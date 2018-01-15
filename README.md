@@ -24,14 +24,14 @@ clone项目
 
     ├── server.js   # Express Server
     ├── dist     # 编译压缩目录
+	│	└── views	# iframe引用的页面
     │   └── index.html      # 主页
     │   └── locking.html    # 锁屏页面
     │   └── login.html      #  登陆页面
     │   └── assets  # 静态资源文件
     │       ├── img
     │       ├── js
-    │       ├── css
-    │       └── views
+    │       └── css
     │
     ├── gulpfile.js  # Gulp配置文件
     ├── package.json
@@ -53,5 +53,5 @@ clone项目
     └── api      # 每个页面对应的交互json格式数据
         ├── upload      # 上传资源统一存放路径
         ├── views       # iframe引用页面对应的json数据
-        └── login.json
+        └── login.json	# 登录页面json数据
 
