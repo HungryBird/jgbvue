@@ -35,4 +35,8 @@ app.use('/FBackup', FBackupRouter);
 
 app.listen(3001);
 
-opn('http://localhost:3001');
+/**
+*open proxy port 7000
+*/
+
+opn('http://localhost:7000');
