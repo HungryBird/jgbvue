@@ -1,0 +1,172 @@
+[
+	{
+		"id": "param_001",
+		"param": "启用审核：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "text",
+			"text": "启用后单据只有在审核后才会生效，报表数据才会变化"
+		}
+	},
+	{
+		"id": "param_002",
+		"param": "启用税金：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "input",
+			"text": "增值税率",
+			"value": 17
+		}
+	},
+	{
+		"id": "param_003",
+		"param": "商品价格是否含税：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "text",
+			"text": "勾选后，商品资料中预设的采购和销售价格，对应购货、销货类单据中的含税单价列，不勾选则对应不含税单价列"
+		}
+	},
+	{
+		"id": "param_004",
+		"param": "启用辅助属性：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "text",
+			"text": "启用后允许商品新增服装、尺码等自定义属性"
+		}
+	},
+	{
+		"id": "param_005",
+		"param": "启用序列号：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "text",
+			"text": "启用后将新增商品序列号管理功能"
+		}
+	},
+	{
+		"id": "param_006",
+		"param": "启用批次保质期管理：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "text",
+			"text": "启用后将新增商品保持期管理功能"
+		}
+	},
+	{
+		"id": "param_007",
+		"param": "启用自动出库最早批次：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "text",
+			"text": "启用后录入出库类单据时，会自动选择商品最早时间的批次"
+		}
+	},
+	{
+		"id": "param_008",
+		"param": "启用自动填充结算金额：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "text",
+			"text": "启用后将自动填充收付款金额"
+		}
+	},
+	{
+		"id": "param_009",
+		"param": "启用分仓核算：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {
+			"type": "text",
+			"text": "启用后将商品的成本将根据各分仓核算，未启用根据总仓核算"
+		}
+	},
+	{
+		"id": "param_010",
+		"param": "本位币：",
+		"action": {
+			"type": "select",
+			"options": [
+				{
+					"label": "RMB",
+					"value": "RMB"
+				}
+			],
+			"value": "RMB"
+		},
+		"explain": {}
+	},
+	{
+		"id": "param_011",
+		"param": "数量小数位：",
+		"action": {
+			"type": "number",
+			"value": 3
+		},
+		"explain": {}
+	},
+	{
+		"id": "param_012",
+		"param": "单价小数位：",
+		"action": {
+			"type": "number",
+			"value": 3
+		},
+		"explain": {}
+	},
+	{
+		"id": "param_013",
+		"param": "存货计价方法：",
+		"action": {
+			"type": "select",
+			"options": [
+				{
+					"label": "移动平均",
+					"value": "移动平均"
+				},
+				{
+					"label": "先进先出",
+					"value": "先进先出"
+				}
+			],
+			"value": "移动平均"
+		},
+		"explain": {}
+	},
+	{
+		"id": "param_014",
+		"param": "是否检查负库存：",
+		"action": {
+			"type": "check",
+			"status": false
+		},
+		"explain": {}
+	}
+]

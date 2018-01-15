@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>行政区域</title>
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../assets/css/views/administrativeRegion.css">
+	<style type="text/css">
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<el-container>
+			<el-aside width="200px">
+				<el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+			</el-aside>
+			<el-main>
+				<div>
+					<div style="float: left;">
+						<el-form :inline="true">
+							<el-form-item>
+								<el-input v-model="searchInputVal" placeholder="输入名称/编号">
+									<template slot="append">
+										<el-button class="el-icon-search"></el-button>
+									</template>
+								</el-input>
+							</el-form-item>
+						</el-form>
+					</div>
+					<div style="float: right;">
+						<div style="text-align: right;">
+							<el-button-group>
+								<el-button type="primary" @click="addRegin">
+									<i class="el-icon-plus"></i>
+								</el-button>
+								<el-button type="primary" @click="editRegin" :disabled="selectedRows.length != 1">
+									<i class="el-icon-edit"></i>
+								</el-button>
+								<el-button type="primary" @click="deleteRegin" :disabled="selectedRows.length == 0">
+									<i class="el-icon-delete"></i>
+								</el-button>
+							</el-button-group>
+						</div>
+					</div>
+				</div>
+				<el-table :data="tableData" border ref="multipleTable" tooltip-effect="dark" @row-click="rowClick">
+					<el-table-column type="selection"></el-table-column>
+					<el-table-column type="index"></el-table-column>
+					<el-table-column prop="number" label="编号"></el-table-column>
+					<el-table-column prop="label" label="名称"></el-table-column>
+					<el-table-column prop="initials" label="简拼"></el-table-column>
+					<el-table-column prop="level" label="级别"></el-table-column>
+					<el-table-column prop="valid" label="状态">
+						<template slot-scope="scope">
+							{{scope.row.valid ? '有效' : '无效'}}
+						</template>
+					</el-table-column>
+					<el-table-column prop="notes" label="备注"></el-table-column>
+				</el-table>
+			</el-main>
+			<el-dialog title="新增行政区域" :visible.sync="addForm.visible">
+				<el-form ref="addForm" :model="addForm.addFormData" :rules="addForm.rules" label-width="80px">
+					<el-form-item label="编号" prop="number">
+						<el-input v-model="addForm.addFormData.number" auto-complete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="名称" prop="name">
+						<el-input v-model="addForm.addFormData.name" auto-complete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="级别" prop="level">
+						<el-input v-model="addForm.addFormData.level" auto-complete="off" :disabled="true"></el-input>
+					</el-form-item>
+					<el-form-item label="备注" prop="notes">
+						<el-input v-model="addForm.addFormData.notes" type="textarea" auto-complete="off"></el-input>
+					</el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+					<div style="float: left;">
+						<el-checkbox v-model="addForm.checked">确认并关闭窗口</el-checkbox>
+					</div>
+					<div style="float: right;">
+						<el-button type="primary" @click="onSubmitAdd('addForm')">保存</el-button>
+						<el-button @click="addForm.visible = false">取消</el-button>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</el-dialog>
+			<el-dialog title="编辑行政区域" :visible.sync="editForm.visible">
+				<el-form ref="editForm" :model="editForm.editFormData" :rules="editForm.rules" label-width="80px">
+					<el-form-item label="编号" prop="number">
+						<el-input v-model="editForm.editFormData.number" auto-complete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="名称" prop="name">
+						<el-input v-model="editForm.editFormData.name" auto-complete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="级别" prop="level">
+						<el-input v-model="editForm.editFormData.level" auto-complete="off" :disabled="true"></el-input>
+					</el-form-item>
+					<el-form-item label="备注" prop="notes">
+						<el-input v-model="editForm.editFormData.notes" type="textarea" auto-complete="off"></el-input>
+					</el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+					<div style="float: left;">
+						<el-checkbox v-model="editForm.checked">确认并关闭窗口</el-checkbox>
+					</div>
+					<div style="float: right;">
+						<el-button type="primary" @click="onSubmitEdit">保存</el-button>
+						<el-button @click="editForm.visible = false">取消</el-button>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</el-dialog>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../assets/js/common/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../assets/js/views/administrativeRegion.js"></script>
+</html>
