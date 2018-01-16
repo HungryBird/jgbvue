@@ -8,6 +8,9 @@ new Vue({
 				{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, 
 				{name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
 			]
+		},
+		timingDialog: {
+			visible: false
 		}
 	},
 	mounted() {
@@ -68,6 +71,30 @@ new Vue({
 		},
 		deleteData() {
 			//
+		},
+		timing() {
+			this.timingDialog.visible = true;
+			axios.get('/FBackup/getTiming').then((data)=> {
+				console.log('get data', data.data);
+			})
+		},
+		submitTiming() {
+			let _self = this;
+			let obj = {};
+			obj.checked = _self.timingDialog.checked;
+			obj.time = _self.timingDialog.time;
+			console.log('time', obj.time);
+			axios.post('/FBackup/setTiming', obj).then((data)=> {
+				if(data.data.status) {
+					this.$message({
+						type: 'success',
+						message: data.data.message
+					})
+					this.timingDialog.visible = false;
+				}
+			}).catch((err)=> {
+				this.$message.error(err);
+			})
 		}
 	},
 	filters: {

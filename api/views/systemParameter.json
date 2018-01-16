@@ -20,8 +20,20 @@
 		},
 		"explain": {
 			"type": "input",
-			"text": "增值税率",
-			"value": 17
+			"taxs": [
+				{
+					"text": "默认税率",
+					"value": 17
+				},
+				{
+					"text": "税率1",
+					"value": 0
+				},
+				{
+					"text": "税率2",
+					"value": 0
+				}
+			]
 		}
 	},
 	{
@@ -121,7 +133,10 @@
 			],
 			"value": "RMB"
 		},
-		"explain": {}
+		"explain": {
+			"type": "text",
+			"text": "用于计价结算货币的类型"
+		}
 	},
 	{
 		"id": "param_011",
@@ -130,7 +145,10 @@
 			"type": "number",
 			"value": 3
 		},
-		"explain": {}
+		"explain": {
+			"type": "text",
+			"text": "设置数量的小鼠位数"
+		}
 	},
 	{
 		"id": "param_012",
@@ -139,7 +157,10 @@
 			"type": "number",
 			"value": 3
 		},
-		"explain": {}
+		"explain": {
+			"type": "text",
+			"text": "设置单价的小数位数"
+		}
 	},
 	{
 		"id": "param_013",
@@ -158,7 +179,10 @@
 			],
 			"value": "移动平均"
 		},
-		"explain": {}
+		"explain": {
+			"type": "text",
+			"text": "设置存货计价方法"
+		}
 	},
 	{
 		"id": "param_014",
@@ -167,6 +191,9 @@
 			"type": "check",
 			"status": false
 		},
-		"explain": {}
+		"explain": {
+			"type": "text",
+			"text": "启用后将检查负库存"
+		}
 	}
 ]

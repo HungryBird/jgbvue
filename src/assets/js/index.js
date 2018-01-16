@@ -31,8 +31,8 @@ new Vue({
                       name: '系统参数'
                     },
                     {
-                      id: 'cgdj004',
-                      name: '已销购货版'
+                      id: 'FBackup',
+                      name: '备份与恢复'
                     }
                   ]
                 },

@@ -24,13 +24,13 @@ clone项目
 
     ├── server.js   # Express Server
     ├── dist     # 编译压缩目录
+    │   └── views   #iframe引用html
     │   └── index.html      # 主页
     │   └── locking.html    # 锁屏页面
     │   └── login.html      #  登陆页面
     │   └── assets  # 静态资源文件
     │       ├── img
     │       ├── js
-    │       ├── css
     │       └── views
     │
     ├── gulpfile.js  # Gulp配置文件
@@ -45,6 +45,12 @@ clone项目
     │       ├── css
     │       ├── sass    # scss格式
     │       └── views
+    ├── static  # 引用的静态资源文件
+	│	├──	axios	# axios
+	│	├──	vue		# vue源文件
+    │   ├── font-awesome    # icon
+    │   └── element-ui      # element框架
+    │
     ├── routes
     │   ├── views       # iframe引用页面对应的路由
     │   ├── login.js
