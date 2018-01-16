@@ -6,14 +6,14 @@ const router = express.Router();
 
 router.get('/get_table_data', (req, res)=> {
 	let tableData = '';
-	fs.readFile('api/FBackup.json', 'utf-8', (err, data)=> {
+	fs.readFile('api/views/FBackup.json', 'utf-8', (err, data)=> {
 		if(err) {
 			res.send({
 				status: false,
 				message: err
 			})
 		}else{
-			tableData += data;
+			tableData += data
 			res.send({
 				status: true,
 				message: tableData
@@ -39,5 +39,17 @@ router.use('/backup', (req, res)=> {
 		})
 	})
 });
+
+router.post('/setTiming', (req, res)=> {
+	res.send({
+		status: true,
+		message: '设置成功'
+	})
+});
+
+router.get('/setTiming', (req, res)=> {
+	let time = 0;
+	
+})
 
 module.exports = router;

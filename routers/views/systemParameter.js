@@ -22,6 +22,7 @@ router.get('/data_get', (req, res)=> {
 });
 
 router.post('/data_save', (req, res)=> {
+	console.log('save_data', req.body);
 	res.send({
 		status: true,
 		message: '保存成功'

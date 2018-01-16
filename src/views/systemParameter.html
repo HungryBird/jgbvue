@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<title>系统参数</title>
-	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../font-awesome-4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="../assets/css/views/systemParameter.css">
 	<style type="text/css">
 		[v-cloak] {
@@ -32,9 +32,12 @@
 		</el-table-column>
 		<el-table-column label="说明" prop="explain">
 			<template slot-scope="scope">
-				<span>{{scope.row.explain.text}} </span>
-				<div style="display: inline-block;">
-					<el-input v-if="scope.row.explain.type == 'input'" size="mini" v-model="scope.row.explain.value">
+				<span v-if="scope.row.explain.type != 'input'">{{scope.row.explain.text}} </span>
+				<div v-else>
+					<el-input size="mini" v-model="tax.value" v-for="tax in scope.row.explain.taxs">
+						<template slot="prepend">
+							{{ tax.text }}
+						</template>
 						<template slot="append">
 							<i>%</i>
 						</template>
@@ -45,8 +48,9 @@
 	</el-table>
 </div>
 </body>
-<script type="text/javascript" src="../assets/js/common/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../vue/vue.js"></script>
+<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+<script type="text/javascript" src="../axios/axios.min.js"></script>
+<script type="text/javascript" src="../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../assets/js/views/systemParameter.js"></script>
 </html>

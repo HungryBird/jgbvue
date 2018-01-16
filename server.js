@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const opn = require('opn');
+const path = require('path');
 
 const app = express();
 
@@ -8,7 +9,8 @@ const app = express();
  * parse
  */
 
-app.use(express.static('./src/'));
+app.use(express.static(path.join(__dirname, 'src')));
+app.use(express.static('static'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -35,8 +37,4 @@ app.use('/FBackup', FBackupRouter);
 
 app.listen(3001);
 
-/**
-*open proxy port 7000
-*/
-
-opn('http://localhost:7000');
+opn('http://localhost:3001');
