@@ -19,41 +19,61 @@ new Vue({
                   /*title: '',*/
                   items: [
                     {
-                      id: 'administrativeRegion',
-                      name: '行政区域'
+                      id: 'systemParameter',
+                      name: '系统参数'
+                    },
+                    {
+                      id: 'phoneInfo',
+                      name: '手机信息'
+                    },
+                    {
+                      id: 'auditProcess',
+                      name: '审核流程'
                     },
                     {
                       id: 'systemLog',
                       name: '系统日志'
                     },
                     {
-                      id: 'systemParameter',
-                      name: '系统参数'
+                      id: 'customizingTemplate',
+                      name: '套打模板'
                     },
                     {
-                      id: 'FBackup',
-                      name: '备份与恢复'
+                      id: 'recountCost',
+                      name: '重算成本'
+                    },
+                    {
+                      id: 'addedServer',
+                      name: '增值服务'
                     }
                   ]
                 },
                 {
-                  title: '采购报表',
+                  /*title: '采购报表',*/
                   items: [
                     {
-                      id: 'cabb001',
-                      name: '采购订单跟踪表'
+                      id: 'messageInSite',
+                      name: '站内信息'
                     },
                     {
-                      id: 'cabb002',
-                      name: '采购明细表'
+                      id: 'emailMessage',
+                      name: '邮件信息'
                     },
                     {
-                      id: 'cabb003',
-                      name: '采购汇总表(按商品)'
+                      id: 'administrativeRegion',
+                      name: '行政区域'
                     },
                     {
-                      id: 'cabb004',
-                      name: '采购汇总表(按供应商)'
+                      id: 'FBackup',
+                      name: '备份与恢复'
+                    },
+                    {
+                      id: 'settlementNAntiSettlement',
+                      name: '结账/反结账'
+                    },
+                    {
+                      id: 'reinitialize',
+                      name: '重新初始化'
                     }
                   ]
                 }
@@ -200,11 +220,16 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'home',
+        activeTab: 'messageInSite',
         tabs: [
           {
             name: 'home',
             label: '首页'
+          },
+          {
+            name: 'messageInSite',
+            label: '站内信息',
+            link: 'views/messageInSite.html'
           }
         ],
         locking: {

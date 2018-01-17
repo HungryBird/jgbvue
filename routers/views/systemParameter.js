@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/data_get', (req, res)=> {
 	let jdata = '';
-	fs.readFile('api/views/systemParameter.json', 'utf-8', (err, data)=> {
+	fs.readFile('api/views/systemParameter/systemParameter.json', 'utf-8', (err, data)=> {
 		if(err) {
 			res.send({
 				status: false,

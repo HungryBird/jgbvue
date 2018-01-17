@@ -129,7 +129,18 @@ new Vue({
 			if(_self.selectedRows.indexOf(row) == -1) {
 				_self.selectedRows.push(row)
 			}else{
-				_self.selectedRows.splice(indexOf(row), 1);
+				_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
+			}
+		},
+		selectAll(selection) {
+			let _self = this;
+			if(selection.length == 0) {
+				_self.selectedRows.splice(0, _self.selectedRows.length);
+			}else{
+				_self.selectedRows.splice(0, _self.selectedRows.length);
+				selection.forEach((item)=> {
+					_self.selectedRows.push(item);
+				})
 			}
 		},
 		addRegin() {

@@ -100,7 +100,7 @@ gulp.task('browserSync', ['nodemon'], ()=> {
 		'src/assets/**/**/**.*'
 	]
 	browserSync.init(files, {
-		proxy: 'http://localhost:3001',
+		proxy: 'http://127.0.0.1:3001',
 		notify: false,
 		port: 7000
 	});

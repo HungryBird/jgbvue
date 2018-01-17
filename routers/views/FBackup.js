@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/get_table_data', (req, res)=> {
 	let tableData = '';
-	fs.readFile('api/views/FBackup.json', 'utf-8', (err, data)=> {
+	fs.readFile('api/views/FBackup/FBackup.json', 'utf-8', (err, data)=> {
 		if(err) {
 			res.send({
 				status: false,

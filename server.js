@@ -10,7 +10,7 @@ const app = express();
  */
 
 app.use(express.static(path.join(__dirname, 'src')));
-app.use(express.static('static'));
+app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -23,12 +23,14 @@ const administrativeRegionRouter = require('./routers/views/administrativeRegion
 const systemLogRouter = require('./routers/views/systemLog');
 const systemParameterRouter = require('./routers/views/systemParameter');
 const FBackupRouter = require('./routers/views/FBackup');
+const messageInSiteRouter = require('./routers/views/messageInSite');
 
 app.use('/user', userLoginRouter);
 app.use('/administrativeRegion', administrativeRegionRouter);
 app.use('/systemLog', systemLogRouter);
 app.use('/systemParameter', systemParameterRouter);
 app.use('/FBackup', FBackupRouter);
+app.use('/messageInSite', messageInSiteRouter);
 
 
 /**
