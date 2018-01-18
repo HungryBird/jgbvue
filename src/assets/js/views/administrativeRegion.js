@@ -214,7 +214,6 @@ new Vue({
 						axios.post('/administrativeRegion/data_delete', _self.selectedRows).then(function(req) {
 							if(req.data.status) {
 								//do something
-								console.log('delete success');
 								done()
 							};
 						}).catch(function(err) {

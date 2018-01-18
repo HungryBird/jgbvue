@@ -58,6 +58,7 @@ router.get('/data_get_unread', (req, res)=> {
 });
 
 router.post('/data_delete', (req, res)=> {
+	console.log('data_delete', req.body)
 	res.send({
 		status: true,
 		message: '删除成功'

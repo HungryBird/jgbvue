@@ -47,7 +47,16 @@ new Vue({
 			})
 		},
 		makeItRead() {
-			//
+			axios.post('/messageInSite//data_red', this.selectedRows).then((data)=> {
+				if(data.data.status) {
+					this.$message({
+						type: 'success',
+						message: data.data.message
+					})
+				}
+			}).catch((err)=> {
+				console.log('err', err);
+			});
 		},
 		remove() {
 			var _self = this;
@@ -60,7 +69,7 @@ new Vue({
 						axios.post('/messageInSite/data_delete', _self.selectedRows).then(function(req) {
 							if(req.data.status) {
 								//do something
-								done()
+								done(action, instance, done)
 							};
 						}).catch(function(err) {
 							console.log(err);
@@ -69,15 +78,15 @@ new Vue({
 						done(false);
 					}
 				}
-			}).then((data) => {
+			}).then((action) => {
 				this.$message({
 					type: 'success',
-					message: data.data.message
+					message: '删除成功'
 				});
 			}).catch(() => {
 				this.$message({
 					type: 'info',
-					message: '已取消删除'
+					message: '已取消'
 				});          
 			});
 		},
@@ -106,11 +115,12 @@ new Vue({
 				})
 			}
 		},
-		handleSizeChange() {
-			//
+		handleSizeChange(size) {
+			//page size change
+			console.log('size', size);
 		},
 		handleCurrentChange() {
-			//
+			//current page change
 		}
 	},
 	filters: {
