@@ -83,7 +83,6 @@ new Vue({
 			let obj = {};
 			obj.checked = _self.timingDialog.checked;
 			obj.time = _self.timingDialog.time;
-			console.log('time', obj.time);
 			axios.post('/FBackup/setTiming', obj).then((data)=> {
 				if(data.data.status) {
 					this.$message({
@@ -95,7 +94,8 @@ new Vue({
 			}).catch((err)=> {
 				this.$message.error(err);
 			})
-		}
+		},
+		rowClick
 	},
 	filters: {
 		parseDate(date) {

@@ -29,7 +29,7 @@
 				<div style="clear: both;"></div>
 			</el-col>
 		</el-row>
-		<el-table border :data="table.backups" ref="BFtable">
+		<el-table border :data="table.backups" ref="BFtable" v-on:row-click="rowClick">
 			<el-table-column type="selection"></el-table-column>
 			<el-table-column type="index"></el-table-column>
 			<el-table-column label="备份名称" prop="name"></el-table-column>

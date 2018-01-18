@@ -204,30 +204,34 @@ new Vue({
 			})
 		},
 		deleteRegin() {
-			var _self = this;
+			let _self = this;
 			this.$confirm('确定删除行政区域?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning',
 				beforeClose: function(action, instance, done) {
-					if(action == 'confirm') {
-						axios.post('/administrativeRegion/data_delete', _self.selectedRows).then(function(req) {
-							if(req.data.status) {
-								//do something
-								done()
-							};
-						}).catch(function(err) {
-							console.log(err);
-						})
-					}else{
-						done(false);
-					}
+					done(action);
 				}
-			}).then(() => {
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				});
+			}).then((action) => {
+				let _self = this;
+				if(action == 'confirm') {
+					axios.post('/administrativeRegion/data_delete', _self.selectedRows).then(function(req) {
+						if(req.data.status) {
+							//替换selectedRows的数据
+							_self.$message({
+								type: 'success',
+								message: req.data.message
+							});
+						};
+					}).catch(function(err) {
+						console.log(err);
+					})
+				}else if(action == 'cancel'){
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});
+				}
 			}).catch(() => {
 				this.$message({
 					type: 'info',

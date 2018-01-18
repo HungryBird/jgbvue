@@ -220,16 +220,11 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'messageInSite',
+        activeTab: 'home',
         tabs: [
           {
             name: 'home',
             label: '首页'
-          },
-          {
-            name: 'messageInSite',
-            label: '站内信息',
-            link: 'views/messageInSite.html'
           }
         ],
         locking: {

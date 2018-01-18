@@ -65,29 +65,32 @@ new Vue({
 				cancelButtonText: '取消',
 				type: 'warning',
 				beforeClose: function(action, instance, done) {
-					if(action == 'confirm') {
-						axios.post('/messageInSite/data_delete', _self.selectedRows).then(function(req) {
-							if(req.data.status) {
-								//do something
-								done(action, instance, done)
-							};
-						}).catch(function(err) {
-							console.log(err);
-						})
-					}else{
-						done(false);
-					}
+					done(action);
 				}
 			}).then((action) => {
-				this.$message({
-					type: 'success',
-					message: '删除成功'
-				});
-			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消'
-				});          
+				if(action == 'confirm') {
+					axios.post('/messageInSite/data_delete', _self.selectedRows).then(function(req) {
+						if(req.data.status) {
+							//替换selectedRows的数据
+							_self.$message({
+								type: 'success',
+								message: req.data.message
+							});
+						};
+					}).catch(function(err) {
+						console.log(err);
+					})
+				}else if(action == 'cancel'){
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});
+				}
+			}).catch((err) => {
+			   this.$message({
+			   		type: 'error',
+			   		message: err
+			   }) 
 			});
 		},
 		tableRowClassName({row, rowIndex}) {
