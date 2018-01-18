@@ -33,6 +33,8 @@ a {
     -webkit-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
     width: 100%;
+    background-position:  center;
+    background-size: 100%;
     height: 524px;
 }
 #app .login-wrap .layout-side {
@@ -66,7 +68,6 @@ a {
 #app .login-wrap .main-wrap .content-wrap {
         height: 100%;
         border: 0;
-        background-color: blue;
 }
 #app .login-wrap .main-wrap .content-wrap .login-form-wrap {
           position: absolute;
@@ -77,15 +78,17 @@ a {
           padding-left: 40px 16px 16px 16px;
           background-color: #fff;
           padding: 70px 20px 0 20px;
-          -webkit-box-shadow: 5px 10px 20px 2px rgba(0, 0, 0, 0.27);
-                  box-shadow: 5px 10px 20px 2px rgba(0, 0, 0, 0.27);
+          -webkit-box-shadow: 0px 0px 0px 10px rgba(0, 0, 0, 0.27);
+                  box-shadow: 0px 0px 0px 10px rgba(0, 0, 0, 0.27);
 }
 #app .login-wrap .main-wrap .content-wrap .login-form-wrap .login-form .el-button {
             width: 100%;
+            background-color: #2576a5;
+            border: 0px;
 }
 #app .login-wrap .main-wrap .content-wrap .login-form-wrap .login-form .linkAdmin {
             position: absolute;
-            top: 260px;
+            top: 300px;
             right: 20px;
             width: 100%;
             text-align: right;
@@ -109,3 +112,8 @@ a {
         color: #828282;
         font-size: 12px;
 }
+
+
+#app .login-wrap .main-wrap .content-wrap .login-form-wrap .yzm123 { float: left; }
+#app .login-wrap .main-wrap .content-wrap .login-form-wrap .yzm_box { float: left; background: #000;}
+#app .login-wrap .main-wrap .content-wrap .login-form-wrap .yzm_box img { display: block; }

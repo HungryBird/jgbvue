@@ -2,9 +2,8 @@ new Vue({
 	el: '#app',
 	data: {
 			logo: './assets/img/common/logo.png',
-			backPic: './assets/img/login/bg_02.jpg',
-			backSiderL: './assets/img/login/bg_01.png',
-			backSiderR: './assets/img/login/bg_03.png',
+			backPic: './assets/img/login/bg_1.jpg',
+
 			ruleForm: {
 				user: '',
 				pass: ''
