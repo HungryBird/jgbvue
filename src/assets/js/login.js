@@ -3,10 +3,10 @@ new Vue({
 	data: {
 			logo: './assets/img/common/logo.png',
 			backPic: './assets/img/login/bg_1.jpg',
-
 			ruleForm: {
 				user: '',
-				pass: ''
+				pass: '',
+				vcode: ''
 			},
 			rules: {
 				user: [
@@ -14,6 +14,9 @@ new Vue({
 				],
 				pass: [
 					{ required: true, message: '请填写密码！', trigger: 'blur' }
+				],
+				vcode: [
+					{ required: true, message: '请填写验证码！', trigger: 'blur' }
 				]
 			}
 		},

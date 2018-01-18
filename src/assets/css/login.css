@@ -72,12 +72,11 @@ a {
 #app .login-wrap .main-wrap .content-wrap .login-form-wrap {
           position: absolute;
           right: 57px;
-          top: 80px;
+          top: 70px;
           height: 300px;
           width: 306px;
-          padding-left: 40px 16px 16px 16px;
           background-color: #fff;
-          padding: 70px 20px 0 20px;
+          padding: 40px 20px 0 20px;
           -webkit-box-shadow: 0px 0px 0px 10px rgba(0, 0, 0, 0.27);
                   box-shadow: 0px 0px 0px 10px rgba(0, 0, 0, 0.27);
 }
@@ -86,18 +85,18 @@ a {
             background-color: #2576a5;
             border: 0px;
 }
-#app .login-wrap .main-wrap .content-wrap .login-form-wrap .login-form .linkAdmin {
+#app .login-wrap .main-wrap .content-wrap .login-form-wrap .linkAdmin {
             position: absolute;
-            top: 300px;
+            top: 280px;
             right: 20px;
             width: 100%;
             text-align: right;
 }
-#app .login-wrap .main-wrap .content-wrap .login-form-wrap .login-form .linkAdmin a {
+#app .login-wrap .main-wrap .content-wrap .login-form-wrap .linkAdmin a {
               font-size: 12px;
               cursor: pointer;
 }
-#app .login-wrap .main-wrap .content-wrap .login-form-wrap .login-form .curVer {
+#app .login-wrap .main-wrap .content-wrap .login-form-wrap .curVer {
             position: absolute;
             bottom: 15px;
             width: 306px;
@@ -112,8 +111,12 @@ a {
         color: #828282;
         font-size: 12px;
 }
-
-
-#app .login-wrap .main-wrap .content-wrap .login-form-wrap .yzm123 { float: left; }
-#app .login-wrap .main-wrap .content-wrap .login-form-wrap .yzm_box { float: left; background: #000;}
-#app .login-wrap .main-wrap .content-wrap .login-form-wrap .yzm_box img { display: block; }
+#app .login-wrap .main-wrap .content-wrap .login-form-wrap .yzm_box { 
+        float: left;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-left: 4px;
+}
+#app .login-wrap .main-wrap .content-wrap .login-form-wrap .yzm_box img { 
+        display: block; 
+}
