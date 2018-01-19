@@ -1,11 +1,12 @@
 {
-  "name": "vmp-tradition",
+  "name": "JGBVue",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "postcss": "postcss --config postcss.json"
   },
   "keywords": [],
   "author": "",
@@ -29,12 +30,24 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.1.0",
     "gulp-babel": "^7.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-express": "^0.3.5",
     "gulp-file-include": "^2.0.1",
+    "gulp-live-server": "^0.0.31",
+    "gulp-livereload": "^3.8.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-plumber": "^1.2.0",
+    "gulp-postcss": "^7.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.3",
     "gulp-uglify": "^3.0.0",
-    "nodemon": "^1.14.11"
+    "nodemon": "^1.14.11",
+    "postcss-cli": "^4.1.1",
+    "postcss-extend": "^1.0.5",
+    "postcss-import": "^11.0.0",
+    "postcss-mixins": "^6.2.0",
+    "postcss-nested": "^3.0.0",
+    "postcss-simple-vars": "^4.1.0"
   }
 }
