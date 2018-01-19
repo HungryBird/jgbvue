@@ -3,6 +3,7 @@ new Vue({
 	data: {
 			logo: './assets/img/common/logo.png',
 			backPic: './assets/img/login/bg_1.jpg',
+			vcodeImg: './assets/img/login/yzm.jpg',
 			ruleForm: {
 				user: '',
 				pass: '',
