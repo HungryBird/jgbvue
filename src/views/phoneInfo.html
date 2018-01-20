@@ -5,7 +5,7 @@
 	<title>手机信息</title>
 	<link rel="stylesheet" type="text/css" href="../font-awesome-4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="../element-ui-2.0.11/lib/theme-chalk/index.css">
-	<link rel="stylesheet" type="text/css" href="jgbvue.css">
+	<link rel="stylesheet" type="text/css" href="../assets/css/common/common.css">
 	<style type="text/css">
 		body{
 			overflow-x: hidden;
@@ -21,32 +21,67 @@
 				</el-button-group>
 			</div>
 			<div class="inner_main">
-				<el-row :gutter="24">
-					<el-col :span="6">短信剩余数量</el-col>
-					<el-col :span="6">{{ msNumber }}条</el-col>
-					<el-col :span="6">
-						尚未申请？请点击这里<a href="#">注册</a>
-					</el-col>
-				</el-row>
-				<el-row :gutter="24">
-					<el-col :span="6"></el-col>
-					<el-col :span="9"></el-col>
-					<el-col :span="9"></el-col>
-				</el-row>
-				<el-row :gutter="24">
-					<el-col :span="6"></el-col>
-					<el-col :span="9"></el-col>
-					<el-col :span="9"></el-col>
-				</el-row>
-				<el-row :gutter="24">
-					<el-col :span="6"></el-col>
-					<el-col :span="9"></el-col>
-					<el-col :span="9"></el-col>
-				</el-row>
-				<el-row :gutter="24">
-					<el-col :span="6"></el-col>
-					<el-col :span="18"></el-col>
-				</el-row>
+				<div class="jgb-table">
+					<div class="jgb-table-column">
+						<div>
+							短信剩余数量
+						</div>
+						<div>
+							{{ msNumber }}条
+						</div>
+						<div>
+							尚未申请？请点击这里<a href="#">注册</a>
+						</div>
+					</div>
+					<div class="jgb-table-column">
+						<div>
+							<i class=""></i>
+							<span>短信API地址</span>
+						</div>
+						<div>
+							<span>http://</span>
+						</div>
+						<div>
+							以http://开头
+						</div>
+					</div>
+					<div class="jgb-table-column">
+						<div>
+							<i class=""></i>
+							<span>平台登陆账户</span>
+						</div>
+						<div>
+							{{ loginUser }}
+						</div>
+						<div>
+							短信注册账号的用户名
+						</div>
+					</div>
+					<div class="jgb-table-column">
+						<div>
+							<i class=""></i>
+							<span>平台通讯密匙</span>
+						</div>
+						<div>
+							{{ communicationKey }}
+						</div>
+						<div>
+							开通短信账户设置的通讯密匙
+						</div>
+					</div>
+					<div class="jgb-table-column">
+						<div>
+							短信平台说明
+						</div>
+						<div style="width: 66.6%;">
+							<ol>
+								<li>请不要使用系统默认账户test，因为它是公用的测试账号。</li>
+								<li>请在短信平台修改账户资料中绑定签名方可使用短信功能。</li>
+								<li>如果您尚未申请开通，请先注册后填写您的用户名和通讯密匙方可使用。</li>
+							</ol>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

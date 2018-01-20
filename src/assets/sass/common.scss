@@ -1,0 +1,26 @@
+#app{
+	.wrap_main{
+		padding: 10px 20px;
+		.nav{
+			padding: 10px;
+		}
+		.inner_main{
+			.jgb-table{
+				display: flex;
+				flex-flow: row wrap;
+				justify-content: flex-start;
+				.jgb-table-column{
+					border: 1px solid #333;
+					border-bottom: 0;
+					border-right: 0;
+					box-sizing: border-box;
+					div{
+						border: 1px solid #333;
+						border-left: 0;
+						border-top: 0;
+					}
+				}
+			}
+		}
+	}
+}
