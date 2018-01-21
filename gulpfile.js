@@ -32,7 +32,7 @@ gulp.task('clean',(cb)=> {
  */
 
 gulp.task('sass',()=> {
-	return gulp.src('./src/assets/sass/**.scss')
+	return gulp.src('./src/assets/sass/*.scss')
 	.pipe(plumber())
 	.pipe(autoprefixer('last 3 version'))
 	.pipe(sass({
@@ -45,6 +45,7 @@ gulp.task('sass',()=> {
 	.pipe(cssbase64())
 	.pipe(minify())
 	.pipe(gulp.dest('dist/assets/css/common'))
+	.pipe(browserSync.stream())
 });
 
 /**
@@ -58,6 +59,7 @@ gulp.task('css', ()=> {
 	.pipe(minify())
 	.pipe(cssbase64())
 	.pipe(gulp.dest('dist/assets/css'))
+	.pipe(browserSync.stream())
 });
 
 /**
@@ -72,6 +74,7 @@ gulp.task('html', ()=> {
 		baspath: '@file'
 	}))
 	.pipe(gulp.dest('dist'))
+	.pipe(browserSync.stream())
 });
 
 
@@ -91,6 +94,7 @@ gulp.task('js', (path)=> {
 		path.basename += '.min'
 	}))
 	.pipe(gulp.dest('dist/assets/js'))
+	.pipe(browserSync.stream())
 });
 
 
@@ -99,13 +103,18 @@ gulp.task('js', (path)=> {
  */
 
 gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'css'], ()=> {
-	browserSync.init(null, {
+	let files = [
+		'src/**.html', 
+		'src/views/**.html', 
+		'src/assets/**/**.*', 
+		'src/assets/**/**/**.*'
+	]
+	browserSync.init(files, {
 		proxy: 'http://localhost:3001',
 		port: 7000
 	});
-	gulp.watch(['src/**.html', 'src/views/**.html'], ['html']);
-	gulp.watch(['src/assets/css/**.css', 'src/assets/css/**/**.css'], ['css']);
-	gulp.watch(['src/assets/js/**.js', 'src/assets/js/**/**.js'], ['js']);
+	gulp.watch('src/assets/sass/*.scss', ['sass'])
+	gulp.watch(files).on('change', reload);
 })
 
 /**
