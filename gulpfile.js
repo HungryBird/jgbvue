@@ -40,10 +40,11 @@ gulp.task('sass',()=> {
 	}).on('error', (err)=> {
 		console.log('sass err:', err);
 	}))
-	.pipe(gulp.dest('assets/css/common'))
+	.pipe(gulp.dest('src/assets/css/common'))
+	.pipe(gulp.dest('dist/assets/css/common'))
 	.pipe(cssbase64())
 	.pipe(minify())
-	.pipe(gulp.dest('assets/css/common'))
+	.pipe(gulp.dest('dist/assets/css/common'))
 });
 
 /**
