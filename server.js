@@ -37,6 +37,8 @@ app.use('/messageInSite', messageInSiteRouter);
  * server running at port 3001
  */
 
-app.listen(3001);
+//app.listen(3001);
 
-opn('http://localhost:3001');
+//opn('http://localhost:3001');
+
+module.exports = app;

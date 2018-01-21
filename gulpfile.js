@@ -14,9 +14,18 @@ const autoprefixer = require('gulp-autoprefixer');
 const fileInclude = require('gulp-file-include');
 const plumber = require('gulp-plumber');
 const cssnano = require('gulp-cssnano');
+const minify = require('gulp-clean-css');
 const cssbase64 = require('gulp-base64');
 const uglify = require('gulp-uglify');
 const reload = browserSync.reload;
+
+/**
+ * clean
+ */
+
+gulp.task('clean',(cb)=> {
+	del(['dist/*'], cb);
+});
 
 /**
  * sass编译
@@ -26,17 +35,15 @@ gulp.task('sass',()=> {
 	return gulp.src('./src/assets/sass/**.scss')
 	.pipe(plumber())
 	.pipe(autoprefixer('last 3 version'))
-	.pipe(sass().on('error', (err)=> {
+	.pipe(sass({
+		paths: [ path.join(__dirname, 'sass', 'includes') ]
+	}).on('error', (err)=> {
 		console.log('sass err:', err);
 	}))
-	.pipe(gulp.dest('dist/assets/css'))
-	.pipe(cssnano())
-	.pipe(rename((path)=> {
-		path.basename += ".min"
-	}))
+	.pipe(gulp.dest('assets/css/common'))
 	.pipe(cssbase64())
-	.pipe(gulp.dest('dist/assets/css'))
-	.pipe(livereload())
+	.pipe(minify())
+	.pipe(gulp.dest('assets/css/common'))
 });
 
 /**
@@ -46,14 +53,10 @@ gulp.task('sass',()=> {
 gulp.task('css', ()=> {
 	return gulp.src(['src/assets/css/**/*.css', 'src/assets/css/*.css'])
 	.pipe(plumber())
-	.pipe(autoprefixer('last 6 version'))
+	.pipe(autoprefixer('last 3 version'))
+	.pipe(minify())
 	.pipe(cssbase64())
-	.pipe(cssnano())
-	.pipe(rename((path)=> {
-		path.basename += ".min"
-	}))
 	.pipe(gulp.dest('dist/assets/css'))
-	.pipe(livereload())
 });
 
 /**
@@ -62,13 +65,12 @@ gulp.task('css', ()=> {
 
 gulp.task('html', ()=> {
 	return gulp.src(['src/**.html', 'src/**/*.html'])
-	/*.pipe(plumber())
+	.pipe(plumber())
 	.pipe(fileInclude({
 		prefix: '@@',
 		baspath: '@file'
-	}))*/
+	}))
 	.pipe(gulp.dest('dist'))
-	.pipe(livereload())
 });
 
 
@@ -88,50 +90,31 @@ gulp.task('js', (path)=> {
 		path.basename += '.min'
 	}))
 	.pipe(gulp.dest('dist/assets/js'))
-	.pipe(livereload())
 });
 
-/**
- * watch
- */
-
-gulp.task('watch', ()=> {
-	livereload.listen({start: true});
-	gulp.watch('src/**.html', ['html']);
-	gulp.watch('src/views/**.html', ['html']);
-	gulp.watch('src/assets/css/**.css', ['css']);
-	gulp.watch('src/assets/css/**/**.css', ['css']);
-	gulp.watch('src/assets/js/**.js', ['js']);
-	gulp.watch('src/assets/js/**/**.js', ['js']);
-	// gulp.watch('src/**/*.*',(file)=> {
- //        livereload.changed(file.path);
- //    });
- 	gulp.watch(['./**.*','./dist/**/*']).on('change', reload);
-});
 
 /**
- * server
+ * browserSync
  */
 
-gulp.task('server', ['nodemon', 'sass', 'js', 'css', 'html', 'watch'], ()=> {
-	// let server = gls.new('server.js');
-	// server.start();
-
-	// gulp.watch(['src/**.html', 'src/views/**.html', 'src/assets/css/**.css', 'src/assets/css/**/**.css', 'src/assets/js/**.js', 'src/assets/js/**/**.js'], (file)=> {
-	// 	server.notify.apply(server, [file]);
- //    });
-
-    //gulp.watch('server.js', server.start.bind(server));
+gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'css'], ()=> {
+	browserSync.init(null, {
+		proxy: 'http://localhost:3001',
+		port: 7000
+	});
+	gulp.watch(['src/**.html', 'src/views/**.html'], ['html']);
+	gulp.watch(['src/assets/css/**.css', 'src/assets/css/**/**.css'], ['css']);
+	gulp.watch(['src/assets/js/**.js', 'src/assets/js/**/**.js'], ['js']);
 })
 
 /**
- * open express server
+ * open express
  */
 
 gulp.task('nodemon', (cb)=> {
 	let started = false;
 	return nodemon({
-		script: 'server.js'
+		script: 'bin/www'
 	}).on('start', ()=> {
 		if(!started) {
 			cb();
@@ -140,18 +123,10 @@ gulp.task('nodemon', (cb)=> {
 	})
 });
 
-/**
- * build打包
- */
-
-gulp.task('build', ['html', 'css', 'sass', 'js'], ()=> {
-	//pass
-});
-
 
 /**
  * default
  */
 
-gulp.task('default', ['server']);
+gulp.task('default', ['browserSync']);
 

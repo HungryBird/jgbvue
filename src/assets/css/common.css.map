@@ -1,7 +1,7 @@
 {
 "version": 3,
 "mappings": "AACC,eAAU;EACT,OAAO,EAAE,SAAS;EAClB,oBAAI;IACH,OAAO,EAAE,IAAI;EAGb,sCAAU;IACT,OAAO,EAAE,IAAI;IACb,SAAS,EAAE,QAAQ;IACnB,eAAe,EAAE,UAAU;IAC3B,wDAAiB;MAChB,MAAM,EAAE,cAAc;MACtB,aAAa,EAAE,CAAC;MAChB,YAAY,EAAE,CAAC;MACf,UAAU,EAAE,UAAU;MACtB,4DAAG;QACF,MAAM,EAAE,cAAc;QACtB,WAAW,EAAE,CAAC;QACd,UAAU,EAAE,CAAC",
-"sources": ["../../sass/common.scss"],
+"sources": ["../sass/common.scss"],
 "names": [],
 "file": "common.css"
 }

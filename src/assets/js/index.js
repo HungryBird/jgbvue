@@ -2,7 +2,7 @@ new Vue({
 	el: '#app',
 	data: {
         user: {
-          name: '赵某',
+          name: '赵某22',
           portrait: './assets/img/index/portrait.png',
           teamName: '我的团队001',
           navItems: [
