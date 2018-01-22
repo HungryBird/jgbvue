@@ -24,6 +24,8 @@ const systemLogRouter = require('./routers/views/systemLog');
 const systemParameterRouter = require('./routers/views/systemParameter');
 const FBackupRouter = require('./routers/views/FBackup');
 const messageInSiteRouter = require('./routers/views/messageInSite');
+const phoneInfoRouter = require('./routers/views/phoneInfo');
+const emailInfoRouter = require('./routers/views/emailInfo');
 
 app.use('/user', userLoginRouter);
 app.use('/administrativeRegion', administrativeRegionRouter);
@@ -31,6 +33,8 @@ app.use('/systemLog', systemLogRouter);
 app.use('/systemParameter', systemParameterRouter);
 app.use('/FBackup', FBackupRouter);
 app.use('/messageInSite', messageInSiteRouter);
+app.use('/phoneInfo', phoneInfoRouter);
+app.use('/emailInfo', emailInfoRouter);
 
 
 /**

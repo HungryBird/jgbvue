@@ -220,16 +220,16 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'phoneInfo',
+        activeTab: 'emailInfo',
         tabs: [
           {
             name: 'home',
             label: '首页'
           },
           {
-            name: 'phoneInfo',
-            label: '手机信息',
-            link: 'views/phoneInfo.html'
+            name: 'emailInfo',
+            label: '邮件信息',
+            link: 'views/emailInfo.html'
           }
         ],
         locking: {

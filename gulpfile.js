@@ -4,6 +4,7 @@ const nodemon = require('gulp-nodemon');
 const clean = require('gulp-clean');
 const express = require('gulp-express');
 const gls = require('gulp-live-server');
+const imagemin = require('gulp-imagemin');
 const livereload = require('gulp-livereload');
 const sass = require('gulp-sass');
 const path = require('path');
@@ -63,6 +64,16 @@ gulp.task('css', ()=> {
 });
 
 /**
+ * imgs
+ */
+
+gulp.task('img', ()=> {
+	return gulp.src(['src/assets/img/**/*'])
+	.pipe(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true }))
+	.pipe(gulp.dest('dist/assets/img'))
+})
+
+/**
  * html文件编译
  */
 
@@ -102,7 +113,7 @@ gulp.task('js', (path)=> {
  * browserSync
  */
 
-gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'css'], ()=> {
+gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'css', 'img'], ()=> {
 	let files = [
 		'src/**.html', 
 		'src/views/**.html', 

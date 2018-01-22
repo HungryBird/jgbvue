@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>手机信息</title>
+	<title>邮件信息</title>
 	<link rel="stylesheet" type="text/css" href="../font-awesome-4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="../element-ui-2.0.11/lib/theme-chalk/index.css">
 	<link rel="stylesheet" type="text/css" href="../assets/css/common/common.css">
@@ -24,32 +24,32 @@
 				<el-form class="jgb-table">
 					<div class="jgb-table-column">
 						<div>
-							短信剩余数量
+							<span class="required">SMTP服务器</span>
 						</div>
 						<div>
-							{{ formData.messageNumber }}<span style="margin-left: 4px;">条</span>
+							<el-input v-model="formData.serverAddress"></el-input>
 						</div>
 						<div>
-							尚未申请？请点击这里<a href="#">注册</a>
-						</div>
-					</div>
-					<div class="jgb-table-column">
-						<div>
-							<span class="required">短信API地址</span>
-						</div>
-						<div>
-							<el-input v-model="formData.address"></el-input>
-						</div>
-						<div>
-							以http://开头
+							发送邮件的SMTP服务器地址
 						</div>
 					</div>
 					<div class="jgb-table-column">
 						<div>
-							<span class="required">平台登陆账户</span>
+							<span class="required">SSL加密连接</span>
 						</div>
 						<div>
-							<el-input v-model="formData.account"></el-input>
+							<el-switch v-model="formData.using" v-on:change="switchChange"></el-switch>
+						</div>
+						<div>
+							是否启用SSL加密连接
+						</div>
+					</div>
+					<div class="jgb-table-column">
+						<div>
+							<span class="required">SMTP端口</span>
+						</div>
+						<div>
+							<el-input v-model="formData.port"></el-input>
 						</div>
 						<div>
 							短信注册账号的用户名
@@ -57,10 +57,10 @@
 					</div>
 					<div class="jgb-table-column">
 						<div>
-							<span class="required">平台通讯密匙</span>
+							<span class="required">发件人地址</span>
 						</div>
 						<div>
-							<el-input type="password" v-model="formData.passKey"></el-input>
+							<el-input type="password" v-model="formData.postmanAddress"></el-input>
 						</div>
 						<div>
 							开通短信账户设置的通讯密匙
@@ -68,14 +68,35 @@
 					</div>
 					<div class="jgb-table-column">
 						<div>
-							短信平台说明
+							<span class="required">邮箱账号</span>
 						</div>
-						<div style="justify-content: flex-start;">
-							<ol>
-								<li>请不要使用系统默认账户test，因为它是公用的测试账号。</li>
-								<li>请在短信平台修改账户资料中绑定签名方可使用短信功能。</li>
-								<li>如果您尚未申请开通，请先注册后填写您的用户名和通讯密匙方可使用。</li>
-							</ol>
+						<div>
+							<el-input v-model="formData.emailAccount"></el-input>
+						</div>
+						<div>
+							....
+						</div>
+					</div>
+					<div class="jgb-table-column">
+						<div>
+							<span class="required">邮箱密码</span>
+						</div>
+						<div>
+							<el-input type="password" v-model="formData.password"></el-input>
+						</div>
+						<div>
+							....
+						</div>
+					</div>
+					<div class="jgb-table-column">
+						<div>
+							<span class="required">发件人昵称</span>
+						</div>
+						<div>
+							<el-input v-model="formData.nickname"></el-input>
+						</div>
+						<div>
+							....
 						</div>
 					</div>
 				</el-form>
@@ -86,5 +107,5 @@
 <script type="text/javascript" src="../vue/vue.js"></script>
 <script type="text/javascript" src="../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../axios/axios.min.js"></script>
-<script type="text/javascript" src="../assets/js/views/phoneInfo.js"></script>
+<script type="text/javascript" src="../assets/js/views/emailInfo.js"></script>
 </html>

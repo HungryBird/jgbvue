@@ -1,0 +1,9 @@
+{
+	"serverAddress": "smtp.qq.com",
+	"using": true,
+	"port": 25,
+	"postmanAddress": "info@it134.cn",
+	"emailAccount": "info@it134.cn",
+	"password": "123456",
+	"nickname": "小花"
+}
