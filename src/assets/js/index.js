@@ -1,8 +1,8 @@
 new Vue({
-	el: '#app',
-	data: {
+  	el: '#app',
+  	data: {
         user: {
-          name: '赵某22',
+          name: '赵某',
           portrait: './assets/img/index/portrait.png',
           teamName: '我的团队001',
           navItems: [
@@ -56,7 +56,7 @@ new Vue({
                       name: '站内信息'
                     },
                     {
-                      id: 'emailMessage',
+                      id: 'emailInfo',
                       name: '邮件信息'
                     },
                     {

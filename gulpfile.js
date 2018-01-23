@@ -78,11 +78,11 @@ gulp.task('img', ()=> {
  */
 
 gulp.task('html', ()=> {
-	return gulp.src(['src/**.html', 'src/**/*.html'])
+	return gulp.src(['src/*.html', 'src/**/*.html'])
 	.pipe(plumber())
 	.pipe(fileInclude({
 		prefix: '@@',
-		baspath: '@file'
+		basepath: '@file'
 	}))
 	.pipe(gulp.dest('dist'))
 	.pipe(browserSync.stream())
@@ -115,16 +115,21 @@ gulp.task('js', (path)=> {
 
 gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'css', 'img'], ()=> {
 	let files = [
-		'src/**.html', 
-		'src/views/**.html', 
-		'src/assets/**/**.*', 
-		'src/assets/**/**/**.*'
+		'dist/**.html', 
+		'dist/views/**.html', 
+		'dist/assets/**/*',
+		'dist/assets/**/**.*', 
+		'dist/assets/**/**/**.*'
 	]
-	browserSync.init(files, {
+	browserSync.init({
 		proxy: 'http://localhost:3001',
 		port: 7000
 	});
-	gulp.watch('src/assets/sass/*.scss', ['sass'])
+	gulp.watch(['src/*.html', 'src/views/*.html', 'src/include/*.html'], ['html']);
+	gulp.watch(['src/assets/js/*.js', 'src/assets/js/**/*.js'], ['js']);
+	gulp.watch(['src/assets/css/*.css', 'src/assets/css/**/*.css'], ['css']);
+	gulp.watch(['src/assets/img/**/*'], ['img']);
+	gulp.watch(['src/assets/sass/*.scss'], ['sass'])
 	gulp.watch(files).on('change', reload);
 })
 

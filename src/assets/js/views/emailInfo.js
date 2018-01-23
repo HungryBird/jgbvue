@@ -49,6 +49,7 @@ new Vue({
 			});
 		},
 		switchChange(val) {
+			console.log(11)
 			this.formData.using = val;
 		}
 	}

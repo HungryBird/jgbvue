@@ -1,8 +1,8 @@
 body {
   background-color: #f4f4f4; }
 
-input {
-  outline: none; }
+.el-switch__core {
+  outline: none !important; }
 
 #app {
   min-height: 600px;
