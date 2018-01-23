@@ -1,4 +1,23 @@
-<ul class="nav-head-wrap">
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>index</title>
+	<link rel="stylesheet" type="text/css" href="./font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="./assets/css/index.css">
+	<style type="text/css">
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<el-container>
+		    <el-header>
+		    	<ul class="nav-head-wrap">
 	<li id="logo-box-wrap">
 		<a class="logo-box">
 			<span>
@@ -186,3 +205,23 @@
 		</ul>
 	</li>
 </ul>
+		    </el-header>
+		    <el-container>
+				<el-aside width="220px"></el-aside>
+				<el-main>
+					<el-tabs type="card" v-model="activeTab" @tab-remove="removeTab">
+						<el-tab-pane v-for="(tab,index) in tabs" :label="tab.label" :key="tab.name" :name="tab.name" :closable="index != 0">
+							<iframe :src="tab.link" v-if="index != 0"></iframe>
+							<div v-else>这是主页</div>
+						</el-tab-pane>
+					</el-tabs>
+				</el-main>
+		    </el-container>
+		</el-container>
+		<div class="circle" :style="{display: locking.isHidden ? 'none' : 'block', opacity: locking.isHidden ? 0 : 1,width: locking.diameter + 'px', height: locking.diameter + 'px', borderWidth: locking.borderWidth + 'px', transition: locking.isHidden ? '' : 'all 1s', zIndex: locking.isHidden ? -1 : 10000, border: locking.isHidden ? '' : locking.borderWidth + 'px solid #2dc3e8'}"></div>
+	</div>
+</body>
+<script type="text/javascript" src="./vue/vue.js"></script>
+<script type="text/javascript" src="./element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="./assets/js/index.js"></script>
+</html>

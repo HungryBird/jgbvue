@@ -280,7 +280,7 @@ new Vue({
           setTimeout(function() {
             window.location.href = './locking.html';
           }, 1014);
-        },delay = 14)
+        },14)
       }
     }
 })

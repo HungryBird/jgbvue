@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  	<meta name="format-detection" content="telephone=no,email=no">
+	<title>登录页面</title>
+	<link rel="stylesheet" type="text/css" href="./font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="./assets/css/login.css">
+	<style type="text/css">
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div class="login-wrap" :style="{background: 'url('+ backPic +') center'} ">
+			<div class="main-wrap">
+				<div class="logo-wrap">
+					<img :src="logo" class="logo-img">
+				</div>
+				<div class="content-wrap" >
+					<div class="login-form-wrap">
+						<el-form class="login-form" :rules="rules" ref="ruleForm" :model="ruleForm">
+							<el-form-item prop="user">
+								<el-input placeholder="用户名" v-model="ruleForm.user">
+									<template slot="prepend">
+										<i class="fa fa-user"></i>
+									</template>
+								</el-input>
+							</el-form-item>
+							<el-form-item prop="pass">
+								<el-input placeholder="密码" v-model="ruleForm.pass" type="password" @keyup.enter="login">
+									<template slot="prepend">
+										<i class="fa fa-lock"></i>
+									</template>
+								</el-input>
+							</el-form-item>
+							<el-form-item style="float: left;width: 209px;" prop="vcode">
+								<el-input placeholder="验证码" v-model="ruleForm.vcode">
+	                            	<template slot="prepend">
+	                            		<i class="fa fa-pencil-square"></i>
+	                            	</template>
+	                            </el-input>
+							</el-form-item>
+							<div class="yzm_box">
+								<img :src="vcodeImg">
+							</div>
+							<el-button type="primary" @click="login" style="clear: both;">登陆</el-button>
+						</el-form>
+						<div class="linkAdmin">
+							<a @click="alertAdminPhone">忘记密码</a>
+						</div>
+						<div class="curVer">
+							当前版本v1.0.0.0
+						</div>
+					</div>
+				</div>
+				<div class="company-info">
+					出版公司: 南宁市悟空软件有限公司<br>
+					<a href="#">金箍棒进销存官方网站: http://www.nnwobao.com/jingubang</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="./vue/vue.js"></script>
+<script type="text/javascript" src="./element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../axios/axios.min.js"></script>
+<script type="text/javascript" src="./assets/js/login.js"></script>
+</html>

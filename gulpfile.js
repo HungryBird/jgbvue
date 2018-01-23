@@ -122,8 +122,9 @@ gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'css', 'img'], ()=> {
 		'dist/assets/**/**/**.*'
 	]
 	browserSync.init({
-		proxy: 'http://localhost:3001',
-		port: 7000
+		proxy: 'http://localhost:3333',
+		port: 7000,
+		notify: false
 	});
 	gulp.watch(['src/*.html', 'src/views/*.html', 'src/include/*.html'], ['html']);
 	gulp.watch(['src/assets/js/*.js', 'src/assets/js/**/*.js'], ['js']);
