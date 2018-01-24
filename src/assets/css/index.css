@@ -466,10 +466,10 @@ dd {
           transform: rotate(-90deg);
 }
 #logo-box-wrap:hover .logo-white {
-  opacity: 0;
+  opacity: 0 !important;
 }
 #logo-box-wrap:hover .logo-black {
-  opacity: 1;
+  opacity: 1 !important;
 }
 .fr {
   float: right !important;

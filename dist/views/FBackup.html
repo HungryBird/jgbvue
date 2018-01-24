@@ -38,7 +38,7 @@
 					{{ scope.row.date | parseDate }}
 				</template>
 			</el-table-column>
-			<el-table-column label="文件大小" prop="">
+			<el-table-column label="文件大小" prop="size">
 				<template slot-scope="scope">
 					{{ scope.row.size | parseSize }}
 				</template>

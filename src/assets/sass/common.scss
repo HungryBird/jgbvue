@@ -1,6 +1,15 @@
 body{
 	background-color: #f4f4f4;
 }
+.red{
+	color: #fe5d54;
+}
+.el-table{
+	box-sizing: border-box;
+	.default-row{
+		background: #f8f8f8;
+	}
+}
 .el-switch__core{
 	outline: none !important;
 }
@@ -9,7 +18,7 @@ body{
 	background-color: #fff;
 	.wrap_main{
 		padding: 10px;
-		.nav{
+		.nav,nav{
 			margin-bottom: 10px;
 		}
 		.inner_main{

@@ -11,7 +11,8 @@ new Vue({
 		},
 		timingDialog: {
 			visible: false
-		}
+		},
+		selectedRows: []
 	},
 	mounted() {
 		const _self = this;
@@ -95,7 +96,15 @@ new Vue({
 				this.$message.error(err);
 			})
 		},
-		rowClick
+		rowClick(row) {
+			let _self = this;
+			this.$refs.BFtable.toggleRowSelection(row);
+			if(_self.selectedRows.indexOf(row) == -1) {
+				_self.selectedRows.push(row)
+			}else{
+				_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
+			}
+		}
 	},
 	filters: {
 		parseDate(date) {
@@ -103,10 +112,10 @@ new Vue({
 			month = oDate.getMonth() + 1;
 			day = oDate.getDate();
 			year = oDate.getFullYear();
-			if(day.length < 10) {
+			if(day < 10) {
 				day = '0' + day;
 			}
-			if(month.length < 10) {
+			if(month < 10) {
 				month = '0' + month;
 			}
 			return year + '-' + month + '-' + day;

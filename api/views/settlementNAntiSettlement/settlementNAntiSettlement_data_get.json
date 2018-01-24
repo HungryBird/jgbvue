@@ -1,0 +1,17 @@
+{
+	"date": 1515242621,
+	"sysStartDate": 1515042621,
+	"lastSettleDate": 1515245621,
+	"table": [
+		{
+			"jdate": 1515242621,
+			"cdate": 1517642621,
+			"operator": "小明"
+		},
+		{
+			"jdate": 1515612621,
+			"cdate": 1515682621,
+			"operator": "小张"
+		}
+	]
+}

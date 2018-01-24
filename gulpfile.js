@@ -79,7 +79,7 @@ gulp.task('img', ()=> {
  */
 
 gulp.task('html', ()=> {
-	return gulp.src(['src/*.html', 'src/views/*.html', 'src/include/*.html'])
+	return gulp.src(['src/*.html', 'src/**/*.html'])
 	.pipe(plumber())
 	.pipe(fileInclude({
 		prefix: '@@',
@@ -102,7 +102,8 @@ gulp.task('vjs', function () {
 gulp.task('js', function () {
     return gulp.src('src/assets/js/*.js')
         .pipe(plumber())
-        .pipe(gulp.dest('dist/assets/js'));
+        .pipe(gulp.dest('dist/assets/js'))
+        .pipe(browserSync.stream())
 });
 
 /**
