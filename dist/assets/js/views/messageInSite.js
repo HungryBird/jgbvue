@@ -1,5 +1,3 @@
-'use strict';
-
 new Vue({
 	el: '#app',
 	data: {
@@ -7,161 +5,145 @@ new Vue({
 		selectedRows: [],
 		markAllow: true
 	},
-	mounted: function mounted() {
-		var _this = this;
-
-		axios.get('/messageInSite/data_get_all').then(function (data) {
-			var jdata = JSON.parse(data.data.message);
-			if (data.data.status) {
-				_this.tableData = jdata;
+	mounted() {
+		axios.get('/messageInSite/data_get_all').then((data)=> {
+			let jdata = JSON.parse(data.data.message);
+			if(data.data.status) {
+				this.tableData = jdata;
 			}
-		}).catch(function (err) {
+		}).catch((err)=> {
 			console.log('err', err);
-		});
+		})
 	},
-
 	methods: {
-		all: function all() {
-			var _this2 = this;
-
-			axios.get('/messageInSite/data_get_all').then(function (data) {
-				var jdata = JSON.parse(data.data.message);
-				if (data.data.status) {
-					_this2.tableData = jdata;
+		all() {
+			axios.get('/messageInSite/data_get_all').then((data)=> {
+				let jdata = JSON.parse(data.data.message);
+				if(data.data.status) {
+					this.tableData = jdata;
 				}
-			}).catch(function (err) {
+			}).catch((err)=> {
 				console.log('err', err);
-			});
+			})
 		},
-		read: function read() {
-			var _this3 = this;
-
-			axios.get('/messageInSite/data_get_read').then(function (data) {
-				var jdata = JSON.parse(data.data.message);
-				if (data.data.status) {
-					_this3.tableData = jdata;
+		read() {
+			axios.get('/messageInSite/data_get_read').then((data)=> {
+				let jdata = JSON.parse(data.data.message);
+				if(data.data.status) {
+					this.tableData = jdata;
 				}
-			}).catch(function (err) {
+			}).catch((err)=> {
 				console.log('err', err);
-			});
+			})
 		},
-		unread: function unread() {
-			var _this4 = this;
-
-			axios.get('/messageInSite/data_get_unread').then(function (data) {
-				var jdata = JSON.parse(data.data.message);
-				if (data.data.status) {
-					_this4.tableData = jdata;
+		unread() {
+			axios.get('/messageInSite/data_get_unread').then((data)=> {
+				let jdata = JSON.parse(data.data.message);
+				if(data.data.status) {
+					this.tableData = jdata;
 				}
-			}).catch(function (err) {
+			}).catch((err)=> {
 				console.log('err', err);
-			});
+			})
 		},
-		makeItRead: function makeItRead() {
-			var _this5 = this;
-
-			axios.post('/messageInSite//data_red', this.selectedRows).then(function (data) {
-				if (data.data.status) {
-					_this5.$message({
+		makeItRead() {
+			axios.post('/messageInSite//data_red', this.selectedRows).then((data)=> {
+				if(data.data.status) {
+					this.$message({
 						type: 'success',
 						message: data.data.message
-					});
+					})
 				}
-			}).catch(function (err) {
+			}).catch((err)=> {
 				console.log('err', err);
 			});
 		},
-		remove: function remove() {
-			var _this6 = this;
-
+		remove() {
 			var _self = this;
 			this.$confirm('确定删除?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning',
-				beforeClose: function beforeClose(action, instance, done) {
+				beforeClose: function(action, instance, done) {
 					done(action);
 				}
-			}).then(function (action) {
-				if (action == 'confirm') {
-					axios.post('/messageInSite/data_delete', _self.selectedRows).then(function (req) {
-						if (req.data.status) {
+			}).then((action) => {
+				if(action == 'confirm') {
+					axios.post('/messageInSite/data_delete', _self.selectedRows).then(function(req) {
+						if(req.data.status) {
 							//替换selectedRows的数据
 							_self.$message({
 								type: 'success',
 								message: req.data.message
 							});
 						};
-					}).catch(function (err) {
+					}).catch(function(err) {
 						console.log(err);
-					});
-				} else if (action == 'cancel') {
-					_this6.$message({
+					})
+				}else if(action == 'cancel'){
+					this.$message({
 						type: 'info',
 						message: '已取消'
 					});
 				}
-			}).catch(function (err) {
-				_this6.$message({
-					type: 'error',
-					message: err
-				});
+			}).catch((err) => {
+			   this.$message({
+			   		type: 'error',
+			   		message: err
+			   }) 
 			});
 		},
-		tableRowClassName: function tableRowClassName(_ref) {
-			var row = _ref.row,
-			    rowIndex = _ref.rowIndex;
-
-			if (!row.status) {
+		tableRowClassName({row, rowIndex}) {
+			if(!row.status) {
 				return 'info';
 			}
 		},
-		rowClick: function rowClick(row) {
+		rowClick(row) {
 			var _self = this;
 			this.$refs.msTable.toggleRowSelection(row);
-			if (_self.selectedRows.indexOf(row) == -1) {
-				_self.selectedRows.push(row);
-			} else {
+			if(_self.selectedRows.indexOf(row) == -1) {
+				_self.selectedRows.push(row)
+			}else{
 				_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
 			}
 		},
-		selectAll: function selectAll(selection) {
-			var _self = this;
-			if (selection.length == 0) {
+		selectAll(selection) {
+			let _self = this;
+			if(selection.length == 0) {
 				_self.selectedRows.splice(0, _self.selectedRows.length);
-			} else {
+			}else{
 				_self.selectedRows.splice(0, _self.selectedRows.length);
-				selection.forEach(function (item) {
+				selection.forEach((item)=> {
 					_self.selectedRows.push(item);
-				});
+				})
 			}
 		},
-		handleSizeChange: function handleSizeChange(size) {
+		handleSizeChange(size) {
 			//page size change
 			console.log('size', size);
 		},
-		handleCurrentChange: function handleCurrentChange() {
+		handleCurrentChange() {
 			//current page change
 		}
 	},
 	filters: {
-		statusFilter: function statusFilter(val) {
-			if (val) {
+		statusFilter(val) {
+			if(val) {
 				return '已读';
-			} else {
+			}else{
 				return '未读';
 			}
 		}
 	},
 	watch: {
-		selectedRows: function selectedRows(arr) {
-			var _self = this;
-			if (arr.length == 0) {
+		selectedRows(arr) {
+			let _self = this;
+			if(arr.length == 0) {
 				_self.markAllow = true;
 				return;
 			}
-			for (var i = 0; i < arr.length; i++) {
-				if (arr[i].status) {
+			for(let i =0; i < arr.length; i++) {
+				if(arr[i].status) {
 					_self.markAllow = true;
 					return false;
 				}
@@ -169,4 +151,4 @@ new Vue({
 			_self.markAllow = false;
 		}
 	}
-});
+})

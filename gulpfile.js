@@ -2,6 +2,8 @@ const gulp = require('gulp');
 const browserSync = require('browser-sync').create();
 const nodemon = require('gulp-nodemon');
 const clean = require('gulp-clean');
+const watch = require('gulp-watch');
+const batch = require('batch');
 const express = require('gulp-express');
 const gls = require('gulp-live-server');
 const imagemin = require('gulp-imagemin');
@@ -41,7 +43,6 @@ gulp.task('sass',()=> {
 	}).on('error', (err)=> {
 		console.log('sass err:', err);
 	}))
-	.pipe(gulp.dest('src/assets/css/common'))
 	.pipe(gulp.dest('dist/assets/css/common'))
 	.pipe(cssbase64())
 	.pipe(minify())
@@ -78,7 +79,7 @@ gulp.task('img', ()=> {
  */
 
 gulp.task('html', ()=> {
-	return gulp.src(['src/*.html', 'src/**/*.html'])
+	return gulp.src(['src/*.html', 'src/views/*.html', 'src/include/*.html'])
 	.pipe(plumber())
 	.pipe(fileInclude({
 		prefix: '@@',
@@ -88,32 +89,43 @@ gulp.task('html', ()=> {
 	.pipe(browserSync.stream())
 });
 
-
 /**
  * js
  */
 
-gulp.task('js', (path)=> {
-	return gulp.src(['src/assets/js/**/*.js', 'src/assets/js/*.js'])
-	.pipe(plumber())
-	.pipe(babel({
-		presets: ['env']
-	}))
-	.pipe(gulp.dest('./dist/assets/js'))
-	.pipe(uglify())
-	.pipe(rename((path)=> {
-		path.basename += '.min'
-	}))
-	.pipe(gulp.dest('dist/assets/js'))
-	.pipe(browserSync.stream())
+gulp.task('vjs', function () {
+    return gulp.src('src/assets/js/views/*.js')
+        .pipe(plumber())
+        .pipe(gulp.dest('dist/assets/js/views'));
 });
 
+gulp.task('js', function () {
+    return gulp.src('src/assets/js/*.js')
+        .pipe(plumber())
+        .pipe(gulp.dest('dist/assets/js'));
+});
+
+/**
+ * watch
+ */
+
+gulp.task('watch', ()=> {
+	gulp.watch('src/*.html', ['html']);
+	gulp.watch('src/views/*.html', ['html']);
+	gulp.watch('src/include/*.html', ['html']);
+	gulp.watch('src/assets/js/*.js', ['js']);
+	gulp.watch('src/assets/js/views/*.js', ['vjs']);
+	gulp.watch('src/assets/css/*.css', ['css']);
+	gulp.watch('src/assets/css/**/*.css', ['css']);
+	gulp.watch('src/assets/img/**/*', ['img']);
+	gulp.watch('src/assets/sass/*.scss', ['sass'])
+})
 
 /**
  * browserSync
  */
 
-gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'css', 'img'], ()=> {
+gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'vjs', 'css', 'img', 'watch'], ()=> {
 	let files = [
 		'dist/**.html', 
 		'dist/views/**.html', 
@@ -126,11 +138,6 @@ gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'css', 'img'], ()=> {
 		port: 7000,
 		notify: false
 	});
-	gulp.watch(['src/*.html', 'src/views/*.html', 'src/include/*.html'], ['html']);
-	gulp.watch(['src/assets/js/*.js', 'src/assets/js/**/*.js'], ['js']);
-	gulp.watch(['src/assets/css/*.css', 'src/assets/css/**/*.css'], ['css']);
-	gulp.watch(['src/assets/img/**/*'], ['img']);
-	gulp.watch(['src/assets/sass/*.scss'], ['sass'])
 	gulp.watch(files).on('change', reload);
 })
 

@@ -220,16 +220,16 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'emailInfo',
+        activeTab: 'settlementNAntiSettlement',
         tabs: [
           {
             name: 'home',
             label: '首页'
           },
           {
-            name: 'emailInfo',
-            label: '邮件信息',
-            link: 'views/emailInfo.html'
+            name: 'settlementNAntiSettlement',
+            label: '结账与反结账',
+            link: 'views/settlementNAntiSettlement.html'
           }
         ],
         locking: {

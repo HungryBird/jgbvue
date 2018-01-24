@@ -1,5 +1,3 @@
-'use strict';
-
 new Vue({
 	el: '#app',
 	data: {
@@ -12,10 +10,10 @@ new Vue({
 		tableData: [],
 		selectedRows: [],
 		/**
-   * 提交表单
-   * [规定addForm.addFormData.number为001时正确，002已存在, 其他格式错误]
-   * @type {Object}
-   */
+		 * 提交表单
+		 * [规定addForm.addFormData.number为001时正确，002已存在, 其他格式错误]
+		 * @type {Object}
+		 */
 		addForm: {
 			visible: false,
 			checked: true,
@@ -26,19 +24,27 @@ new Vue({
 				notes: ''
 			},
 			rules: {
-				number: [{
-					required: true,
-					message: '请输入编号'
-				}],
-				name: [{
-					required: true,
-					message: '请输入名称'
-				}],
-				level: [{
-					required: true,
-					message: '请输入级别'
-				}],
-				notes: [{}]
+				number: [
+					{
+						required: true,
+						message: '请输入编号'
+					}
+				],
+				name: [
+					{
+						required: true,
+						message: '请输入名称'
+					}
+				],
+				level: [
+					{
+						required: true,
+						message: '请输入级别'
+					}
+				],
+				notes: [
+					{}
+				]
 			}
 		},
 		editForm: {
@@ -51,35 +57,43 @@ new Vue({
 				notes: ''
 			},
 			rules: {
-				number: [{
-					required: true,
-					message: '请输入编号'
-				}],
-				name: [{
-					required: true,
-					message: '请输入名称'
-				}],
-				level: [{
-					required: true,
-					message: '请输入级别'
-				}],
-				notes: [{}]
+				number: [
+					{
+						required: true,
+						message: '请输入编号'
+					}
+				],
+				name: [
+					{
+						required: true,
+						message: '请输入名称'
+					}
+				],
+				level: [
+					{
+						required: true,
+						message: '请输入级别'
+					}
+				],
+				notes: [
+					{}
+				]
 			}
-		}
+		},
 	},
-	mounted: function mounted() {
+	mounted() {
 		var _self = this;
 		/**
-   * 获取行政区域数据
-   * @param  {[type]} req) {			var      cities [行政区域]
-   * @return {[type]}      [description]
-   */
-		axios.get('/administrativeRegion/data_get').then(function (req) {
+		 * 获取行政区域数据
+		 * @param  {[type]} req) {			var      cities [行政区域]
+		 * @return {[type]}      [description]
+		 */
+		axios.get('/administrativeRegion/data_get').then(function(req) {
 			var cities = JSON.parse(req.data.cities);
-			cities.forEach(function (item) {
+			cities.forEach(function(item) {
 				var obj = {};
-				for (key in item) {
-					if (key != 'children') {
+				for(key in item) {
+					if(key != 'children') {
 						obj[key] = item[key];
 					}
 				}
@@ -90,19 +104,18 @@ new Vue({
 			console.log('err', err);
 		});
 	},
-
 	methods: {
-		handleNodeClick: function handleNodeClick(data, node, cmp) {
+		handleNodeClick(data,node,cmp) {
 			var _self = this;
-			if (!data.children) {
+			if(!data.children) {
 				_self.addForm.addFormData.level = data.level;
 				return;
 			};
 			this.tableData.splice(0, this.tableData.length);
-			data.children.forEach(function (item) {
+			data.children.forEach(function(item) {
 				var obj = {};
-				for (key in item) {
-					if (key != 'children') {
+				for(key in item) {
+					if(key != 'children') {
 						obj[key] = item[key];
 					}
 				}
@@ -110,61 +123,61 @@ new Vue({
 			});
 			_self.addForm.addFormData.level = data.children[0].level;
 		},
-		rowClick: function rowClick(row, event, column) {
+		rowClick(row, event, column) {
 			var _self = this;
 			this.$refs.multipleTable.toggleRowSelection(row);
-			if (_self.selectedRows.indexOf(row) == -1) {
-				_self.selectedRows.push(row);
-			} else {
+			if(_self.selectedRows.indexOf(row) == -1) {
+				_self.selectedRows.push(row)
+			}else{
 				_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
 			}
 		},
-		selectAll: function selectAll(selection) {
-			var _self = this;
-			if (selection.length == 0) {
+		selectAll(selection) {
+			let _self = this;
+			if(selection.length == 0) {
 				_self.selectedRows.splice(0, _self.selectedRows.length);
-			} else {
+			}else{
 				_self.selectedRows.splice(0, _self.selectedRows.length);
-				selection.forEach(function (item) {
+				selection.forEach((item)=> {
 					_self.selectedRows.push(item);
-				});
+				})
 			}
 		},
-		addRegin: function addRegin() {
+		addRegin() {
 			this.addForm.visible = true;
 		},
-		onSubmitAdd: function onSubmitAdd(formName) {
+		onSubmitAdd(formName) {
 			var _self = this;
-			this.$refs[formName].validate(function (valid) {
+			this.$refs[formName].validate((valid) => {
 				console.log('valid', valid);
-				if (valid) {
-					axios.post('/administrativeRegion/data_write', _self.addForm.addFormData).then(function (req) {
-						if (req.data.status) {
-							if (_self.addForm.checked) {
+				if(valid) {
+					axios.post('/administrativeRegion/data_write', _self.addForm.addFormData).then(function(req) {
+						if(req.data.status) {
+							if(_self.addForm.checked) {
 								_self.addForm.visible = false;
 							}
 							_self.$message({
 								message: req.data.message,
 								type: 'success'
 							});
-						} else {
+						}else{
 							_self.$message({
 								message: req.data.message,
 								type: 'error'
 							});
 						}
-					}).catch(function (err) {
+					}).catch(function(err) {
 						_self.$message({
 							message: req.data.message,
 							type: 'error'
 						});
-					});
-				} else {
+					})
+				}else{
 					return false;
 				}
-			});
+			})
 		},
-		editRegin: function editRegin() {
+		editRegin() {
 			_self = this;
 			_self.editForm.visible = true;
 			console.log('rows', _self.selectedRows[0]);
@@ -173,60 +186,58 @@ new Vue({
 			_self.editForm.editFormData.number = _self.selectedRows[0].number;
 			_self.editForm.editFormData.notes = _self.selectedRows[0].notes;
 		},
-		onSubmitEdit: function onSubmitEdit() {
+		onSubmitEdit() {
 			var _self = this;
-			axios.post('/administrativeRegion/data_edit', _self.editForm.editFormData).then(function (req) {
-				if (req.data.status) {
-					if (_self.editForm.checked) _self.editForm.visible = false;
+			axios.post('/administrativeRegion/data_edit', _self.editForm.editFormData).then(function(req) {
+				if(req.data.status) {
+					if(_self.editForm.checked) _self.editForm.visible = false;
 					_self.$message({
 						type: 'success',
 						message: req.data.message
-					});
-				} else {
+					})
+				}else{
 					_self.$message({
 						type: 'error',
 						message: req.data.message
-					});
+					})
 				}
-			});
+			})
 		},
-		deleteRegin: function deleteRegin() {
-			var _this = this;
-
-			var _self = this;
+		deleteRegin() {
+			let _self = this;
 			this.$confirm('确定删除行政区域?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning',
-				beforeClose: function beforeClose(action, instance, done) {
+				beforeClose: function(action, instance, done) {
 					done(action);
 				}
-			}).then(function (action) {
-				var _self = _this;
-				if (action == 'confirm') {
-					axios.post('/administrativeRegion/data_delete', _self.selectedRows).then(function (req) {
-						if (req.data.status) {
+			}).then((action) => {
+				let _self = this;
+				if(action == 'confirm') {
+					axios.post('/administrativeRegion/data_delete', _self.selectedRows).then(function(req) {
+						if(req.data.status) {
 							//替换selectedRows的数据
 							_self.$message({
 								type: 'success',
 								message: req.data.message
 							});
 						};
-					}).catch(function (err) {
+					}).catch(function(err) {
 						console.log(err);
-					});
-				} else if (action == 'cancel') {
-					_this.$message({
+					})
+				}else if(action == 'cancel'){
+					this.$message({
 						type: 'info',
 						message: '已取消'
 					});
 				}
-			}).catch(function () {
-				_this.$message({
+			}).catch(() => {
+				this.$message({
 					type: 'info',
 					message: '已取消删除'
-				});
+				});          
 			});
 		}
 	}
-});
+})

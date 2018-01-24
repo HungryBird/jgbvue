@@ -465,10 +465,10 @@ dd {
   -webkit-transform: rotate(-90deg);
           transform: rotate(-90deg);
 }
-#logo-box-wrap:hover>.logo-white {
+#logo-box-wrap:hover .logo-white {
   opacity: 0;
 }
-#logo-box-wrap:hover>.logo-black {
+#logo-box-wrap:hover .logo-black {
   opacity: 1;
 }
 .fr {
