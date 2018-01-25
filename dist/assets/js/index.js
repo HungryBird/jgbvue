@@ -220,16 +220,11 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'settlementNAntiSettlement',
+        activeTab: 'home',
         tabs: [
           {
             name: 'home',
             label: '首页'
-          },
-          {
-            name: 'settlementNAntiSettlement',
-            label: '结账与反结账',
-            link: 'views/settlementNAntiSettlement.html'
           }
         ],
         locking: {

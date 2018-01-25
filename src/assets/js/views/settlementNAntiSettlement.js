@@ -37,6 +37,12 @@ new Vue({
 		},
 		changeDate(val) {
 			console.log('changeDate', val);
+		},
+		handleSizeChange() {
+			//
+		},
+		handleCurrentChange() {
+			//
 		}
 	},
 	filters: {
