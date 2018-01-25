@@ -1,6 +1,36 @@
 body{
 	background-color: #f4f4f4;
 }
+h1,h2,h3,h4,h5,h6{
+	margin: 0;
+}
+ul{
+	padding: 0;
+	li{
+		list-style: none;
+	}
+}
+.el-form{
+	.el-form-item{
+		margin: 0;
+		padding: 10px 0;
+	}
+}
+.el-dialog{
+	.el-dialog__header{
+		background: #f7f7f7;
+		.title{
+			font-size: 14px;
+		}
+	}
+	.el-dialog__body{
+		padding: 10px 16px;
+		h1,h2,h3,h4,h5,h6{
+			background: #f7f7f7;
+			padding: 6px 4px;
+		}
+	}
+}
 .red{
 	color: #fe5d54;
 }
@@ -35,7 +65,7 @@ body{
 		}
 		.inner_main{
 			position: absolute;
-			top: 100px;
+			top: 0;
 			left: 10px;
 			right: 10px;
 			bottom: 10px;

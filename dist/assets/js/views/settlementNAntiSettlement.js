@@ -42,7 +42,7 @@ new Vue({
 			//
 		},
 		handleCurrentChange() {
-			
+			//
 		}
 	},
 	filters: {

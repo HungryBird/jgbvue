@@ -35,7 +35,7 @@ gulp.task('clean',(cb)=> {
  */
 
 gulp.task('sass',()=> {
-	return gulp.src('./src/assets/sass/*.scss')
+	return gulp.src('./src/assets/sass/common.scss')
 	.pipe(plumber())
 	.pipe(autoprefixer('last 3 version'))
 	.pipe(sass({
