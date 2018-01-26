@@ -44,9 +44,12 @@ gulp.task('sass',()=> {
 		console.log('sass err:', err);
 	}))
 	.pipe(gulp.dest('dist/assets/css/common'))
-	.pipe(cssbase64())
+	/*.pipe(cssbase64())
 	.pipe(minify())
-	.pipe(gulp.dest('dist/assets/css/common'))
+	.pipe(rename(function(path) {
+		path.basename += ".min"
+	}))
+	.pipe(gulp.dest('dist/assets/css/common'))*/
 	.pipe(browserSync.stream())
 });
 
@@ -58,9 +61,12 @@ gulp.task('css', ()=> {
 	return gulp.src(['src/assets/css/**/*.css', 'src/assets/css/*.css'])
 	.pipe(plumber())
 	.pipe(autoprefixer('last 3 version'))
-	.pipe(minify())
+	/*.pipe(minify())
 	.pipe(cssbase64())
-	.pipe(gulp.dest('dist/assets/css'))
+	.pipe(rename(function(path) {
+		path.basename += ".min"
+	}))
+	.pipe(gulp.dest('dist/assets/css'))*/
 	.pipe(browserSync.stream())
 });
 
