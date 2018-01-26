@@ -24,6 +24,10 @@ ul {
     background: #f7f7f7;
     padding: 6px 4px; }
 
+.el-dialog .el-dialog__footer {
+  border-top: 1px solid #dbdfe7;
+  padding: 10px; }
+
 .red {
   color: #fe5d54; }
 

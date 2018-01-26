@@ -21,4 +21,11 @@ router.get('/data_get', (req, res)=> {
 	});
 });
 
+router.post('/data_save', (req, res)=> {
+	res.send({
+		status: true,
+		message: '保存成功'
+	})
+})
+
 module.exports = router;

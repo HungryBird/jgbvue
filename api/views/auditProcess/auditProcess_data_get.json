@@ -21,5 +21,35 @@
 			"auditor": "陈小美|王大帅",
 			"remarkWay": "站内信息；手机信息；邮件信息"
 		}
-	]
+	],
+	"sysModuleOptions": [
+		{
+			"label": "采购",
+			"value": "选项1"
+		},
+		{
+			"label": "销售",
+			"value": "选项2"
+		},
+		{
+			"label": "仓库",
+			"value": "选项3"
+		}
+	],
+	"processLevelOptions": [
+		{
+			"label": "一级审核",
+			"value": "选项1"
+		},
+		{
+			"label": "二级审核",
+			"value": "选项2"
+		},
+		{
+			"label": "三级审核",
+			"value": "选项3"
+		}
+	],
+	"firstLevelAuditors": ["王某", "李某"],
+	"secondLevelAuditors": ["赵某"]
 }

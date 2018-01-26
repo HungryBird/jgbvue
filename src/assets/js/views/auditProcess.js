@@ -4,18 +4,23 @@
 new Vue({
     el: '#app',
     data: {
+        /**
+         * [data 获取的数据]
+         * @type {[type]}
+         */
         data: null,
-        dialogFormVisible: {
-            visible: true
-        },
+        dialogFormVisible: false,
+        /**
+         * [form 要提交的数据]
+         * @type {Object}
+         */
         form: {
+            selectSysModule: '',
             selectProcessLevel: '',
-            firstLevelAuditors: ['王某', '李某'],
             firstLevelAuditorsGroup: [],
-            secondLevelAuditors: ['赵某'],
             secondLevelAuditorsGroup: [],
             auditWay: '',
-            type: []
+            multiplayerAuditMethod: []
         }
     },
     mounted() {
@@ -31,7 +36,32 @@ new Vue({
     },
     methods: {
         add() {
-            //
+            this.form.selectSysModule = this.data.sysModuleOptions[0].label;
+            this.form.selectProcessLevel = this.data.processLevelOptions[0].label;
+            this.dialogFormVisible = true;
+        },
+        saveAdd() {
+            let _self = this;
+            axios.post('/auditProcess/data_save', this.form).then((data)=> {
+                console.log('data', data.data);
+                if(data.data.status) {
+                    _self.dialogFormVisible = false;
+                    _self.$message({
+                        type: 'success',
+                        message: data.data.message
+                    })
+                }else{
+                    _self.$message({
+                        type: 'error',
+                        message: data.data.message
+                    })
+                }
+            }).catch((err)=> {
+                _self.$message({
+                    type: 'error',
+                    message: err
+                });
+            });
         },
         edit() {
             //

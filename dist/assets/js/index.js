@@ -220,16 +220,16 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'auditProcess',
+        activeTab: 'printTemplate',
         tabs: [
           {
             name: 'home',
             label: '首页'
           },
           {
-            name: 'auditProcess',
-            label: '审核流程',
-            link: './views/auditProcess.html'
+            name: 'printTemplate',
+            label: '套打模板',
+            link: './views/printTemplate.html'
           }
         ],
         locking: {

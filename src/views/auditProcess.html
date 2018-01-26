@@ -33,7 +33,7 @@
 				</div>
 			</div>
 		</div>
-		<el-dialog :visible.sync="dialogFormVisible.visible">
+		<el-dialog :visible.sync="dialogFormVisible">
 			<div slot="title" class="title">
 				新增审核流程
 			</div>
@@ -42,10 +42,8 @@
 					1、系统模块
 				</h3>
 				<el-form-item label="选择系统模块">
-					<el-select>
-						<el-option>采购</el-option>
-						<el-option>销售</el-option>
-						<el-option>仓库</el-option>
+					<el-select v-model="form.selectSysModule">
+						<el-option v-for="option in data.sysModuleOptions" :label="option.label" :value="option.value" :key="option.value"></el-option>
 					</el-select>
 					<el-checkbox name="type"></el-checkbox>
 				</el-form-item>
@@ -54,9 +52,7 @@
 				</h3>
 				<el-form-item label="选择流程级数">
 					<el-select v-model="form.selectProcessLevel">
-						<el-option>一级审核</el-option>
-						<el-option>二级审核</el-option>
-						<el-option>三级审核</el-option>
+						<el-option v-for="option in data.processLevelOptions" :label="option.label" :value="option.value" :key="option.value"></el-option>
 					</el-select>
 				</el-form-item>
 				<h3>
@@ -68,14 +64,14 @@
 							<label>选择一级审核人员</label>
 							<i class="fa fa-user-circle"></i>
 							<el-checkbox-group v-model="form.firstLevelAuditorsGroup" style="display: inline-block;">
-								<el-checkbox-button v-for="auditor in form.firstLevelAuditors" :label="auditor" :key="auditor" :value="auditor">{{auditor}}</el-checkbox-button>
+								<el-checkbox-button v-for="auditor in data.firstLevelAuditors" :label="auditor" :key="auditor" :value="auditor">{{auditor}}</el-checkbox-button>
 							</el-checkbox-group>
 						</li>
 						<li>
 							<label>选择二级审核人员</label>
 							<i class="fa fa-user-circle"></i>
 							<el-checkbox-group v-model="form.secondLevelAuditorsGroup" style="display: inline-block;">
-								<el-checkbox-button v-for="auditor in form.secondLevelAuditors" :label="auditor" :key="auditor" :value="auditor">{{auditor}}</el-checkbox-button>
+								<el-checkbox-button v-for="auditor in data.secondLevelAuditors" :label="auditor" :key="auditor" :value="auditor">{{auditor}}</el-checkbox-button>
 							</el-checkbox-group>
 						</li>
 					</ul>
@@ -91,7 +87,7 @@
 					5、多人审核方式
 				</h3>
 				<el-form-item>
-					<el-checkbox-group v-model="form.type">
+					<el-checkbox-group v-model="form.multiplayerAuditMethod">
 						<el-checkbox label="站内信息" name="type"></el-checkbox>
 						<el-checkbox label="手机信息" name="type"></el-checkbox>
 						<el-checkbox label="邮件信息" name="type"></el-checkbox>
@@ -99,8 +95,8 @@
 				</el-form-item>
 			</el-form>
 			<div slot="footer">
-				<el-button type="primary">保存</el-button>
-				<el-button>关闭</el-button>
+				<el-button type="primary" v-on:click="saveAdd">保存</el-button>
+				<el-button v-on:click="dialogFormVisible = false">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>
