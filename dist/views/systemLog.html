@@ -6,7 +6,7 @@
 	<title>系统日志</title>
 	<link rel="stylesheet" href="../element-ui-2.0.11/lib/theme-chalk/index.css">
 	<link rel="stylesheet" type="text/css" href="../font-awesome-4.7.0/css/font-awesome.css">
-	<link rel="stylesheet" type="text/css" href="../assets/css/views/systemLog.css">
+	<link rel="stylesheet" type="text/css" href="../assets/css/common/common.css">
 	<style type="text/css">
 		[v-cloak] {
 			display: none;
@@ -15,38 +15,36 @@
 </head>
 <body>
 	<div id="app" v-cloak>
-		<el-row style="padding: 10px;">
-			<el-col :span="24">
-				<div class="nav-wrap">
-					<div style="float: left;">
-						<el-select v-model="selectLook.optionVal.label" :filterable="true">
-							<el-option v-for="option in selectLook.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
-						</el-select>
-						<el-date-picker v-model="dateValue" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-					</div>
-					<el-form :inline="true" style="float: left;margin: 1px 0 0 4px;">
-						<el-form-item>
-							<el-input v-model="searchValue" placeholder="请输入用户名/姓名/日志内容等关键词查询">
-								<template slot="append">
-									<el-button>搜索</el-button>
-								</template>
-							</el-input>
-						</el-form-item>
-					</el-form>
-					<div style="text-align: right;float: right;">
-						<el-button-group>
-							<el-button @click="deleteLog">
-								<i class="el-icon-delete"></i>
-							</el-button>
-							<el-button>
-								<i class="fa fa-sign-out"></i>
-							</el-button>
-						</el-button-group>
-					</div>
-					<div style="clear: both;"></div>
+		<div class="wrap_main">
+			<div class="nav">
+				<div style="float: left;">
+					<el-select v-model="selectLook.optionVal.label" :filterable="true">
+						<el-option v-for="option in selectLook.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+					</el-select>
+					<el-date-picker v-model="dateValue" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
 				</div>
-			</el-col>
-			<el-col :span="24">
+				<el-form :inline="true" style="float: left;margin: 1px 0 0 4px;">
+					<el-form-item>
+						<el-input v-model="searchValue" placeholder="请输入用户名/姓名/日志内容等关键词查询">
+							<template slot="append">
+								<el-button>搜索</el-button>
+							</template>
+						</el-input>
+					</el-form-item>
+				</el-form>
+				<div style="text-align: right;float: right;">
+					<el-button-group>
+						<el-button @click="deleteLog">
+							<i class="el-icon-delete"></i>
+						</el-button>
+						<el-button>
+							<i class="fa fa-sign-out"></i>
+						</el-button>
+					</el-button-group>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+			<div class="inner_main" style="top: 70px;">
 				<el-table :data="logTable" border ref="logTable" tooltip-effect="dark">
 					<el-table-column type="index"></el-table-column>
 					<el-table-column prop="date" label="操作时间"></el-table-column>
@@ -58,8 +56,10 @@
 					<el-table-column prop="executeResult" label="执行结果"></el-table-column>
 					<el-table-column prop="executeResultDescribe" label="执行结果描述"></el-table-column>
 				</el-table>
-				<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
-			</el-col>
+				<div class="inner_footer">
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
+				</div>
+			</div>
 			<el-dialog :visible.sync="deleteLogDialog.visible" title="清空">
 				<span style="margin-right: 20px;">日志保留时间:</span>
 				<el-select v-model="selectClear.optionVal.label" :filterable="true" @change="curSelect">
@@ -76,7 +76,7 @@
 					<div style="clear: both;"></div>
 				</div>
 			</el-dialog>
-		</el-row>
+		</div>
 	</div>
 </body>
 <script type="text/javascript" src="../vue/vue.js"></script>

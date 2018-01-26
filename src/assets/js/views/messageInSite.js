@@ -59,7 +59,7 @@ new Vue({
 			});
 		},
 		remove() {
-			var _self = this;
+			let _self = this;
 			this.$confirm('确定删除?', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',

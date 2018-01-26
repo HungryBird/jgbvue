@@ -12,6 +12,8 @@ ul {
 .el-form .el-form-item {
   margin: 0;
   padding: 10px 0; }
+  .el-form .el-form-item .el-input {
+    width: 217px; }
 
 .el-dialog .el-dialog__header {
   background: #f7f7f7; }
@@ -59,6 +61,8 @@ ul {
     padding: 10px; }
     #app .wrap_main .nav, #app .wrap_main nav {
       margin-bottom: 10px; }
+      #app .wrap_main .nav .el-form-item, #app .wrap_main nav .el-form-item {
+        padding: 0; }
     #app .wrap_main .inner_main {
       position: absolute;
       top: 0;
@@ -70,7 +74,7 @@ ul {
       #app .wrap_main .inner_main .jgb-table {
         font-size: 14px; }
         #app .wrap_main .inner_main .jgb-table .jgb-table-column {
-          width: 800px;
+          width: 799px;
           display: -webkit-box;
           display: -ms-flexbox;
           display: flex;
@@ -135,3 +139,5 @@ ul {
         padding: 4px;
         border-top: 1px solid #dbdfe7;
         background: #f7f7f7; }
+        #app .wrap_main .inner_main .inner_footer .el-pagination {
+          float: right; }

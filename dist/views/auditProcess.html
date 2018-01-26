@@ -19,7 +19,7 @@
 				</el-button-group>
 			</nav>
 			<div class="inner_main" style="top: 70px;">
-				<el-table :data="data.table" border :row-class-name="tableRowClassName"  :span-method="objectSpanMethod">
+				<el-table :data="data.table" border :row-class-name="tableRowClassName"  :span-method="objectSpanMethod" v-on:row-click="rowClick" ref="auditTable">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50"></el-table-column>
 					<el-table-column label="系统模块" width="100" prop="sysModule"></el-table-column>

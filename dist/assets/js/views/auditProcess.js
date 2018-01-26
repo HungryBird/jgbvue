@@ -21,7 +21,8 @@ new Vue({
             secondLevelAuditorsGroup: [],
             auditWay: '',
             multiplayerAuditMethod: []
-        }
+        },
+        selectedRows: []
     },
     mounted() {
         axios.get('/auditProcess/data_get').then((req)=> {
@@ -87,6 +88,15 @@ new Vue({
         tableRowClassName({row, rowIndex}) {
             if(rowIndex%2 != 0) {
                 return 'default-row';
+            }
+        },
+        rowClick(row) {
+            let _self = this;
+            this.$refs.auditTable.toggleRowSelection(row);
+            if(_self.selectedRows.indexOf(row) == -1) {
+                _self.selectedRows.push(row)
+            }else{
+                _self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
             }
         }
     }

@@ -13,90 +13,60 @@
 		<div class="wrap_main">
 			<nav>
 				<el-button-group class="pull-right">
-					<el-button type="info">导入模板</el-button>
+					<el-button type="info" v-on:click="load">导入模板</el-button>
 					<el-button type="primary" v-on:click="add" icon="el-icon-plus">新增</el-button>
-					<el-button type="primary" v-on:click="remove" icon="el-icon-delete">删除</el-button>
+					<el-button type="primary" v-on:click="remove" icon="el-icon-delete" :disabled="selectedRows.length == 0">删除</el-button>
 				</el-button-group>
 			</nav>
 			<div class="inner_main" style="top: 70px;">
-				<el-table :data="data.table" border :row-class-name="tableRowClassName"  :span-method="objectSpanMethod">
+				<el-table :data="data.table" border :row-class-name="tableRowClassName"  :span-method="objectSpanMethod" ref="printtable" v-on:row-click="rowClick">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50"></el-table-column>
-					<el-table-column label="系统模块" width="100" prop="sysModule"></el-table-column>
-					<el-table-column label="流程级数" width="100" prop="processRank"></el-table-column>
-					<el-table-column label="审核人员" width="400" prop="auditor"></el-table-column>
-					<el-table-column label="提醒方式" width="400" prop="remarkWay"></el-table-column>
+					<el-table-column label="名称" width="200" prop="name"></el-table-column>
+					<el-table-column label="类别" width="100" prop="type"></el-table-column>
+					<el-table-column label="模板类别" width="200" prop="templateType"></el-table-column>
+					<el-table-column label="默认模板" width="50" prop="usingDefaultTemplate">
+						<template slot-scope="scope">
+							{{ scope.row.usingDefaultTemplate | usingStatus }}
+						</template>
+					</el-table-column>
 					<el-table-column></el-table-column>
 				</el-table>
 				<div class="inner_footer">
-					<el-pagination class="pull-right" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
 				</div>
 			</div>
 		</div>
-		<el-dialog :visible.sync="dialogFormVisible">
+		<el-dialog :visible.sync="dialogLoadVisible">
 			<div slot="title" class="title">
 				新增审核流程
 			</div>
-			<el-form>
-				<h3>
-					1、系统模块
-				</h3>
-				<el-form-item label="选择系统模块">
-					<el-select v-model="form.selectSysModule">
-						<el-option v-for="option in data.sysModuleOptions" :label="option.label" :value="option.value" :key="option.value"></el-option>
-					</el-select>
-					<el-checkbox name="type"></el-checkbox>
-				</el-form-item>
-				<h3>
-					2、流程级数
-				</h3>
-				<el-form-item label="选择流程级数">
-					<el-select v-model="form.selectProcessLevel">
-						<el-option v-for="option in data.processLevelOptions" :label="option.label" :value="option.value" :key="option.value"></el-option>
+			<el-form label-width="80px">
+				<el-form-item label="模板类别">
+					<el-select v-model="form.selectedTemplate">
+						<el-option></el-option>
 					</el-select>
 				</el-form-item>
-				<h3>
-					3、审核人员
-				</h3>
-				<el-form-item>
-					<ul>
-						<li>
-							<label>选择一级审核人员</label>
-							<i class="fa fa-user-circle"></i>
-							<el-checkbox-group v-model="form.firstLevelAuditorsGroup" style="display: inline-block;">
-								<el-checkbox-button v-for="auditor in data.firstLevelAuditors" :label="auditor" :key="auditor" :value="auditor">{{auditor}}</el-checkbox-button>
-							</el-checkbox-group>
-						</li>
-						<li>
-							<label>选择二级审核人员</label>
-							<i class="fa fa-user-circle"></i>
-							<el-checkbox-group v-model="form.secondLevelAuditorsGroup" style="display: inline-block;">
-								<el-checkbox-button v-for="auditor in data.secondLevelAuditors" :label="auditor" :key="auditor" :value="auditor">{{auditor}}</el-checkbox-button>
-							</el-checkbox-group>
-						</li>
-					</ul>
+				<el-form-item label="模板文件">
+					<el-input v-model="form.name"></el-input>
+					<el-button>浏览</el-button>
 				</el-form-item>
-				<h3>
-					4、多人审核方式
-				</h3>
-				<el-form-item>
-					<el-radio v-model="form.auditWay" label="1">只要有一个通过审核即可向下流转</el-radio>
-					<el-radio v-model="form.auditWay" label="2">只有全部人员通过审核才可向下流转</el-radio>
+				<el-form-item label="模板名称">
+					<el-input v-model="form.name"></el-input>
 				</el-form-item>
-				<h3>
-					5、多人审核方式
-				</h3>
-				<el-form-item>
-					<el-checkbox-group v-model="form.multiplayerAuditMethod">
-						<el-checkbox label="站内信息" name="type"></el-checkbox>
-						<el-checkbox label="手机信息" name="type"></el-checkbox>
-						<el-checkbox label="邮件信息" name="type"></el-checkbox>
-					</el-checkbox-group>
+				<el-form-item label="模板描述">
+					<el-input v-model="form.describe"></el-input>
+				</el-form-item>
+				<el-form-item label="模板编码">
+					<el-input v-model="form.coding"></el-input>
+				</el-form-item>
+				<el-form-item label="默认模板">
+					<el-checkbox v-model="form.usingDefaultTemplate"></el-checkbox >
 				</el-form-item>
 			</el-form>
 			<div slot="footer">
-				<el-button type="primary" v-on:click="saveAdd">保存</el-button>
-				<el-button v-on:click="dialogFormVisible = false">关闭</el-button>
+				<el-button type="primary" v-on:click="saveLoad">保存</el-button>
+				<el-button v-on:click="dialogLoadVisible = false">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>

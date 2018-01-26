@@ -65,8 +65,8 @@ gulp.task('css', ()=> {
 	.pipe(cssbase64())
 	.pipe(rename(function(path) {
 		path.basename += ".min"
-	}))
-	.pipe(gulp.dest('dist/assets/css'))*/
+	}))*/
+	.pipe(gulp.dest('dist/assets/css'))
 	.pipe(browserSync.stream())
 });
 

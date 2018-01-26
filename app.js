@@ -29,6 +29,7 @@ const phoneInfoRouter = require('./routers/views/phoneInfo');
 const emailInfoRouter = require('./routers/views/emailInfo');
 const settlementNAntiSettlementRouter = require('./routers/views/settlementNAntiSettlement');
 const auditProcessRouter = require('./routers/views/auditProcess');
+const printTemplateRouter = require('./routers/views/printTemplate');
 
 app.use('/user', userLoginRouter);
 app.use('/administrativeRegion', administrativeRegionRouter);
@@ -40,6 +41,7 @@ app.use('/phoneInfo', phoneInfoRouter);
 app.use('/emailInfo', emailInfoRouter);
 app.use('/settlementNAntiSettlement', settlementNAntiSettlementRouter);
 app.use('/auditProcess', auditProcessRouter);
+app.use('/printTemplate', printTemplateRouter);
 
 /**
  * server running at port 3001

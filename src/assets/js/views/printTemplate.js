@@ -9,22 +9,23 @@ new Vue({
          * @type {[type]}
          */
         data: null,
-        dialogFormVisible: false,
+        dialogLoadVisible: false,
+        dialogAddVisible: false,
         /**
          * [form 要提交的数据]
          * @type {Object}
          */
         form: {
-            selectSysModule: '',
-            selectProcessLevel: '',
-            firstLevelAuditorsGroup: [],
-            secondLevelAuditorsGroup: [],
-            auditWay: '',
-            multiplayerAuditMethod: []
-        }
+            selectedTemplate: '',
+            name: '',
+            describe: '',
+            coding: '',
+            usingDefaultTemplate: false
+        },
+        selectedRows: []
     },
     mounted() {
-        axios.get('/auditProcess/data_get').then((req)=> {
+        axios.get('/printTemplate/data_get').then((req)=> {
             if(req.data.status) {
                 let jdata = JSON.parse(req.data.message);
                 this.data = jdata;
@@ -35,14 +36,12 @@ new Vue({
         })
     },
     methods: {
-        add() {
-            this.form.selectSysModule = this.data.sysModuleOptions[0].label;
-            this.form.selectProcessLevel = this.data.processLevelOptions[0].label;
-            this.dialogFormVisible = true;
-        },
-        saveAdd() {
+    	load() {
+    		this.dialogLoadVisible = true;
+    	},
+        saveLoad() {
             let _self = this;
-            axios.post('/auditProcess/data_save', this.form).then((data)=> {
+            axios.post('/printTemplate/data_load_save', this.form).then((data)=> {
                 console.log('data', data.data);
                 if(data.data.status) {
                     _self.dialogFormVisible = false;
@@ -63,11 +62,44 @@ new Vue({
                 });
             });
         },
+        add() {
+            this.dialogAddVisible = true;
+        },
         edit() {
             //
         },
         remove() {
-            //
+            let _self = this;
+			this.$confirm('确定删除?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+				beforeClose: function(action, instance, done) {
+					done(action);
+				}
+			}).then((action) => {
+				if(action == 'confirm') {
+					axios.post('/printTemplate/data_delete', _self.selectedRows).then(function(req) {
+						if(req.data.status) {
+							//替换selectedRows的数据
+							_self.$message({
+								type: 'success',
+								message: req.data.message
+							});
+						};
+					}).catch(function(err) {
+						_self.$message({
+							type: 'error',
+							message: req.data.message || err
+						});
+					})
+				}
+			}).catch(() => {
+			   this.$message({
+					type: 'info',
+					message: '已取消'
+				});
+			});
         },
         handleSizeChange() {
             //
@@ -88,6 +120,20 @@ new Vue({
             if(rowIndex%2 != 0) {
                 return 'default-row';
             }
+        },
+        rowClick(row) {
+        	let _self = this;
+            this.$refs.printtable.toggleRowSelection(row);
+            if(_self.selectedRows.indexOf(row) == -1) {
+                _self.selectedRows.push(row)
+            }else{
+                _self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
+            }
         }
+    },
+    filters: {
+    	usingStatus(val) {
+    		return val ? '是' : '否';
+    	}
     }
 })
