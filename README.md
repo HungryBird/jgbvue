@@ -26,7 +26,7 @@ clone项目
 
 生产模式，不具备热更新，运行在 3333 端口
 
-    $ yarn run start
+    $ yarn/npm run start
 
 
 **目录结构**
