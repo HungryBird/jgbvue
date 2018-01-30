@@ -27,7 +27,36 @@ clone项目
 生产模式，不具备热更新，运行在 3333 端口
 
     $ yarn/npm run start
+    
+**详细使用教程**
 
+#### 初次使用
+
+克隆仓库文件至本地
+
+    $ git clone http://192.168.0.180:8080/tfs/DefaultCollection
+    
+跳转至文件目录下
+
+    $ e:
+$ cd JGBVue
+
+安装依赖包
+
+    $ yarn
+
+运行
+
+    $ yarn run start
+    
+#### 更新代码
+
+    $ git pull
+    
+#### 添加文件
+    $ git add '文件名.后缀'
+    $ git commit -m'输入说明'
+    $ git push origin master 
 
 **目录结构**
 
