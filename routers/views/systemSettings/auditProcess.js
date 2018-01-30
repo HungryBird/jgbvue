@@ -26,6 +26,13 @@ router.post('/data_save', (req, res)=> {
 		status: true,
 		message: '保存成功'
 	})
+});
+
+router.post('/data_edit', (req, res)=> {
+	res.send({
+		status: true,
+		message: '编辑成功'
+	})
 })
 
 module.exports = router;

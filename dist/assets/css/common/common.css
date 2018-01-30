@@ -1,11 +1,18 @@
 body {
-  background-color: #f4f4f4; }
+  background-color: #f4f4f4;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: 'PingFangSC-Light','Hiragino Sans GB',Microsoft YaHei Light,Microsoft YaHei,Arial,sans-serif; }
+
+[v-cloak] {
+  display: none; }
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0; }
 
 ul {
-  padding: 0; }
+  padding: 0;
+  margin: 0; }
   ul li {
     list-style: none; }
 
@@ -35,6 +42,13 @@ ul {
   .el-message-box .el-message-box__btns .el-button--default {
     background: #ddd; }
 
+.el-checkbox-button.is-checked .el-checkbox-button__inner {
+  color: #fff;
+  background-color: #2dc3e8;
+  border-color: #2dc3e8;
+  -webkit-box-shadow: -1px 0 0 0 #8cc5ff;
+  box-shadow: -1px 0 0 0 #8cc5ff; }
+
 .el-checkbox-button:first-child .el-checkbox-button__inner {
   border-left-color: #2dc3e8; }
 
@@ -44,8 +58,22 @@ ul {
   border-color: #2dc3e8;
   color: #2dc3e8; }
 
+.el-radio__input.is-checked + .el-radio__label {
+  color: #2dc3e8; }
+
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: #2dc3e8;
+  background: #2dc3e8; }
+
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: #2dc3e8; }
+
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color: #2dc3e8;
+  border-color: #2dc3e8; }
+
 .el-dialog {
-  width: 660px; }
+  width: 775px; }
   .el-dialog .el-dialog__header {
     background: #f7f7f7; }
     .el-dialog .el-dialog__header .title {
@@ -55,9 +83,14 @@ ul {
     .el-dialog .el-dialog__body h1, .el-dialog .el-dialog__body h2, .el-dialog .el-dialog__body h3, .el-dialog .el-dialog__body h4, .el-dialog .el-dialog__body h5, .el-dialog .el-dialog__body h6 {
       background: #f7f7f7;
       padding: 6px 4px; }
+    .el-dialog .el-dialog__body .checkbox {
+      margin-left: 40px; }
   .el-dialog .el-dialog__footer {
     border-top: 1px solid #dbdfe7;
     padding: 10px; }
+
+.info {
+  font-weight: 900; }
 
 .red {
   color: #fe5d54; }
@@ -74,6 +107,8 @@ ul {
   margin-bottom: 20px; }
   .el-table .default-row {
     background: #f8f8f8; }
+  .el-table th.is-leaf {
+    background: #eee; }
 
 .el-switch__core {
   outline: none !important; }
@@ -100,9 +135,11 @@ ul {
       right: 10px;
       bottom: 10px;
       background: #fff;
-      border: 1px solid #dbdfe7; }
+      -webkit-box-shadow: 1px 1px 3px #dbdfe7;
+      box-shadow: 1px 1px 3px #dbdfe7; }
       #app .wrap_main .inner_main .jgb-table {
-        font-size: 14px; }
+        font-size: 14px;
+        padding: 10px; }
         #app .wrap_main .inner_main .jgb-table .jgb-table-column {
           width: 799px;
           display: -webkit-box;

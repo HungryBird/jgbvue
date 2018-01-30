@@ -119,12 +119,12 @@ gulp.task('js', function () {
 
 gulp.task('watch', ()=> {
 	gulp.watch('src/*.html', ['html']);
-	gulp.watch('src/views/**/*.html', ['html']);
+	gulp.watch('src/**/**/*.html', ['html']);
 	gulp.watch('src/include/*.html', ['html']);
 	gulp.watch('src/assets/js/*.js', ['js']);
-	gulp.watch('src/assets/js/views/**/*.js', ['vjs']);
+	gulp.watch('src/assets/js/**/**/*.js', ['vjs']);
 	gulp.watch('src/assets/css/*.css', ['css']);
-	gulp.watch('src/assets/css/views/**/*.css', ['css']);
+	gulp.watch('src/assets/css/**/**/*.css', ['css']);
 	gulp.watch('src/assets/img/**/*', ['img']);
 	gulp.watch('src/assets/sass/*.scss', ['sass'])
 })
@@ -135,7 +135,15 @@ gulp.task('watch', ()=> {
 
 gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'vjs', 'css', 'img', 'watch'], ()=> {
 	let files = [
-		'dist/*'
+		'dist/*.html',
+		'dist/**/**/*.html',
+		'dist/include/*.html',
+		'dist/assets/js/*.js',
+		'dist/assets/js/views/**/*.js',
+		'dist/assets/css/common/*.css',
+		'dist/assets/css/*.css',
+		'dist/assets/css/**/**/*.css',
+		'dist/assets/img/**/*'
 	]
 	browserSync.init({
 		proxy: 'http://localhost:3333',

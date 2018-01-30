@@ -6,20 +6,20 @@
 		{
 			"sysModule": "采购",
 			"processRank": 2,
-			"auditor": "陈小美|王大帅",
-			"remarkWay": "站内信息；手机信息；邮件信息"
+			"auditor": ["陈小美", "王大帅"],
+			"remarkWay": ["站内信息","手机信息","邮件信息"]
 		},
 		{
 			"sysModule": "销售",
 			"processRank": 1,
-			"auditor": "陈小美|王大帅",
-			"remarkWay": "站内信息；手机信息；邮件信息"
+			"auditor": ["陈小美", "王大帅"],
+			"remarkWay": ["站内信息","手机信息","邮件信息"]
 		},
 		{
 			"sysModule": "仓库",
 			"processRank": 1,
-			"auditor": "陈小美|王大帅",
-			"remarkWay": "站内信息；手机信息；邮件信息"
+			"auditor": ["陈小美", "王大帅"],
+			"remarkWay": ["站内信息","手机信息","邮件信息"]
 		}
 	],
 	"sysModuleOptions": [

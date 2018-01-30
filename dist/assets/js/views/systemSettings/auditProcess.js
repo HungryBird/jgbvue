@@ -19,10 +19,11 @@ new Vue({
             selectProcessLevel: '',
             firstLevelAuditorsGroup: [],
             secondLevelAuditorsGroup: [],
-            auditWay: '1',
+            auditWay: '',
             multiplayerAuditMethod: []
         },
-        selectedRows: []
+        selectedRows: [],
+        dialogEditVisible: false
     },
     mounted() {
         axios.get('/auditProcess/data_get').then((req)=> {
@@ -65,7 +66,13 @@ new Vue({
             });
         },
         edit() {
-            //
+            let _self = this;
+            /*axios.post('/auditProcess/data_edit', this.selectedRows).then((data)=> {
+                if(data.data.status) {
+                    _self.
+                }
+            })*/
+            console.log('data', this.selectedRows);
         },
         remove() {
             //
@@ -98,6 +105,12 @@ new Vue({
             }else{
                 _self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
             }
+        }
+    },
+    filters: {
+        auditorFilter(arr) {
+            let str = arr.join('，');
+            return str;
         }
     }
 })

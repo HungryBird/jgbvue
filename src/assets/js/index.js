@@ -222,11 +222,15 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'home',
+        activeTab: 'auditProcess',
         tabs: [
           {
             name: 'home',
             label: '首页'
+          },{
+            name: 'auditProcess',
+            label: '审核流程',
+            link: 'views/systemSettings/auditProcess.html'
           }
         ],
         locking: {
