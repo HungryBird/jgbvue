@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>结账反结账</title>
+	<link rel="stylesheet" type="text/css" href="../../font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+<body>
+	<div id="app">
+		<div class="wrap_main">
+			<nav v-if="data != null">
+				<label>日期：</label>
+				<el-date-picker type="date" placeholder="请选择日期" v-model="data.date" v-on:change="changeDate"></el-date-picker>
+				<el-button-group>
+					<el-button type="primary" v-on:click="settlement">结账</el-button>
+					<el-button type="primary" v-on:click="antiSettlement">反结账</el-button>
+				</el-button-group>
+			</nav>
+			<p style="font-size: 14px;">
+				结账日期不能小于系统启动日期: <span class="red">{{ data.sysStartDate | filterDate }}</span>
+				不能小于等于上次结账日期：<span class="red">{{ data.lastSettleDate | filterDate }}</span>
+			</p>
+			<div class="inner_main" style="top: 100px;">
+				<el-table :data="data.table" border :row-class-name="tableRowClassName"  :span-method="objectSpanMethod">
+					<el-table-column label="结账日" width="200" prop="jdate">
+						<template slot-scope="scope">
+							{{ scope.row.jdate | filterDate_time }}
+						</template>
+					</el-table-column>
+					<el-table-column label="操作日期" width="200" prop="cdate">
+						<template slot-scope="scope">
+							{{ scope.row.cdate | filterDate_time }}
+						</template>
+					</el-table-column>
+					<el-table-column label="操作员" width="200" prop="operator"></el-table-column>
+					<el-table-column></el-table-column>
+				</el-table>
+				<div class="inner_footer">
+					<el-pagination class="pull-right" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../assets/js/views/systemSettings/settlementNAntiSettlement.js"></script>
+</html>

@@ -20,6 +20,7 @@ const cssnano = require('gulp-cssnano');
 const minify = require('gulp-clean-css');
 const cssbase64 = require('gulp-base64');
 const uglify = require('gulp-uglify');
+const dest = require('gulp-dest');
 const reload = browserSync.reload;
 
 /**
@@ -58,7 +59,7 @@ gulp.task('sass',()=> {
  */
 
 gulp.task('css', ()=> {
-	return gulp.src(['src/assets/css/**/*.css', 'src/assets/css/*.css'])
+	return gulp.src(['src/assets/css/**/**/*.css', 'src/assets/css/*.css'])
 	.pipe(plumber())
 	.pipe(autoprefixer('last 3 version'))
 	/*.pipe(minify())
@@ -85,13 +86,13 @@ gulp.task('img', ()=> {
  */
 
 gulp.task('html', ()=> {
-	return gulp.src(['src/*.html', 'src/**/*.html'])
+	return gulp.src(['src/**.html', 'src/**/**/*.html'])
 	.pipe(plumber())
 	.pipe(fileInclude({
 		prefix: '@@',
 		basepath: '@file'
 	}))
-	.pipe(gulp.dest('dist'))
+	.pipe(gulp.dest('dist/'))
 	.pipe(browserSync.stream())
 });
 
@@ -99,8 +100,8 @@ gulp.task('html', ()=> {
  * js
  */
 
-gulp.task('vjs', function () {
-    return gulp.src('src/assets/js/views/*.js')
+gulp.task('vjs', ()=> {
+    return gulp.src('src/assets/js/views/**/*.js')
         .pipe(plumber())
         .pipe(gulp.dest('dist/assets/js/views'));
 });
@@ -118,12 +119,12 @@ gulp.task('js', function () {
 
 gulp.task('watch', ()=> {
 	gulp.watch('src/*.html', ['html']);
-	gulp.watch('src/views/*.html', ['html']);
+	gulp.watch('src/views/**/*.html', ['html']);
 	gulp.watch('src/include/*.html', ['html']);
 	gulp.watch('src/assets/js/*.js', ['js']);
-	gulp.watch('src/assets/js/views/*.js', ['vjs']);
+	gulp.watch('src/assets/js/views/**/*.js', ['vjs']);
 	gulp.watch('src/assets/css/*.css', ['css']);
-	gulp.watch('src/assets/css/**/*.css', ['css']);
+	gulp.watch('src/assets/css/views/**/*.css', ['css']);
 	gulp.watch('src/assets/img/**/*', ['img']);
 	gulp.watch('src/assets/sass/*.scss', ['sass'])
 })
@@ -134,11 +135,7 @@ gulp.task('watch', ()=> {
 
 gulp.task('browserSync', ['nodemon', 'html', 'sass', 'js', 'vjs', 'css', 'img', 'watch'], ()=> {
 	let files = [
-		'dist/**.html', 
-		'dist/views/**.html', 
-		'dist/assets/**/*',
-		'dist/assets/**/**.*', 
-		'dist/assets/**/**/**.*'
+		'dist/*'
 	]
 	browserSync.init({
 		proxy: 'http://localhost:3333',

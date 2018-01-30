@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>备份与恢复</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/views/FBackup.css">
+	<style type="text/css">
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div class="wrap_main">
+			<nav>
+				<el-button-group class="pull-left">
+					<el-button type="primary" @click="start">开始备份</el-button>
+					<el-button type="primary" @click="upload">上传本地备份</el-button>
+					<el-button type="primary" @click="timing">定时备份</el-button>
+				</el-button-group>
+				<el-button-group class="pull-right">
+					<el-button v-on:click="recover">恢复</el-button>
+					<el-button v-on:click="download">下载</el-button>
+					<el-button v-on:click="deleteData">删除</el-button>
+				</el-button-group>
+				<div style="clear: both;"></div>
+			</nav>
+			<div class="inner_main">
+				<el-table border :data="table.backups" ref="BFtable" v-on:row-click="rowClick">
+					<el-table-column type="selection"></el-table-column>
+					<el-table-column type="index"></el-table-column>
+					<el-table-column label="备份名称" prop="name"></el-table-column>
+					<el-table-column label="时间" prop="date">
+						<template slot-scope="scope">
+							{{ scope.row.date | parseDate }}
+						</template>
+					</el-table-column>
+					<el-table-column label="文件大小" prop="size">
+						<template slot-scope="scope">
+							{{ scope.row.size | parseSize }}
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<el-dialog title="上传本地备份" :visible.sync="uploadDialog.visible">
+				<el-upload action="/FBackup/backup" :on-success="handleSuccess" :file-list="uploadDialog.fileList" ref="upload" :auto-upload="false">
+					<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+					<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+				</el-upload>
+			</el-dialog>
+			<el-dialog title="定时备份" :visible.sync="timingDialog.visible">
+				<el-form>
+					<el-form-item label="是否启用定时配送">
+						<el-switch v-model="table.timing.checked"></el-switch>
+					</el-form-item>
+					<el-form-item>
+						<el-time-picker type="fixed-time" placeholder="选择时间" v-model="table.timing.time" style="width: 100%;"></el-time-picker>
+					</el-form-item>
+				</el-form>
+				<div slot="footer">
+					<el-button v-on:click="timingDialog.visible=false">取消</el-button>
+					<el-button v-on:click="submitTiming">确定</el-button>
+				</div>
+			</el-dialog>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/views/systemSettings/FBackup.js"></script>
+</html>

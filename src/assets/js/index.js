@@ -17,6 +17,7 @@ new Vue({
               menuItems: [
                 {
                   /*title: '',*/
+                  parentFolder: 'systemSettings',
                   items: [
                     {
                       id: 'systemParameter',
@@ -35,7 +36,7 @@ new Vue({
                       name: '系统日志'
                     },
                     {
-                      id: 'customizingTemplate',
+                      id: 'printTemplate',
                       name: '套打模板'
                     },
                     {
@@ -50,6 +51,7 @@ new Vue({
                 },
                 {
                   /*title: '采购报表',*/
+                  parentFolder: 'systemSettings',
                   items: [
                     {
                       id: 'messageInSite',
@@ -220,16 +222,11 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'printTemplate',
+        activeTab: 'home',
         tabs: [
           {
             name: 'home',
             label: '首页'
-          },
-          {
-            name: 'printTemplate',
-            label: '套打模板',
-            link: './views/printTemplate.html'
           }
         ],
         locking: {
@@ -239,32 +236,32 @@ new Vue({
         }
     },
     mounted: function() {
-      var widthSquare = Math.pow(document.body.clientWidth, 2);
-      var heightSquare = Math.pow(document.body.clientHeight, 2);
-      var diameter = Math.ceil(Math.pow(widthSquare+heightSquare, 1/2));
+      let widthSquare = Math.pow(document.body.clientWidth, 2);
+      let heightSquare = Math.pow(document.body.clientHeight, 2);
+      let diameter = Math.ceil(Math.pow(widthSquare+heightSquare, 1/2));
       this.locking.diameter = diameter;
-      var tabContent = document.getElementsByClassName('el-tabs__content')[0];
-      tabContent.style.height = document.body.clientHeight - 116 + 'px';
+      let tabContent = document.getElementsByClassName('el-tabs__content')[0];
+      tabContent.style.height = document.body.clientHeight - 91 + 'px';
     },
     methods: {
-      selectTab: function(tabId, tabName) {
-        var _self = this;
-        for(var i = 0; i < _self.tabs.length; i++) {
+      selectTab: function(tabId, tabName, parentFolder) {
+         _self = this;
+        for(let i = 0; i < _self.tabs.length; i++) {
           if(_self.tabs[i].name == 'tab' + tabId) {
             _self.activeTab = 'tab' + tabId;
             return;
           }
         }
-        var obj = {};
+        let obj = {};
         obj.name = 'tab' + tabId;
         obj.label = tabName;
-        obj.link = './views/' + tabId + '.html';
+        obj.link = './views/' + parentFolder + '/' + tabId + '.html';
         _self.tabs.push(obj);
         _self.activeTab = obj.name;
       },
       removeTab: function(tabName) {
-        var _self = this;
-        for(var i = 0; i < _self.tabs.length; i++) {
+        let _self = this;
+        for(let i = 0; i < _self.tabs.length; i++) {
           if(_self.tabs[i].name == tabName) {
             _self.tabs.splice(i,1);
             _self.activeTab = _self.tabs[i-1].name;
@@ -273,7 +270,7 @@ new Vue({
         }
       },
       lockScreen: function() {
-        var _self = this;
+        let _self = this;
       	this.locking.isHidden = false;
         setTimeout(function() {
           _self.locking.borderWidth = _self.locking.diameter/2;

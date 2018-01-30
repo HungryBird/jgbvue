@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>系统日志</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+	<style type="text/css">
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div class="wrap_main">
+			<div class="nav">
+				<div style="float: left;">
+					<el-select v-model="selectLook.optionVal.label" :filterable="true">
+						<el-option v-for="option in selectLook.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+					</el-select>
+					<el-date-picker v-model="dateValue" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+				</div>
+				<el-form :inline="true" style="float: left;margin: 1px 0 0 4px;">
+					<el-form-item>
+						<el-input v-model="searchValue" placeholder="请输入用户名/姓名/日志内容等关键词查询">
+							<template slot="append">
+								<el-button>搜索</el-button>
+							</template>
+						</el-input>
+					</el-form-item>
+				</el-form>
+				<div style="text-align: right;float: right;">
+					<el-button-group>
+						<el-button @click="deleteLog">
+							<i class="el-icon-delete"></i>
+						</el-button>
+						<el-button>
+							<i class="fa fa-sign-out"></i>
+						</el-button>
+					</el-button-group>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+			<div class="inner_main" style="top: 70px;">
+				<el-table :data="logTable" border ref="logTable" tooltip-effect="dark">
+					<el-table-column type="index"></el-table-column>
+					<el-table-column prop="date" label="操作时间"></el-table-column>
+					<el-table-column prop="user" label="操作用户"></el-table-column>
+					<el-table-column prop="name" label="姓名"></el-table-column>
+					<el-table-column prop="IPAddress" label="IP地址"></el-table-column>
+					<el-table-column prop="sysFunction" label="系统功能"></el-table-column>
+					<el-table-column prop="operationType" label="操作类型"></el-table-column>
+					<el-table-column prop="executeResult" label="执行结果"></el-table-column>
+					<el-table-column prop="executeResultDescribe" label="执行结果描述"></el-table-column>
+				</el-table>
+				<div class="inner_footer">
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
+				</div>
+			</div>
+			<el-dialog :visible.sync="deleteLogDialog.visible" title="清空">
+				<span style="margin-right: 20px;">日志保留时间:</span>
+				<el-select v-model="selectClear.optionVal.label" :filterable="true" @change="curSelect">
+					<el-option v-for="option in selectClear.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+				</el-select>
+				<div slot="footer" class="dialog-footer">
+					<div style="float: left;">
+						<el-checkbox v-model="deleteLogDialog.checked">确认并关闭窗口</el-checkbox>
+					</div>
+					<div style="float: right;">
+						<el-button type="primary" @click="onSubmit">确认</el-button>
+						<el-button @click="deleteLogDialog.visible = false">关闭</el-button>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</el-dialog>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/views/systemSettings/systemLog.js"></script>
+</html>

@@ -19,7 +19,42 @@ ul{
 		}
 	}
 }
+.el-message-box__headerbtn{
+	top: 10px;
+	right: 10px;
+}
+.el-message-box{
+	.el-message-box__header{
+		padding: 10px;
+		background: #eee;
+		.el-message-box__title{
+			font-size: 14px;
+		}
+	}
+	.el-message-box__content{
+		padding: 15px 20px;
+	}
+	.el-message-box__btns{
+		border-top: 1px solid #ddd;
+		.el-button--primary{
+			background: #2dc3e8 !important;
+		}
+		.el-button--default{
+			background: #ddd;
+		}
+	}
+}
+.el-checkbox-button:first-child .el-checkbox-button__inner{
+	border-left-color: #2dc3e8;
+}
+.el-checkbox-button__inner{
+	padding: 6px 10px;
+	font-size: 12px;
+	border-color: #2dc3e8;
+	color: #2dc3e8;
+}
 .el-dialog{
+	width: 660px;
 	.el-dialog__header{
 		background: #f7f7f7;
 		.title{
@@ -49,6 +84,7 @@ ul{
 }
 .el-table{
 	box-sizing: border-box;
+	margin-bottom: 20px;
 	.default-row{
 		background: #f8f8f8;
 	}
@@ -75,7 +111,7 @@ ul{
 		}
 		.inner_main{
 			position: absolute;
-			top: 0;
+			top: 70px;
 			left: 10px;
 			right: 10px;
 			bottom: 10px;
@@ -88,16 +124,16 @@ ul{
 					display: flex;
 					flex-flow: row wrap;
 					align-items:stretch;
-					border-left: 1px solid #333;
+					/* border-left: 1px solid #333; */
 					box-sizing: border-box;
 					>div{
 						display: flex;
 						flex: 1;
 						align-items: center;
 						justify-content: center;
-						border: 1px solid #333;
+						/* border: 1px solid #333;
 						border-left: 0;
-						border-top: 0;
+						border-top: 0; */
 						text-align: left;
 						padding: 10px;
 						&:first-child{
@@ -124,7 +160,7 @@ ul{
 						}
 					}
 					&:first-child{
-						border-top: 1px solid #333;
+						/* border-top: 1px solid #333; */
 					}
 				}
 			}

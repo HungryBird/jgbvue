@@ -100,7 +100,7 @@
 						<div class="menu-item-wrap" :style="{'borderRight': index == 0 ? '1px dashed #ddd' : 'none'}">
 							<strong v-if="menuItem.title != undefined"><span>{{menuItem.title}}</span></strong>
 							<ul class="menu-item-group">
-								<li v-for="item in menuItem.items" :id="item.id" @click="selectTab(item.id, item.name)">
+								<li v-for="item in menuItem.items" :id="item.id" @click="selectTab(item.id, item.name, menuItem.parentFolder)">
 									<a>
 										<span>{{item.name}}</span>
 									</a>
