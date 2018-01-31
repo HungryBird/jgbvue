@@ -19,7 +19,7 @@
 				</el-button-group>
 			</nav>
 			<div class="inner_main" style="top: 70px;">
-				<el-table :data="data.table" border :row-class-name="tableRowClassName"  :span-method="objectSpanMethod" ref="printtable" v-on:row-click="rowClick">
+				<el-table :data="data.table" border :span-method="objectSpanMethod" ref="printtable" v-on:row-click="rowClick">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50"></el-table-column>
 					<el-table-column label="名称" width="200" prop="name"></el-table-column>

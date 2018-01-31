@@ -9,19 +9,23 @@ new Vue({
          * @type {[type]}
          */
         data: null,
-        dialogFormVisible: false,
+        dialogFormVisible: true,
         /**
          * [form 要提交的数据]
          * @type {Object}
          */
         form: {
             selectSysModule: '',
-            selectProcessLevel: '',
+            checked: false,
             firstLevelAuditorsGroup: [],
             secondLevelAuditorsGroup: [],
+            bosses: [],
             auditWay: '',
             multiplayerAuditMethod: []
         },
+        levelSelected: '',
+        selectProcessLevel: null,
+        bossesSelected: true,
         selectedRows: [],
         dialogEditVisible: false
     },
@@ -38,8 +42,6 @@ new Vue({
     },
     methods: {
         add() {
-            this.form.selectSysModule = this.data.sysModuleOptions[0].label;
-            this.form.selectProcessLevel = this.data.processLevelOptions[0].label;
             this.dialogFormVisible = true;
         },
         saveAdd() {
@@ -105,12 +107,73 @@ new Vue({
             }else{
                 _self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
             }
+        },
+        changeModule() {
+            this.form.checked = false;
+        },
+        changeLevel(val) {
+            console.log('val', val);
+            this.selectProcessLevel = val;
+            this.form.firstLevelAuditorsGroup.splice(0, this.form.firstLevelAuditorsGroup.length);
+            this.form.secondLevelAuditorsGroup.splice(0, this.form.secondLevelAuditorsGroup.length);
         }
     },
     filters: {
         auditorFilter(arr) {
             let str = arr.join('，');
             return str;
+        }
+    },
+    watch: {
+        'form.firstLevelAuditorsGroup'(arr) {
+            let _self = this;
+            let isKeeping = true;
+            console.log('this.selectProcessLevel', this.selectProcessLevel);
+            if(this.selectProcessLevel === 2) {
+                if(_self.form.secondLevelAuditorsGroup != 0) {
+                    for(let i = 0; i < _self.form.secondLevelAuditorsGroup; i++) {
+                        if(_self.form.secondLevelAuditorsGroup[i] > 1000) {
+                            _self.bossesSelected = true;
+                            isKeeping = false;
+                            return;
+                        }
+                    }
+                }
+                if(arr.length != 0 && isKeeping) {
+                    for(let j = 0; j < arr.length; j++) {
+                        if(arr[j] > 1000) {
+                            _self.bossesSelected = true;
+                            return;
+                        }
+                    }
+                    _self.bossesSelected = false;
+                }
+            }
+            if(this.selectProcessLevel === 1) {
+                if(arr.length != 0) {
+                    for(let j = 0; j < arr.length; j++) {
+                        if(arr[j] > 1000) {
+                            _self.bossesSelected = true;
+                            return;
+                        }
+                    }
+                    _self.bossesSelected = false;
+                }
+            }
+        },
+        'form.secondLevelAuditorsGroup'(arr) {
+            let _self = this;
+            if(arr.length != 0) {
+                if(_self.form.firstLevelAuditorsGroup != 0) {
+                    for(let i = 0; i < arr.length; i++) {
+                        if(arr[i] > 1000) {
+                            _self.bossesSelected = true;
+                            return;
+                        }
+                    }
+                    _self.bossesSelected = false;
+                }
+            }
         }
     }
 })

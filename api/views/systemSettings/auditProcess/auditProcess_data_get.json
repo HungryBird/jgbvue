@@ -39,17 +39,39 @@
 	"processLevelOptions": [
 		{
 			"label": "一级审核",
-			"value": "选项1"
+			"value": 1
 		},
 		{
 			"label": "二级审核",
-			"value": "选项2"
-		},
-		{
-			"label": "三级审核",
-			"value": "选项3"
+			"value": 2
 		}
 	],
-	"firstLevelAuditors": ["王某", "李某"],
-	"secondLevelAuditors": ["赵某"]
+	"auditors": [
+		{
+			"name": "王某",
+			"value": 1
+		}, 
+		{
+			"name": "李某",
+			"value": 2
+		},
+		{
+			"name": "张某",
+			"value": 3
+		},
+		{
+			"name": "赵某",
+			"value": 4
+		}
+	],
+	"bosses": [
+		{
+			"name": "钱总",
+			"value": 1001
+		}, 
+		{
+			"name": "孙总",
+			"value": 1002
+		}
+	]
 }

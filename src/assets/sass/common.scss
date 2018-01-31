@@ -103,11 +103,19 @@ ul{
 		padding: 10px;
 	}
 }
+.selectAuditorsLi{
+	li+li{
+		margin-top: 10px;
+	}
+}
 .info{
 	font-weight: 900;
 }
 .red{
 	color: #fe5d54;
+}
+.addAuditors{
+	cursor: pointer;
 }
 .pull-left{
 	float: left !important;
@@ -122,11 +130,14 @@ ul{
 		background: #f8f8f8;
 	}
 	th.is-leaf{
-		background: #eee;
+		background: linear-gradient(#f8f8f8, #efefef);
 	}
 }
 .el-switch__core{
 	outline: none !important;
+}
+.el-tag+.el-tag {
+    margin-left: 10px;
 }
 #app{
 	position: relative;

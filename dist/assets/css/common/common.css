@@ -89,11 +89,17 @@ ul {
     border-top: 1px solid #dbdfe7;
     padding: 10px; }
 
+.selectAuditorsLi li + li {
+  margin-top: 10px; }
+
 .info {
   font-weight: 900; }
 
 .red {
   color: #fe5d54; }
+
+.addAuditors {
+  cursor: pointer; }
 
 .pull-left {
   float: left !important; }
@@ -108,10 +114,15 @@ ul {
   .el-table .default-row {
     background: #f8f8f8; }
   .el-table th.is-leaf {
-    background: #eee; }
+    background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#efefef));
+    background: -o-linear-gradient(#f8f8f8, #efefef);
+    background: linear-gradient(#f8f8f8, #efefef); }
 
 .el-switch__core {
   outline: none !important; }
+
+.el-tag + .el-tag {
+  margin-left: 10px; }
 
 #app {
   position: relative;

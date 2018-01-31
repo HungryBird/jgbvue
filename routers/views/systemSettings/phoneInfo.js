@@ -3,7 +3,7 @@ const fs = require('fs');
 
 router = express.Router();
 
-router.post('/data_get_data', (req, res)=> {
+router.post('/data_get', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/views/systemSettings/phoneInfo/phoneInfo_get_data.json', 'utf-8', (err, data)=>{
 		if(err) {

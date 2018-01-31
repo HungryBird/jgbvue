@@ -1,37 +1,41 @@
-new Vue({
-	el: '#app',
-	data: {
-		formData: {
-			messageNumber: 0,
-			address: '',
-			account: '',
-			passKey: ''
-		}
-	},
-	mounted() {
-		let _self = this;
-		axios.post('/phoneInfo/data_get_data').then((req)=> {
-			if(req.data.status) {
-				let jdata = JSON.parse(req.data.message)
-				_self.formData.messageNumber = jdata.messageNumber;
-				_self.formData.address = jdata.address;
-				_self.formData.account = jdata.account;
-				_self.formData.passKey = jdata.passKey;
-			}
-		})
-	},
-	methods: {
-		save() {
-			let _self = this;
-			this.$confirm('确认保存设置？', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				before: function(action, instance, done) {
-					done(action);
+/**
+ * [JGBVue description]
+ * @type {Object}
+ */
+JGBVue = {
+	module: {}
+};
+
+JGBVue.module.phoneInfo = ()=> {
+	let _this = {}
+	,that = {};
+
+	_this.init = (getDataUrl, saveDataUrl)=> {
+		new Vue({
+			el: '#app',
+			data: {
+				formData: {
+					messageNumber: 0,
+					address: '',
+					account: '',
+					passKey: ''
 				}
-			}).then((action)=> {
-				if(action == 'confirm') {
-					axios.post('/phoneInfo/data_save').then((req)=> {
+			},
+			mounted() {
+				let _self = this;
+				axios.post(getDataUrl).then((req)=> {
+					if(req.data.status) {
+						let jdata = JSON.parse(req.data.message)
+						_self.formData.messageNumber = jdata.messageNumber;
+						_self.formData.address = jdata.address;
+						_self.formData.account = jdata.account;
+						_self.formData.passKey = jdata.passKey;
+					}
+				})
+			},
+			methods: {
+				save() {
+					axios.post(saveDataUrl).then((req)=> {
 						if(req.data.status) {
 							this.$message({
 								type: 'success',
@@ -50,12 +54,13 @@ new Vue({
 						})
 					});
 				}
-			}).catch(()=> {
-				this.$message({
-					type: 'info',
-					message: '已取消'
-				})
-			})
-		}
+			}
+		});
 	}
-})
+
+	that.init = (getDataUrl, saveDataUrl)=> {
+		_this.init(getDataUrl, saveDataUrl);
+	}
+
+	return that;
+}
