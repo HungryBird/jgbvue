@@ -42,77 +42,159 @@
 			</div>
 		</div>
 		<!-- 新增窗口 -->
-		<el-dialog :visible.sync="dialogFormVisible">
+		<el-dialog :visible.sync="dialogAddFormVisible">
 			<div slot="title" class="title">
 				新增审核流程
 			</div>
-			<el-form>
+			<el-form :model="addForm" :rules="rules" ref="addForm">
 				<h3>
 					①系统模块
 				</h3>
-				<el-form-item label="选择系统模块">
-					<el-select v-model="form.selectSysModule" v-on:change="changeModule">
+				<el-form-item label="选择系统模块" prop="selectSysModule">
+					<el-select v-model="addForm.selectSysModule" v-on:change="changeModule">
 						<el-option v-for="option in data.sysModuleOptions" :label="option.label" :value="option.value" :key="option.value"></el-option>
 					</el-select>
-					<label class="red" v-if="form.selectSysModule == '选项1' || form.selectSysModule == '选项2'">
-						<el-checkbox name="type" class="checkbox" v-model="form.checked"></el-checkbox>
+					<label class="red" v-if="addForm.selectSysModule == '选项1'">
+						<el-checkbox name="type" class="checkbox" v-model="addForm.saleBossAudit"></el-checkbox>
 						<b>商品销售价低于最低价时需要老板审核</b>
+					</label>
+					<label class="red" v-if="addForm.selectSysModule == '选项2'">
+						<el-checkbox name="type" class="checkbox" v-model="addForm.purchaseBossAudit"></el-checkbox>
+						<b>商品采购价高于预采购价时需要老板审核</b>
 					</label>
 				</el-form-item>
 				<h3>
 					②流程级数
 				</h3>
-				<el-form-item label="选择流程级数">
-					<el-select v-on:change="changeLevel" v-model="levelSelected">
+				<el-form-item label="选择流程级数" prop="levelSelected">
+					<el-select v-on:change="changeLevel" v-model="addForm.levelSelected">
 						<el-option v-for="option in data.processLevelOptions" :label="option.label" :value="option.value" :key="option.value"></el-option>
 					</el-select>
 				</el-form-item>
 				<h3>
 					③审核人员
 				</h3>
-				<el-form-item>
-					<ul class="selectAuditorsLi">
-						<li v-if="selectProcessLevel > 0">
-							<label>选择一级审核人员</label>
-							<el-select multiple placeholder="请选择" v-model="form.firstLevelAuditorsGroup" width="100%">
-								<el-option v-for="item in data.auditors.concat(data.bosses)" :key="item.value" :label="item.name" :value="item.value"></el-option>
-							</el-select>
-						</li>
-						<li v-if="selectProcessLevel == 2">
-							<label>选择二级审核人员</label>
-							<el-select multiple placeholder="请选择" v-model="form.secondLevelAuditorsGroup" width="100%">
-								<el-option v-for="item in data.auditors.concat(data.bosses)" :key="item.value" :label="item.name" :value="item.value"></el-option>
-							</el-select>
-						</li>
-						<li v-if="!bossesSelected">
-							<label>选择老板</label>
-							<el-select multiple placeholder="请选择" v-model="form.bosses" width="100%">
-								<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
-							</el-select>
-						</li>
-					</ul>
+				<el-form-item v-if="selectProcessLevel > 0" prop="firstLevelAuditorsGroup" label="选择一级审核人员">
+					<el-select multiple placeholder="请选择" v-model="addForm.firstLevelAuditorsGroup" width="100%">
+						<el-option v-for="item in data.auditors.concat(data.bosses)" :key="item.value" :label="item.name" :value="item.value"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item v-if="selectProcessLevel == 2" prop="secondLevelAuditorsGroup" label="选择二级审核人员">
+					<el-select multiple placeholder="请选择" v-model="addForm.secondLevelAuditorsGroup" width="100%">
+						<el-option v-for="item in data.auditors.concat(data.bosses)" :key="item.value" :label="item.name" :value="item.value"></el-option>
+					</el-select>
+				</el-form-item>
+				<!-- 当选择1级审核方式时，审核人员没有老板时显示老板选项 -->
+				<el-form-item v-if="selectProcessLevel == '1'&&!firstLeveAuditHasBoss&&addForm.firstLevelAuditorsGroup.length != 0" prop="bosses">
+					<label>选择老板</label>
+					<el-select multiple placeholder="请选择" v-model="addForm.bosses" width="100%">
+						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
+					</el-select>
+				</el-form-item>
+				<!-- 当选择2级审核方式时，审核人员没有老板时显示老板选项 -->
+				<el-form-item v-if="selectProcessLevel == '2'&&!firstLeveAuditHasBoss&&!secondLeveAuditHasBoss&&addForm.firstLevelAuditorsGroup.length != 0&&addForm.secondLevelAuditorsGroup.length != 0" prop="bosses" label="选择老板">
+					<el-select multiple placeholder="请选择" v-model="addForm.bosses" width="100%">
+						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
+					</el-select>
 				</el-form-item>
 				<h3>
 					④多人审核方式
 				</h3>
-				<el-form-item>
-					<el-radio v-model="form.auditWay" label="1">只要有一个通过审核即可向下流转</el-radio>
-					<el-radio v-model="form.auditWay" label="2">只有全部人员通过审核才可向下流转</el-radio>
+				<el-form-item prop="auditMethod">
+					<el-radio v-model="addForm.auditMethod" label="1">只要有一个通过审核即可向下流转</el-radio>
+					<el-radio v-model="addForm.auditMethod" label="2">只有全部人员通过审核才可向下流转</el-radio>
 				</el-form-item>
 				<h3>
-					⑤多人审核方式
+					⑤提醒方式
 				</h3>
 				<el-form-item>
-					<el-checkbox-group v-model="form.multiplayerAuditMethod">
-						<el-checkbox label="站内信息" name="type"></el-checkbox>
+					<el-checkbox-group v-model="addForm.remainWays" prop="remainWays">
+						<el-checkbox label="站内信息" name="type" disabled></el-checkbox>
 						<el-checkbox label="手机信息" name="type"></el-checkbox>
 						<el-checkbox label="邮件信息" name="type"></el-checkbox>
 					</el-checkbox-group>
 				</el-form-item>
 			</el-form>
 			<div slot="footer">
-				<el-button type="primary" v-on:click="saveAdd">保存</el-button>
-				<el-button v-on:click="dialogFormVisible = false">关闭</el-button>
+				<el-button type="primary" v-on:click="saveAdd('addForm')">保存</el-button>
+				<el-button v-on:click="closeAdd('addForm')">关闭</el-button>
+			</div>
+		</el-dialog>
+		<!-- 编辑窗口 -->
+		<el-dialog :visible.sync="dialogEditFormVisible">
+			<div slot="title" class="title">
+				新增审核流程
+			</div>
+			<el-form :model="editForm" :rules="rules" ref="editForm" v-loading="editDialogLoading">
+				<h3>
+					①系统模块
+				</h3>
+				<el-form-item label="选择系统模块" prop="selectSysModule">
+					<el-select v-model="editForm.selectSysModule" v-on:change="editChangeModule">
+						<el-option v-for="option in data.sysModuleOptions" :label="option.label" :value="option.value" :key="option.value"></el-option>
+					</el-select>
+					<label class="red" v-if="editForm.selectSysModule == '选项1'">
+						<el-checkbox name="type" class="checkbox" v-model="editForm.saleBossAudit"></el-checkbox>
+						<b>商品销售价低于最低价时需要老板审核</b>
+					</label>
+					<label class="red" v-if="editForm.selectSysModule == '选项2'">
+						<el-checkbox name="type" class="checkbox" v-model="editForm.purchaseBossAudit"></el-checkbox>
+						<b>商品采购价高于预采购价时需要老板审核</b>
+					</label>
+				</el-form-item>
+				<h3>
+					②流程级数
+				</h3>
+				<el-form-item label="选择流程级数" prop="levelSelected">
+					<el-select v-on:change="changeLevel" v-model="editForm.levelSelected">
+						<el-option v-for="option in data.processLevelOptions" :label="option.label" :value="option.value" :key="option.value"></el-option>
+					</el-select>
+				</el-form-item>
+				<h3>
+					③审核人员
+				</h3>
+				<el-form-item v-if="selectProcessLevel > 0" prop="firstLevelAuditorsGroup" label="选择一级审核人员">
+					<el-select multiple placeholder="请选择" v-model="editForm.firstLevelAuditorsGroup" width="100%">
+						<el-option v-for="item in data.auditors.concat(data.bosses)" :key="item.value" :label="item.name" :value="item.value"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item v-if="selectProcessLevel == 2" prop="secondLevelAuditorsGroup" label="选择二级审核人员">
+					<el-select multiple placeholder="请选择" v-model="editForm.secondLevelAuditorsGroup" width="100%">
+						<el-option v-for="item in data.auditors.concat(data.bosses)" :key="item.value" :label="item.name" :value="item.value"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item v-if="selectProcessLevel == '1'&&!firstLeveAuditHasBoss&&editForm.firstLevelAuditorsGroup.length != 0" prop="bosses">
+					<label>选择老板</label>
+					<el-select multiple placeholder="请选择" v-model="editForm.bosses" width="100%">
+						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item v-if="selectProcessLevel == '2'&&!firstLeveAuditHasBoss&&!secondLeveAuditHasBoss&&editForm.firstLevelAuditorsGroup.length != 0&&editForm.secondLevelAuditorsGroup.length != 0" prop="bosses" label="选择老板">
+					<el-select multiple placeholder="请选择" v-model="editForm.bosses" width="100%">
+						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
+					</el-select>
+				</el-form-item>
+				<h3>
+					④多人审核方式
+				</h3>
+				<el-form-item prop="auditMethod">
+					<el-radio v-model="editForm.auditMethod" label="1">只要有一个通过审核即可向下流转</el-radio>
+					<el-radio v-model="editForm.auditMethod" label="2">只有全部人员通过审核才可向下流转</el-radio>
+				</el-form-item>
+				<h3>
+					⑤提醒方式
+				</h3>
+				<el-form-item>
+					<el-checkbox-group v-model="editForm.remainWays" prop="remainWays">
+						<el-checkbox label="站内信息" name="type" disabled></el-checkbox>
+						<el-checkbox label="手机信息" name="type"></el-checkbox>
+						<el-checkbox label="邮件信息" name="type"></el-checkbox>
+					</el-checkbox-group>
+				</el-form-item>
+			</el-form>
+			<div slot="footer">
+				<el-button type="primary" v-on:click="saveAdd('editForm')">保存</el-button>
+				<el-button v-on:click="closeAdd('editForm')">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>

@@ -36,11 +36,12 @@ ul {
   padding: 15px 20px; }
 
 .el-message-box .el-message-box__btns {
-  border-top: 1px solid #ddd; }
+  border-top: 1px solid #ddd;
+  /* .el-button--default{
+			background: #ddd;
+		} */ }
   .el-message-box .el-message-box__btns .el-button--primary {
     background: #2dc3e8 !important; }
-  .el-message-box .el-message-box__btns .el-button--default {
-    background: #ddd; }
 
 .el-checkbox-button.is-checked .el-checkbox-button__inner {
   color: #fff;
@@ -81,6 +82,7 @@ ul {
   .el-dialog .el-dialog__body {
     padding: 10px 16px; }
     .el-dialog .el-dialog__body h1, .el-dialog .el-dialog__body h2, .el-dialog .el-dialog__body h3, .el-dialog .el-dialog__body h4, .el-dialog .el-dialog__body h5, .el-dialog .el-dialog__body h6 {
+      margin-bottom: 4px;
       background: #f7f7f7;
       padding: 6px 4px; }
     .el-dialog .el-dialog__body .checkbox {
@@ -88,9 +90,6 @@ ul {
   .el-dialog .el-dialog__footer {
     border-top: 1px solid #dbdfe7;
     padding: 10px; }
-
-.selectAuditorsLi li + li {
-  margin-top: 10px; }
 
 .info {
   font-weight: 900; }

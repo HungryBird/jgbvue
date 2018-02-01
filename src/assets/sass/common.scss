@@ -45,9 +45,9 @@ ul{
 		.el-button--primary{
 			background: #2dc3e8 !important;
 		}
-		.el-button--default{
+		/* .el-button--default{
 			background: #ddd;
-		}
+		} */
 	}
 }
 .el-checkbox-button.is-checked .el-checkbox-button__inner {
@@ -91,6 +91,7 @@ ul{
 	.el-dialog__body{
 		padding: 10px 16px;
 		h1,h2,h3,h4,h5,h6{
+			margin-bottom: 4px;
 			background: #f7f7f7;
 			padding: 6px 4px;
 		}
@@ -101,11 +102,6 @@ ul{
 	.el-dialog__footer{
 		border-top: 1px solid #dbdfe7;
 		padding: 10px;
-	}
-}
-.selectAuditorsLi{
-	li+li{
-		margin-top: 10px;
 	}
 }
 .info{

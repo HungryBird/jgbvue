@@ -9,25 +9,70 @@ new Vue({
          * @type {[type]}
          */
         data: null,
-        dialogFormVisible: true,
         /**
-         * [form 要提交的数据]
-         * @type {Object}
+         * [addForm 要提交的数据]
+         * @type {
+         *       选择的模块
+         *       销售老板审核
+         *       采购老板审核
+         *       选择审核级数
+         *       一级审核人员
+         *       二级审核人员
+         *       当1、2级没有老板的时候选择的老板
+         *       多人审核方式
+         *       提醒方式
+         * }
          */
-        form: {
+        addForm: {
             selectSysModule: '',
-            checked: false,
+            saleBossAudit: false,
+            purchaseBossAudit: false,
+            levelSelected: '',
             firstLevelAuditorsGroup: [],
             secondLevelAuditorsGroup: [],
             bosses: [],
-            auditWay: '',
-            multiplayerAuditMethod: []
+            auditMethod: '1',
+            remainWays: ['站内信息']
         },
-        levelSelected: '',
+        /**
+         * 预填信息
+         * @type {Object}
+         */
+        editForm: {
+            selectSysModule: '',
+            saleBossAudit: false,
+            purchaseBossAudit: false,
+            levelSelected: '',
+            firstLevelAuditorsGroup: [],
+            secondLevelAuditorsGroup: [],
+            bosses: [],
+            auditMethod: '1',
+            remainWays: ['站内信息']
+        },
+        dialogAddFormVisible: false,
+        dialogEditFormVisible: false,
+        editDialogLoading: true,
         selectProcessLevel: null,
-        bossesSelected: true,
+        firstLeveAuditHasBoss: false,
+        secondLeveAuditHasBoss: false,
         selectedRows: [],
-        dialogEditVisible: false
+        rules: {
+            selectSysModule: [
+                {required: true, message: '请选择系统模块'}
+            ],
+            levelSelected: [
+                {required: true, message: '请选择审核级数'}
+            ],
+            firstLevelAuditorsGroup: [
+                {required: true, message: '请选择1级审核人员'}
+            ],
+            secondLevelAuditorsGroup: [
+                {required: true, message: '请选择2级审核人员'}
+            ],
+            bosses: [
+                {required: true, message: '请选择老板'}
+            ]
+        }
     },
     mounted() {
         axios.get('/auditProcess/data_get').then((req)=> {
@@ -42,48 +87,94 @@ new Vue({
     },
     methods: {
         add() {
-            this.dialogFormVisible = true;
+            this.dialogAddFormVisible = true;
         },
-        saveAdd() {
+        saveAdd(formName) {
             let _self = this;
-            axios.post('/auditProcess/data_save', this.form).then((data)=> {
-                console.log('data', data.data);
-                if(data.data.status) {
-                    _self.dialogFormVisible = false;
-                    _self.$message({
-                        type: 'success',
-                        message: data.data.message
-                    })
+            this.$refs[formName].validate((valid)=> {
+                if(valid) {
+                    axios.post('/auditProcess/data_save', this.addForm).then((data)=> {
+                        if(data.data.status) {
+                            _self.dialogAddFormVisible = false;
+                            _self.$message({
+                                type: 'success',
+                                message: data.data.message
+                            })
+                        }else{
+                            _self.$message({
+                                type: 'error',
+                                message: data.data.message
+                            })
+                        }
+                    }).catch((err)=> {
+                        _self.$message({
+                            type: 'error',
+                            message: err
+                        });
+                    });
                 }else{
-                    _self.$message({
-                        type: 'error',
-                        message: data.data.message
-                    })
+                    return false;
                 }
-            }).catch((err)=> {
-                _self.$message({
-                    type: 'error',
-                    message: err
-                });
-            });
+            })
+        },
+        closeAdd(formName) {
+            let _self = this;
+            this.$refs[formName].resetFields();
+            this.dialogAddFormVisible = false;
         },
         edit() {
             let _self = this;
-            /*axios.post('/auditProcess/data_edit', this.selectedRows).then((data)=> {
+            this.dialogEditFormVisible = true;
+            axios.post('/auditProcess/data_edit_get', this.selectedRows).then((data)=> {
                 if(data.data.status) {
-                    _self.
+                    let jdata = JSON.parse(data.data.message);
+                    this.editForm = jdata;
+                    this.editDialogLoading = false;
                 }
-            })*/
-            console.log('data', this.selectedRows);
+            })
+        },
+        saveEdit() {
+            //
+        },
+        closeEdit() {
+            //
         },
         remove() {
-            //
+            this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                beforeClose: function(action, instance, done) {
+                    done(action);
+                }
+            }).then((action)=> {
+                if(action == 'confirm') {
+                    axios.post('/auditProcess/data_delete', this.selectedRows).then((data)=> {
+                        if(data.data.status) {
+                            this.$message({
+                                type: 'success',
+                                message: data.data.message
+                            })
+                        }
+                    }).catch(function(err) {
+                        _self.$message({
+                            type: 'error',
+                            message: req.data.message || err
+                        });
+                    })
+                }
+            }).catch(() => {
+               this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });
+            });
         },
         handleSizeChange() {
-            //
+            //size变化时
         },
         handleCurrentChange() {
-            //
+            //当前页改变时
         },
         objectSpanMethod({ row, column, rowIndex, columnIndex }) {
             let _self = this;
@@ -109,13 +200,16 @@ new Vue({
             }
         },
         changeModule() {
-            this.form.checked = false;
+            this.addForm.checked = false;
         },
         changeLevel(val) {
-            console.log('val', val);
             this.selectProcessLevel = val;
-            this.form.firstLevelAuditorsGroup.splice(0, this.form.firstLevelAuditorsGroup.length);
-            this.form.secondLevelAuditorsGroup.splice(0, this.form.secondLevelAuditorsGroup.length);
+            this.addForm.firstLevelAuditorsGroup.splice(0, this.addForm.firstLevelAuditorsGroup.length);
+            this.addForm.secondLevelAuditorsGroup.splice(0, this.addForm.secondLevelAuditorsGroup.length);
+            this.addForm.bosses.splice(0, this.addForm.bosses.length);
+        },
+        editChangeModule() {
+            //
         }
     },
     filters: {
@@ -125,54 +219,28 @@ new Vue({
         }
     },
     watch: {
-        'form.firstLevelAuditorsGroup'(arr) {
+        'addForm.firstLevelAuditorsGroup'(arr) {
             let _self = this;
-            let isKeeping = true;
-            console.log('this.selectProcessLevel', this.selectProcessLevel);
-            if(this.selectProcessLevel === 2) {
-                if(_self.form.secondLevelAuditorsGroup != 0) {
-                    for(let i = 0; i < _self.form.secondLevelAuditorsGroup; i++) {
-                        if(_self.form.secondLevelAuditorsGroup[i] > 1000) {
-                            _self.bossesSelected = true;
-                            isKeeping = false;
-                            return;
-                        }
-                    }
-                }
-                if(arr.length != 0 && isKeeping) {
-                    for(let j = 0; j < arr.length; j++) {
-                        if(arr[j] > 1000) {
-                            _self.bossesSelected = true;
-                            return;
-                        }
-                    }
-                    _self.bossesSelected = false;
+            for(let i = 0; i < arr.length; i++) {
+                if(arr[i] > 1000) {
+                    _self.firstLeveAuditHasBoss = true;
+                    _self.bosses.splice(0, _self.bosses.length);
+                    return;
                 }
             }
-            if(this.selectProcessLevel === 1) {
-                if(arr.length != 0) {
-                    for(let j = 0; j < arr.length; j++) {
-                        if(arr[j] > 1000) {
-                            _self.bossesSelected = true;
-                            return;
-                        }
-                    }
-                    _self.bossesSelected = false;
-                }
-            }
+            _self.firstLeveAuditHasBoss = false;
         },
-        'form.secondLevelAuditorsGroup'(arr) {
+        'addForm.secondLevelAuditorsGroup'(arr) {
             let _self = this;
-            if(arr.length != 0) {
-                if(_self.form.firstLevelAuditorsGroup != 0) {
-                    for(let i = 0; i < arr.length; i++) {
-                        if(arr[i] > 1000) {
-                            _self.bossesSelected = true;
-                            return;
-                        }
+            if(this.selectProcessLevel === 2) {
+                for(let i = 0; i < arr.length; i++) {
+                    if(arr[i] > 1000) {
+                        _self.secondLeveAuditHasBoss = true;
+                        _self.bosses.splice(0, _self.bosses.length);
+                        return;
                     }
-                    _self.bossesSelected = false;
                 }
+                _self.secondLeveAuditHasBoss = false;
             }
         }
     }
