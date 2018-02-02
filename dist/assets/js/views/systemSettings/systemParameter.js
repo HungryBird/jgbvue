@@ -10,7 +10,8 @@ JGBVue.module.systemParameter = ()=>{
 		new Vue({
 			el: '#app',
 			data: {
-				table: []
+				table: [],
+				loading: false
 			},
 			mounted: function() {
 				const _self = this;
@@ -24,13 +25,16 @@ JGBVue.module.systemParameter = ()=>{
 			methods: {
 				save() {
 					var _self = this;
+					this.loading = true;
 					axios.post(saveDataUrl, _self.table).then((req)=>{
 						if(req.data.status) {
+							this.loading = false;
 							_self.$message({
 								type: 'success',
 								message: req.data.message
 							})
 						}else{
+							this.loading = false;
 							_self.$message({
 								type: 'error',
 								message: req.data.message

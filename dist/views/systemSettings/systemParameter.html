@@ -20,7 +20,7 @@
 			<el-button type="primary" icon="fa fa-save" v-on:click="save"><span style="padding-left: 8px;">保存</span></el-button>
 		</nav>
 		<div class="inner_main">
-			<el-table :data="table" border ref="parameterTable" tooltip-effect="dark">
+			<el-table :data="table" border ref="parameterTable" tooltip-effect="dark" v-loading.fullscreen.lock="loading">
 				<el-table-column label="系统参数" prop="param"></el-table-column>
 				<el-table-column label="操作" prop="action" width="200">
 					<template slot-scope="scope">
