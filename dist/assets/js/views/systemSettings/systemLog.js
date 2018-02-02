@@ -50,30 +50,17 @@ new Vue({
 			],
 			curSelectValue: ''
 		},
-		dateValue: '',
-		searchValue: '',
-		logTable: [
-			{
-				date: '',
-				user: '',
-				name: '',
-				IPAddress: '',
-				sysFunction: '',
-				operationType: '',
-				executeResult: '',
-				executeResultDescribe: ''
-			},
-			{
-				date: '',
-				user: '',
-				name: '',
-				IPAddress: '',
-				sysFunction: '',
-				operationType: '',
-				executeResult: '',
-				executeResultDescribe: ''
-			}
-		],
+		/**
+		 * 搜索的值
+		 * 日期
+		 * 输入值
+		 * @type {Object}
+		 */
+		searchForm: {
+			dateValue: '',
+			searchValue: '',
+		},
+		logTable: [],
 		selectedArr: [],
 		deleteLogDialog: {
 			checked: true,
@@ -122,9 +109,38 @@ new Vue({
 				_self.deleteLogDialog.visible = false;
 			}
 		},
+		changeDate(val) {
+			/**
+			 * val == option.value
+			 */
+			if(val == 'all') {
+				axios.post('/systemLog/data_get_all', val).then((data)=> {
+					if(data.data.status) {
+						let jdata = JSON.parse(data.data.message);
+						this.logTable = jdata;
+					}else{
+						this.$message({
+							type: 'error',
+							message: data.data.message
+						})
+					}
+				})
+			}else{
+				axios.post('/systemLog/data_get_other', val).then((data)=> {
+					if(data.data.status) {
+						let jdata = JSON.parse(data.data.message);
+						this.logTable = jdata;
+					}else{
+						this.$message({
+							type: 'error',
+							message: data.data.message
+						})
+					}
+				})
+			}
+		},
 		curSelect(item) {
-			this.selectClear.curSelectValue
-			console.log('item', item);
+			this.selectClear.curSelectValue;
 		},
 		handleSizeChange() {
 			//pass
@@ -133,7 +149,17 @@ new Vue({
 			//pass
 		},
 		search() {
-			//
+			axios.post('/systemLog/data_search', this.searchForm).then((data)=> {
+				if(data.data.status) {
+					let jdata = JSON.parse(data.data.message);
+					this.logTable = jdata;
+				}else{
+					this.$message({
+						type: 'error',
+						message: data.data.message
+					})
+				}
+			})
 		}
 	},
 	filters: {
