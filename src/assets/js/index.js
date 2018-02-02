@@ -137,7 +137,7 @@ new Vue({
             },
           ]
         },
-        action1: [ 
+        action1: [
           {
             id: 'ac10001',
             backgroundPosition: '0 -501px',
@@ -222,15 +222,15 @@ new Vue({
             backgroundPosition: '-112px -1099px'
           },
         ],
-        activeTab: 'auditProcess',
+        activeTab: 'systemParameter',
         tabs: [
           {
             name: 'home',
             label: '首页'
           },{
-            name: 'auditProcess',
-            label: '审核流程',
-            link: 'views/systemSettings/auditProcess.html'
+            name: 'systemParameter',
+            label: '系统参数',
+            link: 'views/systemSettings/systemParameter.html'
           }
         ],
         locking: {

@@ -16,7 +16,7 @@ router.get('/data_get', (req, res)=> {
 		jdata += data;
 		res.send({
 			status: true,
-			data: jdata
+			message: jdata
 		})
 	})
 });

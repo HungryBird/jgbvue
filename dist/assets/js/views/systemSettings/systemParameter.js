@@ -1,13 +1,13 @@
 new Vue({
 	el: '#app',
 	data: {
-		table: null
+		table: []
 	},
 	mounted: function() {
 		const _self = this;
 		axios.get('/systemParameter/data_get').then((req)=> {
-			let data = JSON.parse(req.data.data);
-			_self.table = data;
+			let jdata = JSON.parse(req.data.message);
+			_self.table = jdata;
 		}).catch((err)=> {
 			console.log('err', err);
 		})
@@ -16,7 +16,6 @@ new Vue({
 		save() {
 			var _self = this;
 			axios.post('/systemParameter/data_save', _self.table).then((req)=>{
-				console.log(req)
 				if(req.data.status) {
 					_self.$message({
 						type: 'success',

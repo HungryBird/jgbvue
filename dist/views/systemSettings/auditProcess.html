@@ -193,8 +193,8 @@
 				</el-form-item>
 			</el-form>
 			<div slot="footer">
-				<el-button type="primary" v-on:click="saveAdd('editForm')">保存</el-button>
-				<el-button v-on:click="closeAdd('editForm')">关闭</el-button>
+				<el-button type="primary" v-on:click="saveEdit('editForm')">保存</el-button>
+				<el-button v-on:click="closeEdit('editForm')">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -203,4 +203,14 @@
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/auditProcess.js"></script>
+<script type="text/javascript">
+	/**
+	 * 数据获取url
+	 * 数据保存url
+	 * 打开编辑窗口获取url
+	 * 保存编辑数据url
+	 * 数据删除url
+	 */
+	//JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_save', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_delete');
+</script>
 </html>

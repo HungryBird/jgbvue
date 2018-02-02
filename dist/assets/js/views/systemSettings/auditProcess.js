@@ -1,6 +1,22 @@
 /**
  * Created by Segotep on 2018/1/25.
  */
+JGBVue = {
+    module: {}
+};
+JGBVue.module.auditProcess = ()=> {
+    let _this = {},
+    that = {};
+
+    _this.init = (getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl)=> {
+        //
+    }
+
+    that.init = ()=> {
+        _this.init();
+    }
+    return that;
+}
 new Vue({
     el: '#app',
     data: {
@@ -8,7 +24,9 @@ new Vue({
          * [data 获取的数据]
          * @type {[type]}
          */
-        data: null,
+        data: {
+            table: null
+        },
         /**
          * [addForm 要提交的数据]
          * @type {
@@ -134,10 +152,28 @@ new Vue({
             })
         },
         saveEdit() {
-            //
+            this.editDialogLoading = true;
+            axios.post('/auditProcess/data_edit_save', this.editForm).then((data)=> {
+                if(data.data.status) {
+                    this.editDialogLoading = false;
+                    this.dialogEditFormVisible = false;
+                    this.$message({
+                        type: 'success',
+                        message: data.data.message
+                    })
+                }else{
+                    this.editDialogLoading = false;
+                    this.$message({
+                        type: 'error',
+                        message: data.data.message
+                    })
+                }
+            })
         },
-        closeEdit() {
-            //
+        closeEdit(formName) {
+            let _self = this;
+            this.$refs[formName].resetFields();
+            this.dialogEditFormVisible = false;
         },
         remove() {
             this.$confirm('确定删除?', '提示', {

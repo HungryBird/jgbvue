@@ -50,6 +50,13 @@ router.post('/data_edit_get', (req, res)=> {
 			message: jdata
 		})
 	})
+});
+
+router.post('/data_edit_save', (req, res)=> {
+	res.send({
+		status: true,
+		message: '编辑成功'
+	})
 })
 
 router.post('/data_delete', (req, res)=> {

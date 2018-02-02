@@ -27,7 +27,7 @@
 					<el-form-item>
 						<el-input v-model="searchValue" placeholder="请输入用户名/姓名/日志内容等关键词查询">
 							<template slot="append">
-								<el-button>搜索</el-button>
+								<el-button v-on:click="search">搜索</el-button>
 							</template>
 						</el-input>
 					</el-form-item>
@@ -47,7 +47,11 @@
 			<div class="inner_main" style="top: 70px;">
 				<el-table :data="logTable" border ref="logTable" tooltip-effect="dark">
 					<el-table-column type="index"></el-table-column>
-					<el-table-column prop="date" label="操作时间"></el-table-column>
+					<el-table-column prop="date" label="操作时间">
+						<template slot-scope="scope">
+							{{ scope.row.date | filterDate }}
+						</template>
+					</el-table-column>
 					<el-table-column prop="user" label="操作用户"></el-table-column>
 					<el-table-column prop="name" label="姓名"></el-table-column>
 					<el-table-column prop="IPAddress" label="IP地址"></el-table-column>

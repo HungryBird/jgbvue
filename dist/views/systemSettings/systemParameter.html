@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
 	<link rel="stylesheet" type="text/css" href="../../font-awesome-4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/views/systemParameter.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
 	<style type="text/css">
 		[v-cloak] {
 			display: none;
@@ -14,38 +15,40 @@
 </head>
 <body>
 <div id="app" v-cloak>
-	<el-row style="margin-bottom: 20px;">
-		<el-col :span="24">
-			<el-button type="primary" icon="fa fa-save" @click="save"><span style="padding-left: 8px;">保存</span></el-button>
-		</el-col>
-	</el-row>
-	<el-table border ref="parameterTable" tooltip-effect="dark" :data="table">
-		<el-table-column label="系统参数" prop="param"></el-table-column>
-		<el-table-column label="操作" prop="action" width="200">
-			<template slot-scope="scope">
-				<el-checkbox v-if="scope.row.action.type == 'check'" v-model="scope.row.action.status"></el-checkbox>
-				<el-select v-else-if="scope.row.action.type == 'select'" v-model="scope.row.action.value">
-					<el-option v-for="option in scope.row.action.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
-				</el-select>
-				<el-input v-else-if="scope.row.action.type == 'number'" type="number" v-model="scope.row.action.value"></el-input>
-			</template>
-		</el-table-column>
-		<el-table-column label="说明" prop="explain">
-			<template slot-scope="scope">
-				<span v-if="scope.row.explain.type != 'input'">{{scope.row.explain.text}} </span>
-				<div v-else>
-					<el-input size="mini" v-model="tax.value" v-for="tax in scope.row.explain.taxs">
-						<template slot="prepend">
-							{{ tax.text }}
-						</template>
-						<template slot="append">
-							<i>%</i>
-						</template>
-					</el-input>
-				</div>
-			</template>
-		</el-table-column>
-	</el-table>
+	<div class="wrap_main">
+		<nav>
+			<el-button type="primary" icon="fa fa-save" v-on:click="save"><span style="padding-left: 8px;">保存</span></el-button>
+		</nav>
+		<div class="inner_main">
+			<el-table :data="table" border ref="parameterTable" tooltip-effect="dark">
+				<el-table-column label="系统参数" prop="param"></el-table-column>
+				<el-table-column label="操作" prop="action" width="200">
+					<template slot-scope="scope">
+						<el-checkbox v-if="scope.row.action.type == 'check'" v-model="scope.row.action.status"></el-checkbox>
+						<el-select v-else-if="scope.row.action.type == 'select'" v-model="scope.row.action.value">
+							<el-option v-for="option in scope.row.action.options" :key="option.label" :label="option.label" :value="option.value"></el-option>
+						</el-select>
+						<el-input v-else-if="scope.row.action.type == 'number'" type="number" v-model="scope.row.action.value"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="说明" prop="explain">
+					<template slot-scope="scope">
+						<span v-if="scope.row.explain.type != 'input'">{{scope.row.explain.text}} </span>
+						<div v-else>
+							<el-input size="mini" v-model="tax.value" v-for="tax in scope.row.explain.taxs" :key="tax.text">
+								<template slot="prepend">
+									{{ tax.text }}
+								</template>
+								<template slot="append">
+									<i>%</i>
+								</template>
+							</el-input>
+						</div>
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
+	</div>
 </div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>

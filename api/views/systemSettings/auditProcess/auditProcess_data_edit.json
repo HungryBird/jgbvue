@@ -1,21 +1,10 @@
 {
-	"selectSysModule": "采购",
+	"selectSysModule": "选项1",
 	"saleBossAudit": true,
 	"purchaseBossAudit": false,
 	"levelSelected": "二级审核",
-	"firstLevelAuditorsGroup": [{
-			"name": "王某",
-			"value": 1
-		},
-		{
-			"name": "李某",
-			"value": 2
-		}
-	],
-	"secondLevelAuditorsGroup": [{
-		"name": "钱总",
-		"value": 1001
-	}],
+	"firstLevelAuditorsGroup": [1,2],
+	"secondLevelAuditorsGroup": [1001],
 	"bosses": [],
 	"auditMethod": "2",
 	"remainWays": ["站内信息", "手机信息"]

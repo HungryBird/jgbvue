@@ -47,7 +47,6 @@ new Vue({
 					value: '3months',
 					label: '近3个月'
 				}
-				
 			],
 			curSelectValue: ''
 		},
@@ -55,24 +54,24 @@ new Vue({
 		searchValue: '',
 		logTable: [
 			{
-				date: '2016-08-10',
-				user: '007AAA',
-				name: '赵某',
-				IPAddress: '222.216.18.129',
-				sysFunction: '某功能',
-				operationType: '登陆',
-				executeResult: '成功',
-				executeResultDescribe: '登陆成功'
+				date: '',
+				user: '',
+				name: '',
+				IPAddress: '',
+				sysFunction: '',
+				operationType: '',
+				executeResult: '',
+				executeResultDescribe: ''
 			},
 			{
-				date: '2016-08-11',
-				user: '007AAB',
-				name: '李某',
-				IPAddress: '222.216.18.130',
-				sysFunction: '某功能',
-				operationType: '登陆',
-				executeResult: '成功',
-				executeResultDescribe: '登陆成功'
+				date: '',
+				user: '',
+				name: '',
+				IPAddress: '',
+				sysFunction: '',
+				operationType: '',
+				executeResult: '',
+				executeResultDescribe: ''
 			}
 		],
 		selectedArr: [],
@@ -85,6 +84,17 @@ new Vue({
 	},
 	mounted: function() {
 		this.selectClear.curSelectValue = this.selectClear.options[0].value;
+		axios.get('/systemLog/data_get_all').then((data)=> {
+			if(data.data.status) {
+				let jdata = JSON.parse(data.data.message);
+				this.logTable = jdata;
+			}else{
+				console.log('data get err: ', err);
+			}
+
+		}).catch((err)=> {
+			console.log('get systemLog_data_all error: ', err);
+		})
 	},
 	methods: {
 		deleteLog() {
@@ -122,6 +132,24 @@ new Vue({
 		handleCurrentChange() {
 			//pass
 		},
+		search() {
+			//
+		}
+	},
+	filters: {
+		filterDate(val) {
+			let oDate = new Date(val*1000)
+			,month = oDate.getMonth() + 1
+			,day = oDate.getDate()
+			,year = oDate.getFullYear();
 
+			if(day.length < 10) {
+				day = '0' + day;
+			}
+			if(month.length < 10) {
+				month = '0' + month;
+			}
+			return year + '-' + month + '-' + day;
+		}
 	}
 })
