@@ -39,7 +39,7 @@ clone项目
 跳转至文件目录下
 
     $ e:
-$ cd JGBVue
+	$ cd JGBVue
 
 安装依赖包
 
