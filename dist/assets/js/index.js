@@ -188,7 +188,7 @@ new Vue({
       borderWidth: 0
     }
   },
-  mounted: function() {
+  mounted() {
     let _self = this;
     let widthSquare = Math.pow(document.body.clientWidth, 2);
     let heightSquare = Math.pow(document.body.clientHeight, 2);
@@ -196,6 +196,17 @@ new Vue({
     this.locking.diameter = diameter;
     let tabContent = document.getElementsByClassName('el-tabs__content')[0];
     tabContent.style.height = document.body.clientHeight - 91 + 'px';
+
+    if(sessionStorage.tabs) {
+      let arr = JSON.parse(sessionStorage.tabs);
+      this.tabs.splice(0, this.tabs.splice);
+      arr.forEach((item)=> {
+        _self.tabs.push(item);
+      });
+      this.activeTab = sessionStorage.activeTab;
+    }
+
+    console.log('sessionStorage', sessionStorage);
 
     axios.get('/index/is_show_guidance').then((data)=> {
       let jdata = JSON.parse(data.data.message)
@@ -252,7 +263,24 @@ new Vue({
     tabs(arr) {
       if(arr.length === 1) {
         this.activeTab = 'home';
+        return;
       }
+      if(sessionStorage.tabs) {
+        let arrObj2 = JSON.parse(sessionStorage.tabs);
+        arrObj2.splice(0, arrObj2.length);
+        arr.forEach((item)=> {
+          arrObj2.push(item);
+        })
+        sessionStorage.tabs = JSON.stringify(arrObj2);
+        sessionStorage.activeTab = this.activeTab;
+        return;
+      }
+      let arrObj = [];
+      arr.forEach((item)=> {
+        arrObj.push(item);
+      })
+      sessionStorage.tabs = JSON.stringify(arrObj);
+      sessionStorage.activeTab = this.activeTab;
     }
   }
-})
+});

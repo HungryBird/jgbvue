@@ -6,7 +6,7 @@ JGBVue.module.guidance = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = ()=> {
+	_this.init = (keepingShowUrl)=> {
 		new Vue({
 			el: '#app',
 			data: {
@@ -20,7 +20,7 @@ JGBVue.module.guidance = ()=> {
 			methods: {
 				keepingShow() {
 					this.neverShow = !this.neverShow;
-					axios.post('/guidance/keeping_show', this.form).then((data)=> {
+					axios.post(keepingShowUrl, this.form).then((data)=> {
 						//
 					}).catch((err)=> {
 						console.log('err', err);
@@ -30,8 +30,8 @@ JGBVue.module.guidance = ()=> {
 		})
 	}
 
-	that.init = ()=> {
-		_this.init();
+	that.init = (keepingShowUrl)=> {
+		_this.init(keepingShowUrl);
 	}
 
 	return that;
