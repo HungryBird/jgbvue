@@ -19,7 +19,8 @@ app.use(bodyParser.json());
  */
 
 const userLoginRouter = require('./routers/login');
-
+const indexRouter = require('./routers/index');
+const guidanceRouter = require('./routers/guidance')
 
 const administrativeRegionRouter = require('./routers/views/systemSettings/administrativeRegion');
 const systemLogRouter = require('./routers/views/systemSettings/systemLog');
@@ -33,6 +34,9 @@ const auditProcessRouter = require('./routers/views/systemSettings/auditProcess'
 const printTemplateRouter = require('./routers/views/systemSettings/printTemplate');
 
 app.use('/user', userLoginRouter);
+app.use('/index', indexRouter);
+app.use('/guidance', guidanceRouter);
+
 app.use('/administrativeRegion', administrativeRegionRouter);
 app.use('/systemLog', systemLogRouter);
 app.use('/systemParameter', systemParameterRouter);

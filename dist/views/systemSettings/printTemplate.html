@@ -30,7 +30,7 @@
 							{{ scope.row.usingDefaultTemplate | usingStatus }}
 						</template>
 					</el-table-column>
-					<el-table-column></el-table-column>
+					<!-- <el-table-column></el-table-column> -->
 				</el-table>
 				<div class="inner_footer">
 					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>

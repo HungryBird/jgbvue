@@ -170,15 +170,18 @@ new Vue({
       name: '系统更新动态',
       backgroundPosition: '-112px -1099px'
     }, ],
-    activeTab: 'systemLog',
-    tabs: [{
-      name: 'home',
-      label: '首页'
-    }, {
-      name: 'systemLog',
-      label: '系统日志',
-      link: 'views/systemSettings/systemLog.html'
-    }],
+    activeTab: 'guidance',
+    tabs: [
+      {
+        name: 'home',
+        label: '工作台'
+      },
+      {
+        name: 'guidance',
+        label: '新手导航',
+        link: './guidance.html'
+      }
+    ],
     locking: {
       isHidden: true,
       diameter: 0,
@@ -186,12 +189,27 @@ new Vue({
     }
   },
   mounted: function() {
+    let _self = this;
     let widthSquare = Math.pow(document.body.clientWidth, 2);
     let heightSquare = Math.pow(document.body.clientHeight, 2);
     let diameter = Math.ceil(Math.pow(widthSquare + heightSquare, 1 / 2));
     this.locking.diameter = diameter;
     let tabContent = document.getElementsByClassName('el-tabs__content')[0];
     tabContent.style.height = document.body.clientHeight - 91 + 'px';
+
+    axios.get('/index/is_show_guidance').then((data)=> {
+      let jdata = JSON.parse(data.data.message)
+      if(data.data.status) {
+        if(jdata.neverShow) {
+          for(let i = 0; i < _self.tabs.length; i++) {
+            if(_self.tabs[i].name == 'guidance') {
+              _self.tabs.splice(i, 1);
+              return;
+            }
+          }
+        }
+      }
+    })
   },
   methods: {
     selectTab: function(tabId, tabName, parentFolder) {
@@ -228,6 +246,13 @@ new Vue({
           window.location.href = './locking.html';
         }, 1014);
       }, 14)
+    }
+  },
+  watch: {
+    tabs(arr) {
+      if(arr.length === 1) {
+        this.activeTab = 'home';
+      }
     }
   }
 })

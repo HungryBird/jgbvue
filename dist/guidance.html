@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>新手导航</title>
+	<link rel="stylesheet" href="./element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="./assets/css/guidance.css">
+</head>
+<body>
+	<div id="app">
+		<div class="wrap-guidance">
+			<div class="inner-guidance"></div>
+			<el-form>
+				<el-form-item style="text-align: center;">
+					<label>
+						<el-checkbox v-on:change="keepingShow" v-model="form.neverShow"></el-checkbox>
+						<span>我已清楚，下次登陆不再显示</span>
+					</label>
+				</el-form-item>
+			</el-form>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="./vue/vue.js"></script>
+<script type="text/javascript" src="./element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../axios/axios.min.js"></script>
+<script type="text/javascript" src="./assets/js/guidance.js"></script>>
+<script type="text/javascript">
+	JGBVue.module.guidance().init();
+</script>
+</html>

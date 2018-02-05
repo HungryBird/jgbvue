@@ -1,0 +1,19 @@
+html,body{
+	height: 100%;
+	margin: 0;
+}
+#app{
+	height: 100%;
+}
+.wrap-guidance{
+	position: relative;
+	background: #EEEADE;
+	height: 100%;
+}
+.wrap-guidance .inner-guidance{
+	margin: 0 auto;
+	padding: 40px 0;
+	width: 1292px;
+	height: 592px;
+	background: url(../../assets/img/index/guidance.jpg) center center no-repeat;
+}
