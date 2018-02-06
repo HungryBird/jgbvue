@@ -63,24 +63,28 @@ new Vue({
       }, {
         id: 'nav_003',
         cls: 'fa fa-group',
-        name: '销货',
+        name: '基础资料',
         menuItems: [{
-          title: '销售单据',
+          title: '公司组织',
+          parentFolder: 'companyOrganization',
           items: [{
-            id: 'xsdj001',
-            name: '销售订单'
+            id: 'companyManagement',
+            name: '公司管理'
           }, {
             id: 'xsdj002',
-            name: '销售报表'
+            name: '部门管理'
           }, {
             id: 'xsdj003',
-            name: '销售退货单'
+            name: '职位管理'
           }, {
             id: 'xsdj004',
-            name: '原始单据'
+            name: '角色管理'
+          }, {
+            id: 'xsdj004',
+            name: '用户管理'
           }]
         }, {
-          title: '销售报表',
+          title: '客户管理',
           items: [{
               id: 'xsbb001',
               name: '销售订单跟踪表'
@@ -170,7 +174,7 @@ new Vue({
       name: '系统更新动态',
       backgroundPosition: '-112px -1099px'
     }, ],
-    activeTab: 'guidance',
+    activeTab: 'systemParameter',
     tabs: [
       {
         name: 'home',
@@ -180,6 +184,11 @@ new Vue({
         name: 'guidance',
         label: '新手导航',
         link: './guidance.html'
+      },
+      {
+        name: 'systemParameter',
+        label: '部门管理',
+        link: './views/systemSettings/systemParameter.html'
       }
     ],
     locking: {

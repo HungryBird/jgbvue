@@ -144,12 +144,11 @@ ul {
       left: 10px;
       right: 10px;
       bottom: 10px;
-      background: #fff;
-      -webkit-box-shadow: 1px 1px 3px #dbdfe7;
-      box-shadow: 1px 1px 3px #dbdfe7; }
+      background: #fff; }
       #app .wrap_main .inner_main .jgb-table {
         font-size: 14px;
-        padding: 10px; }
+        padding: 10px;
+        background: #fff; }
         #app .wrap_main .inner_main .jgb-table .jgb-table-column {
           width: 799px;
           display: -webkit-box;
@@ -208,6 +207,48 @@ ul {
               justify-content: flex-start; }
           #app .wrap_main .inner_main .jgb-table .jgb-table-column:first-child {
             /* border-top: 1px solid #333; */ }
+      #app .wrap_main .inner_main .form-table {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        margin-bottom: 20px;
+        border: 1px solid #ebeef5;
+        border-right: none;
+        border-bottom: none;
+        background: #fff; }
+        #app .wrap_main .inner_main .form-table .form-table-thead {
+          background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#efefef));
+          background: -o-linear-gradient(#f8f8f8, #efefef);
+          background: linear-gradient(#f8f8f8, #efefef); }
+        #app .wrap_main .inner_main .form-table .el-form-item {
+          padding: 0; }
+          #app .wrap_main .inner_main .form-table .el-form-item .el-form-item__content {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex; }
+            #app .wrap_main .inner_main .form-table .el-form-item .el-form-item__content > div {
+              -webkit-box-flex: 1;
+              -ms-flex: auto;
+              flex: auto;
+              padding: 10px;
+              text-align: center;
+              border-right: 1px solid #ebeef5;
+              border-bottom: 1px solid #ebeef5; }
+              #app .wrap_main .inner_main .form-table .el-form-item .el-form-item__content > div:first-child {
+                -webkit-box-flex: 0;
+                -ms-flex: 0 0 350px;
+                flex: 0 0 350px; }
+              #app .wrap_main .inner_main .form-table .el-form-item .el-form-item__content > div:nth-child(2) {
+                -webkit-box-flex: 0;
+                -ms-flex: 0 0 250px;
+                flex: 0 0 250px; }
+              #app .wrap_main .inner_main .form-table .el-form-item .el-form-item__content > div > label {
+                display: block;
+                height: 100%; }
       #app .wrap_main .inner_main .inner_footer {
         position: absolute;
         bottom: 0;

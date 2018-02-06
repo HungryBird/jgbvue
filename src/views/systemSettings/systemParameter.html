@@ -20,7 +20,7 @@
 			<el-button type="primary" icon="fa fa-save" v-on:click="save"><span style="padding-left: 8px;">保存</span></el-button>
 		</nav>
 		<div class="inner_main">
-			<el-table :data="table" border ref="parameterTable" tooltip-effect="dark" v-loading.fullscreen.lock="loading">
+			<!-- <el-table :data="table" border ref="parameterTable" tooltip-effect="dark" v-loading.fullscreen.lock="loading">
 				<el-table-column label="系统参数" prop="param"></el-table-column>
 				<el-table-column label="操作" prop="action" width="200">
 					<template slot-scope="scope">
@@ -46,7 +46,171 @@
 						</div>
 					</template>
 				</el-table-column>
-			</el-table>
+			</el-table> -->
+			<el-form class="form-table">
+				<el-form-item class="form-table-thead">
+					<div>系统参数</div>
+					<div>操作</div>
+					<div>说明</div>
+				</el-form-item>
+				<el-form-item>
+					<div>启动审核：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.usingAudit"></el-checkbox>
+						</label>
+					</div>
+					<div>启用后单据只有在审核后才会生效，报表数据才会变化</div>
+				</el-form-item>
+				<el-form-item>
+					<div>启动税金：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.usingTaxes"></el-checkbox>
+						</label>
+					</div>
+					<div>
+						<el-input style="width: 240px;" size="small " v-model="form.defaultTaxRate">
+							<template>
+								<div slot="prepend">
+									默认税率
+								</div>
+								<div slot="append">
+									%
+								</div>
+							</template>
+						</el-input>
+						<el-input style="width: 240px;" size="small " v-model="form.taxRate1">
+							<template>
+								<div slot="prepend">
+									税率1
+								</div>
+								<div slot="append">
+									%
+								</div>
+							</template>
+						</el-input>
+						<el-input style="width: 240px;" size="small " v-model="form.taxRate2">
+							<template>
+								<div slot="prepend">
+									税率2
+								</div>
+								<div slot="append">
+									%
+								</div>
+							</template>
+						</el-input>
+					</div>
+				</el-form-item>
+				<el-form-item>
+					<div>商品价格是否含税：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.hasTax"></el-checkbox>
+						</label>
+					</div>
+					<div>勾选后，商品资料中预设的采购和销售价格，对应购货、销货类单据中的含税单价列，不勾选则对应不含税单价列</div>
+				</el-form-item>
+				<el-form-item>
+					<div>启用辅助属性：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.usingSupport"></el-checkbox>
+						</label>
+					</div>
+					<div>启用后允许商品新增服装、尺码等自定义属性</div>
+				</el-form-item>
+				<el-form-item>
+					<div>启用序列号：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.usingSerialNumber "></el-checkbox>
+						</label>
+					</div>
+					<div>启用后将新增商品序列号管理功能</div>
+				</el-form-item>
+				<el-form-item>
+					<div>启用批次保质期管理：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.usingManagement"></el-checkbox>
+						</label>
+					</div>
+					<div>启用后将新增商品保持期管理功能</div>
+				</el-form-item>
+				<el-form-item>
+					<div>启用自动出库最早批次：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.usingEarliest"></el-checkbox>
+						</label>
+					</div>
+					<div>启用后录入出库类单据时，会自动选择商品最早时间的批次</div>
+				</el-form-item>
+				<el-form-item>
+					<div>启用自动填充结算金额：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.autoFill"></el-checkbox>
+						</label>
+					</div>
+					<div>启用后将自动填充收付款金额</div>
+				</el-form-item>
+				<el-form-item>
+					<div>启用分仓核算：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.usingBranchWarehouseCheck"></el-checkbox>
+						</label>
+					</div>
+					<div>启用后将商品的成本将根据各分仓核算，未启用根据总仓核算</div>
+				</el-form-item>
+				<el-form-item>
+					<div>本位币：</div>
+					<div>
+						<el-select v-model="form.money">
+							<el-option v-for="m in money" :label="m.label" :value="m.value" :key="m.value"></el-option>
+						</el-select>
+					</div>
+					<div>用于计价结算货币的类型</div>
+				</el-form-item>
+				<el-form-item>
+					<div>数量小数位：</div>
+					<div>
+						<label>
+							<el-input v-model="form.quantityDigits" type="number"></el-input>
+						</label>
+					</div>
+					<div>设置数量的小数位数</div>
+				</el-form-item>
+				<el-form-item>
+					<div>单价小数位：</div>
+					<div>
+						<label>
+							<el-input v-model="form.priceDigits" type="number"></el-input>
+						</label>
+					</div>
+					<div>设置单价的小数位数</div>
+				</el-form-item>
+				<el-form-item>
+					<div>存货计价方法：</div>
+					<div>
+						<el-select v-model="form.valuationMethod">
+							<el-option v-for="vm in valuationMethod" :label="vm.label" :value="vm.value" :key="vm.valuetrue"></el-option>
+						</el-select>
+					</div>
+					<div>设置存货计价方法</div>
+				</el-form-item>
+				<el-form-item>
+					<div>是否检查负库存：</div>
+					<div>
+						<label>
+							<el-checkbox v-model="form.usingCheckNegativeOnHand"></el-checkbox>
+						</label>
+					</div>
+					<div>启用后将检查负库存</div>
+				</el-form-item>
+			</el-form>
 		</div>
 	</div>
 </div>

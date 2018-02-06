@@ -159,10 +159,10 @@ ul{
 			right: 10px;
 			bottom: 10px;
 			background: #fff;
-			box-shadow: 1px 1px 3px #dbdfe7;
 			.jgb-table{
 				font-size: 14px;
 				padding: 10px;
+				background: #fff;
 				.jgb-table-column{
 					width: 799px;
 					display: flex;
@@ -205,6 +205,41 @@ ul{
 					}
 					&:first-child{
 						/* border-top: 1px solid #333; */
+					}
+				}
+			}
+			.form-table{
+				display: flex;
+				flex-direction: column;
+				margin-bottom: 20px;
+				border: 1px solid #ebeef5;
+				border-right: none;
+    			border-bottom: none;
+    			background: #fff;
+				.form-table-thead{
+					background: linear-gradient(#f8f8f8,#efefef);
+				}
+				.el-form-item{
+					padding: 0;
+					.el-form-item__content{
+						display: flex;
+						>div{
+							flex: auto;
+							padding: 10px;
+							text-align: center;
+						    border-right: 1px solid #ebeef5;
+							border-bottom: 1px solid #ebeef5;
+							&:first-child{
+								flex: 0 0 350px;
+							}
+							&:nth-child(2){
+								flex: 0 0 250px;
+							}
+							>label{
+								display: block;
+								height: 100%;
+							}
+						}
 					}
 				}
 			}
