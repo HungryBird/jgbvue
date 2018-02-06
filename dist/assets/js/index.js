@@ -199,14 +199,12 @@ new Vue({
 
     if(sessionStorage.tabs) {
       let arr = JSON.parse(sessionStorage.tabs);
-      this.tabs.splice(0, this.tabs.splice);
+      _self.tabs.splice(0, _self.tabs.length);
       arr.forEach((item)=> {
         _self.tabs.push(item);
       });
-      this.activeTab = sessionStorage.activeTab;
+      _self.activeTab = sessionStorage.activeTab;
     }
-
-    console.log('sessionStorage', sessionStorage);
 
     axios.get('/index/is_show_guidance').then((data)=> {
       let jdata = JSON.parse(data.data.message)
@@ -273,14 +271,14 @@ new Vue({
         })
         sessionStorage.tabs = JSON.stringify(arrObj2);
         sessionStorage.activeTab = this.activeTab;
-        return;
+      }else{
+        let arrObj = [];
+        arr.forEach((item)=> {
+          arrObj.push(item);
+        })
+        sessionStorage.tabs = JSON.stringify(arrObj);
+        sessionStorage.activeTab = this.activeTab;
       }
-      let arrObj = [];
-      arr.forEach((item)=> {
-        arrObj.push(item);
-      })
-      sessionStorage.tabs = JSON.stringify(arrObj);
-      sessionStorage.activeTab = this.activeTab;
     }
   }
 });
