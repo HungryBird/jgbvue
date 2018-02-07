@@ -20,7 +20,7 @@
 			<el-button type="primary" icon="fa fa-save" v-on:click="save"><span style="padding-left: 8px;">保存</span></el-button>
 		</nav>
 		<div class="inner_main">
-			<el-form class="form-table">
+			<el-form class="form-table" ref="tableForm" :model="form" :rules="rules">
 				<el-form-item class="form-table-thead">
 					<div>系统参数</div>
 					<div>操作</div>
@@ -141,26 +141,27 @@
 				<el-form-item>
 					<div>本位币：</div>
 					<div>
-						<el-select v-model="form.money">
+						<!-- <el-select v-model="form.money">
 							<el-option v-for="m in money" :label="m.label" :value="m.value" :key="m.value"></el-option>
-						</el-select>
+						</el-select> -->
+						<el-input v-model="form.money" value="RMB"></el-input>
 					</div>
 					<div>用于计价结算货币的类型</div>
 				</el-form-item>
-				<el-form-item>
+				<el-form-item prop="quantityDigits">
 					<div>数量小数位：</div>
 					<div>
 						<label>
-							<el-input v-model="form.quantityDigits" type="number"></el-input>
+							<el-input v-model="form.quantityDigits" type="number" min="0"></el-input>
 						</label>
 					</div>
 					<div>设置数量的小数位数</div>
 				</el-form-item>
-				<el-form-item>
+				<el-form-item prop="priceDigits">
 					<div>单价小数位：</div>
 					<div>
 						<label>
-							<el-input v-model="form.priceDigits" type="number"></el-input>
+							<el-input v-model="form.priceDigits" type="number" min="0"></el-input>
 						</label>
 					</div>
 					<div>设置单价的小数位数</div>

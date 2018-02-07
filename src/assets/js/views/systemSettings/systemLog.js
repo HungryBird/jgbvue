@@ -12,20 +12,20 @@ new Vue({
 					label: '全部日志'
 				},
 				{
-					value: '3months',
-					label: '近3个月'
+					value: 'login',
+					label: '登陆'
 				},
 				{
-					value: '1month',
-					label: '近1个月'
+					value: 'visit',
+					label: '访问'
 				},
 				{
-					value: '7days',
-					label: '近7天'
+					value: 'operation',
+					label: '操作'
 				},
 				{
-					value: 'today',
-					label: '今天'
+					value: 'error',
+					label: '异常'
 				}
 			]
 		},
@@ -176,6 +176,13 @@ new Vue({
 				month = '0' + month;
 			}
 			return year + '-' + month + '-' + day;
+		},
+		executeResultFilter(val) {
+			if(val === 'success') {
+				return '成功'
+			}else if(val === 'false') {
+				return '失败'
+			}
 		}
 	}
 })

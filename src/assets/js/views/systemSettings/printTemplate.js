@@ -136,4 +136,12 @@ new Vue({
     		return val ? '是' : '否';
     	}
     }
-})
+});
+
+JGBVue = {
+    module: {}
+};
+
+JGBVue.module.printTemplate = ()=> {
+    //
+}

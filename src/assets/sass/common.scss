@@ -223,7 +223,7 @@ ul{
 					padding: 0;
 					.el-form-item__content{
 						display: flex;
-						>div{
+						>div:not(.el-input){
 							flex: auto;
 							padding: 10px;
 							text-align: center;

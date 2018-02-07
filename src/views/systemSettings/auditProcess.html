@@ -85,14 +85,14 @@
 					</el-select>
 				</el-form-item>
 				<!-- 当选择1级审核方式时，审核人员没有老板时显示老板选项 -->
-				<el-form-item v-if="selectProcessLevel == '1'&&!firstLeveAuditHasBoss&&addForm.firstLevelAuditorsGroup.length != 0" prop="bosses">
+				<el-form-item v-if="(addForm.selectSysModule == '选项1'&&addForm.saleBossAudit||addForm.selectSysModule == '选项2'&&addForm.purchaseBossAudit)&&selectProcessLevel == '1'&&!firstLeveAuditHasBoss&&addForm.firstLevelAuditorsGroup.length != 0" prop="bosses">
 					<label>选择老板</label>
 					<el-select multiple placeholder="请选择" v-model="addForm.bosses" width="100%">
 						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
 					</el-select>
 				</el-form-item>
 				<!-- 当选择2级审核方式时，审核人员没有老板时显示老板选项 -->
-				<el-form-item v-if="selectProcessLevel == '2'&&!firstLeveAuditHasBoss&&!secondLeveAuditHasBoss&&addForm.firstLevelAuditorsGroup.length != 0&&addForm.secondLevelAuditorsGroup.length != 0" prop="bosses" label="选择老板">
+				<el-form-item v-if="(addForm.selectSysModule == '选项1'&&addForm.saleBossAudit||addForm.selectSysModule == '选项2'&&addForm.purchaseBossAudit)&&selectProcessLevel == '2'&&!firstLeveAuditHasBoss&&!secondLeveAuditHasBoss&&addForm.firstLevelAuditorsGroup.length != 0&&addForm.secondLevelAuditorsGroup.length != 0" prop="bosses" label="选择老板">
 					<el-select multiple placeholder="请选择" v-model="addForm.bosses" width="100%">
 						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
 					</el-select>

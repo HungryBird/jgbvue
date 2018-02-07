@@ -30,6 +30,14 @@ JGBVue.module.systemParameter = ()=>{
 					valuationMethod: '',
 					usingCheckNegativeOnHand: false
 				},
+				rules:{
+					/*quantityDigits: [
+						{min: 0, message: '不能小于0', trigger: 'blur'}
+					],
+					priceDigits: [
+						{min: 0, message: '不能小于0', trigger: 'blur'}
+					]*/
+				},
 				money: [
 					{
 						label: 'RMB',
@@ -40,6 +48,10 @@ JGBVue.module.systemParameter = ()=>{
 					{
 						label: '移动平均',
 						value: 'move'
+					},
+					{
+						label: '先进先出',
+						value: 'firstInFirstOut'
 					}
 				]
 			},
@@ -73,6 +85,23 @@ JGBVue.module.systemParameter = ()=>{
 					}).catch((err)=>{
 						console.log('err', err);
 					})
+				}
+			},
+			watch: {
+				'form.quantityDigits'(val) {
+					console.log(typeof val)
+					if(Number(val) <= 0 || isNaN(Number(val))) {
+						this.form.quantityDigits = 0;
+						return;
+					}
+					this.form.quantityDigits = Number(val);
+				},
+				'form.priceDigits'(val) {
+					if(Number(val) <= 0 || isNaN(Number(val))) {
+						this.form.priceDigits = 0;
+						return;
+					}
+					this.form.quantityDigits = Number(val);
 				}
 			}
 		});
