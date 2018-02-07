@@ -22,6 +22,14 @@ const userLoginRouter = require('./routers/login');
 const indexRouter = require('./routers/index');
 const guidanceRouter = require('./routers/guidance')
 
+app.use('/user', userLoginRouter);
+app.use('/index', indexRouter);
+app.use('/guidance', guidanceRouter);
+
+/**
+ * 系统参数
+ */
+
 const administrativeRegionRouter = require('./routers/views/systemSettings/administrativeRegion');
 const systemLogRouter = require('./routers/views/systemSettings/systemLog');
 const systemParameterRouter = require('./routers/views/systemSettings/systemParameter');
@@ -32,10 +40,6 @@ const emailInfoRouter = require('./routers/views/systemSettings/emailInfo');
 const settlementNAntiSettlementRouter = require('./routers/views/systemSettings/settlementNAntiSettlement');
 const auditProcessRouter = require('./routers/views/systemSettings/auditProcess');
 const printTemplateRouter = require('./routers/views/systemSettings/printTemplate');
-
-app.use('/user', userLoginRouter);
-app.use('/index', indexRouter);
-app.use('/guidance', guidanceRouter);
 
 app.use('/administrativeRegion', administrativeRegionRouter);
 app.use('/systemLog', systemLogRouter);
@@ -49,7 +53,15 @@ app.use('/auditProcess', auditProcessRouter);
 app.use('/printTemplate', printTemplateRouter);
 
 /**
- * server running at port 3001
+ * 基础资料
+ */
+
+const divisionalManagementRouter = require('./routers/views/companyOrganization/divisionalManagement');
+
+app.use('/divisionalManagement', divisionalManagementRouter);
+
+/**
+ * server running at port 3333
  */
 
 module.exports = app;

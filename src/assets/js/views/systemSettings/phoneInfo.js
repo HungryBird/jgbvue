@@ -18,7 +18,19 @@ JGBVue.module.phoneInfo = ()=> {
 					messageNumber: 0,
 					address: '',
 					account: '',
-					passKey: ''
+					passKey: '',
+					usingSysDefaultMethod: false
+				},
+				rules: {
+					address: [
+						{ required: true, message: '短信API地址不能为空' }
+					],
+					account: [
+						{ required: true, message: '平台登陆账户不能为空' }
+					],
+					平台通讯密匙: [
+						{ required: true, message: '平台通讯密匙不能为空' }
+					]
 				}
 			},
 			mounted() {
@@ -26,33 +38,33 @@ JGBVue.module.phoneInfo = ()=> {
 				axios.post(getDataUrl).then((req)=> {
 					if(req.data.status) {
 						let jdata = JSON.parse(req.data.message)
-						_self.formData.messageNumber = jdata.messageNumber;
-						_self.formData.address = jdata.address;
-						_self.formData.account = jdata.account;
-						_self.formData.passKey = jdata.passKey;
+						_self.formData = jdata;
 					}
 				})
 			},
 			methods: {
 				save() {
-					axios.post(saveDataUrl).then((req)=> {
-						if(req.data.status) {
-							this.$message({
-								type: 'success',
-								message: req.data.message
-							})
-						}else{
+					this.$refs.PIForm.validate((validate)=> {
+						if(!validate) return;
+						axios.post(saveDataUrl).then((req)=> {
+							if(req.data.status) {
+								this.$message({
+									type: 'success',
+									message: req.data.message
+								})
+							}else{
+								this.$message({
+									type: 'error',
+									message: req.data.message
+								})
+							}
+						}).catch((err)=> {
 							this.$message({
 								type: 'error',
-								message: req.data.message
+								message: err
 							})
-						}
-					}).catch((err)=> {
-						this.$message({
-							type: 'error',
-							message: err
-						})
-					});
+						});
+					})
 				}
 			}
 		});

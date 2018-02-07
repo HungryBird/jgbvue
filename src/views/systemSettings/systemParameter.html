@@ -20,33 +20,6 @@
 			<el-button type="primary" icon="fa fa-save" v-on:click="save"><span style="padding-left: 8px;">保存</span></el-button>
 		</nav>
 		<div class="inner_main">
-			<!-- <el-table :data="table" border ref="parameterTable" tooltip-effect="dark" v-loading.fullscreen.lock="loading">
-				<el-table-column label="系统参数" prop="param"></el-table-column>
-				<el-table-column label="操作" prop="action" width="200">
-					<template slot-scope="scope">
-						<el-checkbox v-if="scope.row.action.type == 'check'" v-model="scope.row.action.status"></el-checkbox>
-						<el-select v-else-if="scope.row.action.type == 'select'" v-model="scope.row.action.value">
-							<el-option v-for="option in scope.row.action.options" :key="option.label" :label="option.label" :value="option.value"></el-option>
-						</el-select>
-						<el-input v-else-if="scope.row.action.type == 'number'" type="number" v-model="scope.row.action.value"></el-input>
-					</template>
-				</el-table-column>
-				<el-table-column label="说明" prop="explain">
-					<template slot-scope="scope">
-						<span v-if="scope.row.explain.type != 'input'">{{scope.row.explain.text}} </span>
-						<div v-else>
-							<el-input size="mini" v-model="tax.value" v-for="tax in scope.row.explain.taxs" :key="tax.text">
-								<template slot="prepend">
-									{{ tax.text }}
-								</template>
-								<template slot="append">
-									<i>%</i>
-								</template>
-							</el-input>
-						</div>
-					</template>
-				</el-table-column>
-			</el-table> -->
 			<el-form class="form-table">
 				<el-form-item class="form-table-thead">
 					<div>系统参数</div>

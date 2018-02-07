@@ -1,9 +1,10 @@
 {
-	"serverAddress": "smtp.qq.com",
-	"using": true,
-	"port": 25,
+	"STMPServer": "smtp.qq.com",
+	"usingSSL": true,
+	"SMTPPort": 25,
 	"postmanAddress": "info@it134.cn",
 	"emailAccount": "info@it134.cn",
-	"password": "123456",
-	"nickname": "小花"
+	"emailPassword": "123456",
+	"nickname": "小花",
+	"usingSysDefaultMethod": true
 }

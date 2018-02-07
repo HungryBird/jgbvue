@@ -71,7 +71,7 @@ new Vue({
             id: 'companyManagement',
             name: '公司管理'
           }, {
-            id: 'xsdj002',
+            id: 'divisionalManagement',
             name: '部门管理'
           }, {
             id: 'xsdj003',
@@ -174,7 +174,7 @@ new Vue({
       name: '系统更新动态',
       backgroundPosition: '-112px -1099px'
     }, ],
-    activeTab: 'systemParameter',
+    activeTab: 'guidance',
     tabs: [
       {
         name: 'home',
@@ -184,11 +184,6 @@ new Vue({
         name: 'guidance',
         label: '新手导航',
         link: './guidance.html'
-      },
-      {
-        name: 'systemParameter',
-        label: '部门管理',
-        link: './views/systemSettings/systemParameter.html'
       }
     ],
     locking: {

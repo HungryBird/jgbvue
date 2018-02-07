@@ -21,7 +21,7 @@
 				</el-button-group>
 			</div>
 			<div class="inner_main">
-				<el-form class="jgb-table">
+				<el-form class="jgb-table" ref="PIForm" :model="formData" :rules="rules">
 					<div class="jgb-table-column">
 						<div>
 							短信剩余数量
@@ -37,9 +37,9 @@
 						<div>
 							<span class="required">短信API地址</span>
 						</div>
-						<div>
+						<el-form-item prop="address">
 							<el-input v-model="formData.address"></el-input>
-						</div>
+						</el-form-item>
 						<div>
 							以http://开头
 						</div>
@@ -48,9 +48,9 @@
 						<div>
 							<span class="required">平台登陆账户</span>
 						</div>
-						<div>
+						<el-form-item prop="account">
 							<el-input v-model="formData.account"></el-input>
-						</div>
+						</el-form-item>
 						<div>
 							短信注册账号的用户名
 						</div>
@@ -59,11 +59,22 @@
 						<div>
 							<span class="required">平台通讯密匙</span>
 						</div>
-						<div>
+						<el-form-item prop="password">
 							<el-input type="password" v-model="formData.passKey"></el-input>
-						</div>
+						</el-form-item>
 						<div>
 							开通短信账户设置的通讯密匙
+						</div>
+					</div>
+					<div class="jgb-table-column">
+						<div>
+							<span>启用系统默认提醒方式</span>
+						</div>
+						<el-form-item>
+							<el-checkbox v-model="formData.usingSysDefaultMethod"></el-checkbox>
+						</el-form-item>
+						<div>
+							启用后，系统将默认通过手机信息的方式发送提醒信息
 						</div>
 					</div>
 					<div class="jgb-table-column">

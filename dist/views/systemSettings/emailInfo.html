@@ -6,11 +6,6 @@
 	<link rel="stylesheet" type="text/css" href="../../font-awesome-4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
-	<style type="text/css">
-		body{
-			overflow-x: hidden;
-		}
-	</style>
 </head>
 <body>
 	<div id="app">
@@ -21,14 +16,14 @@
 				</el-button-group>
 			</div>
 			<div class="inner_main">
-				<el-form class="jgb-table">
+				<el-form class="jgb-table" :model="formData" :rules="rules" ref="emailForm">
 					<div class="jgb-table-column">
 						<div>
 							<span class="required">SMTP服务器</span>
 						</div>
-						<div>
-							<el-input v-model="formData.serverAddress"></el-input>
-						</div>
+						<el-form-item prop="STMPServer">
+							<el-input v-model="formData.STMPServer"></el-input>
+						</el-form-item>
 						<div>
 							发送邮件的SMTP服务器地址
 						</div>
@@ -37,9 +32,9 @@
 						<div>
 							<span class="required">SSL加密连接</span>
 						</div>
-						<div>
-							<el-switch v-model="formData.using" v-on:change="switchChange"></el-switch>
-						</div>
+						<el-form-item prop="usingSSL">
+							<el-switch v-model="formData.usingSSL" v-on:change="switchChange"></el-switch>
+						</el-form-item>
 						<div>
 							是否启用SSL加密连接
 						</div>
@@ -48,55 +43,66 @@
 						<div>
 							<span class="required">SMTP端口</span>
 						</div>
+						<el-form-item prop="SMTPPort">
+							<el-input v-model="formData.SMTPPort"></el-input>
+						</el-form-item>
 						<div>
-							<el-input v-model="formData.port"></el-input>
-						</div>
-						<div>
-							短信注册账号的用户名
+							SMTP服务器的端口，大部分服务商都支持25端口
 						</div>
 					</div>
 					<div class="jgb-table-column">
 						<div>
 							<span class="required">发件人地址</span>
 						</div>
+						<el-form-item prop="postmanAddress">
+							<el-input v-model="formData.postmanAddress"></el-input>
+						</el-form-item>
 						<div>
-							<el-input type="password" v-model="formData.postmanAddress"></el-input>
-						</div>
-						<div>
-							开通短信账户设置的通讯密匙
+							收件人的邮箱地址
 						</div>
 					</div>
 					<div class="jgb-table-column">
 						<div>
 							<span class="required">邮箱账号</span>
 						</div>
-						<div>
+						<el-form-item prop="emailAccount">
 							<el-input v-model="formData.emailAccount"></el-input>
-						</div>
+						</el-form-item>
 						<div>
-							....
+							收件人的邮箱帐号
 						</div>
 					</div>
 					<div class="jgb-table-column">
 						<div>
 							<span class="required">邮箱密码</span>
 						</div>
+						<el-form-item prop="emailPassword">
+							<el-input type="password" v-model="formData.emailPassword"></el-input>
+						</el-form-item>
 						<div>
-							<el-input type="password" v-model="formData.password"></el-input>
-						</div>
-						<div>
-							....
+							收件人的邮箱密码
 						</div>
 					</div>
 					<div class="jgb-table-column">
 						<div>
 							<span class="required">发件人昵称</span>
 						</div>
+						<el-form-item prop="nickname">
+							<el-input v-model="formData.nickname" required></el-input>
+						</el-form-item>
 						<div>
-							<el-input v-model="formData.nickname"></el-input>
+							对方收到邮件时显示的昵称
 						</div>
+					</div>
+					<div class="jgb-table-column">
 						<div>
-							....
+							<span>启动系统默认提醒方式</span>
+						</div>
+						<el-form-item prop="usingSysDefaultMethod">
+							<el-checkbox v-model="formData.usingSysDefaultMethod"></el-checkbox>
+						</el-form-item>
+						<div>
+							对方收到邮件时显示的昵称
 						</div>
 					</div>
 				</el-form>
@@ -108,4 +114,11 @@
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/emailInfo.js"></script>
+<script type="text/javascript">
+	/**
+	 *获取初始信息
+	 *保存信息
+	 */
+	JGBVue.module.emailInfo().init('/emailInfo/data_get', '/emailInfo/data_save');
+</script>
 </html>

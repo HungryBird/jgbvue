@@ -1,56 +1,90 @@
-new Vue({
-	el: '#app',
-	data: {
-		formData: {
-			serverAddress: '',
-			using: false,
-			port: 0,
-			postmanAddress: '',
-			emailAccount: '',
-			password: '',
-			nickname: ''
-		}
-	},
-	mounted() {
-		let _self = this;
-		axios.post('/emailInfo/data_get').then((req)=> {
-			if(req.data.status) {
-				let jdata = JSON.parse(req.data.message)
-				_self.formData.serverAddress = jdata.serverAddress;
-				_self.formData.using = jdata.using;
-				_self.formData.port = jdata.port;
-				_self.formData.postmanAddress = jdata.postmanAddress;
-				_self.formData.emailAccount = jdata.emailAccount;
-				_self.formData.password = jdata.password;
-				_self.formData.nickname = jdata.nickname;
-			}
-		})
-	},
-	methods: {
-		save() {
-			let _self = this;
-			axios.post('/emailInfo/data_save').then((req)=> {
-				if(req.data.status) {
-					this.$message({
-						type: 'success',
-						message: req.data.message
-					})
-				}else{
-					this.$message({
-						type: 'error',
-						message: req.data.message
-					})
+JGBVue = {
+	module: {}
+};
+
+JGBVue.module.emailInfo = ()=> {
+	let _this = {}
+	,that = {};
+
+	_this.init = (dataGetUrl, dataSaveUrl)=> {
+		new Vue({
+			el: '#app',
+			data: {
+				formData: {
+					STMPServer: '',
+					usingSSL: false,
+					SMTPPort: 0,
+					postmanAddress: '',
+					emailAccount: '',
+					emailPassword: '',
+					nickname: '',
+					usingSysDefaultMethod: false
+				},
+				rules: {
+					STMPServer: [
+						{required: true, message: 'SMTP服务器不能为空'}
+					],
+					SMTPPort: [
+						{required: true, message: 'SMTPPort不能为空'}
+					],
+					postmanAddress: [
+						{required: true, message: '发件人地址不能为空'}
+					],
+					emailAccount: [
+						{required: true, message: '邮箱账号不能为空'}
+					],
+					emailPassword: [
+						{required: true, message: '邮箱密码不能为空'}
+					],
+					nickname: [
+						{required: true, message: '发件人昵称不能为空'}
+					]
 				}
-			}).catch((err)=> {
-				this.$message({
-					type: 'error',
-					message: err
+			},
+			mounted() {
+				let _self = this;
+				axios.post(dataGetUrl).then((req)=> {
+					if(req.data.status) {
+						let jdata = JSON.parse(req.data.message)
+						_self.formData = jdata;
+					}
 				})
-			});
-		},
-		switchChange(val) {
-			console.log(11)
-			this.formData.using = val;
-		}
+			},
+			methods: {
+				save() {
+					let _self = this;
+					this.$refs.emailForm.validate((validate)=> {
+						if(!validate) return;
+						axios.post(dataSaveUrl).then((req)=> {
+							if(req.data.status) {
+								this.$message({
+									type: 'success',
+									message: req.data.message
+								})
+							}else{
+								this.$message({
+									type: 'error',
+									message: req.data.message
+								})
+							}
+						}).catch((err)=> {
+							this.$message({
+								type: 'error',
+								message: err
+							})
+						});
+					})
+				},
+				switchChange(val) {
+					this.formData.usingSSL = val;
+				}
+			}
+		});
 	}
-})
+
+	that.init = (dataGetUrl, dataSaveUrl)=> {
+		_this.init(dataGetUrl, dataSaveUrl);
+	}
+
+	return that;
+}
