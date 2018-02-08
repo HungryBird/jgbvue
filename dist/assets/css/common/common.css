@@ -87,6 +87,21 @@ ul {
       padding: 6px 4px; }
     .el-dialog .el-dialog__body .checkbox {
       margin-left: 40px; }
+    .el-dialog .el-dialog__body .el-checkbox-group {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap; }
+      .el-dialog .el-dialog__body .el-checkbox-group .is-bordered {
+        margin: 0; }
+      .el-dialog .el-dialog__body .el-checkbox-group .el-checkbox-wrap {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 25%;
+        padding: 0 10px 10px 0; }
+        .el-dialog .el-dialog__body .el-checkbox-group .el-checkbox-wrap .el-checkbox {
+          width: 100%; }
   .el-dialog .el-dialog__footer {
     border-top: 1px solid #dbdfe7;
     padding: 10px; }

@@ -38,9 +38,11 @@
 					<el-button-group>
 						<el-button @click="deleteLog">
 							<i class="el-icon-delete"></i>
+							删除
 						</el-button>
-						<el-button>
+						<el-button v-on:click="exportLogDialog.visible = true">
 							<i class="fa fa-sign-out"></i>
+							导出
 						</el-button>
 					</el-button-group>
 				</div>
@@ -48,41 +50,87 @@
 			</div>
 			<div class="inner_main" style="top: 70px;">
 				<el-table :data="logTable" border ref="logTable" tooltip-effect="dark">
-					<el-table-column type="index" width="50" label="序号"></el-table-column>
-					<el-table-column prop="date" label="操作时间">
+					<el-table-column type="index" width="50" label="序号" align="center"></el-table-column>
+					<el-table-column prop="date" label="操作时间" align="center">
 						<template slot-scope="scope">
 							{{ scope.row.date | filterDate }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="user" label="操作用户"></el-table-column>
-					<el-table-column prop="name" label="姓名"></el-table-column>
-					<el-table-column prop="IPAddress" label="IP地址"></el-table-column>
-					<el-table-column prop="sysFunction" label="系统功能"></el-table-column>
-					<el-table-column prop="operationType" label="操作类型"></el-table-column>
-					<el-table-column prop="executeResult" label="执行结果">
+					<el-table-column prop="user" label="操作用户" align="center"></el-table-column>
+					<el-table-column prop="name" label="姓名" align="center"></el-table-column>
+					<el-table-column prop="IPAddress" label="IP地址" align="center"></el-table-column>
+					<el-table-column prop="sysFunction" label="系统功能 align="center""></el-table-column>
+					<el-table-column prop="operationType" label="操作类型" align="center"></el-table-column>
+					<el-table-column prop="executeResult" label="执行结果" align="center">
 						<template slot-scope="scope">
 							<el-tag :type="scope.row.executeResult == 'success' ? 'success' : 'danger'">
 								{{ scope.row.executeResult | executeResultFilter }}
 							</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column prop="executeResultDescribe" label="执行结果描述"></el-table-column>
+					<el-table-column prop="executeResultDescribe" label="执行结果描述" align="center"></el-table-column>
 				</el-table>
 				<div class="inner_footer">
 					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
 				</div>
 			</div>
-			<el-dialog :visible.sync="deleteLogDialog.visible" title="清空">
-				<span style="margin-right: 20px;">日志保留时间:</span>
-				<el-select v-model="selectClear.optionVal.label" :filterable="true" @change="curSelect">
-					<el-option v-for="option in selectClear.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
-				</el-select>
+			<!-- 清空dialog -->
+			<el-dialog :visible.sync="deleteLogDialog.visible">
+				<div slot="title" class="title">
+					清空
+				</div>
+				<el-form>
+					<el-form-item label="日志保留时间">
+						<el-select v-model="selectClear.optionVal.label" :filterable="true" v-on:change="curSelect">
+							<el-option v-for="option in selectClear.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-form>
 				<div slot="footer" class="dialog-footer">
-					<!-- <div style="float: left;">
-						<el-checkbox v-model="deleteLogDialog.checked">确认并关闭窗口</el-checkbox>
-					</div> -->
 					<div style="float: right;">
 						<el-button type="primary" @click="onSubmit">确认</el-button>
+						<el-button @click="deleteLogDialog.visible = false">关闭</el-button>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</el-dialog>
+			<!-- 导出dialog -->
+			<el-dialog :visible.sync="exportLogDialog.visible">
+				<div slot="title" class="title">
+					导出
+				</div>
+				<p>
+					<small>注：请选择需要导出的字段</small>
+				</p>
+				<el-checkbox-group v-model="exportForm">
+					<div class="el-checkbox-wrap">
+						<el-checkbox label="操作时间" border></el-checkbox>
+					</div>
+					<div class="el-checkbox-wrap">
+						<el-checkbox label="操作账号" border></el-checkbox>
+					</div>
+					<div class="el-checkbox-wrap">
+						<el-checkbox label="姓名" border></el-checkbox>
+					</div>
+					<div class="el-checkbox-wrap">
+						<el-checkbox label="IP地址" border></el-checkbox>
+					</div>
+					<div class="el-checkbox-wrap">
+						<el-checkbox label="系统功能" border></el-checkbox>
+					</div>
+					<div class="el-checkbox-wrap">
+						<el-checkbox label="操作类型" border></el-checkbox>
+					</div>
+					<div class="el-checkbox-wrap">
+						<el-checkbox label="执行结果" border></el-checkbox>
+					</div>
+					<div class="el-checkbox-wrap">
+						<el-checkbox label="执行结果描述" border></el-checkbox>
+					</div>
+				</el-checkbox-group>
+				<div slot="footer" class="dialog-footer">
+					<div style="float: right;">
+						<el-button type="primary" v-on:click="onSubmit">确认</el-button>
 						<el-button @click="deleteLogDialog.visible = false">关闭</el-button>
 					</div>
 					<div style="clear: both;"></div>

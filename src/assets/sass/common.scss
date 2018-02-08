@@ -98,6 +98,21 @@ ul{
 		.checkbox{
 			margin-left: 40px;
 		}
+		.el-checkbox-group{
+			display: flex;
+			flex-wrap: wrap;
+			.is-bordered{
+				margin:0;
+			}
+			.el-checkbox-wrap{
+				box-sizing: border-box;
+				width: 25%;
+				padding: 0 10px 10px 0;
+				.el-checkbox{
+					width: 100%;
+				}
+			}
+		}
 	}
 	.el-dialog__footer{
 		border-top: 1px solid #dbdfe7;

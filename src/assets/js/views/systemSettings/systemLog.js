@@ -67,7 +67,11 @@ new Vue({
 			visible: false
 		},
 		currentPage: 1,
-
+		exportForm: [],
+		exportLogDialog: {
+			checked: true,
+			visible: false
+		}
 	},
 	mounted: function() {
 		this.selectClear.curSelectValue = this.selectClear.options[0].value;
