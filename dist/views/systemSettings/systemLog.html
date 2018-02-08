@@ -143,4 +143,15 @@
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/systemLog.js"></script>
+<script type="text/javascript">
+	/**
+	 * 初始化数据/获得全部数据
+	 * 删除数据
+	 * 切换select类型
+	 * 搜索
+	 * 点击分页
+	 * 改变页面尺寸
+	 */
+	JGBVue.module.systemLog().init('/systemLog/data_get_all', '/systemLog/data_delete', '/systemLog/data_get_other', '/systemLog/data_search', '/systemLog/data_paging_current', '/systemLog/data_paging_size');
+</script>
 </html>
