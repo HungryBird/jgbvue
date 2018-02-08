@@ -264,13 +264,13 @@ ul {
               #app .wrap_main .inner_main .form-table .el-form-item .el-form-item__content > div:not(.el-input) > label {
                 display: block;
                 height: 100%; }
-      #app .wrap_main .inner_main .inner_footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 4px;
-        border-top: 1px solid #dbdfe7;
-        background: #f7f7f7; }
-        #app .wrap_main .inner_main .inner_footer .el-pagination {
-          float: right; }
+  #app .wrap_footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 4px;
+    border-top: 1px solid #dbdfe7;
+    background: #f7f7f7; }
+    #app .wrap_footer .el-pagination {
+      float: right; }

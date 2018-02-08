@@ -258,18 +258,18 @@ ul{
 					}
 				}
 			}
-			.inner_footer{
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				padding: 4px;
-				border-top: 1px solid #dbdfe7;
-				background: #f7f7f7;
-				.el-pagination{
-					float: right;
-				}
-			}
+		}
+	}
+	.wrap_footer{
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 4px;
+		border-top: 1px solid #dbdfe7;
+		background: #f7f7f7;
+		.el-pagination{
+			float: right;
 		}
 	}
 }

@@ -235,5 +235,6 @@ JGBVue.module.systemLog = ()=> {
 	that.init = (dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize, dataExportUrl)=> {
 		_this.init(dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize, dataExportUrl);
 	}
+	
 	return that;
 }

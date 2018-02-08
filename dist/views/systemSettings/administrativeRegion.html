@@ -5,7 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>行政区域</title>
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
-	<link rel="stylesheet" type="text/css" href="../../assets/css/views/systemSettings/administrativeRegion.css">
+	<!-- <link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css"> -->
+	<link rel="stylesheet" type="text/css" href="../../assets/css/views/administrativeRegion.css">
 	<style type="text/css">
 		[v-cloak] {
 			display: none;
@@ -16,7 +17,7 @@
 	<div id="app" v-cloak>
 		<el-container>
 			<el-aside width="200px">
-				<el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+				<el-tree :data="treeData" :props="defaultProps" v-on:node-click="handleNodeClick"></el-tree>
 			</el-aside>
 			<el-main>
 				<div>
@@ -34,22 +35,25 @@
 					<div style="float: right;">
 						<div style="text-align: right;">
 							<el-button-group>
-								<el-button type="primary" @click="addRegin">
+								<el-button type="primary" v-on:click="addRegin">
 									<i class="el-icon-plus"></i>
+									添加
 								</el-button>
-								<el-button type="primary" @click="editRegin" :disabled="selectedRows.length != 1">
+								<el-button type="primary" v-on:click="editRegin" :disabled="selectedRows.length != 1">
 									<i class="el-icon-edit"></i>
+									编辑
 								</el-button>
-								<el-button type="primary" @click="deleteRegin" :disabled="selectedRows.length == 0">
+								<el-button type="primary" v-on:click="deleteRegin" :disabled="selectedRows.length == 0">
 									<i class="el-icon-delete"></i>
+									删除
 								</el-button>
 							</el-button-group>
 						</div>
 					</div>
 				</div>
-				<el-table :data="tableData" border ref="multipleTable" tooltip-effect="dark" @row-click="rowClick" v-on:select-all="selectAll">
+				<el-table :data="tableData" border ref="multipleTable" tooltip-effect="dark" v-on:row-click="rowClick" v-on:select-all="selectAll">
 					<el-table-column type="selection"></el-table-column>
-					<el-table-column type="index"></el-table-column>
+					<el-table-column type="index" label="序号" width="50px"></el-table-column>
 					<el-table-column prop="number" label="编号"></el-table-column>
 					<el-table-column prop="label" label="名称"></el-table-column>
 					<el-table-column prop="initials" label="简拼"></el-table-column>
@@ -108,7 +112,7 @@
 						<el-checkbox v-model="editForm.checked">确认并关闭窗口</el-checkbox>
 					</div>
 					<div style="float: right;">
-						<el-button type="primary" @click="onSubmitEdit">保存</el-button>
+						<el-button type="primary" v-on:click="onSubmitEdit">保存</el-button>
 						<el-button @click="editForm.visible = false">取消</el-button>
 					</div>
 					<div style="clear: both;"></div>
@@ -121,4 +125,7 @@
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/administrativeRegion.js"></script>
+<script type="text/javascript">
+	JGBVue.module.administrativeRegion().init();
+</script>
 </html>
