@@ -76,6 +76,7 @@ JGBVue.module.systemLog = ()=> {
 					visible: false
 				},
 				currentPage: 1,
+				pageSize: 20,
 				exportForm: [],
 				exportLogDialog: {
 					checked: true,
@@ -156,7 +157,11 @@ JGBVue.module.systemLog = ()=> {
 					this.selectClear.curSelectValue;
 				},
 				handleSizeChange(size) {
-					axios.post(dataGetSize, size).then((data)=> {
+					let obj = {};
+					this.pageSize = size;
+					obj.currentPage = this.currentPage;
+					obj.pageSize = this.pageSize;
+					axios.post(dataGetSize, obj).then((data)=> {
 						if(data.data.status) {
 							let jdata = JSON.parse(data.data.message);
 							this.logTable = jdata;
@@ -166,7 +171,11 @@ JGBVue.module.systemLog = ()=> {
 					})
 				},
 				handleCurrentChange(number) {
-					axios.post(dataGetCurrentUrl, number).then((data)=> {
+					let obj = {};
+					this.currentPage = number;
+					obj.currentPage = this.currentPage;
+					obj.pageSize = this.pageSize;
+					axios.post(dataGetCurrentUrl, obj).then((data)=> {
 						if(data.data.status) {
 							let jdata = JSON.parse(data.data.message);
 							this.logTable = jdata;
