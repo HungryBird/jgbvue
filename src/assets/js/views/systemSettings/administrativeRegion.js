@@ -114,6 +114,14 @@ JGBVue.module.administrativeRegion = ()=> {
 				});
 			},
 			methods: {
+				loadNode(node, resolve) {
+					console.log('node', node);
+					console.log('resolve', resolve);
+					if(node.level === 0) {
+						return resolve([{ name: 'region' }]);
+					};
+					if (node.level > 1) return resolve([]);
+				},
 				handleNodeClick(data,node,cmp) {
 					var _self = this;
 					if(!data.children) {
@@ -189,7 +197,7 @@ JGBVue.module.administrativeRegion = ()=> {
 				editRegin() {
 					_self = this;
 					_self.editForm.visible = true;
-					_self.editForm.editFormData.name = _self.selectedRows[0].label;
+					_self.editForm.editFormData.label = _self.selectedRows[0].label;
 					_self.editForm.editFormData.level = _self.selectedRows[0].level;
 					_self.editForm.editFormData.number = _self.selectedRows[0].number;
 					_self.editForm.editFormData.notes = _self.selectedRows[0].notes;

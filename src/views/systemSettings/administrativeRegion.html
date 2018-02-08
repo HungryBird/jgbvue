@@ -17,7 +17,7 @@
 	<div id="app" v-cloak>
 		<el-container>
 			<el-aside width="200px">
-				<el-tree :data="treeData" :props="defaultProps" v-on:node-click="handleNodeClick"></el-tree>
+				<el-tree :data="treeData" :load="loadNode" :props="defaultProps" lazy v-on:node-click="handleNodeClick"></el-tree>
 			</el-aside>
 			<el-main>
 				<div>
@@ -71,8 +71,8 @@
 					<el-form-item label="编号" prop="number">
 						<el-input v-model="addForm.addFormData.number" auto-complete="off"></el-input>
 					</el-form-item>
-					<el-form-item label="名称" prop="name">
-						<el-input v-model="addForm.addFormData.name" auto-complete="off"></el-input>
+					<el-form-item label="名称" prop="label">
+						<el-input v-model="addForm.addFormData.label" auto-complete="off"></el-input>
 					</el-form-item>
 					<el-form-item label="级别" prop="level">
 						<el-input v-model="addForm.addFormData.level" auto-complete="off" :disabled="true"></el-input>
@@ -97,8 +97,8 @@
 					<el-form-item label="编号" prop="number">
 						<el-input v-model="editForm.editFormData.number" auto-complete="off"></el-input>
 					</el-form-item>
-					<el-form-item label="名称" prop="name">
-						<el-input v-model="editForm.editFormData.name" auto-complete="off"></el-input>
+					<el-form-item label="名称" prop="label">
+						<el-input v-model="editForm.editFormData.label" auto-complete="off"></el-input>
 					</el-form-item>
 					<el-form-item label="级别" prop="level">
 						<el-input v-model="editForm.editFormData.level" auto-complete="off" :disabled="true"></el-input>
