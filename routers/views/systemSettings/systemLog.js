@@ -82,4 +82,11 @@ router.post('/data_delete', (req, res)=> {
 	})
 });
 
+router.post('/data_export', (req, res)=> {
+	res.send({
+		status: true,
+		message: '导出成功'
+	})
+})
+
 module.exports = router;

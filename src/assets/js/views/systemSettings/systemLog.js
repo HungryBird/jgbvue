@@ -6,7 +6,7 @@ JGBVue.module.systemLog = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize)=> {
+	_this.init = (dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize, dataExportUrl)=> {
 		new Vue({
 			el: '#app',
 			data: {
@@ -187,6 +187,23 @@ JGBVue.module.systemLog = ()=> {
 							})
 						}
 					})
+				},
+				exportLog() {
+					let _self = this;
+					if(this.exportForm.length === 0) {
+						this.$message({
+							type: 'error',
+							message: '请至少选择一个要导出的类型'
+						});
+						return;
+					}
+					axios.post(dataExportUrl, this.exportForm).then((data)=> {
+						if(data.data.status) {
+							_self.exportLogDialog.visible = false;
+						}else{
+							console.log('err: ', data.data.message);
+						}
+					})
 				}
 			},
 			filters: {
@@ -215,8 +232,8 @@ JGBVue.module.systemLog = ()=> {
 		});
 	}
 
-	that.init = (dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize)=> {
-		_this.init(dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize);
+	that.init = (dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize, dataExportUrl)=> {
+		_this.init(dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize, dataExportUrl);
 	}
 	return that;
 }

@@ -130,8 +130,8 @@
 				</el-checkbox-group>
 				<div slot="footer" class="dialog-footer">
 					<div style="float: right;">
-						<el-button type="primary" v-on:click="onSubmit">确认</el-button>
-						<el-button @click="deleteLogDialog.visible = false">关闭</el-button>
+						<el-button type="primary" v-on:click="exportLog">导出</el-button>
+						<el-button @click="exportLogDialog.visible = false">关闭</el-button>
 					</div>
 					<div style="clear: both;"></div>
 				</div>
@@ -152,6 +152,6 @@
 	 * 点击分页
 	 * 改变页面尺寸
 	 */
-	JGBVue.module.systemLog().init('/systemLog/data_get_all', '/systemLog/data_delete', '/systemLog/data_get_other', '/systemLog/data_search', '/systemLog/data_paging_current', '/systemLog/data_paging_size');
+	JGBVue.module.systemLog().init('/systemLog/data_get_all', '/systemLog/data_delete', '/systemLog/data_get_other', '/systemLog/data_search', '/systemLog/data_paging_current', '/systemLog/data_paging_size', '/systemLog/data_export');
 </script>
 </html>
