@@ -141,24 +141,14 @@ ul {
 #app {
   position: relative;
   width: 100%;
-  min-height: 600px; }
+  height: 100%; }
   #app .wrap_main {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
     padding: 10px; }
     #app .wrap_main .nav, #app .wrap_main nav {
       margin-bottom: 10px; }
       #app .wrap_main .nav .el-form-item, #app .wrap_main nav .el-form-item {
         padding: 0; }
     #app .wrap_main .inner_main {
-      position: absolute;
-      top: 70px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
       background: #fff; }
       #app .wrap_main .inner_main .jgb-table {
         font-size: 14px;
@@ -265,7 +255,7 @@ ul {
                 display: block;
                 height: 100%; }
   #app .wrap_footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
