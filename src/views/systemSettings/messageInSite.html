@@ -40,10 +40,10 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<div class="inner_footer">
-					<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page.sync="tableData.pageIndex" :page-size="tableData.pageSize" :page-sizes="[20, 40, 60, 80]" layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"></el-pagination>
-				</div>
 			</div>
+		</div>
+		<div class="wrap_footer">
+			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page.sync="tableData.pageIndex" :page-size="tableData.pageSize" :page-sizes="[20, 40, 60, 80]" layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"></el-pagination>
 		</div>
 	</div>
 </body>

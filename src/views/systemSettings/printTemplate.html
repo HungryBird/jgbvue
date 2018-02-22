@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
 </head>
 <body>
-	<div id="app">
+	<div id="app" v-cloak>
 		<div class="wrap_main">
 			<nav>
 				<el-button-group class="pull-right">
@@ -18,7 +18,7 @@
 					<el-button type="primary" v-on:click="remove" icon="el-icon-delete" :disabled="selectedRows.length == 0">删除</el-button>
 				</el-button-group>
 			</nav>
-			<div class="inner_main" style="top: 70px;">
+			<div class="inner_main">
 				<el-table :data="data.table" border :span-method="objectSpanMethod" ref="printtable" v-on:row-click="rowClick">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50"></el-table-column>
@@ -32,10 +32,10 @@
 					</el-table-column>
 					<!-- <el-table-column></el-table-column> -->
 				</el-table>
-				<div class="inner_footer">
-					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
-				</div>
 			</div>
+		</div>
+		<div class="wrap_footer">
+			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
 		</div>
 		<el-dialog :visible.sync="dialogLoadVisible">
 			<div slot="title" class="title">
@@ -76,6 +76,11 @@
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/printTemplate.js"></script>
 <script type="text/javascript">
+	/**
+	 * 获取数据url
+	 * 保存审核流程url
+	 * 删除url
+	 */
 	JGBVue.module.printTemplate().init();
 </script>
 </html>

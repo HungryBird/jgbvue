@@ -174,6 +174,7 @@ new Vue({
       name: '系统更新动态',
       backgroundPosition: '-112px -1099px'
     }, ],
+    dropdownIsActive: false,
     activeTab: 'guidance',
     tabs: [
       {
@@ -208,7 +209,7 @@ new Vue({
         _self.tabs.push(item);
       });
       _self.activeTab = sessionStorage.activeTab;
-    }
+    };
 
     axios.get('/index/is_show_guidance').then((data)=> {
       let jdata = JSON.parse(data.data.message)
@@ -230,6 +231,8 @@ new Vue({
       for (let i = 0; i < _self.tabs.length; i++) {
         if (_self.tabs[i].name == 'tab' + tabId) {
           _self.activeTab = 'tab' + tabId;
+          sessionStorage.activeTab = _self.activeTab;
+          this.dropdownIsActive = false;
           return;
         }
       }
@@ -237,8 +240,13 @@ new Vue({
       obj.name = 'tab' + tabId;
       obj.label = tabName;
       obj.link = './views/' + parentFolder + '/' + tabId + '.html';
-      _self.tabs.push(obj);
-      _self.activeTab = obj.name;
+      this.tabs.push(obj);
+      this.activeTab = obj.name;
+      sessionStorage.activeTab = obj.name;
+      this.dropdownIsActive = false;
+    },
+    clickTab: function(tab) {
+      sessionStorage.activeTab = tab.name;
     },
     removeTab: function(tabName) {
       let _self = this;

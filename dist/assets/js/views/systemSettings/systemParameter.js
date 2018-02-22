@@ -89,7 +89,6 @@ JGBVue.module.systemParameter = ()=>{
 			},
 			watch: {
 				'form.quantityDigits'(val) {
-					console.log(typeof val)
 					if(Number(val) <= 0 || isNaN(Number(val))) {
 						this.form.quantityDigits = 0;
 						return;

@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>行政区域</title>
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
-	<!-- <link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css"> -->
-	<link rel="stylesheet" type="text/css" href="../../assets/css/views/administrativeRegion.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+	<!-- <link rel="stylesheet" type="text/css" href="../../assets/css/views/administrativeRegion.css"> -->
 	<style type="text/css">
 		[v-cloak] {
 			display: none;
@@ -20,8 +20,8 @@
 				<el-tree :data="treeData" :load="loadNode" :props="defaultProps" lazy v-on:node-click="handleNodeClick"></el-tree>
 			</el-aside>
 			<el-main>
-				<div>
-					<div style="float: left;">
+				<nav>
+					<div class="pull-left">
 						<el-form :inline="true">
 							<el-form-item>
 								<el-input v-model="searchInputVal" placeholder="输入名称/编号">
@@ -32,7 +32,7 @@
 							</el-form-item>
 						</el-form>
 					</div>
-					<div style="float: right;">
+					<div class="pull-right">
 						<div style="text-align: right;">
 							<el-button-group>
 								<el-button type="primary" v-on:click="addRegin">
@@ -50,7 +50,7 @@
 							</el-button-group>
 						</div>
 					</div>
-				</div>
+				</nav>
 				<el-table :data="tableData" border ref="multipleTable" tooltip-effect="dark" v-on:row-click="rowClick" v-on:select-all="selectAll">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50px"></el-table-column>

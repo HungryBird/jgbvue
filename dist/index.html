@@ -90,17 +90,17 @@
 					</li>
 					<li class="base-nav">
 						<ul class="base-nav-group">
-							<li v-for="navItem in user.navItems" :key="navItem.id" :id="navItem.id" class="base-nav-dropdown">
+							<li v-for="navItem in user.navItems" :key="navItem.id" :id="navItem.id" class="base-nav-dropdown" v-on:mouseenter="dropdownIsActive = true">
 								<a class="base-nav-item-link">
 									<i :class="navItem.cls"></i>
 									<span v-if="navItem.name != undefined">{{ navItem.name }}</span>
 								</a>
-								<ul class="base-nav-dropdown-apps">
+								<ul class="base-nav-dropdown-apps" v-if="dropdownIsActive">
 									<li v-for="(menuItem,index) in navItem.menuItems" :style="{width: navItem.menuItems.length*210 + 'px'}">
 										<div class="menu-item-wrap" :style="{'borderRight': index == 0 ? '1px dashed #ddd' : 'none'}">
 											<strong v-if="menuItem.title != undefined"><span>{{menuItem.title}}</span></strong>
 											<ul class="menu-item-group">
-												<li v-for="item in menuItem.items" :id="item.id" @click="selectTab(item.id, item.name, menuItem.parentFolder)">
+												<li v-for="item in menuItem.items" :id="item.id" v-on:click="selectTab(item.id, item.name, menuItem.parentFolder)">
 													<a>
 														<span>{{item.name}}</span>
 													</a>
@@ -209,7 +209,7 @@
 		    <el-container>
 				<el-aside width="220px"></el-aside>
 				<el-main>
-					<el-tabs type="card" v-model="activeTab" @tab-remove="removeTab">
+					<el-tabs type="card" v-model="activeTab" v-on:tab-remove="removeTab" v-on:tab-click="clickTab">
 						<el-tab-pane v-for="(tab,index) in tabs" :label="tab.label" :key="tab.name" :name="tab.name" :closable="index != 0">
 							<iframe :src="tab.link" v-if="index != 0"></iframe>
 							<div v-else>这是主页</div>

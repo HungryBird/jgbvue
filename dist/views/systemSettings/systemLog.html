@@ -16,7 +16,7 @@
 <body>
 	<div id="app" v-cloak>
 		<div class="wrap_main">
-			<div class="nav">
+			<nav>
 				<div class="pull-left">
 					<el-select v-model="selectLook.optionVal.label" :filterable="true" v-on:change="changeDate">
 						<el-option v-for="option in selectLook.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
@@ -46,9 +46,8 @@
 						</el-button>
 					</el-button-group>
 				</div>
-				<div style="clear: both;"></div>
-			</div>
-			<div class="inner_main" style="top: 70px;">
+			</nav>
+			<div class="inner_main">
 				<el-table :data="logTable" border ref="logTable" tooltip-effect="dark">
 					<el-table-column type="index" width="50" label="序号" align="center"></el-table-column>
 					<el-table-column prop="date" label="操作时间" align="center">

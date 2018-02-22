@@ -142,12 +142,19 @@ ul {
   position: relative;
   width: 100%;
   height: 100%; }
+  #app .nav, #app nav {
+    margin-bottom: 10px; }
+    #app .nav .el-form-item, #app nav .el-form-item {
+      padding: 0; }
+  #app .nav:after, #app nav:after {
+    clear: both;
+    visibility: hidden;
+    display: block;
+    content: '.';
+    font-size: 0;
+    width: 0; }
   #app .wrap_main {
     padding: 10px; }
-    #app .wrap_main .nav, #app .wrap_main nav {
-      margin-bottom: 10px; }
-      #app .wrap_main .nav .el-form-item, #app .wrap_main nav .el-form-item {
-        padding: 0; }
     #app .wrap_main .inner_main {
       background: #fff; }
       #app .wrap_main .inner_main .jgb-table {

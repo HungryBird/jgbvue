@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
 </head>
 <body>
-	<div id="app">
+	<div id="app" v-cloak>
 		<div class="wrap_main">
 			<nav v-if="data != null">
 				<label>日期：</label>
@@ -38,10 +38,10 @@
 					<el-table-column label="操作员" width="200" prop="operator"></el-table-column>
 					<el-table-column></el-table-column>
 				</el-table>
-				<div class="inner_footer">
-					<el-pagination class="pull-right" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
-				</div>
 			</div>
+		</div>
+		<div class="wrap_footer">
+			<el-pagination class="pull-right" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
 		</div>
 	</div>
 </body>

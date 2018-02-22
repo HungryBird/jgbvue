@@ -193,6 +193,17 @@ dd {
   z-index: -1;
   background-color: #fff;
 }
+.base-nav-dropdown-active{
+  top: 50px;
+  opacity: 1;
+  visibility: visible;
+  z-index: 99999888;
+  -webkit-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s;
+  -webkit-box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1), -1px 0 1px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.1);
+          box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1), -1px 0 1px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.1);
+}
 .base-nav-dropdown-apps > li {
   background-color: #fff;
   cursor: default;

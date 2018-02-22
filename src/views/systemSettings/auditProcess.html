@@ -36,10 +36,10 @@
 					</el-table-column>
 					<el-table-column style="pointer-events: none;"></el-table-column>
 				</el-table>
-				<div class="inner_footer">
-					<el-pagination class="pull-right" v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
-				</div>
 			</div>
+		</div>
+		<div class="wrap_footer">
+			<el-pagination class="pull-right" v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
 		</div>
 		<!-- 新增窗口 -->
 		<el-dialog :visible.sync="dialogAddFormVisible">
