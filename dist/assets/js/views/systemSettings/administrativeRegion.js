@@ -137,6 +137,7 @@ JGBVue.module.administrativeRegion = ()=> {
 					 * 每次点击请求数据
 					 */
 					if(node.level <= 3 && !node.isLeaf) {
+						this.tableData.splice(0, this.tableData.length);
 						axios.post(lazyUrl, node.data).then((req)=> {
 							let jdata = JSON.parse(req.data.data);
 							jdata.forEach((item)=> {

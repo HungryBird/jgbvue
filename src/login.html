@@ -15,7 +15,7 @@
 	</style>
 </head>
 <body>
-	<div id="app" v-cloak v-on:keyup.enter="login">
+	<div id="app" v-cloak v-on:keyup.enter="login" v-on:keyup="tabInput">
 		<div class="login-wrap" :style="{background: 'url('+ backPic +') center'} ">
 			<div class="main-wrap">
 				<div class="logo-wrap">
@@ -48,7 +48,7 @@
 							<div class="yzm_box">
 								<img :src="vcodeImg">
 							</div>
-							<el-button type="primary" v-on:click="login" style="clear: both;">登陆</el-button>
+							<el-button type="primary"  style="clear: both;">登陆</el-button>
 						</el-form>
 						<div class="linkAdmin">
 							<a @click="alertAdminPhone">忘记密码</a>
@@ -70,4 +70,10 @@
 <script type="text/javascript" src="./element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../axios/axios.min.js"></script>
 <script type="text/javascript" src="./assets/js/login.js"></script>
+<script type="text/javascript">
+	let login = JGBVue.module.login();
+	login.init();
+	console.log('html_that: ', login.vm);
+	login.vm.test();
+</script>
 </html>

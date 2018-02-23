@@ -12,12 +12,12 @@
 		<div class="wrap_main" v-cloak>
 			<nav>
 				<el-button-group class="pull-left">
-					<el-button type="primary" @click="start">开始备份</el-button>
-					<el-button type="primary" @click="upload">上传本地备份</el-button>
-					<el-button type="primary" @click="timing">定时备份</el-button>
+					<el-button type="primary" v-on:click="start" :disabled="">开始备份</el-button>
+					<el-button type="primary" v-on:click="upload">上传本地备份</el-button>
+					<el-button type="primary" v-on:click="timing">定时备份</el-button>
 				</el-button-group>
 				<el-button-group class="pull-right">
-					<el-button v-on:click="recover">恢复</el-button>
+					<el-button v-on:click="recover" >恢复</el-button>
 					<el-button v-on:click="download">下载</el-button>
 					<el-button v-on:click="deleteData">删除</el-button>
 				</el-button-group>
@@ -67,4 +67,10 @@
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/FBackup.js"></script>
+<script type="text/javascript">
+	/**
+	 * 
+	 */
+	JGBVue.module.companyManagement().init();
+</script>
 </html>
