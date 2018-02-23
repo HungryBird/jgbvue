@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const router = express.Router();
 
-router.post('/data_get', (req, res)=> {
+router.post('/data_get_lazy', (req, res)=> {
 	let cities = '';
 	if(req.body.level === 1) {
 		fs.readFile('api/views/systemSettings/administrativeRegion/beijing1.json', 'utf-8', (err, data)=> {

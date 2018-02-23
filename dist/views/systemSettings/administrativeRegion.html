@@ -126,6 +126,13 @@
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/administrativeRegion.js"></script>
 <script type="text/javascript">
-	JGBVue.module.administrativeRegion().init();
+	/**
+	 * 获取初始值url
+	 * 懒加载url
+	 * 添加url
+	 * 编辑url
+	 * 删除url
+	 */
+	JGBVue.module.administrativeRegion().init('/administrativeRegion/data_get_0', '/administrativeRegion/data_get_lazy', '/administrativeRegion/data_write', '/administrativeRegion/data_edit', '/administrativeRegion/data_delete');
 </script>
 </html>

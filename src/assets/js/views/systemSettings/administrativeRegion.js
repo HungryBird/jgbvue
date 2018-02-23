@@ -6,7 +6,7 @@ JGBVue.module.administrativeRegion = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = ()=> {
+	_this.init = (getDataInitUrl, lazyUrl, addUrl, editUrl, deteleUrl)=> {
 		new Vue({
 			el: '#app',
 			data: {
@@ -102,7 +102,7 @@ JGBVue.module.administrativeRegion = ()=> {
 					 * @return {[type]}            [description]
 					 */
 					if(node.level === 0) {
-						axios.get('/administrativeRegion/data_get_0').then((req)=> {
+						axios.get(getDataInitUrl).then((req)=> {
 							let jdata = JSON.parse(req.data.data);
 							jdata.forEach((item)=> {
 								let obj = {};
@@ -137,7 +137,7 @@ JGBVue.module.administrativeRegion = ()=> {
 					 * 每次点击请求数据
 					 */
 					if(node.level <= 3 && !node.isLeaf) {
-						axios.post('/administrativeRegion/data_get', node.data).then((req)=> {
+						axios.post(lazyUrl, node.data).then((req)=> {
 							let jdata = JSON.parse(req.data.data);
 							jdata.forEach((item)=> {
 								let obj = {};
@@ -199,7 +199,7 @@ JGBVue.module.administrativeRegion = ()=> {
 					this.$refs[formName].validate((valid) => {
 						console.log('valid', valid);
 						if(valid) {
-							axios.post('/administrativeRegion/data_write', _self.addForm.addFormData).then(function(req) {
+							axios.post(addUrl, _self.addForm.addFormData).then(function(req) {
 								if(req.data.status) {
 									if(_self.addForm.checked) {
 										_self.addForm.visible = false;
@@ -235,7 +235,7 @@ JGBVue.module.administrativeRegion = ()=> {
 				},
 				onSubmitEdit() {
 					let _self = this;
-					axios.post('/administrativeRegion/data_edit', _self.editForm.editFormData).then(function(req) {
+					axios.post(editUrl, _self.editForm.editFormData).then(function(req) {
 						if(req.data.status) {
 							if(_self.editForm.checked) _self.editForm.visible = false;
 							_self.$message({
@@ -262,7 +262,7 @@ JGBVue.module.administrativeRegion = ()=> {
 					}).then((action) => {
 						let _self = this;
 						if(action == 'confirm') {
-							axios.post('/administrativeRegion/data_delete', _self.selectedRows).then(function(req) {
+							axios.post(deteleUrl, _self.selectedRows).then(function(req) {
 								if(req.data.status) {
 									//替换selectedRows的数据
 									_self.$message({
@@ -290,8 +290,8 @@ JGBVue.module.administrativeRegion = ()=> {
 		});
 	}
 
-	that.init = ()=> {
-		_this.init();
+	that.init = (getDataInitUrl, lazyUrl, addUrl, editUrl, deteleUrl)=> {
+		_this.init(getDataInitUrl, lazyUrl, addUrl, editUrl, deteleUrl);
 	}
 
 	return that;
