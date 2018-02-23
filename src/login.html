@@ -15,7 +15,7 @@
 	</style>
 </head>
 <body>
-	<div id="app" v-cloak>
+	<div id="app" v-cloak v-on:keyup.enter="login">
 		<div class="login-wrap" :style="{background: 'url('+ backPic +') center'} ">
 			<div class="main-wrap">
 				<div class="logo-wrap">
@@ -31,8 +31,8 @@
 									</template>
 								</el-input>
 							</el-form-item>
-							<el-form-item prop="emailPassword">
-								<el-input placeholder="密码" v-model="ruleForm.emailPassword" type="password" @keyup.enter="login">
+							<el-form-item prop="pass">
+								<el-input placeholder="密码" v-model="ruleForm.pass" type="password">
 									<template slot="prepend">
 										<i class="fa fa-lock"></i>
 									</template>
@@ -48,7 +48,7 @@
 							<div class="yzm_box">
 								<img :src="vcodeImg">
 							</div>
-							<el-button type="primary" @click="login" style="clear: both;">登陆</el-button>
+							<el-button type="primary" v-on:click="login" style="clear: both;">登陆</el-button>
 						</el-form>
 						<div class="linkAdmin">
 							<a @click="alertAdminPhone">忘记密码</a>
