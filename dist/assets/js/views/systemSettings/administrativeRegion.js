@@ -10,7 +10,7 @@ JGBVue.module.administrativeRegion = ()=> {
 		new Vue({
 			el: '#app',
 			data: {
-				treeData: null,
+				treeData: [],
 				defaultProps: {
 					children: 'children',
 					label: 'label'
@@ -91,46 +91,77 @@ JGBVue.module.administrativeRegion = ()=> {
 				},
 			},
 			mounted() {
-				var _self = this;
-				/**
-				 * 获取行政区域数据
-				 * @param  {[type]} req) {			var      cities [行政区域]
-				 * @return {[type]}      [description]
-				 */
-				axios.get('/administrativeRegion/data_get').then(function(req) {
-					var cities = JSON.parse(req.data.cities);
-					cities.forEach(function(item) {
-						var obj = {};
-						for(key in item) {
-							if(key != 'children') {
-								obj[key] = item[key];
-							}
-						}
-						_self.tableData.push(obj);
-					});
-					_self.treeData = cities;
-				}).catch(function (err) {
-					console.log('err', err);
-				});
+				//pass
 			},
 			methods: {
 				loadNode(node, resolve) {
-					console.log('node', node);
-					console.log('resolve', resolve);
+					let _self = this;
+					/**
+					 * 加载页面时自动获取level为0的数据
+					 * @param  {[type]} node.level [description]
+					 * @return {[type]}            [description]
+					 */
 					if(node.level === 0) {
-						return resolve([{ name: 'region' }]);
+						axios.get('/administrativeRegion/data_get_0').then((req)=> {
+							let jdata = JSON.parse(req.data.data);
+							jdata.forEach((item)=> {
+								let obj = {};
+								for(key in item) {
+									if(key != 'children') {
+										obj[key] = item[key];
+									}
+								}
+								_self.tableData.push(obj);
+							});
+							_self.treeData = jdata;
+							return resolve(jdata);
+						})
 					};
-					if (node.level > 1) return resolve([]);
+					/**
+					 * 规定最大level === 4
+					 * @param  {[type]} node.level >             3 [description]
+					 * @return {[type]}            [description]
+					 */
+					if(node.level > 3) {
+						return resolve([]);
+					};
+					/**
+					 * 当为叶子节点时返回空数组
+					 * @param  {[type]} node.data.isLeaf [description]
+					 * @return {[type]}                  [description]
+					 */
+					if(node.isLeaf) {
+						return resolve([]);
+					};
+					/**
+					 * 每次点击请求数据
+					 */
+					if(node.level <= 3 && !node.isLeaf) {
+						axios.post('/administrativeRegion/data_get', node.data).then((req)=> {
+							let jdata = JSON.parse(req.data.data);
+							jdata.forEach((item)=> {
+								let obj = {};
+								for(key in item) {
+									if(key != 'children') {
+										obj[key] = item[key];
+									}
+								}
+								_self.tableData.push(obj);
+							});
+							_self.treeData = jdata;
+							return resolve(jdata);
+						});
+					}
 				},
 				handleNodeClick(data,node,cmp) {
-					var _self = this;
+					let _self = this;
 					if(!data.children) {
 						_self.addForm.addFormData.level = data.level;
 						return;
 					};
 					this.tableData.splice(0, this.tableData.length);
 					data.children.forEach(function(item) {
-						var obj = {};
+						let obj = {};
 						for(key in item) {
 							if(key != 'children') {
 								obj[key] = item[key];
@@ -141,7 +172,7 @@ JGBVue.module.administrativeRegion = ()=> {
 					_self.addForm.addFormData.level = data.children[0].level;
 				},
 				rowClick(row, event, column) {
-					var _self = this;
+					let _self = this;
 					this.$refs.multipleTable.toggleRowSelection(row);
 					if(_self.selectedRows.indexOf(row) == -1) {
 						_self.selectedRows.push(row)
@@ -164,7 +195,7 @@ JGBVue.module.administrativeRegion = ()=> {
 					this.addForm.visible = true;
 				},
 				onSubmitAdd(formName) {
-					var _self = this;
+					let _self = this;
 					this.$refs[formName].validate((valid) => {
 						console.log('valid', valid);
 						if(valid) {
@@ -203,7 +234,7 @@ JGBVue.module.administrativeRegion = ()=> {
 					_self.editForm.editFormData.notes = _self.selectedRows[0].notes;
 				},
 				onSubmitEdit() {
-					var _self = this;
+					let _self = this;
 					axios.post('/administrativeRegion/data_edit', _self.editForm.editFormData).then(function(req) {
 						if(req.data.status) {
 							if(_self.editForm.checked) _self.editForm.visible = false;

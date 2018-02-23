@@ -1,0 +1,11 @@
+[
+    {
+        "label": "北京",
+        "level": 1,
+        "number": "110000",
+        "initials": "bj",
+        "valid": true,
+        "notes": "",
+        "isLeaf": false
+    }
+]

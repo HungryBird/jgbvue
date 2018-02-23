@@ -3,9 +3,65 @@ const fs = require('fs');
 
 const router = express.Router();
 
-router.get('/data_get', (req, res)=> {
+router.post('/data_get', (req, res)=> {
 	let cities = '';
-	fs.readFile('api/views/systemSettings/administrativeRegion/administrativeRegion.json', 'utf-8', (err, data)=> {
+	if(req.body.level === 1) {
+		fs.readFile('api/views/systemSettings/administrativeRegion/beijing1.json', 'utf-8', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err', err);
+				return;
+			}else{
+				cities += data;
+				res.send({
+					status: true,
+					data: cities
+				});
+			}
+		});
+	} else if(req.body.level === 2) {
+		fs.readFile('api/views/systemSettings/administrativeRegion/beijing2.json', 'utf-8', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err', err);
+				return;
+			}else{
+				cities += data;
+				res.send({
+					status: true,
+					data: cities
+				});
+			}
+		});
+	} else if(req.body.level === 3) {
+		fs.readFile('api/views/systemSettings/administrativeRegion/beijing3.json', 'utf-8', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err', err);
+				return;
+			}else{
+				cities += data;
+				res.send({
+					status: true,
+					data: cities
+				});
+			}
+		});
+	}
+});
+
+router.get('/data_get_0', (req, res)=> {
+	let cities = '';
+	fs.readFile('api/views/systemSettings/administrativeRegion/beijing0.json', 'utf-8', (err, data)=> {
 		if(err) {
 			res.send({
 				status: false,
@@ -17,7 +73,7 @@ router.get('/data_get', (req, res)=> {
 			cities += data;
 			res.send({
 				status: true,
-				cities: cities
+				data: cities
 			});
 		}
 	});

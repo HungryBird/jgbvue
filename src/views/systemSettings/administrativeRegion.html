@@ -17,7 +17,7 @@
 	<div id="app" v-cloak>
 		<el-container>
 			<el-aside width="200px">
-				<el-tree :data="treeData" :load="loadNode" :props="defaultProps" lazy v-on:node-click="handleNodeClick"></el-tree>
+				<el-tree :load="loadNode" :props="defaultProps" lazy v-on:node-click="handleNodeClick"></el-tree>
 			</el-aside>
 			<el-main>
 				<nav>

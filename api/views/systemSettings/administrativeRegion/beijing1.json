@@ -1,0 +1,11 @@
+[
+	{
+        "label": "北京市",
+        "level": 2,
+        "number": "110100",
+        "initials": "bjs",
+        "valid": true,
+        "notes": "",
+        "isLeaf": false
+    }
+]
