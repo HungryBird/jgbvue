@@ -57,8 +57,10 @@ app.use('/printTemplate', printTemplateRouter);
  */
 
 const divisionalManagementRouter = require('./routers/views/companyOrganization/divisionalManagement');
+const companyManagementRouter = require('./routers/views/companyOrganization/companyManagement');
 
 app.use('/divisionalManagement', divisionalManagementRouter);
+app.use('/companyManagement', companyManagementRouter);
 
 /**
  * server running at port 3333

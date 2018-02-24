@@ -18,22 +18,36 @@
 				</el-button-group>
 			</nav>
 			<div class="inner_main">
-				<el-table ref="companyTable" border v-on:row-click="rowClick">
+				<el-table ref="companyTable" border v-on:row-click="rowClick" :data="cyTable">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50px"></el-table-column>
-					<el-table-column label="公司名称"></el-table-column>
-					<el-table-column label="所属行业"></el-table-column>
-					<el-table-column label="公司电话"></el-table-column>
-					<el-table-column label="公司地址"></el-table-column>
-					<el-table-column label="联系人"></el-table-column>
-					<el-table-column label="手机号码"></el-table-column>
-					<el-table-column label="邮箱"></el-table-column>
-					<el-table-column label="传真"></el-table-column>
-					<el-table-column label="启用时间"></el-table-column>
-					<el-table-column label="备注"></el-table-column>
+					<el-table-column label="公司名称" prop="name"></el-table-column>
+					<el-table-column label="所属行业" prop="trade"></el-table-column>
+					<el-table-column label="公司电话" prop="telephone"></el-table-column>
+					<el-table-column label="公司地址" prop="address"></el-table-column>
+					<el-table-column label="联系人" prop="linkman"></el-table-column>
+					<el-table-column label="手机号码" prop="phoneNumber"></el-table-column>
+					<el-table-column label="邮箱" prop="email"></el-table-column>
+					<el-table-column label="传真" prop="fax"></el-table-column>
+					<el-table-column label="启用时间" prop="startTime"></el-table-column>
+					<el-table-column label="备注" prop="remark"></el-table-column>
 				</el-table>
 			</div>
 		</div>
+		<div class="wrap_footer">
+			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
+		</div>
+		<!-- 新增窗口 -->
+		<el-dialog :visible.sync="addDialogVisiable">
+			<div slot="title" class="title">
+				新增公司资料
+			</div>
+			<el-form :model="addForm" ref="addForm" rules="formRules">
+				<el-form-item label="公司名称" prop="">
+					<el-input></el-input>
+				</el-form-item>
+			</el-form>
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -42,8 +56,8 @@
 <script type="text/javascript" src="../../assets/js/views/companyOrganization/companyManagement.js"></script>
 <script type="text/javascript">
 	/**
-	 * 
+	 * 获取数据url
 	 */
-	JGBVue.module.companyManagement().init();
+	JGBVue.module.companyManagement().init('/companyManagement/data_get');
 </script>
 </html>
