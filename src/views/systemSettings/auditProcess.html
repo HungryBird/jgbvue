@@ -19,22 +19,22 @@
 				</el-button-group>
 			</nav>
 			<div class="inner_main">
-				<el-table :data="data.table" border :span-method="objectSpanMethod" v-on:row-click="rowClick" ref="auditTable">
+				<el-table :data="data.table" border v-on:row-click="rowClick" ref="auditTable">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50"></el-table-column>
-					<el-table-column label="系统模块" width="100" prop="sysModule"></el-table-column>
-					<el-table-column label="流程级数" width="100" prop="processRank"></el-table-column>
-					<el-table-column label="审核人员" width="400" prop="auditor">
+					<el-table-column label="系统模块" prop="sysModule"></el-table-column>
+					<el-table-column label="流程级数" prop="processRank"></el-table-column>
+					<el-table-column label="审核人员" prop="auditor">
 						<template slot-scope="scope">
 							{{ scope.row.auditor | auditorFilter }}
 						</template>
 					</el-table-column>
-					<el-table-column label="提醒方式" width="400" prop="remarkWay">
+					<el-table-column label="提醒方式" prop="remarkWay">
 						<template slot-scope="scope">
 							{{ scope.row.remarkWay | auditorFilter }}
 						</template>
 					</el-table-column>
-					<el-table-column style="pointer-events: none;"></el-table-column>
+					<!-- <el-table-column style="pointer-events: none;"></el-table-column> -->
 				</el-table>
 			</div>
 		</div>

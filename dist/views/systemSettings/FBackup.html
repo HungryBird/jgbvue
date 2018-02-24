@@ -32,13 +32,13 @@
 				<el-table border :data="table.backups" ref="BFtable" v-on:row-click="rowClick">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50"></el-table-column>
-					<el-table-column label="备份名称" prop="name" width="250"></el-table-column>
-					<el-table-column label="时间" prop="date" width="100">
+					<el-table-column label="备份名称" prop="name"></el-table-column>
+					<el-table-column label="时间" prop="date">
 						<template slot-scope="scope">
 							{{ scope.row.date | parseDate }}
 						</template>
 					</el-table-column>
-					<el-table-column label="文件大小" prop="size" width="100">
+					<el-table-column label="文件大小" prop="size">
 						<template slot-scope="scope">
 							{{ scope.row.size | parseSize }}
 						</template>

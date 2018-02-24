@@ -213,13 +213,13 @@ new Vue({
             //当前页改变时
         },
         objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-            let _self = this;
+            /*let _self = this;
             if(columnIndex == 6) {
                 return {
                     rowspan: _self.data.table.length,
                     colspan: 1
                 }
-            }
+            }*/
         },
         tableRowClassName({row, rowIndex}) {
             if(rowIndex%2 != 0) {

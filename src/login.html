@@ -48,7 +48,7 @@
 							<div class="yzm_box">
 								<img :src="vcodeImg">
 							</div>
-							<el-button type="primary"  style="clear: both;">登陆</el-button>
+							<button type="button" onclick="test111()" class="el-button el-button--primary">登陆</button>
 						</el-form>
 						<div class="linkAdmin">
 							<a @click="alertAdminPhone">忘记密码</a>
@@ -73,7 +73,8 @@
 <script type="text/javascript">
 	let login = JGBVue.module.login();
 	login.init();
-	console.log('html_that: ', login.vm);
-	login.vm.test();
+	function test111(e) {
+		login.vm.test();
+	}
 </script>
 </html>

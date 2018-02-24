@@ -45,7 +45,7 @@ new Vue({
 				this.$message({
 					type: 'info',
 					message: '已取消'
-				});          
+				});
 			});
 		},
 		upload() {

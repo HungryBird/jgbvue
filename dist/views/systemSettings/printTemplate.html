@@ -22,10 +22,10 @@
 				<el-table :data="data.table" border :span-method="objectSpanMethod" ref="printtable" v-on:row-click="rowClick">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50"></el-table-column>
-					<el-table-column label="名称" width="200" prop="name"></el-table-column>
-					<el-table-column label="类别" width="100" prop="type"></el-table-column>
-					<el-table-column label="模板类别" width="200" prop="templateType"></el-table-column>
-					<el-table-column label="默认模板" width="100" prop="usingDefaultTemplate">
+					<el-table-column label="名称" prop="name"></el-table-column>
+					<el-table-column label="类别" prop="type"></el-table-column>
+					<el-table-column label="模板类别" prop="templateType"></el-table-column>
+					<el-table-column label="默认模板" prop="usingDefaultTemplate">
 						<template slot-scope="scope">
 							{{ scope.row.usingDefaultTemplate | usingStatus }}
 						</template>

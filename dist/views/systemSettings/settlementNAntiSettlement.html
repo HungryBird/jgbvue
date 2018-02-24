@@ -24,19 +24,18 @@
 				不能小于等于上次结账日期：<span class="red">{{ data.lastSettleDate | filterDate }}</span>
 			</p>
 			<div class="inner_main" style="top: 100px;">
-				<el-table :data="data.table" border :row-class-name="tableRowClassName"  :span-method="objectSpanMethod">
-					<el-table-column label="结账日" width="200" prop="jdate">
+				<el-table :data="data.table" border>
+					<el-table-column label="结账日" prop="jdate">
 						<template slot-scope="scope">
 							{{ scope.row.jdate | filterDate_time }}
 						</template>
 					</el-table-column>
-					<el-table-column label="操作日期" width="200" prop="cdate">
+					<el-table-column label="操作日期" prop="cdate">
 						<template slot-scope="scope">
 							{{ scope.row.cdate | filterDate_time }}
 						</template>
 					</el-table-column>
-					<el-table-column label="操作员" width="200" prop="operator"></el-table-column>
-					<el-table-column></el-table-column>
+					<el-table-column label="操作员" prop="operator"></el-table-column>
 				</el-table>
 			</div>
 		</div>
