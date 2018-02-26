@@ -139,6 +139,24 @@ JGBVue.module.printTemplate = ()=> {
                     }else{
                         _self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
                     }
+                },
+                selectAll(selection) {
+                    let _self = this;
+                    if(selection.length == 0) {
+                        _self.selectedRows.splice(0, _self.selectedRows.length);
+                    }else{
+                        _self.selectedRows.splice(0, _self.selectedRows.length);
+                        selection.forEach((item)=> {
+                            _self.selectedRows.push(item);
+                        })
+                    }
+                },
+                selectItem(selection, row) {
+                    let = _self = this;
+                    this.selectedRows.splice(0, _self.selectedRows.length);
+                    for(let i = 0; i < selection.length; i++) {
+                        _self.selectedRows.push(selection[i]);
+                    }
                 }
             },
             filters: {

@@ -17,10 +17,9 @@ JGBVue.module.companyManagement = ()=> {
 				pageSize: 20,
 				addDialogVisiable: true,
 				addForm: {
-					
+					//
 				},
-				formRules: [
-				]
+				formRules: {}
 			},
 			mounted() {
 				axios.get(dataGetUrl).then((req)=> {

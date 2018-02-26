@@ -17,18 +17,16 @@
 	<div id="app" v-cloak>
 		<div class="wrap_main">
 			<nav>
-				<el-button-group class="pull-left">
-					<el-button type="primary" v-on:click="all" :disabled="tableData.type == 'all'">全部</el-button>
-					<el-button type="primary" v-on:click="read" :disabled="tableData.type == 'read'">已读</el-button>
-					<el-button type="primary" v-on:click="unread" :disabled="tableData.type == 'unread'">未读</el-button>
-				</el-button-group>
+				<el-select class="pull-left" v-model="selectedValue" v-on:change="changeSelect">
+					<el-option v-for="option in options" :label="option.label" :value="option.value" :key="option.value"></el-option>
+				</el-select>
 				<el-button-group class="pull-right">
 					<el-button v-on:click="makeItRead" :disabled="markAllow">标为已读</el-button>
 					<el-button v-on:click="remove" :disabled="selectedRows.length == 0">删除</el-button>
 				</el-button-group>
 			</nav>
 			<div class="inner_main">
-				<el-table :data="tableData.table" tooltip-effect="dark" ref="msTable" border :row-class-name="tableRowClassName" v-on:row-click="rowClick" v-on:select-all="selectAll">
+				<el-table :data="tableData.table" tooltip-effect="dark" ref="msTable" border :row-class-name="tableRowClassName" v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="60"></el-table-column>
 					<el-table-column label="时间" prop="date"></el-table-column>
@@ -51,4 +49,13 @@
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/messageInSite.js"></script>
+<script type="text/javascript">
+	/**
+	 * 获取数据
+	 * 标为已读
+	 * 删除
+	 * @type {[type]}
+	 */
+	let ms = JGBVue.module.messageInSite().init('/messageInSite/data_get', '/messageInSite/data_read', '/messageInSite/data_delete');
+</script>
 </html>

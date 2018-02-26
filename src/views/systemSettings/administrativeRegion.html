@@ -51,7 +51,7 @@
 						</div>
 					</div>
 				</nav>
-				<el-table :data="tableData" border ref="multipleTable" tooltip-effect="dark" v-on:row-click="rowClick" v-on:select-all="selectAll">
+				<el-table :data="tableData" border ref="multipleTable" tooltip-effect="dark" v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50px"></el-table-column>
 					<el-table-column prop="number" label="编号"></el-table-column>

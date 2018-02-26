@@ -42,8 +42,8 @@
 			<div slot="title" class="title">
 				新增公司资料
 			</div>
-			<el-form :model="addForm" ref="addForm" rules="formRules">
-				<el-form-item label="公司名称" prop="">
+			<el-form :model="addForm" ref="addForm" :rules="formRules">
+				<el-form-item label="公司名称" prop="" :inline=true>
 					<el-input></el-input>
 				</el-form-item>
 			</el-form>

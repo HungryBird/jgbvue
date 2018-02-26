@@ -22,14 +22,14 @@
 					<el-button type="primary" @click="timing">定时备份</el-button>
 				</el-button-group>
 				<el-button-group class="pull-right">
-					<el-button v-on:click="recover">恢复</el-button>
-					<el-button v-on:click="download">下载</el-button>
-					<el-button v-on:click="deleteData">删除</el-button>
+					<el-button v-on:click="recover" :disabled="selectedRows.length !== 1">恢复</el-button>
+					<el-button v-on:click="download" :disabled="selectedRows.length !== 1">下载</el-button>
+					<el-button v-on:click="deleteData" :disabled="selectedRows.length === 0">删除</el-button>
 				</el-button-group>
 				<div style="clear: both;"></div>
 			</nav>
 			<div class="inner_main">
-				<el-table border :data="table.backups" ref="BFtable" v-on:row-click="rowClick">
+				<el-table border :data="table.backups" ref="BFtable" v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50"></el-table-column>
 					<el-table-column label="备份名称" prop="name"></el-table-column>

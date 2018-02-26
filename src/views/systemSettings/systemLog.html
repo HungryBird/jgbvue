@@ -18,13 +18,13 @@
 		<div class="wrap_main">
 			<nav>
 				<div class="pull-left">
-					<el-select v-model="selectLook.optionVal.label" :filterable="true" v-on:change="changeDate">
+					<el-select v-model="selectLook.optionVal.label" v-on:change="changeDate">
 						<el-option v-for="option in selectLook.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
 					</el-select>
 				</div>
 				<el-form :inline="true" style="float: left;margin: 1px 0 0 4px;">
 					<el-form-item>
-						<el-date-picker v-model="searchForm.dateValue" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+						<el-date-picker v-model="searchForm.dateValue" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
 					</el-form-item>
 					<el-form-item>
 						<el-input v-model="searchForm.searchValue" placeholder="请输入用户名/姓名/日志内容等关键词查询">

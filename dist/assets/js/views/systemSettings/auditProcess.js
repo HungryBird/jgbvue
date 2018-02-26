@@ -235,14 +235,33 @@ new Vue({
                 _self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
             }
         },
+        selectAll(selection) {
+            let _self = this;
+            if(selection.length == 0) {
+                _self.selectedRows.splice(0, _self.selectedRows.length);
+            }else{
+                _self.selectedRows.splice(0, _self.selectedRows.length);
+                selection.forEach((item)=> {
+                    _self.selectedRows.push(item);
+                })
+            }
+        },
+        selectItem(selection, row) {
+            let = _self = this;
+            this.selectedRows.splice(0, _self.selectedRows.length);
+            for(let i = 0; i < selection.length; i++) {
+                _self.selectedRows.push(selection[i]);
+            }
+        },
         changeModule() {
             this.addForm.checked = false;
         },
         changeLevel(val) {
+            let _self = this;
             this.selectProcessLevel = val;
-            this.addForm.firstLevelAuditorsGroup.splice(0, this.addForm.firstLevelAuditorsGroup.length);
-            this.addForm.secondLevelAuditorsGroup.splice(0, this.addForm.secondLevelAuditorsGroup.length);
-            this.addForm.bosses.splice(0, this.addForm.bosses.length);
+            this.addForm.firstLevelAuditorsGroup.splice(0, _self.addForm.firstLevelAuditorsGroup.length);
+            this.addForm.secondLevelAuditorsGroup.splice(0, _self.addForm.secondLevelAuditorsGroup.length);
+            this.addForm.bosses.splice(0, _self.addForm.bosses.length);
         },
         editChangeModule() {
             //
@@ -260,7 +279,7 @@ new Vue({
             for(let i = 0; i < arr.length; i++) {
                 if(arr[i] > 1000) {
                     _self.firstLeveAuditHasBoss = true;
-                    _self.bosses.splice(0, _self.bosses.length);
+                    _self.addForm.bosses.splice(0, _self.addForm.bosses.length);
                     return;
                 }
             }
@@ -272,7 +291,7 @@ new Vue({
                 for(let i = 0; i < arr.length; i++) {
                     if(arr[i] > 1000) {
                         _self.secondLeveAuditHasBoss = true;
-                        _self.bosses.splice(0, _self.bosses.length);
+                        _self.addForm.bosses.splice(0, _self.addForm.bosses.length);
                         return;
                     }
                 }

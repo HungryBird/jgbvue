@@ -3,58 +3,54 @@ const fs = require('fs');
 
 const router = express.Router();
 
-router.get('/data_get_all', (req, res)=> {
-	let message = '';
-	fs.readFile('api/views/systemSettings/messageInSite/messageInSite_all.json', (err, data)=> {
-		if(err) {
+router.post('/data_get', (req, res)=> {
+	let jdata = '';
+	if(req.body.selectedType === 'all') {
+		fs.readFile('api/views/systemSettings/messageInSite/messageInSite_all.json', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				return false;
+			}
+			jdata += data;
 			res.send({
-				status: false,
-				message: err
+				status: true,
+				message: jdata
 			})
-			return false;
-		}
-		message += data;
-		res.send({
-			status: true,
-			message: message
 		})
-	})
-});
-
-router.get('/data_get_read', (req, res)=> {
-	let message = '';
-	fs.readFile('api/views/messageInSite/messageInSite_read.json', (err, data)=> {
-		if(err) {
+	}else if(req.body.selectedType === 'readed') {
+		fs.readFile('api/views/systemSettings/messageInSite/messageInSite_readed.json', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				return false;
+			}
+			jdata += data;
 			res.send({
-				status: false,
-				message: err
+				status: true,
+				message: jdata
 			})
-			return false;
-		}
-		message += data;
-		res.send({
-			status: true,
-			message: message
 		})
-	})
-});
-
-router.get('/data_get_unread', (req, res)=> {
-	let message = '';
-	fs.readFile('api/views/messageInSite/messageInSite_unread.json', (err, data)=> {
-		if(err) {
+	}else if(req.body.selectedType === 'unread') {
+		fs.readFile('api/views/systemSettings/messageInSite/messageInSite_unread.json', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				return false;
+			}
+			jdata += data;
 			res.send({
-				status: false,
-				message: err
+				status: true,
+				message: jdata
 			})
-			return false;
-		}
-		message += data;
-		res.send({
-			status: true,
-			message: message
 		})
-	})
+	}
 });
 
 router.post('/data_delete', (req, res)=> {
@@ -65,7 +61,7 @@ router.post('/data_delete', (req, res)=> {
 	})
 });
 
-router.post('/data_red', (req, res)=> {
+router.post('/data_read', (req, res)=> {
 	res.send({
 		status: true,
 		message: '操作成功'

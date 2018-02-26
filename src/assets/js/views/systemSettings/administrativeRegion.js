@@ -192,6 +192,13 @@ JGBVue.module.administrativeRegion = ()=> {
 						})
 					}
 				},
+				selectItem(selection, row) {
+					let = _self = this;
+					this.selectedRows.splice(0, _self.selectedRows.length);
+					for(let i = 0; i < selection.length; i++) {
+						_self.selectedRows.push(selection[i]);
+					}
+				},
 				addRegin() {
 					this.addForm.visible = true;
 				},
