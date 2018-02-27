@@ -43,8 +43,15 @@
 				新增公司资料
 			</div>
 			<el-form :model="addForm" ref="addForm" :rules="formRules">
-				<el-form-item label="公司名称" prop="" :inline=true>
-					<el-input></el-input>
+				<el-form-item label="公司名称" prop="name">
+					<el-input v-model="addForm.name"></el-input>
+				</el-form-item>
+			</el-form>
+			<el-form :model="addForm" ref="addForm" :rules="formRules">
+				<el-form-item label="公司名称" prop="trade">
+					<el-select placeholder="请选择行业"  v-model="addForm.trade">
+						<el-option v-for="item in tradeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+					</el-select>
 				</el-form-item>
 			</el-form>
 		</el-dialog>

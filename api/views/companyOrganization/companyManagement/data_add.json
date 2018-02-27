@@ -1,0 +1,16 @@
+{
+	"trade": [
+		{
+			"value": "opt1",
+			"label": "行业1"
+		},
+		{
+			"value": "opt2",
+			"label": "行业2"
+		},
+		{
+			"value": "opt3",
+			"label": "行业3"
+		}
+	]
+}

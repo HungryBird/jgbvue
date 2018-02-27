@@ -19,7 +19,7 @@
 				<el-button-group class="pull-left">
 					<el-button type="primary" @click="start">开始备份</el-button>
 					<el-button type="primary" @click="upload">上传本地备份</el-button>
-					<el-button type="primary" @click="timing">定时备份</el-button>
+					<el-button type="primary" @click="setTiming">定时备份</el-button>
 				</el-button-group>
 				<el-button-group class="pull-right">
 					<el-button v-on:click="recover" :disabled="selectedRows.length !== 1">恢复</el-button>
@@ -54,10 +54,10 @@
 			<el-dialog title="定时备份" :visible.sync="timingDialog.visible">
 				<el-form>
 					<el-form-item label="是否启用定时配送">
-						<el-switch v-model="table.timing.checked"></el-switch>
+						<el-switch v-model="timing.checked"></el-switch>
 					</el-form-item>
 					<el-form-item>
-						<el-time-picker type="fixed-time" placeholder="选择时间" v-model="table.timing.time" style="width: 100%;"></el-time-picker>
+						<el-time-picker type="fixed-time" placeholder="选择时间" v-model="timing.time" style="width: 100%;"></el-time-picker>
 					</el-form-item>
 				</el-form>
 				<div slot="footer">
@@ -72,4 +72,15 @@
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/views/systemSettings/FBackup.js"></script>
+<script type="text/javascript">
+	/**
+	 * 获取数据
+	 * 备份
+	 * 获取定时数据
+	 * 提交定时数据
+	 * @type {[type]}
+	 */
+	let fb = JGBVue.module.FBackup();
+	fb.init('/FBackup/get_table_data', '/FBackup/backup', '/FBackup/getTiming', '/FBackup/setTiming', '/FBackup/recover', '/FBackup/download', '/FBackup/delete');
+</script>
 </html>

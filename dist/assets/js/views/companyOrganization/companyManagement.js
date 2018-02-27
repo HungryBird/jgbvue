@@ -15,11 +15,33 @@ JGBVue.module.companyManagement = ()=> {
 				selectedRows: [],
 				currentPage: 1,
 				pageSize: 20,
-				addDialogVisiable: true,
+				addDialogVisiable: false,
 				addForm: {
-					//
+					name: '',
+					trade: ''
 				},
-				formRules: {}
+				formRules: {
+					name: [
+						{required: true, message: '请输入公司名称'}
+					],
+					trade: [
+						{required: true, message: '请选择一个行业'}
+					]
+				},
+				tradeOptions: [
+					{
+						"value": "opt1",
+						"label": "行业1"
+					},
+					{
+						"value": "opt2",
+						"label": "行业2"
+					},
+					{
+						"value": "opt3",
+						"label": "行业3"
+					}
+				]
 			},
 			mounted() {
 				axios.get(dataGetUrl).then((req)=> {
@@ -35,7 +57,7 @@ JGBVue.module.companyManagement = ()=> {
 			},
 			methods: {
 				add() {
-					//
+					this.addDialogVisiable = true;
 				},
 				edit() {
 					//

@@ -53,7 +53,7 @@ JGBVue.module.messageInSite = ()=> {
 							} else if(jdata[i].status == 4) {
 								type = 'error'
 							};
-							console.log('str: ', JSON.stringify(JSON.parse(jdata[i])));
+							let str = JSON.stringify(JSON.parse(JSON.stringify(jdata[i])));
 							this.$notify({
 								title: '站内信息提醒',
 								dangerouslyUseHTMLString: true,
@@ -61,7 +61,7 @@ JGBVue.module.messageInSite = ()=> {
 								type: type,
 								offset: offset,
 								duration: 0,
-								message: '<a onclick=msDialog() style=text-decoration:underline;cursor:pointer;>' + jdata[i].summary + '</a>'
+								message: '<a onclick=msDialog('+str+') style=text-decoration:underline;cursor:pointer;>' + jdata[i].summary + '</a>'
 							});
 							offset += 65;
 						}
@@ -167,8 +167,10 @@ JGBVue.module.messageInSite = ()=> {
 				handleCurrentChange() {
 					//current page change
 				},
-				test() {
-					console.log(111)
+				msDialog(ms) {
+					this.$alert('<p>'+ms.content+'</p><a href='+ms.href+' style=text-decoration:underline>'+ms.href+'</a>', '站内信息详情页', {
+						dangerouslyUseHTMLString: true
+					});
 				}
 			},
 			filters: {
@@ -204,4 +206,8 @@ JGBVue.module.messageInSite = ()=> {
 	}
 
 	return that;
+}
+
+function msDialog(obj) {
+	ms.vm.msDialog(obj);
 }
