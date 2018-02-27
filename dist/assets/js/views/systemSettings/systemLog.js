@@ -84,11 +84,15 @@ JGBVue.module.systemLog = ()=> {
 				}
 			},
 			mounted: function() {
+				let _self = this;
 				this.selectClear.curSelectValue = this.selectClear.options[0].value;
 				axios.get(dataGetAllUrl).then((data)=> {
 					if(data.data.status) {
 						let jdata = JSON.parse(data.data.message);
 						this.logTable = jdata;
+						for(key in jdata[0]) {
+							_self.exportForm.push(key);
+						}
 					}else{
 						console.log('data get err: ', err);
 					}
@@ -244,6 +248,5 @@ JGBVue.module.systemLog = ()=> {
 	that.init = (dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize, dataExportUrl)=> {
 		_this.init(dataGetAllUrl, dataDeteleUrl, dataGetOtherUrl, dataGetSearchUrl, dataGetCurrentUrl, dataGetSize, dataExportUrl);
 	}
-	
 	return that;
 }
