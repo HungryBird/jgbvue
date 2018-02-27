@@ -5,7 +5,8 @@
         "number": "110101001",
         "initials": "dhmjd",
         "valid": true,
-        "notes": ""
+        "notes": "",
+        "leaf": true
     },
     {
         "label": "景山街道",
@@ -13,7 +14,8 @@
         "number": "110101002",
         "initials": "jsjd",
         "valid": true,
-        "notes": ""
+        "notes": "",
+        "leaf": true
     },
     {
         "label": "交道口街道",
@@ -21,6 +23,7 @@
         "number": "110101003",
         "initials": "jdkjd",
         "valid": true,
-        "notes": ""
+        "notes": "",
+        "leaf": true
     }
 ]

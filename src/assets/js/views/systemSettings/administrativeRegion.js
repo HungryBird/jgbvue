@@ -13,7 +13,8 @@ JGBVue.module.administrativeRegion = ()=> {
 				treeData: [],
 				defaultProps: {
 					children: 'children',
-					label: 'label'
+					label: 'label',
+					isLeaf: 'leaf'
 				},
 				searchInputVal: '',
 				tableData: [],
@@ -95,6 +96,7 @@ JGBVue.module.administrativeRegion = ()=> {
 			},
 			methods: {
 				loadNode(node, resolve) {
+					console.log('loadNodenode: ', node);
 					let _self = this;
 					/**
 					 * 加载页面时自动获取level为0的数据
@@ -107,9 +109,7 @@ JGBVue.module.administrativeRegion = ()=> {
 							jdata.forEach((item)=> {
 								let obj = {};
 								for(key in item) {
-									if(key != 'children') {
-										obj[key] = item[key];
-									}
+									obj[key] = item[key];
 								}
 								_self.tableData.push(obj);
 							});
@@ -118,19 +118,11 @@ JGBVue.module.administrativeRegion = ()=> {
 						})
 					};
 					/**
-					 * 规定最大level === 4
+					 * 规定最大level === 4 || node.isLeaf
 					 * @param  {[type]} node.level >             3 [description]
 					 * @return {[type]}            [description]
 					 */
-					if(node.level > 3) {
-						return resolve([]);
-					};
-					/**
-					 * 当为叶子节点时返回空数组
-					 * @param  {[type]} node.data.isLeaf [description]
-					 * @return {[type]}                  [description]
-					 */
-					if(node.isLeaf) {
+					if(node.level > 3 || node.isLeaf) {
 						return resolve([]);
 					};
 					/**
@@ -143,34 +135,27 @@ JGBVue.module.administrativeRegion = ()=> {
 							jdata.forEach((item)=> {
 								let obj = {};
 								for(key in item) {
-									if(key != 'children') {
-										obj[key] = item[key];
-									}
+									obj[key] = item[key];
 								}
-								_self.tableData.push(obj);
 							});
-							_self.treeData = jdata;
 							return resolve(jdata);
 						});
 					}
 				},
 				handleNodeClick(data,node,cmp) {
 					let _self = this;
-					if(!data.children) {
-						_self.addForm.addFormData.level = data.level;
-						return;
-					};
+					if(node.isLeaf) return;
 					this.tableData.splice(0, this.tableData.length);
-					data.children.forEach(function(item) {
-						let obj = {};
-						for(key in item) {
-							if(key != 'children') {
+					axios.post(lazyUrl, node.data).then((req)=> {
+						let jdata = JSON.parse(req.data.data);
+						jdata.forEach((item)=> {
+							let obj = {};
+							for(key in item) {
 								obj[key] = item[key];
 							}
-						}
-						_self.tableData.push(obj);
+							_self.tableData.push(obj);
+						});
 					});
-					_self.addForm.addFormData.level = data.children[0].level;
 				},
 				rowClick(row, event, column) {
 					let _self = this;
