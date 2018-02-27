@@ -6,8 +6,8 @@ JGBVue.module.messageInSite = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (getUrl, readUrl, deleteUrl)=> {
-		new Vue({
+	_this.init = (infoUrl, getUrl, readUrl, deleteUrl)=> {
+		that.vm = new Vue({
 			el: '#app',
 			data: {
 				tableData: [],
@@ -34,6 +34,37 @@ JGBVue.module.messageInSite = ()=> {
 					let jdata = JSON.parse(data.data.message);
 					if(data.data.status) {
 						this.tableData = jdata;
+					}
+				}).catch((err)=> {
+					console.log('err', err);
+				});
+				axios.get(infoUrl).then((data)=> {
+					let jdata = JSON.parse(data.data.message)
+					offset = 25;
+					for(let i = 0; i < jdata.length; i++) {
+						if(data.data.status) {
+							let type = '';
+							if(jdata[i].status == 1) {
+								type = 'success'
+							} else if(jdata[i].status == 2) {
+								type = 'warning'
+							} else if(jdata[i].status == 3) {
+								type = 'info'
+							} else if(jdata[i].status == 4) {
+								type = 'error'
+							};
+							console.log('str: ', JSON.stringify(JSON.parse(jdata[i])));
+							this.$notify({
+								title: '站内信息提醒',
+								dangerouslyUseHTMLString: true,
+								position: 'bottom-right',
+								type: type,
+								offset: offset,
+								duration: 0,
+								message: '<a onclick=msDialog() style=text-decoration:underline;cursor:pointer;>' + jdata[i].summary + '</a>'
+							});
+							offset += 65;
+						}
 					}
 				}).catch((err)=> {
 					console.log('err', err);
@@ -135,6 +166,9 @@ JGBVue.module.messageInSite = ()=> {
 				},
 				handleCurrentChange() {
 					//current page change
+				},
+				test() {
+					console.log(111)
 				}
 			},
 			filters: {
@@ -163,10 +197,10 @@ JGBVue.module.messageInSite = ()=> {
 				}
 			}
 		});
-	}
+	};
 
-	that.init = (getUrl, readUrl, deleteUrl)=> {
-		_this.init(getUrl, readUrl, deleteUrl);
+	that.init = (infoUrl, getUrl, readUrl, deleteUrl)=> {
+		_this.init(infoUrl, getUrl, readUrl, deleteUrl);
 	}
 
 	return that;

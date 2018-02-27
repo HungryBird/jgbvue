@@ -3,6 +3,24 @@ const fs = require('fs');
 
 const router = express.Router();
 
+router.get('/info_get', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/systemSettings/messageInSite/info.json', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			})
+			return false;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			message: jdata
+		})
+	})
+})
+
 router.post('/data_get', (req, res)=> {
 	let jdata = '';
 	if(req.body.selectedType === 'all') {

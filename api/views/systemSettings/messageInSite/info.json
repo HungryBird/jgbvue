@@ -1,0 +1,26 @@
+[
+	{
+		"summary": "您的编号为000的审核已经通过",
+		"status": 1,
+		"content": "您提交的编号为000的审核已经通过！\n请前往以下地址处理：",
+		"href": "http://www.baidu.com"
+	},
+	{
+		"summary": "您的编号为000的审核未被通过",
+		"status": 2,
+		"content": "您提交的编号为000的审核未被通过！\n请前往以下地址处理：",
+		"href": "http://www.baidu.com"
+	},
+	{
+		"summary": "您的消息反馈",
+		"status": 3,
+		"content": "这里有一条消息！\n请前往以下地址查看：",
+		"href": "http://www.baidu.com"
+	},
+	{
+		"summary": "您的编号为000的审核出现异常",
+		"status": 4,
+		"content": "您提交的编号为000的审核出现异常！\n请前往以下地址处理：",
+		"href": "http://www.baidu.com"
+	}
+]

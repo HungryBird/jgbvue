@@ -51,11 +51,16 @@
 <script type="text/javascript" src="../../assets/js/views/systemSettings/messageInSite.js"></script>
 <script type="text/javascript">
 	/**
+	 * 获取信息
 	 * 获取数据
 	 * 标为已读
 	 * 删除
 	 * @type {[type]}
 	 */
-	let ms = JGBVue.module.messageInSite().init('/messageInSite/data_get', '/messageInSite/data_read', '/messageInSite/data_delete');
+	let ms = JGBVue.module.messageInSite();
+	ms.init('/messageInSite/info_get', '/messageInSite/data_get', '/messageInSite/data_read', '/messageInSite/data_delete');
+	function msDialog() {
+		console.log('ms: ', 111);
+	}
 </script>
 </html>
