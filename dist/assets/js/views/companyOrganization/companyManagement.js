@@ -23,7 +23,16 @@ JGBVue.module.companyManagement = ()=> {
 					phoneNumber: '',
 					email: '',
 					fax: '',
-					address: []
+					province: '',
+					city: '',
+					district: '',
+					block: ''
+				},
+				address: {
+					provinces: [],
+					cities: [],
+					districts: [],
+					blocks: []
 				},
 				addressProps: {
 					value: 'uid',
@@ -38,6 +47,11 @@ JGBVue.module.companyManagement = ()=> {
 					],
 					phoneNumber: [
 						{required: true, message: '请输入手机号码'}
+					],
+					province: [
+						{
+							required: true, message: '请选择公司地址'
+						}
 					]
 				},
 				tradeOptions: [
@@ -70,7 +84,7 @@ JGBVue.module.companyManagement = ()=> {
 			methods: {
 				add() {
 					let _self = this;
-					axios.get('/companyManagement/address').then((req)=> {
+					/*axios.get('/companyManagement/address').then((req)=> {
 						if(req.data.status) {
 							let jdata = JSON.parse(req.data.data);
 							jdata.forEach((item)=> {
@@ -80,7 +94,17 @@ JGBVue.module.companyManagement = ()=> {
 						}
 					}).catch((err)=> {
 						console.log('err: ', err);
-					})
+					})*/
+					this.addDialogVisiable = true;
+				},
+				foucsProvince() {
+					if(this.address.provinces.length === 0) {
+						axios.get('/companyManagement/address').then((req)=> {
+
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
 				},
 				edit() {
 					//
@@ -108,9 +132,12 @@ JGBVue.module.companyManagement = ()=> {
 				},
 				handleItemChange(val) {
 					console.log('val', val);
-					/*if() {
-
-					}*/
+					axios.post('/companyManagement/address', val).then((req)=> {
+						let jdata = JSON.parse(req.data.data);
+						console.log(this.addForm.address)
+					}).catch((err)=> {
+						console.log('err: ', err);
+					})
 				}
 			}
 		})

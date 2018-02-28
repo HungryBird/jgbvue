@@ -43,7 +43,7 @@
 				新增公司资料
 			</div>
 			<el-form :model="addForm" ref="addForm" :rules="formRules" label-position="top" class="el-form-dialog">
-				<el-row :gutter="22">
+				<el-row :gutter="24">
 					<el-col :span="8">
 						<el-form-item label="公司名称" prop="name">
 							<el-input v-model="addForm.name"></el-input>
@@ -76,9 +76,33 @@
 							<el-input v-model="addForm.fax"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="24">
-						<el-form-item label="公司地址" prop="address">
-							<el-cascader :options="addForm.address" v-on:active-item-change="handleItemChange" :props="addressProps"></el-cascader>
+					<el-col :span="6">
+						<el-form-item label="公司地址" prop="province">
+							<!-- <el-cascader :options="addForm.address" v-on:active-item-change="handleItemChange" :props="addressProps"></el-cascader> -->
+							<el-select placeholder="省份" v-model="addForm.province" v-on:focus="foucsProvince">
+								<el-option v-for=""></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="city" label="城市" class="hide-label">
+							<el-select placeholder="城市" v-model="addForm.city" :disabled="addForm.province === ''" v-on:focus="foucsCity">
+								
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="district" label="地区" class="hide-label">
+							<el-select  placeholder="地区" v-model="addForm.district" :disabled="addForm.city === ''">
+								
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="block" label="街道" class="hide-label">
+							<el-select  placeholder="街道" v-model="addForm.block" :disabled="addForm.district === ''">
+								
+							</el-select>
 						</el-form-item>
 					</el-col>
 				</el-row>

@@ -24,14 +24,15 @@ ul {
 
 .el-form-dialog .el-form-item {
   padding: 0; }
-  .el-form-dialog .el-form-item .el-form-item__label {
-    padding: 0; }
   .el-form-dialog .el-form-item .el-select {
     width: 100%; }
   .el-form-dialog .el-form-item .el-cascader {
     width: 100%; }
   .el-form-dialog .el-form-item .el-input {
     width: 100%; }
+
+.el-form-dialog .hide-label > .el-form-item__label {
+  font-size: 0; }
 
 .el-message-box__headerbtn {
   top: 10px;

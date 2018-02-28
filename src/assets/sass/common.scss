@@ -28,9 +28,6 @@ ul{
 .el-form-dialog{
 	.el-form-item{
 		padding: 0;
-		.el-form-item__label{
-			padding: 0;
-		}
 		.el-select{
 			width: 100%;
 		}
@@ -39,6 +36,11 @@ ul{
 		}
 		.el-input{
 			width: 100%;
+		}
+	}
+	.hide-label{
+		>.el-form-item__label{
+			font-size: 0;
 		}
 	}
 }
