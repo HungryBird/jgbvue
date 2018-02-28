@@ -14,7 +14,6 @@
 			<nav>
 				<el-button-group class="pull-right">
 					<el-button type="info" v-on:click="load">导入模板</el-button>
-					<el-button type="primary" v-on:click="add" icon="el-icon-plus">新增</el-button>
 					<el-button type="primary" v-on:click="remove" icon="el-icon-delete" :disabled="selectedRows.length == 0">删除</el-button>
 				</el-button-group>
 			</nav>
@@ -30,7 +29,6 @@
 							{{ scope.row.usingDefaultTemplate | usingStatus }}
 						</template>
 					</el-table-column>
-					<!-- <el-table-column></el-table-column> -->
 				</el-table>
 			</div>
 		</div>
@@ -41,28 +39,43 @@
 			<div slot="title" class="title">
 				新增审核流程
 			</div>
-			<el-form label-width="80px" :model="form">
-				<el-form-item label="模板类别">
-					<el-select v-model="form.selectedTemplate">
-						<el-option></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="模板文件">
-					<el-input v-model="form.name"></el-input>
-					<el-button>浏览</el-button>
-				</el-form-item>
-				<el-form-item label="模板名称">
-					<el-input v-model="form.name"></el-input>
-				</el-form-item>
-				<el-form-item label="模板描述">
-					<el-input v-model="form.describe"></el-input>
-				</el-form-item>
-				<el-form-item label="模板编码">
-					<el-input v-model="form.coding"></el-input>
-				</el-form-item>
-				<el-form-item label="默认模板">
-					<el-checkbox v-model="form.usingDefaultTemplate"></el-checkbox >
-				</el-form-item>
+			<el-form :model="form" class="el-form-dialog" label-position="top">
+				<el-row :gutter="22">
+					<el-col :span="24">
+						<el-form-item label="模板类别" prop="templateType">
+							<el-select v-model="form.templateType">
+								<el-option label="类别1" value="type1"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="模板文件" prop="fileList">
+							<el-upload action="/printTemplate/upload" :file-list="form.fileList" :auto-upload="false" ref="upload">
+								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+							</el-upload>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="模板名称" prop="name">
+							<el-input v-model="form.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="模板描述" prop="describe">
+							<el-input v-model="form.describe"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="模板编码" prop="coding">
+							<el-input v-model="form.coding"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="默认模板" prop="usingDefaultTemplate">
+							<el-checkbox v-model="form.usingDefaultTemplate" border></el-checkbox >
+						</el-form-item>
+					</el-col>
+				</el-row>
 			</el-form>
 			<div slot="footer">
 				<el-button type="primary" v-on:click="saveLoad">保存</el-button>

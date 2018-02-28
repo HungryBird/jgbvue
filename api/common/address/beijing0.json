@@ -1,0 +1,26 @@
+[
+    {
+        "label": "北京",
+        "level": 1,
+        "uid": "bj",
+        "number": "110000",
+        "initials": "bj",
+        "value": "bj",
+        "valid": true,
+        "notes": "",
+        "leaf": false,
+        "children": []
+    },
+    {
+        "label": "重庆市",
+        "level": 1,
+        "uid": "cq",
+        "number": "110002",
+        "initials": "cq",
+        "value": "cq",
+        "valid": true,
+        "notes": "",
+        "leaf": false,
+        "children": []
+    }
+]

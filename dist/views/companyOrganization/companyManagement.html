@@ -42,17 +42,46 @@
 			<div slot="title" class="title">
 				新增公司资料
 			</div>
-			<el-form :model="addForm" ref="addForm" :rules="formRules">
-				<el-form-item label="公司名称" prop="name">
-					<el-input v-model="addForm.name"></el-input>
-				</el-form-item>
-			</el-form>
-			<el-form :model="addForm" ref="addForm" :rules="formRules">
-				<el-form-item label="公司名称" prop="trade">
-					<el-select placeholder="请选择行业"  v-model="addForm.trade">
-						<el-option v-for="item in tradeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
-					</el-select>
-				</el-form-item>
+			<el-form :model="addForm" ref="addForm" :rules="formRules" label-position="top" class="el-form-dialog">
+				<el-row :gutter="22">
+					<el-col :span="8">
+						<el-form-item label="公司名称" prop="name">
+							<el-input v-model="addForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="公司名称" prop="trade">
+							<el-select placeholder="请选择行业"  v-model="addForm.trade">
+								<el-option v-for="item in tradeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="公司电话" prop="telephone">
+							<el-input v-model="addForm.telephone"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="手机电话" prop="phoneNumber">
+							<el-input v-model="addForm.phoneNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="邮箱" prop="email">
+							<el-input v-model="addForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="传真" prop="fax">
+							<el-input v-model="addForm.fax"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="公司地址" prop="address">
+							<el-cascader :options="addForm.address" v-on:active-item-change="handleItemChange" :props="addressProps"></el-cascader>
+						</el-form-item>
+					</el-col>
+				</el-row>
 			</el-form>
 		</el-dialog>
 	</div>

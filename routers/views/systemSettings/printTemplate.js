@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const multer = require('multer');
 
 const router = express.Router();
 
@@ -32,6 +33,25 @@ router.post('/data_delete', (req, res)=> {
 	res.send({
 		status: true,
 		message: '删除成功'
+	})
+});
+
+let uploadBackup = multer({dest: 'api/uploads/'}).any();
+
+router.post('/upload', (req, res)=> {
+	uploadBackup(req, res, (err)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			})
+			return;
+		}
+		res.send({
+			status: true,
+			message: '备份成功'
+		})
+		console.log('upload: ', req.body);
 	})
 })
 

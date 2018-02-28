@@ -100,7 +100,7 @@ JGBVue.module.systemParameter = ()=>{
 						this.form.priceDigits = 0;
 						return;
 					}
-					this.form.quantityDigits = Number(val);
+					this.form.priceDigits = Number(val);
 				}
 			}
 		});

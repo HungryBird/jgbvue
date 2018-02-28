@@ -26,11 +26,16 @@ JGBVue.module.printTemplate = ()=> {
                  * @type {Object}
                  */
                 form: {
-                    selectedTemplate: '',
+                    templateType: '',
+                    fileList: [],
                     name: '',
                     describe: '',
                     coding: '',
                     usingDefaultTemplate: false
+                },
+                upload: {
+                    status: false,
+                    message: ''
                 },
                 selectedRows: []
             },
@@ -52,9 +57,9 @@ JGBVue.module.printTemplate = ()=> {
                 saveLoad() {
                     let _self = this;
                     axios.post('/printTemplate/data_load_save', this.form).then((data)=> {
-                        console.log('data', data.data);
+                        this.$refs.upload.submit();
                         if(data.data.status) {
-                            _self.dialogFormVisible = false;
+                            _self.dialogLoadVisible = false;
                             _self.$message({
                                 type: 'success',
                                 message: data.data.message
@@ -71,12 +76,6 @@ JGBVue.module.printTemplate = ()=> {
                             message: err
                         });
                     });
-                },
-                add() {
-                    this.dialogAddVisible = true;
-                },
-                edit() {
-                    //
                 },
                 remove() {
                     let _self = this;

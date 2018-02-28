@@ -18,7 +18,16 @@ JGBVue.module.companyManagement = ()=> {
 				addDialogVisiable: false,
 				addForm: {
 					name: '',
-					trade: ''
+					trade: '',
+					telephone: '',
+					phoneNumber: '',
+					email: '',
+					fax: '',
+					address: []
+				},
+				addressProps: {
+					value: 'uid',
+					children: 'children'
 				},
 				formRules: {
 					name: [
@@ -26,6 +35,9 @@ JGBVue.module.companyManagement = ()=> {
 					],
 					trade: [
 						{required: true, message: '请选择一个行业'}
+					],
+					phoneNumber: [
+						{required: true, message: '请输入手机号码'}
 					]
 				},
 				tradeOptions: [
@@ -53,11 +65,22 @@ JGBVue.module.companyManagement = ()=> {
 					this.cyTable = jdata;
 				}).catch((err)=> {
 					console.log('err: ', err);
-				})
+				});
 			},
 			methods: {
 				add() {
-					this.addDialogVisiable = true;
+					let _self = this;
+					axios.get('/companyManagement/address').then((req)=> {
+						if(req.data.status) {
+							let jdata = JSON.parse(req.data.data);
+							jdata.forEach((item)=> {
+								_self.addForm.address.push(item);
+							})
+							this.addDialogVisiable = true;
+						}
+					}).catch((err)=> {
+						console.log('err: ', err);
+					})
 				},
 				edit() {
 					//
@@ -79,6 +102,15 @@ JGBVue.module.companyManagement = ()=> {
 				},
 				handleCurrentChange() {
 					//
+				},
+				handleChange() {
+					//
+				},
+				handleItemChange(val) {
+					console.log('val', val);
+					/*if() {
+
+					}*/
 				}
 			}
 		})

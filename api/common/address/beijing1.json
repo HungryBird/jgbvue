@@ -1,12 +1,14 @@
 [
 	{
         "label": "北京市",
-        "level": 2,
+        "level": 2,,
+        "uid": "bjs",
         "number": "110100",
         "initials": "bjs",
         "value": "bjs",
         "valid": true,
         "notes": "",
-        "leaf": false
+        "leaf": false,
+        "children": []
     }
 ]

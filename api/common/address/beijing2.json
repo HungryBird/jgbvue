@@ -2,11 +2,13 @@
     {
         "label": "东城区",
         "level": 3,
+        "uid": "bjsdcq",
         "number": "110101",
         "initials": "dcq",
         "value": "dcq",
         "valid": true,
         "notes": "",
-        "leaf": false
+        "leaf": false,
+        "children": []
     }
 ]
