@@ -26,9 +26,34 @@ JGBVue.module.companyManagement = ()=> {
 					province: '',
 					city: '',
 					district: '',
-					block: ''
+					block: '',
+					moreInfo: '',
+					date: '',
+					remark: ''
 				},
-				address: {
+				editDialogVisiable: false,
+				editForm: {
+					name: '',
+					trade: '',
+					telephone: '',
+					phoneNumber: '',
+					email: '',
+					fax: '',
+					province: '',
+					city: '',
+					district: '',
+					block: '',
+					moreInfo: '',
+					date: '',
+					remark: ''
+				},
+				addAddress: {
+					provinces: [],
+					cities: [],
+					districts: [],
+					blocks: []
+				},
+				editAddress: {
 					provinces: [],
 					cities: [],
 					districts: [],
@@ -51,6 +76,11 @@ JGBVue.module.companyManagement = ()=> {
 					province: [
 						{
 							required: true, message: '请选择公司地址'
+						}
+					],
+					moreInfo: [
+						{
+							required: true, message: '请输入详细地址'
 						}
 					]
 				},
@@ -84,30 +114,129 @@ JGBVue.module.companyManagement = ()=> {
 			methods: {
 				add() {
 					let _self = this;
-					/*axios.get('/companyManagement/address').then((req)=> {
-						if(req.data.status) {
-							let jdata = JSON.parse(req.data.data);
-							jdata.forEach((item)=> {
-								_self.addForm.address.push(item);
-							})
-							this.addDialogVisiable = true;
-						}
-					}).catch((err)=> {
-						console.log('err: ', err);
-					})*/
 					this.addDialogVisiable = true;
 				},
 				foucsProvince() {
+					let _self = this;
 					if(this.address.provinces.length === 0) {
-						axios.get('/companyManagement/address').then((req)=> {
-
+						axios.get('/companyManagement/get_provinces').then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.address.provinces.push(item);
+								});
+							}
 						}).catch((err)=> {
 							console.log('err: ', err);
 						})
 					}
 				},
+				foucsCity() {
+					let _self = this;
+					if(this.address.cities.length === 0) {
+						axios.post('/companyManagement/get_cities', this.address.provinces).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.address.cities.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				foucsDistrict() {
+					let _self = this;
+					if(this.address.districts.length === 0) {
+						axios.post('/companyManagement/get_district', this.address.cities).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.address.districts.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				foucsBlock() {
+					let _self = this;
+					if(this.address.blocks.length === 0) {
+						axios.post('/companyManagement/get_block', this.address.districts).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.address.blocks.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				changeProvince(val) {
+					if(this.address.cities.length !== 0) {
+						this.address.cities.splice(0, this.address.cities.length);
+						this.addForm.city = '';
+					}
+					if(this.address.districts.length !== 0) {
+						this.address.districts.splice(0, this.address.districts.length);
+						this.addForm.district = '';
+					}
+					if(this.address.blocks.length !== 0) {
+						this.address.blocks.splice(0, this.address.blocks.length);
+						this.addForm.block = '';
+					}
+				},
+				changeCities() {
+					if(this.address.districts.length !== 0) {
+						this.address.districts.splice(0, this.address.districts.length);
+						this.addForm.district = '';
+					}
+					if(this.address.blocks.length !== 0) {
+						this.address.blocks.splice(0, this.address.blocks.length);
+						this.addForm.block = '';
+					}
+				},
+				changeDistrict() {
+					if(this.address.blocks.length !== 0) {
+						this.address.blocks.splice(0, this.address.blocks.length);
+						this.addForm.block = '';
+					}
+				},
 				edit() {
-					//
+					let _self = this;
+					axios.post('/companyManagement/edit_get', this.selectedRows).then((req)=> {
+						if(req.data.status) {
+							let jprovinces = JSON.parse(req.data.data.provinces)
+							,jcities = JSON.parse(req.data.data.cities)
+							,jdistricts = JSON.parse(req.data.data.districts)
+							,jblocks = JSON.parse(req.data.data.blocks)
+							,jdata = JSON.parse(req.data.data.editData);
+							this.editAddress.provinces.splice(0, this.editAddress.provinces.length);
+							this.editAddress.cities.splice(0, this.editAddress.cities.length);
+							this.editAddress.districts.splice(0, this.editAddress.districts.length);
+							this.editAddress.blocks.splice(0, this.editAddress.blocks.length);
+							this.editForm = jdata;
+							jprovinces.forEach((item)=> {
+								_self.editAddress.provinces.push(item);
+							});
+							jcities.forEach((item)=> {
+								_self.editAddress.cities.push(item);
+							});
+							jdistricts.forEach((item)=> {
+								_self.editAddress.districts.push(item);
+							});
+							jblocks.forEach((item)=> {
+								_self.editAddress.blocks.push(item);
+							});
+							this.editDialogVisiable = true;
+						}
+					}).catch((err)=> {
+						console.log('err: ', err);
+					});
 				},
 				remove() {
 					//
@@ -121,6 +250,24 @@ JGBVue.module.companyManagement = ()=> {
 						_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
 					}
 				},
+				selectAll(selection) {
+                    let _self = this;
+                    if(selection.length == 0) {
+                        _self.selectedRows.splice(0, _self.selectedRows.length);
+                    }else{
+                        _self.selectedRows.splice(0, _self.selectedRows.length);
+                        selection.forEach((item)=> {
+                            _self.selectedRows.push(item);
+                        })
+                    }
+                },
+                selectItem(selection, row) {
+                    let = _self = this;
+                    this.selectedRows.splice(0, _self.selectedRows.length);
+                    for(let i = 0; i < selection.length; i++) {
+                        _self.selectedRows.push(selection[i]);
+                    }
+                },
 				handleSizeChange() {
 					//
 				},
@@ -138,6 +285,21 @@ JGBVue.module.companyManagement = ()=> {
 					}).catch((err)=> {
 						console.log('err: ', err);
 					})
+				},
+				saveAdd(formName) {
+					axios.post('/companyManagement/add_save', this.addForm).then((data)=> {
+						if(data.data.status) {
+							this.$refs[formName].resetFields();
+							this.addDialogVisiable = false;
+							this.$message({
+								type: 'success',
+								message: data.data.data
+							})
+						}
+					})
+				},
+				closeAdd() {
+					this.addDialogVisiable = false;
 				}
 			}
 		})

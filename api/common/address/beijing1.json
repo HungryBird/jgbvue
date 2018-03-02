@@ -10,5 +10,17 @@
         "notes": "",
         "leaf": false,
         "children": []
+    },
+    {
+        "label": "北京市1",
+        "level": 2,
+        "uid": "bjs1",
+        "number": "110100",
+        "initials": "bjs1",
+        "value": "bjs1",
+        "valid": true,
+        "notes": "",
+        "leaf": false,
+        "children": []
     }
 ]

@@ -10,5 +10,17 @@
         "notes": "",
         "leaf": false,
         "children": []
+    },
+    {
+        "label": "西城区",
+        "level": 3,
+        "uid": "bjsxcq",
+        "number": "110102",
+        "initials": "xcq",
+        "value": "xcq",
+        "valid": true,
+        "notes": "",
+        "leaf": false,
+        "children": []
     }
 ]

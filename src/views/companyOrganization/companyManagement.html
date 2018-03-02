@@ -13,12 +13,12 @@
 			<nav>
 				<el-button-group class="pull-right">
 					<el-button type="primary" v-on:click="add" icon="el-icon-plus">新增</el-button>
-					<el-button type="primary" v-on:click="edit" icon="el-icon-edit" :disabled="selectedRows.length != 1">修改</el-button>
-					<el-button type="primary" v-on:click="remove" icon="el-icon-delete" :disabled="selectedRows.length == 0">删除</el-button>
+					<el-button type="primary" v-on:click="edit" icon="el-icon-edit" :disabled="selectedRows.length !== 1">修改</el-button>
+					<el-button type="primary" v-on:click="remove" icon="el-icon-delete" :disabled="selectedRows.length === 0">删除</el-button>
 				</el-button-group>
 			</nav>
 			<div class="inner_main">
-				<el-table ref="companyTable" border v-on:row-click="rowClick" :data="cyTable">
+				<el-table ref="companyTable" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem">
 					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50px"></el-table-column>
 					<el-table-column label="公司名称" prop="name"></el-table-column>
@@ -44,21 +44,21 @@
 			</div>
 			<el-form :model="addForm" ref="addForm" :rules="formRules" label-position="top" class="el-form-dialog">
 				<el-row :gutter="24">
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="公司名称" prop="name">
 							<el-input v-model="addForm.name"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
-						<el-form-item label="公司名称" prop="trade">
+					<el-col :span="12">
+						<el-form-item label="公司电话" prop="telephone">
+							<el-input v-model="addForm.telephone"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="公司行业" prop="trade">
 							<el-select placeholder="请选择行业"  v-model="addForm.trade">
 								<el-option v-for="item in tradeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
 							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<el-form-item label="公司电话" prop="telephone">
-							<el-input v-model="addForm.telephone"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="8">
@@ -78,35 +78,146 @@
 					</el-col>
 					<el-col :span="6">
 						<el-form-item label="公司地址" prop="province">
-							<!-- <el-cascader :options="addForm.address" v-on:active-item-change="handleItemChange" :props="addressProps"></el-cascader> -->
-							<el-select placeholder="省份" v-model="addForm.province" v-on:focus="foucsProvince">
-								<el-option v-for=""></el-option>
+							<el-select placeholder="省份" v-model="addForm.province" v-on:focus="foucsProvince" v-on:change="changeProvince">
+								<el-option v-for="item in addAddress.provinces" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="city" label="城市" class="hide-label">
-							<el-select placeholder="城市" v-model="addForm.city" :disabled="addForm.province === ''" v-on:focus="foucsCity">
-								
+							<el-select placeholder="城市" v-model="addForm.city" :disabled="addAddress.provinces.length === 0" v-on:focus="foucsCity" v-on:change="changeCities">
+								<el-option v-for="item in addAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="district" label="地区" class="hide-label">
-							<el-select  placeholder="地区" v-model="addForm.district" :disabled="addForm.city === ''">
-								
+							<el-select  placeholder="地区" v-model="addForm.district" :disabled="addAddress.cities.length === 0" v-on:focus="foucsDistrict" v-on:change="changeDistrict">
+								<el-option v-for="item in addAddress.districts" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="block" label="街道" class="hide-label">
-							<el-select  placeholder="街道" v-model="addForm.block" :disabled="addForm.district === ''">
-								
+							<el-select  placeholder="街道" v-model="addForm.block" :disabled="addAddress.districts.length === 0" v-on:focus="foucsBlock">
+								<el-option v-for="item in addAddress.blocks" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="moreInfo" label="详细地址" class="hide-label hide-label-hight">
+							<el-input v-model="addForm.moreInfo" placeholder="详细地址"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item prop="date" label="启用时间">
+							<el-date-picker v-model="addForm.date" type="date" placeholder="选择日期"></el-date-picker>
+						</el-form-item>
+					</el-col>
+					<el-col :span="16">
+						<div style="padding-top: 60px;">
+							<i class="red" style="padding-right: 10px;">*</i><span>默认启用时间为系统创建时间，也可自行选择</span>
+						</div>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="addForm.remark"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 			</el-form>
+			@@include("../../include/foot_save.html");
+		</el-dialog>
+		<!-- 编辑窗口 -->
+		<el-dialog :visible.sync="editDialogVisiable">
+			<div slot="title" class="title">
+				修改公司资料
+			</div>
+			<el-form :model="editForm" ref="editForm" :rules="formRules" label-position="top" class="el-form-dialog">
+				<el-row :gutter="24">
+					<el-col :span="12">
+						<el-form-item label="公司名称" prop="name">
+							<el-input v-model="editForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="公司电话" prop="telephone">
+							<el-input v-model="editForm.telephone"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="公司行业" prop="trade">
+							<el-select placeholder="请选择行业"  v-model="editForm.trade">
+								<el-option v-for="item in tradeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="手机电话" prop="phoneNumber">
+							<el-input v-model="editForm.phoneNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="邮箱" prop="email">
+							<el-input v-model="editForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="传真" prop="fax">
+							<el-input v-model="editForm.fax"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item label="公司地址" prop="province">
+							<el-select placeholder="省份" v-model="editForm.province" v-on:focus="foucsProvince" v-on:change="changeProvince">
+								<el-option v-for="item in editAddress.provinces" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="city" label="城市" class="hide-label">
+							<el-select placeholder="城市" v-model="editForm.city" :disabled="editAddress.provinces.length === 0" v-on:focus="foucsCity" v-on:change="changeCities">
+								<el-option v-for="item in editAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="district" label="地区" class="hide-label">
+							<el-select  placeholder="地区" v-model="editForm.district" :disabled="editAddress.cities.length === 0" v-on:focus="foucsDistrict" v-on:change="changeDistrict">
+								<el-option v-for="item in editAddress.districts" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="block" label="街道" class="hide-label">
+							<el-select  placeholder="街道" v-model="editForm.block" :disabled="editAddress.districts.length === 0" v-on:focus="foucsBlock">
+								<el-option v-for="item in editAddress.blocks" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="moreInfo" label="详细地址" class="hide-label hide-label-hight">
+							<el-input v-model="editForm.moreInfo" placeholder="详细地址"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item prop="date" label="启用时间">
+							<el-date-picker v-model="editForm.date" type="date" placeholder="选择日期"></el-date-picker>
+						</el-form-item>
+					</el-col>
+					<el-col :span="16">
+						<div style="padding-top: 60px;">
+							<i class="red" style="padding-right: 10px;">*</i><span>默认启用时间为系统创建时间，也可自行选择</span>
+						</div>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="editForm.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			@@include("../../include/foot_save.html");
 		</el-dialog>
 	</div>
 </body>

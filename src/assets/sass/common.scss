@@ -43,6 +43,11 @@ ul{
 			font-size: 0;
 		}
 	}
+	.hide-label-hight{
+		>.el-form-item__label{
+			height: 0;
+		}
+	}
 }
 .el-message-box__headerbtn{
 	top: 10px;

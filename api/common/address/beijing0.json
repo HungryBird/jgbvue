@@ -12,14 +12,15 @@
         "children": []
     },
     {
-        "label": "重庆市",
+        "label": "北京1",
         "level": 1,
-        "uid": "cq",
-        "number": "110002",
-        "initials": "cq",
-        "value": "cq",
+        "uid": "bj1",
+        "number": "110000",
+        "initials": "bj1",
+        "value": "bj1",
         "valid": true,
         "notes": "",
-        "leaf": false
+        "leaf": false,
+        "children": []
     }
 ]
