@@ -66,6 +66,7 @@
 					<el-table-column prop="notes" label="备注"></el-table-column>
 				</el-table>
 			</el-main>
+			<!-- 新增模态框 -->
 			<el-dialog title="新增行政区域" :visible.sync="addForm.visible">
 				<el-form ref="addForm" :model="addForm.addFormData" :rules="addForm.rules" label-width="80px">
 					<el-form-item label="编号" prop="number">
@@ -92,6 +93,7 @@
 					<div style="clear: both;"></div>
 				</div>
 			</el-dialog>
+			<!-- 编辑模态框 -->
 			<el-dialog title="编辑行政区域" :visible.sync="editForm.visible">
 				<el-form ref="editForm" :model="editForm.editFormData" :rules="editForm.rules" label-width="80px">
 					<el-form-item label="编号" prop="number">

@@ -162,6 +162,13 @@ router.post('/add_save', (req, res)=> {
 	}).end();
 });
 
+router.post('/edit_save', (req, res)=> {
+	res.send({
+		status: true,
+		data: '编辑成功'
+	}).end();
+});
+
 router.post('/edit_get', (req, res)=> {
 	let editData = ''
 	,provinces = ''

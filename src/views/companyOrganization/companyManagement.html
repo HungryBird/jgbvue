@@ -78,28 +78,28 @@
 					</el-col>
 					<el-col :span="6">
 						<el-form-item label="公司地址" prop="province">
-							<el-select placeholder="省份" v-model="addForm.province" v-on:focus="foucsProvince" v-on:change="changeProvince">
+							<el-select placeholder="省份" v-model="addForm.province" v-on:focus="foucsAddProvince" v-on:change="changeAddProvince">
 								<el-option v-for="item in addAddress.provinces" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="city" label="城市" class="hide-label">
-							<el-select placeholder="城市" v-model="addForm.city" :disabled="addAddress.provinces.length === 0" v-on:focus="foucsCity" v-on:change="changeCities">
+							<el-select placeholder="城市" v-model="addForm.city" :disabled="addAddress.provinces.length === 0" v-on:focus="foucsAddCity" v-on:change="changeAddCities">
 								<el-option v-for="item in addAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="district" label="地区" class="hide-label">
-							<el-select  placeholder="地区" v-model="addForm.district" :disabled="addAddress.cities.length === 0" v-on:focus="foucsDistrict" v-on:change="changeDistrict">
+							<el-select  placeholder="地区" v-model="addForm.district" :disabled="addAddress.cities.length === 0" v-on:focus="foucsAddDistrict" v-on:change="changeAddDistrict">
 								<el-option v-for="item in addAddress.districts" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="block" label="街道" class="hide-label">
-							<el-select  placeholder="街道" v-model="addForm.block" :disabled="addAddress.districts.length === 0" v-on:focus="foucsBlock">
+							<el-select  placeholder="街道" v-model="addForm.block" :disabled="addAddress.districts.length === 0" v-on:focus="foucsAddBlock">
 								<el-option v-for="item in addAddress.blocks" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
@@ -126,7 +126,7 @@
 					</el-col>
 				</el-row>
 			</el-form>
-			@@include("../../include/foot_save.html");
+			@@include("../../include/foot_add_save.html")
 		</el-dialog>
 		<!-- 编辑窗口 -->
 		<el-dialog :visible.sync="editDialogVisiable">
@@ -169,28 +169,28 @@
 					</el-col>
 					<el-col :span="6">
 						<el-form-item label="公司地址" prop="province">
-							<el-select placeholder="省份" v-model="editForm.province" v-on:focus="foucsProvince" v-on:change="changeProvince">
+							<el-select placeholder="省份" v-model="editForm.province" v-on:focus="foucsEditProvince" v-on:change="changeEditProvince">
 								<el-option v-for="item in editAddress.provinces" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="city" label="城市" class="hide-label">
-							<el-select placeholder="城市" v-model="editForm.city" :disabled="editAddress.provinces.length === 0" v-on:focus="foucsCity" v-on:change="changeCities">
+							<el-select placeholder="城市" v-model="editForm.city" :disabled="editAddress.provinces.length === 0" v-on:focus="foucsEditCity" v-on:change="changeEditCities">
 								<el-option v-for="item in editAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="district" label="地区" class="hide-label">
-							<el-select  placeholder="地区" v-model="editForm.district" :disabled="editAddress.cities.length === 0" v-on:focus="foucsDistrict" v-on:change="changeDistrict">
+							<el-select  placeholder="地区" v-model="editForm.district" :disabled="editAddress.cities.length === 0" v-on:focus="foucsEditDistrict" v-on:change="changeEditDistrict">
 								<el-option v-for="item in editAddress.districts" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="block" label="街道" class="hide-label">
-							<el-select  placeholder="街道" v-model="editForm.block" :disabled="editAddress.districts.length === 0" v-on:focus="foucsBlock">
+							<el-select  placeholder="街道" v-model="editForm.block" :disabled="editAddress.districts.length === 0" v-on:focus="foucsEditBlock">
 								<el-option v-for="item in editAddress.blocks" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
@@ -217,7 +217,7 @@
 					</el-col>
 				</el-row>
 			</el-form>
-			@@include("../../include/foot_save.html");
+			@@include("../../include/foot_edit_save.html")
 		</el-dialog>
 	</div>
 </body>
@@ -228,7 +228,14 @@
 <script type="text/javascript">
 	/**
 	 * 获取数据url
+	 * 获取省份
+	 * 获取城市
+	 * 获取地区
+	 * 获取街区
+	 * 获取编辑数据
+	 * 保存增加
+	 * 保存编辑
 	 */
-	JGBVue.module.companyManagement().init('/companyManagement/data_get');
+	JGBVue.module.companyManagement().init('/companyManagement/data_get', '/companyManagement/get_provinces', '/companyManagement/get_cities', '/companyManagement/get_district', '/companyManagement/get_block', '/companyManagement/edit_get', '/companyManagement/add_save', '/companyManagement/edit_save');
 </script>
 </html>

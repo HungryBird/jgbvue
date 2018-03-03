@@ -7,7 +7,7 @@ JGBVue.module.companyManagement = ()=> {
 	,that = {};
 
 
-	_this.init = (dataGetUrl)=> {
+	_this.init = (dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data: {
@@ -116,14 +116,14 @@ JGBVue.module.companyManagement = ()=> {
 					let _self = this;
 					this.addDialogVisiable = true;
 				},
-				foucsProvince() {
+				foucsAddProvince() {
 					let _self = this;
-					if(this.address.provinces.length === 0) {
-						axios.get('/companyManagement/get_provinces').then((req)=> {
+					if(this.addAddress.provinces.length === 0) {
+						axios.get(getProvincesUrl).then((req)=> {
 							if(req.data.status) {
 								let jdata = JSON.parse(req.data.data);
 								jdata.forEach((item)=> {
-									_self.address.provinces.push(item);
+									_self.addAddress.provinces.push(item);
 								});
 							}
 						}).catch((err)=> {
@@ -131,14 +131,14 @@ JGBVue.module.companyManagement = ()=> {
 						})
 					}
 				},
-				foucsCity() {
+				foucsAddCity() {
 					let _self = this;
-					if(this.address.cities.length === 0) {
-						axios.post('/companyManagement/get_cities', this.address.provinces).then((req)=> {
+					if(this.addAddress.cities.length === 0) {
+						axios.post(getCitiesUrl, this.addAddress.provinces).then((req)=> {
 							if(req.data.status) {
 								let jdata = JSON.parse(req.data.data);
 								jdata.forEach((item)=> {
-									_self.address.cities.push(item);
+									_self.addAddress.cities.push(item);
 								});
 							}
 						}).catch((err)=> {
@@ -146,14 +146,14 @@ JGBVue.module.companyManagement = ()=> {
 						})
 					}
 				},
-				foucsDistrict() {
+				foucsAddDistrict() {
 					let _self = this;
-					if(this.address.districts.length === 0) {
-						axios.post('/companyManagement/get_district', this.address.cities).then((req)=> {
+					if(this.addAddress.districts.length === 0) {
+						axios.post(getDistrictsUrl, this.addAddress.cities).then((req)=> {
 							if(req.data.status) {
 								let jdata = JSON.parse(req.data.data);
 								jdata.forEach((item)=> {
-									_self.address.districts.push(item);
+									_self.addAddress.districts.push(item);
 								});
 							}
 						}).catch((err)=> {
@@ -161,14 +161,14 @@ JGBVue.module.companyManagement = ()=> {
 						})
 					}
 				},
-				foucsBlock() {
+				foucsAddBlock() {
 					let _self = this;
-					if(this.address.blocks.length === 0) {
-						axios.post('/companyManagement/get_block', this.address.districts).then((req)=> {
+					if(this.addAddress.blocks.length === 0) {
+						axios.post(getBlocksUrl, this.addAddress.districts).then((req)=> {
 							if(req.data.status) {
 								let jdata = JSON.parse(req.data.data);
 								jdata.forEach((item)=> {
-									_self.address.blocks.push(item);
+									_self.addAddress.blocks.push(item);
 								});
 							}
 						}).catch((err)=> {
@@ -176,39 +176,39 @@ JGBVue.module.companyManagement = ()=> {
 						})
 					}
 				},
-				changeProvince(val) {
-					if(this.address.cities.length !== 0) {
-						this.address.cities.splice(0, this.address.cities.length);
+				changeAddProvince(val) {
+					if(this.addAddress.cities.length !== 0) {
+						this.addAddress.cities.splice(0, this.addAddress.cities.length);
 						this.addForm.city = '';
 					}
-					if(this.address.districts.length !== 0) {
-						this.address.districts.splice(0, this.address.districts.length);
+					if(this.addAddress.districts.length !== 0) {
+						this.addAddress.districts.splice(0, this.addAddress.districts.length);
 						this.addForm.district = '';
 					}
-					if(this.address.blocks.length !== 0) {
-						this.address.blocks.splice(0, this.address.blocks.length);
+					if(this.addAddress.blocks.length !== 0) {
+						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
 						this.addForm.block = '';
 					}
 				},
-				changeCities() {
-					if(this.address.districts.length !== 0) {
-						this.address.districts.splice(0, this.address.districts.length);
+				changeAddCities() {
+					if(this.addAddress.districts.length !== 0) {
+						this.addAddress.districts.splice(0, this.addAddress.districts.length);
 						this.addForm.district = '';
 					}
-					if(this.address.blocks.length !== 0) {
-						this.address.blocks.splice(0, this.address.blocks.length);
+					if(this.addAddress.blocks.length !== 0) {
+						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
 						this.addForm.block = '';
 					}
 				},
-				changeDistrict() {
-					if(this.address.blocks.length !== 0) {
-						this.address.blocks.splice(0, this.address.blocks.length);
+				changeAddDistrict() {
+					if(this.addAddress.blocks.length !== 0) {
+						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
 						this.addForm.block = '';
 					}
 				},
 				edit() {
 					let _self = this;
-					axios.post('/companyManagement/edit_get', this.selectedRows).then((req)=> {
+					axios.post(getEditDataUrl, this.selectedRows).then((req)=> {
 						if(req.data.status) {
 							let jprovinces = JSON.parse(req.data.data.provinces)
 							,jcities = JSON.parse(req.data.data.cities)
@@ -237,6 +237,96 @@ JGBVue.module.companyManagement = ()=> {
 					}).catch((err)=> {
 						console.log('err: ', err);
 					});
+				},
+				foucsEditProvince() {
+					let _self = this;
+					if(this.editAddress.provinces.length === 0) {
+						axios.get(getProvincesUrl).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.editAddress.provinces.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				foucsEditCity() {
+					let _self = this;
+					if(this.editAddress.cities.length === 0) {
+						axios.post(getCitiesUrl, this.editAddress.provinces).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.editAddress.cities.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				foucsEditDistrict() {
+					let _self = this;
+					if(this.editAddress.districts.length === 0) {
+						axios.post(getDistrictsUrl, this.editAddress.cities).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.editAddress.districts.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				foucsEditBlock() {
+					let _self = this;
+					if(this.editAddress.blocks.length === 0) {
+						axios.post(getBlocksUrl, this.editAddress.districts).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.editAddress.blocks.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				changeEditProvince(val) {
+					if(this.editAddress.cities.length !== 0) {
+						this.editAddress.cities.splice(0, this.editAddress.cities.length);
+						this.addForm.city = '';
+					}
+					if(this.editAddress.districts.length !== 0) {
+						this.editAddress.districts.splice(0, this.editAddress.districts.length);
+						this.addForm.district = '';
+					}
+					if(this.editAddress.blocks.length !== 0) {
+						this.editAddress.blocks.splice(0, this.editAddress.blocks.length);
+						this.addForm.block = '';
+					}
+				},
+				changeEditCities() {
+					if(this.editAddress.districts.length !== 0) {
+						this.editAddress.districts.splice(0, this.editAddress.districts.length);
+						this.addForm.district = '';
+					}
+					if(this.editAddress.blocks.length !== 0) {
+						this.editAddress.blocks.splice(0, this.editAddress.blocks.length);
+						this.addForm.block = '';
+					}
+				},
+				changeEditDistrict() {
+					if(this.editAddress.blocks.length !== 0) {
+						this.editAddress.blocks.splice(0, this.editAddress.blocks.length);
+						this.addForm.block = '';
+					}
 				},
 				remove() {
 					//
@@ -277,36 +367,63 @@ JGBVue.module.companyManagement = ()=> {
 				handleChange() {
 					//
 				},
-				handleItemChange(val) {
-					console.log('val', val);
+				/*handleItemChange(val) {
 					axios.post('/companyManagement/address', val).then((req)=> {
 						let jdata = JSON.parse(req.data.data);
 						console.log(this.addForm.address)
 					}).catch((err)=> {
 						console.log('err: ', err);
 					})
-				},
+				},*/
 				saveAdd(formName) {
-					axios.post('/companyManagement/add_save', this.addForm).then((data)=> {
-						if(data.data.status) {
-							this.$refs[formName].resetFields();
-							this.addDialogVisiable = false;
-							this.$message({
-								type: 'success',
-								message: data.data.data
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveAddUrl, this.addForm).then((data)=> {
+								if(data.data.status) {
+									this.$refs[formName].resetFields();
+									this.addDialogVisiable = false;
+									this.$message({
+										type: 'success',
+										message: data.data.data
+									})
+								}
 							})
+						}else{
+							return false;
 						}
 					})
 				},
 				closeAdd() {
 					this.addDialogVisiable = false;
+				},
+				saveEdit(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveEditUrl, this.editForm).then((data)=> {
+								if(data.data.status) {
+									this.$refs[formName].resetFields();
+									this.addDialogVisiable = false;
+									this.$message({
+										type: 'success',
+										message: data.data.data
+									})
+									this.editDialogVisiable = false;
+								}
+							})
+						}else{
+							return false;
+						}
+					})
+				},
+				closeEdit() {
+					this.editDialogVisiable = false;
 				}
 			}
 		})
 	}
 
-	that.init = (dataGetUrl)=> {
-		_this.init(dataGetUrl);
+	that.init = (dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl)=> {
+		_this.init(dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl);
 	}
 
 	return that;

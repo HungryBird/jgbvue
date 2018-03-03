@@ -40,7 +40,7 @@ JGBVue.module.administrativeRegion = ()=> {
 								message: '请输入编号'
 							}
 						],
-						name: [
+						label: [
 							{
 								required: true,
 								message: '请输入名称'
