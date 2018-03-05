@@ -295,3 +295,23 @@ ul{
 		}
 	}
 }
+.auditMainWrap{
+	.el-aside{
+		.departmentListWrap{
+			border: 1px solid #ddd;
+			border-top: none;
+			border-left: none;
+			li{
+				cursor: pointer;
+				padding: 5px;
+				border: 1px solid #ddd;
+				border-bottom: none;
+				border-right: none;
+				&:hover{
+					background: #49beff;
+					opacity: .5;
+				}
+			}
+		}
+	}
+}

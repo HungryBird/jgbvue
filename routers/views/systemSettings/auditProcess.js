@@ -66,4 +66,46 @@ router.post('/data_delete', (req, res)=> {
 	})
 });
 
+router.post('/getAudit', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/audit/basic.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			})
+			console.log('err: ', err);
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		})
+	})
+});
+
+router.post('/getDepartments', (req, res)=> {
+	let jdata = '';
+	if(req.body.company === 'companyOne') {
+		fs.readFile('api/common/audit/department1.json', 'utf-8', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err: ', err);
+			}
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	} else if(req.body.company === 'companyTwo') {
+		//
+	} else if(req.body.company === 'companyThree') {
+		//
+	}
+})
+
 module.exports = router;

@@ -17,7 +17,7 @@ JGBVue.module.auditProcess = ()=> {
                  * @type {[type]}
                  */
                 data: {
-                    table: null
+                    table: []
                 },
                 /**
                  * [addForm 要提交的数据]
@@ -59,7 +59,7 @@ JGBVue.module.auditProcess = ()=> {
                     auditMethod: '1',
                     remainWays: ['站内信息']
                 },
-                dialogAddFormVisible: false,
+                dialogAddFormVisible: true,
                 dialogEditFormVisible: false,
                 editDialogLoading: true,
                 selectProcessLevel: null,
@@ -82,6 +82,13 @@ JGBVue.module.auditProcess = ()=> {
                     bosses: [
                         {required: true, message: '请选择老板'}
                     ]
+                },
+                dialogSelectAuditVisible: false,
+                audit: {
+                    company: '',
+                    searchValue: '',
+                    departmentList: [],
+                    companyList: []
                 }
             },
             mounted() {
@@ -182,7 +189,7 @@ JGBVue.module.auditProcess = ()=> {
                                     this.$message({
                                         type: 'success',
                                         message: data.data.message
-                                    })
+                                    });
                                 }
                             }).catch(function(err) {
                                 _self.$message({
@@ -203,20 +210,6 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 handleCurrentChange() {
                     //当前页改变时
-                },
-                objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-                    /*let _self = this;
-                    if(columnIndex == 6) {
-                        return {
-                            rowspan: _self.data.table.length,
-                            colspan: 1
-                        }
-                    }*/
-                },
-                tableRowClassName({row, rowIndex}) {
-                    if(rowIndex%2 != 0) {
-                        return 'default-row';
-                    }
                 },
                 rowClick(row) {
                     let _self = this;
@@ -257,6 +250,55 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 editChangeModule() {
                     //
+                },
+                handleEdit(index, row) {
+                    let _self = this;
+                    this.selectedRows.splice(0, _self.selectedRows.length);
+                    this.$refs.auditTable.clearSelection();
+                    this.edit();
+                },
+                handleDelete(index, row) {
+                    let _self = this;
+                    this.selectedRows.splice(0, _self.selectedRows.length);
+                    this.$refs.auditTable.clearSelection();
+                    this.remove();
+                },
+                showSelectAuditDialog(data) {
+                    axios.post('/auditProcess/getAudit', data).then((res)=> {
+                        if(res.data.status) {
+                            let jdata = JSON.parse(res.data.data);
+                            this.audit.companyList = jdata.companyList;
+                            this.dialogSelectAuditVisible = true;
+                        }
+                    }).catch((err)=> {
+                        console.log('err: ', err);
+                    })
+                },
+                searchEmployee() {
+                    //
+                },
+                checkSelectedemployees() {
+                    //
+                },
+                changeCompany(val) {
+                    let _self = this;
+                    console.log('company: ', this.audit.company);
+                    axios.post('/auditProcess/getDepartments', {company: this.audit.company}).then((res)=> {
+                        if(res.data.status) {
+                            this.audit.departmentList.splice(0, _self.audit.departmentList.length);
+                            let jdata = JSON.parse(res.data.data);
+                            console.log('jdata: ', jdata);
+                            jdata.forEach((item)=> {
+                                _self.audit.departmentList.push(item);
+                            })
+                            console.log('departmentList: ', this.audit.departmentList);
+                        }
+                    })
+                },
+                selectDepartment(item) {
+                    console.log(111)
+                    console.log('e', e);
+                    console.log('i', i);
                 }
             },
             filters: {

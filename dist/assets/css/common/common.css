@@ -286,3 +286,17 @@ ul {
     background: #f7f7f7; }
     #app .wrap_footer .el-pagination {
       float: right; }
+
+.auditMainWrap .el-aside .departmentListWrap {
+  border: 1px solid #ddd;
+  border-top: none;
+  border-left: none; }
+  .auditMainWrap .el-aside .departmentListWrap li {
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-right: none; }
+    .auditMainWrap .el-aside .departmentListWrap li:hover {
+      background: #49beff;
+      opacity: .5; }
