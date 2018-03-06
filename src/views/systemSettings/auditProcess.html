@@ -80,9 +80,6 @@
 					③审核人员
 				</h3>
 				<el-form-item v-if="selectProcessLevel > 0" prop="firstLevelAuditorsGroup" label="选择一级审核人员">
-					<!-- <el-select multiple placeholder="请选择" v-model="addForm.firstLevelAuditorsGroup" width="100%">
-						<el-option v-for="item in data.auditors.concat(data.bosses)" :key="item.value" :label="item.name" :value="item.value"></el-option>
-					</el-select> -->
 					<el-button icon="el-icon-plus" size="mini" v-on:click="showSelectAuditDialog(addForm)"></el-button>
 					<div style="padding: 4px;border-radius: 4px;border: 1px solid rgba(64,158,255,.2)" v-if="addForm.firstLevelAuditorsGroup.length !== 0">
 						<el-tag v-for="tag in addForm.firstLevelAuditorsGroup" :key="tag.name" closable :type="tag.type">{{tag.name}}</el-tag>
@@ -130,7 +127,7 @@
 			</div>
 		</el-dialog>
 		<!-- 选择审核人员窗口 -->
-		<el-dialog :visible.sync="dialogSelectAuditVisible">
+		<el-dialog :visible.sync="dialogSelectAuditVisible" width="900px">
 			<div slot="title">
 				选择审核人员
 			</div>
@@ -156,13 +153,41 @@
 			<el-container class="auditMainWrap">
 				<el-aside width="217px">
 					<ul class="departmentListWrap" v-if="audit.departmentList.length !== 0">
-						<li v-for="item in audit.departmentList" :key="item.value" :value="item.value" v-on:click="selectDepartment(item)">
-							{{item.name}}
+						<li v-for="(item, index) in audit.departmentList" :key="item.value" :value="item.value" v-on:click="selectDepartment(item, index)" :class="{active: index === audit.activeIndex}">
+							<a href="javascript:;">
+								{{item.name}}
+							</a>
 						</li>
 					</ul>
 				</el-aside>
 				<el-main>
-					
+					<div class="auditorsWrap">
+						<div v-for="(item, index) in audit.auditors" class="auditor" v-on:click ="toggleSelected(index)">
+							<i class="el-icon-check selectStatus" v-if="item.isSelected"></i>
+							<div class="auditorInner" :class="{activeSelected: item.isSelected}">
+								<div class="auditorPicWrap">
+									<img :src="item.src">
+								</div>
+								<div class="auditorInfo">
+									<div>
+										<span class="leftSpan">工号：</span>
+										<a class="auditText">{{ item.jobNumber }}</a>
+									</div>
+									<div>
+										<span class="leftSpan">姓名：</span>
+										<a class="auditText">{{ item.name }}</a>
+									</div>
+									<div>
+										<span class="leftSpan">
+											部门：
+										</span>
+										<a class="auditText">{{ audit.activeDepartment }}</a>
+									</div>
+								</div>
+								<div style="clear: both;"></div>
+							</div>
+						</div>
+					</div>
 				</el-main>
 			</el-container>
 			<div slot="footer">

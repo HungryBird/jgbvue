@@ -481,6 +481,7 @@ dd {
 }
 .el-main .el-tabs .el-tabs__content iframe {
         width: 100%;
+        min-height: 100%;
         border: 0;
 }
 #logo-box-wrap:hover .logo-arrow {

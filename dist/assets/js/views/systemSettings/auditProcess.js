@@ -88,8 +88,14 @@ JGBVue.module.auditProcess = ()=> {
                     company: '',
                     searchValue: '',
                     departmentList: [],
-                    companyList: []
-                }
+                    companyList: [],
+                    activeIndex: -1,
+                    auditors: [],
+                    activeDepartment: '',
+                    selectedAuditors: []
+                },
+                isSelected: '',
+                ii: 0
             },
             mounted() {
                 axios.get(getDataUrl).then((req)=> {
@@ -295,10 +301,26 @@ JGBVue.module.auditProcess = ()=> {
                         }
                     })
                 },
-                selectDepartment(item) {
-                    console.log(111)
-                    console.log('e', e);
-                    console.log('i', i);
+                selectDepartment(item, i) {
+                    if(this.audit.activeIndex === i) return;
+                    let _self = this;
+                    this.audit.activeIndex = i;
+                    this.audit.activeDepartment = item.name;
+                    axios.post('/auditProcess/getAuditors', item).then((res)=> {
+                        if(res.data.status) {
+                            let jdata = JSON.parse(res.data.data);
+                            this.audit.auditors.splice(0, _self.audit.auditors.length);
+                            jdata.forEach((item)=> {
+                                _self.audit.auditors.push(item);
+                            })
+                        }
+                    }).catch((err)=> {
+                        console.log('err: ', err);
+                    })
+                },
+                toggleSelected(index) {
+                    let _self = this;
+                    this.audit.auditors[index].isSelected = !this.audit.auditors[index].isSelected;
                 }
             },
             filters: {

@@ -9,6 +9,10 @@ body{
 h1,h2,h3,h4,h5,h6{
 	margin: 0;
 }
+a{
+	text-decoration:none;
+	color: inherit;
+}
 ul{
 	padding: 0;
 	margin: 0;
@@ -311,6 +315,65 @@ ul{
 					background: #49beff;
 					opacity: .5;
 				}
+			}
+			.active{
+				background: #49beff;
+				color: #fff;
+			}
+		}
+	}
+	.el-main{
+		padding: 0;
+		.auditorsWrap{
+			display: flex;
+			flex-wrap: wrap;
+			/* justify-content: space-around; */
+			align-content: stretch;
+			.auditor{
+				position: relative;
+				box-sizing: border-box;
+				width: 33.3%;
+				padding: 5px;
+				.selectStatus{
+					position: absolute;
+					top: 5px;
+					right: 5px;
+					background: #ff0000;
+					color: #fff;
+				}
+				.auditorInner{
+					border: 1px solid #333;
+					cursor: pointer;
+					.auditorPicWrap{
+						float: left;
+						width: 80px;
+						height: 80px;
+						background-color: black;
+						img{
+							width: 100%;
+						}
+					}
+					.auditorInfo{
+						float: left;
+						padding-left: 4px;
+						font-size: 12px;
+						.auditText{
+							display: block;
+							float: left;
+							width: 6em;
+							overflow-x: hidden;
+							white-space: nowrap;
+							text-overflow:ellipsis;
+						}
+						.leftSpan{
+							display: block;
+							float: left;
+						}
+					}
+				}
+			}
+			.activeSelected{
+				border: 1px solid red !important;
 			}
 		}
 	}

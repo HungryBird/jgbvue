@@ -102,10 +102,57 @@ router.post('/getDepartments', (req, res)=> {
 			})
 		})
 	} else if(req.body.company === 'companyTwo') {
-		//
+		fs.readFile('api/common/audit/department2.json', 'utf-8', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err: ', err);
+			}
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
 	} else if(req.body.company === 'companyThree') {
-		//
+		fs.readFile('api/common/audit/department3.json', 'utf-8', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err: ', err);
+			}
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
 	}
+});
+
+router.post('/getAuditors', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/audit/auditors.json', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			})
+			console.log('err: ', err);
+		}
+		jdata += data;
+		console.log('jdata: ', jdata);
+		res.send({
+			status: true,
+			data: jdata
+		})
+	})
 })
+
+
 
 module.exports = router;
