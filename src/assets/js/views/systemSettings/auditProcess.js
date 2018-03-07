@@ -84,6 +84,18 @@ JGBVue.module.auditProcess = ()=> {
                     ]
                 },
                 dialogSelectAuditVisible: false,
+                /**
+                 * 打开选择审核人员的模态窗数据
+                 * 选中公司
+                 * 搜索框的值
+                 * 获得的部门列表
+                 * 获得的公司列表
+                 * 选中部门的index，-1表示未选中任何部门
+                 * 获得员工列表
+                 * 选中的部门
+                 * 选中的员工列表
+                 * @type {Object}
+                 */
                 audit: {
                     company: '',
                     searchValue: '',
@@ -262,6 +274,19 @@ JGBVue.module.auditProcess = ()=> {
                     this.addForm.firstLevelAuditorsGroup.splice(0, _self.addForm.firstLevelAuditorsGroup.length);
                     this.addForm.secondLevelAuditorsGroup.splice(0, _self.addForm.secondLevelAuditorsGroup.length);
                     this.addForm.bosses.splice(0, _self.addForm.bosses.length);
+                    this.addFirstLevelAuditorsGroup.splice(0, _self.addFirstLevelAuditorsGroup.length);
+                    this.addSecondLevelAuditorsGroup.splice(0, _self.addSecondLevelAuditorsGroup.length);
+                    this.addBosses.splice(0, _self.addBosses.length);
+                    this.editFirstLevelAuditorsGroup.splice(0, _self.editFirstLevelAuditorsGroup.length);
+                    this.editSecondLevelAuditorsGroup.splice(0, _self.editSecondLevelAuditorsGroup.length);
+                    this.editBosses.splice(0, _self.editBosses.length);
+                    this.audit.auditors.splice(0, _self.audit.auditors.length);
+                    this.audit.company = '';
+                    this.audit.activeDepartment = '';
+                    this.audit.searchValue = '';
+                    this.audit.activeIndex = '';
+                    this.audit.companyList.splice(0, _self.audit.companyList.length);
+                    this.audit.departmentList.splice(0, _self.audit.departmentList.length);
                 },
                 editChangeModule() {
                     //
@@ -289,6 +314,9 @@ JGBVue.module.auditProcess = ()=> {
                     }).catch((err)=> {
                         console.log('err: ', err);
                     })
+                    /*if(this.audit.company !== '') {
+                        this.changeCompany(this.audit.company);
+                    }*/
                 },
                 searchEmployee() {
                     //
@@ -302,11 +330,9 @@ JGBVue.module.auditProcess = ()=> {
                         if(res.data.status) {
                             this.audit.departmentList.splice(0, _self.audit.departmentList.length);
                             let jdata = JSON.parse(res.data.data);
-                            console.log('jdata: ', jdata);
                             jdata.forEach((item)=> {
                                 _self.audit.departmentList.push(item);
                             })
-                            console.log('departmentList: ', this.audit.departmentList);
                         }
                     })
                 },
@@ -323,16 +349,14 @@ JGBVue.module.auditProcess = ()=> {
                      * @type {[type]}
                      */
                     this.audit.activeDepartment = item.name;
-                    if(this.dialogAddFormVisible) {
-                        if(this.currentProcessLevel === 1) {
-                            if(this.addFirstLevelAuditorsGroup.length !== 0) {
-                               /* this.addFirstLevelAuditorsGroup.forEach((item)=> {
-                                    console.log('item: ', item);
-                                })*/
-                                console.log('addFirstLevelAuditorsGroup: ', this.addFirstLevelAuditorsGroup);
-                            }
-                        }
-                    }
+                    /**
+                     * if增加模态框打开
+                     * if当前流程级数为1
+                     * if 1级的长度不为0
+                     * 循环改变获取的职员的选中状态
+                     * @param  {[type]} this.dialogAddFormVisible [description]
+                     * @return {[type]}                           [description]
+                     */
                     axios.post('/auditProcess/getAuditors', item).then((res)=> {
                         if(res.data.status) {
                             let jdata = JSON.parse(res.data.data);
@@ -340,6 +364,19 @@ JGBVue.module.auditProcess = ()=> {
                             jdata.forEach((item)=> {
                                 _self.audit.auditors.push(item);
                             })
+                            if(this.dialogAddFormVisible) {
+                                if(this.currentProcessLevel === 1) {
+                                    if(this.addFirstLevelAuditorsGroup.length !== 0) {
+                                        for(let i = 0; i < _self.addFirstLevelAuditorsGroup.length; i++ ) {
+                                            for(let j = 0; j < _self.audit.auditors.length; j++) {
+                                                if(_self.audit.auditors[j].jobNumber == _self.addFirstLevelAuditorsGroup[i].jobNumber) {
+                                                    _self.audit.auditors[j].isSelected = !_self.audit.auditors[j].isSelected;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }).catch((err)=> {
                         console.log('err: ', err);
@@ -347,6 +384,10 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 toggleSelected(item,index) {
                     let _self = this;
+                    /**
+                     * 改变选中审核人员isSelected布尔值
+                     * @type {Boolean}
+                     */
                     this.audit.auditors[index].isSelected = !this.audit.auditors[index].isSelected;
                     if(this.audit.auditors[index].isSelected) {
                         if(this.currentProcessLevel === 1) {

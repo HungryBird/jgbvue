@@ -72,6 +72,9 @@ JGBVue.module.companyManagement = ()=> {
 					trade: [
 						{required: true, message: '请选择一个行业'}
 					],
+					linkman: [
+						{required: true, message: '请输入联系人'}
+					]
 					phoneNumber: [
 						{required: true, message: '请输入手机号码'}
 					],
