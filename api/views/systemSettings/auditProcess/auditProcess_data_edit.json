@@ -2,9 +2,43 @@
 	"selectSysModule": "选项1",
 	"saleBossAudit": true,
 	"purchaseBossAudit": false,
-	"levelSelected": "二级审核",
-	"firstLevelAuditorsGroup": [1,2],
-	"secondLevelAuditorsGroup": [1001],
+	"selectProcessLevel": 2,
+	"levelSelected": 2[
+		{
+			"jobNumber": 10001,
+			"name": "张总",
+			"src": "../../assets/img/index/portrait.png",
+			"isBoss": true,
+			"isSelected": true,
+			"value": 10001
+		},
+		{
+			"jobNumber": 10002,
+			"name": "张2",
+			"src": "../../assets/img/index/portrait.png",
+			"isBoss": false,
+			"isSelected": true,
+			"value": 10002
+		}
+	],
+	"secondLevelAuditorsGroup": [
+		{
+			"jobNumber": 20014,
+			"name": "李4",
+			"src": "../../assets/img/index/portrait.png",
+			"isBoss": false,
+			"isSelected": true,
+			"value": 20014
+		},
+		{
+			"jobNumber": 20015,
+			"name": "李5",
+			"src": "../../assets/img/index/portrait.png",
+			"isBoss": false,
+			"isSelected": true,
+			"value": 20015
+		}
+	],
 	"bosses": [],
 	"auditMethod": "2",
 	"remainWays": ["站内信息", "手机信息"]

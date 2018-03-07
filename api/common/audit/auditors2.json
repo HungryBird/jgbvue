@@ -1,98 +1,42 @@
 [
 	{
 		"jobNumber": 20011,
-		"name": "李1",
+		"name": "李总",
 		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
+		"isBoss": true,
+		"isSelected": false,
+		"value": 20011
 	},
 	{
 		"jobNumber": 20012,
 		"name": "李2",
 		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
+		"isBoss": false,
+		"isSelected": false,
+		"value": 20012
 	},
 	{
 		"jobNumber": 20013,
 		"name": "李3",
 		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
+		"isBoss": false,
+		"isSelected": false,
+		"value": 20013
 	},
 	{
 		"jobNumber": 20014,
 		"name": "李4",
 		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
+		"isBoss": false,
+		"isSelected": false,
+		"value": 20014
 	},
 	{
 		"jobNumber": 20015,
 		"name": "李5",
 		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20016,
-		"name": "李6",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20017,
-		"name": "李7",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20018,
-		"name": "李8",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20019,
-		"name": "李9",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20020,
-		"name": "李10",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20021,
-		"name": "李11",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20022,
-		"name": "李12",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20023,
-		"name": "李13",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20024,
-		"name": "李14",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20025,
-		"name": "李15",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
-	},
-	{
-		"jobNumber": 20026,
-		"name": "李16",
-		"src": "../../assets/img/index/portrait.png",
-		"isSelected": false
+		"isBoss": false,
+		"isSelected": false,
+		"value": 20015
 	}
 ]

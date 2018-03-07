@@ -1,0 +1,23 @@
+[
+	{
+		"jobNumber": 10001,
+		"name": "张总",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": true,
+		"isSelected": false
+	},
+	{
+		"jobNumber": 20011,
+		"name": "李总",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": true,
+		"isSelected": false
+	},
+	{
+		"jobNumber": 30031,
+		"name": "王总",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": true,
+		"isSelected": false
+	}
+]

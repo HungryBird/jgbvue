@@ -59,7 +59,7 @@ JGBVue.module.auditProcess = ()=> {
                     auditMethod: '1',
                     remainWays: ['站内信息']
                 },
-                dialogAddFormVisible: true,
+                dialogAddFormVisible: false,
                 dialogEditFormVisible: false,
                 editDialogLoading: true,
                 selectProcessLevel: null,
@@ -304,6 +304,13 @@ JGBVue.module.auditProcess = ()=> {
                     this.remove();
                 },
                 showSelectAuditDialog(data, level) {
+                    let _self = this;
+                    console.log('this.currentProcessLevel !== level:', this.currentProcessLevel !== level);
+                    if(this.currentProcessLevel !== level) {
+                        this.audit.auditors.splice(0, _self.audit.auditors.length);
+                        this.audit.activeDepartment = '';
+                        this.audit.activeIndex = '';
+                    }
                     this.currentProcessLevel = level;
                     axios.post('/auditProcess/getAudit', data).then((res)=> {
                         if(res.data.status) {
@@ -314,9 +321,6 @@ JGBVue.module.auditProcess = ()=> {
                     }).catch((err)=> {
                         console.log('err: ', err);
                     })
-                    /*if(this.audit.company !== '') {
-                        this.changeCompany(this.audit.company);
-                    }*/
                 },
                 searchEmployee() {
                     //
@@ -326,6 +330,11 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 changeCompany(val) {
                     let _self = this;
+                    this.audit.activeDepartment = '';
+                    this.audit.searchValue = '';
+                    this.audit.activeIndex = '';
+                    this.audit.departmentList.splice(0, _self.audit.departmentList.length);
+                    this.audit.auditors.splice(0, _self.audit.auditors.length);
                     axios.post('/auditProcess/getDepartments', {company: this.audit.company}).then((res)=> {
                         if(res.data.status) {
                             this.audit.departmentList.splice(0, _self.audit.departmentList.length);
@@ -433,10 +442,6 @@ JGBVue.module.auditProcess = ()=> {
 
                     }
                     this.dialogSelectAuditVisible = false;
-                },
-                closeSelectAuditDialog() {
-                    let _self = this;
-                    this.audit.selectedAuditors.splice(0, _self.audit.selectedAuditors.length);
                 }
             },
             filters: {
@@ -449,7 +454,7 @@ JGBVue.module.auditProcess = ()=> {
                 'addForm.firstLevelAuditorsGroup'(arr) {
                     let _self = this;
                     for(let i = 0; i < arr.length; i++) {
-                        if(arr[i] > 1000) {
+                        if(arr[i].isBoss) {
                             _self.firstLeveAuditHasBoss = true;
                             _self.addForm.bosses.splice(0, _self.addForm.bosses.length);
                             return;
@@ -461,7 +466,31 @@ JGBVue.module.auditProcess = ()=> {
                     let _self = this;
                     if(this.selectProcessLevel === 2) {
                         for(let i = 0; i < arr.length; i++) {
-                            if(arr[i] > 1000) {
+                            if(arr[i].isBoss) {
+                                _self.secondLeveAuditHasBoss = true;
+                                _self.addForm.bosses.splice(0, _self.addForm.bosses.length);
+                                return;
+                            }
+                        }
+                        _self.secondLeveAuditHasBoss = false;
+                    }
+                },
+                'editForm.firstLevelAuditorsGroup'(arr) {
+                    let _self = this;
+                    for(let i = 0; i < arr.length; i++) {
+                        if(arr[i].isBoss) {
+                            _self.firstLeveAuditHasBoss = true;
+                            _self.addForm.bosses.splice(0, _self.addForm.bosses.length);
+                            return;
+                        }
+                    }
+                    _self.firstLeveAuditHasBoss = false;
+                },
+                'editForm.secondLevelAuditorsGroup'(arr) {
+                    let _self = this;
+                    if(this.selectProcessLevel === 2) {
+                        for(let i = 0; i < arr.length; i++) {
+                            if(arr[i].isBoss) {
                                 _self.secondLeveAuditHasBoss = true;
                                 _self.addForm.bosses.splice(0, _self.addForm.bosses.length);
                                 return;

@@ -74,12 +74,19 @@
 	],
 	"bosses": [
 		{
-			"name": "钱总",
-			"value": 1001
+			"value": 10001,
+			"name": "张总",
+			"jobNumber": 10001
 		},
 		{
-			"name": "孙总",
-			"value": 1002
+			"value": 20011,
+			"name": "李总",
+			"jobNumber": 20011
+		},
+		{
+			"value": 30031,
+			"name": "王总",
+			"jobNumber": 30031
 		}
 	]
 }
