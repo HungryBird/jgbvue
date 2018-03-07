@@ -94,8 +94,17 @@ JGBVue.module.auditProcess = ()=> {
                     activeDepartment: '',
                     selectedAuditors: []
                 },
-                isSelected: '',
-                ii: 0
+                /**
+                 * 选择当前流程级数
+                 * @type {Number}
+                 */
+                currentProcessLevel: -1,
+                addFirstLevelAuditorsGroup: [],
+                addSecondLevelAuditorsGroup: [],
+                addBosses: [],
+                editFirstLevelAuditorsGroup: [],
+                editSecondLevelAuditorsGroup: [],
+                editBosses: []
             },
             mounted() {
                 axios.get(getDataUrl).then((req)=> {
@@ -269,7 +278,8 @@ JGBVue.module.auditProcess = ()=> {
                     this.$refs.auditTable.clearSelection();
                     this.remove();
                 },
-                showSelectAuditDialog(data) {
+                showSelectAuditDialog(data, level) {
+                    this.currentProcessLevel = level;
                     axios.post('/auditProcess/getAudit', data).then((res)=> {
                         if(res.data.status) {
                             let jdata = JSON.parse(res.data.data);
@@ -288,7 +298,6 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 changeCompany(val) {
                     let _self = this;
-                    console.log('company: ', this.audit.company);
                     axios.post('/auditProcess/getDepartments', {company: this.audit.company}).then((res)=> {
                         if(res.data.status) {
                             this.audit.departmentList.splice(0, _self.audit.departmentList.length);
@@ -304,8 +313,26 @@ JGBVue.module.auditProcess = ()=> {
                 selectDepartment(item, i) {
                     if(this.audit.activeIndex === i) return;
                     let _self = this;
+                    /**
+                     * 切换li的active
+                     * @type {[type]}
+                     */
                     this.audit.activeIndex = i;
+                    /**
+                     * 切换当前选择部门
+                     * @type {[type]}
+                     */
                     this.audit.activeDepartment = item.name;
+                    if(this.dialogAddFormVisible) {
+                        if(this.currentProcessLevel === 1) {
+                            if(this.addFirstLevelAuditorsGroup.length !== 0) {
+                               /* this.addFirstLevelAuditorsGroup.forEach((item)=> {
+                                    console.log('item: ', item);
+                                })*/
+                                console.log('addFirstLevelAuditorsGroup: ', this.addFirstLevelAuditorsGroup);
+                            }
+                        }
+                    }
                     axios.post('/auditProcess/getAuditors', item).then((res)=> {
                         if(res.data.status) {
                             let jdata = JSON.parse(res.data.data);
@@ -318,9 +345,57 @@ JGBVue.module.auditProcess = ()=> {
                         console.log('err: ', err);
                     })
                 },
-                toggleSelected(index) {
+                toggleSelected(item,index) {
                     let _self = this;
                     this.audit.auditors[index].isSelected = !this.audit.auditors[index].isSelected;
+                    if(this.audit.auditors[index].isSelected) {
+                        if(this.currentProcessLevel === 1) {
+                            if(this.dialogAddFormVisible) {
+                                if(this.addFirstLevelAuditorsGroup.indexOf(item) === -1) {
+                                    this.addFirstLevelAuditorsGroup.push(item);
+                                }
+                            }else{
+                                if(this.dialogAddFormVisible) {
+                                    this.addFirstLevelAuditorsGroup.splice(_self.addFirstLevelAuditorsGroup.indexOf(item), 1);
+                                }
+                            }
+                        }else if(this.currentProcessLevel === 2) {
+                            if(this.addSecondLevelAuditorsGroup.indexOf(item) === -1) {
+                                if(this.dialogAddFormVisible) {
+                                    this.addSecondLevelAuditorsGroup.push(item);
+                                }
+                            }
+                        }
+                    }else if(!this.audit.auditors[index].isSelected){
+                        if(this.addFirstLevelAuditorsGroup.indexOf(item) !== -1) {
+                            if(this.dialogAddFormVisible) {
+                                this.addFirstLevelAuditorsGroup.splice(_self.addFirstLevelAuditorsGroup.indexOf(item), 1);
+                            }
+                        }
+                    }
+                },
+                confirmSelectAuditors() {
+                    let _self = this;
+                    if(this.dialogAddFormVisible) {
+                        if(this.currentProcessLevel === 1) {
+                            this.addForm.firstLevelAuditorsGroup.splice(0, _self.addForm.firstLevelAuditorsGroup.length);
+                            this.addFirstLevelAuditorsGroup.forEach((item)=> {
+                                _self.addForm.firstLevelAuditorsGroup.push(item);
+                            })
+                        } else if(this.currentProcessLevel === 2){
+                            this.addForm.secondLevelAuditorsGroup.splice(0, _self.addForm.secondLevelAuditorsGroup.length);
+                            this.addSecondLevelAuditorsGroup.forEach((item)=> {
+                                _self.addForm.secondLevelAuditorsGroup.push(item);
+                            })
+                        }
+                    }else if(this.dialogEditFormVisible) {
+
+                    }
+                    this.dialogSelectAuditVisible = false;
+                },
+                closeSelectAuditDialog() {
+                    let _self = this;
+                    this.audit.selectedAuditors.splice(0, _self.audit.selectedAuditors.length);
                 }
             },
             filters: {

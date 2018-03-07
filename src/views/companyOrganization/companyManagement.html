@@ -44,12 +44,17 @@
 			</div>
 			<el-form :model="addForm" ref="addForm" :rules="formRules" label-position="top" class="el-form-dialog">
 				<el-row :gutter="24">
-					<el-col :span="12">
+					<el-col :span="8">
 						<el-form-item label="公司名称" prop="name">
 							<el-input v-model="addForm.name"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="12">
+					<el-col :span="8">
+						<el-form-item label="联系人" prop="linkman">
+							<el-input v-model="addForm.linkman"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
 						<el-form-item label="公司电话" prop="telephone">
 							<el-input v-model="addForm.telephone"></el-input>
 						</el-form-item>
@@ -135,12 +140,17 @@
 			</div>
 			<el-form :model="editForm" ref="editForm" :rules="formRules" label-position="top" class="el-form-dialog">
 				<el-row :gutter="24">
-					<el-col :span="12">
+					<el-col :span="8">
 						<el-form-item label="公司名称" prop="name">
 							<el-input v-model="editForm.name"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="12">
+					<el-col :span="8">
+						<el-form-item label="联系人" prop="linkman">
+							<el-input v-model="editForm.linkman"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
 						<el-form-item label="公司电话" prop="telephone">
 							<el-input v-model="editForm.telephone"></el-input>
 						</el-form-item>

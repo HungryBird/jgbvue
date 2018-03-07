@@ -136,21 +136,56 @@ router.post('/getDepartments', (req, res)=> {
 
 router.post('/getAuditors', (req, res)=> {
 	let jdata = '';
-	fs.readFile('api/common/audit/auditors.json', (err, data)=> {
-		if(err) {
+	console.log(req.body)
+	if(req.body.value == 'finance') {
+		fs.readFile('api/common/audit/auditors1.json', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err: ', err);
+			}
+			jdata += data;
+			console.log('jdata: ', jdata);
 			res.send({
-				status: false,
-				message: err
+				status: true,
+				data: jdata
 			})
-			console.log('err: ', err);
-		}
-		jdata += data;
-		console.log('jdata: ', jdata);
-		res.send({
-			status: true,
-			data: jdata
 		})
-	})
+	}else if(req.body.value == 'purchase') {
+		fs.readFile('api/common/audit/auditors2.json', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err: ', err);
+			}
+			jdata += data;
+			console.log('jdata: ', jdata);
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	}else if(req.body.value == 'personnel') {
+		fs.readFile('api/common/audit/auditors3.json', (err, data)=> {
+			if(err) {
+				res.send({
+					status: false,
+					message: err
+				})
+				console.log('err: ', err);
+			}
+			jdata += data;
+			console.log('jdata: ', jdata);
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	}
 })
 
 

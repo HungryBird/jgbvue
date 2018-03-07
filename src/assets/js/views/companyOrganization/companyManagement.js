@@ -19,6 +19,7 @@ JGBVue.module.companyManagement = ()=> {
 				addForm: {
 					name: '',
 					trade: '',
+					linkman: '',
 					telephone: '',
 					phoneNumber: '',
 					email: '',
@@ -35,6 +36,7 @@ JGBVue.module.companyManagement = ()=> {
 				editForm: {
 					name: '',
 					trade: '',
+					linkman: '',
 					telephone: '',
 					phoneNumber: '',
 					email: '',
