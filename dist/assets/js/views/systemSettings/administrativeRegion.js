@@ -95,8 +95,10 @@ JGBVue.module.administrativeRegion = ()=> {
 				//pass
 			},
 			methods: {
+				getInit() {
+					window.location.reload();
+				},
 				loadNode(node, resolve) {
-					console.log('loadNodenode: ', node);
 					let _self = this;
 					/**
 					 * 加载页面时自动获取level为0的数据
@@ -278,6 +280,16 @@ JGBVue.module.administrativeRegion = ()=> {
 							message: '已取消删除'
 						});
 					});
+				},
+				changeValid(val) {
+					axios.post('/administrativeRegion/changeValid', val).then((res)=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+						}
+					})
 				}
 			}
 		});

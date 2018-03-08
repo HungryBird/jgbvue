@@ -124,4 +124,11 @@ router.post('/data_delete', (req, res)=> {
 	})
 });
 
+router.post('/changeValid', (req, res)=> {
+	res.send({
+		status: true,
+		message: '修改状态成功'
+	})
+})
+
 module.exports = router;
