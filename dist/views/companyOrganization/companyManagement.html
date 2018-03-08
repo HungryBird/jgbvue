@@ -19,7 +19,7 @@
 			</nav>
 			<div class="inner_main">
 				<el-table ref="companyTable" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem">
-					<el-table-column type="selection" :selectable="isAllowCheck"></el-table-column>
+					<el-table-column type="selection"></el-table-column>
 					<el-table-column type="index" label="序号" width="50px"></el-table-column>
 					<el-table-column label="公司名称" prop="name"></el-table-column>
 					<el-table-column label="所属行业" prop="trade"></el-table-column>

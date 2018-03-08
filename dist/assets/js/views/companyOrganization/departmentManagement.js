@@ -41,8 +41,8 @@ JGBVue.module.departmentManagement = ()=> {
 				remove() {
 					//
 				},
-				handleNodeClick() {
-					//
+				handleNodeClick(obj, node, self) {
+					console.log('obj: ', obj);console.log('node: ', node);console.log('self: ', self);
 				},
 				rowClick() {
 

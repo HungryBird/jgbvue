@@ -117,11 +117,6 @@ JGBVue.module.companyManagement = ()=> {
 				});
 			},
 			methods: {
-				isAllowCheck(row, index) {
-					if(index !== 0) {
-						return 1;
-					}
-				},
 				add() {
 					let _self = this;
 					this.addDialogVisiable = true;
@@ -341,10 +336,7 @@ JGBVue.module.companyManagement = ()=> {
 				remove() {
 					//
 				},
-				rowClick(row, event, column) {
-					if(!row.isAllowCheck) {
-						return;
-					}
+				rowClick(row) {
 					let _self = this;
 					this.$refs.companyTable.toggleRowSelection(row);
 					if(_self.selectedRows.indexOf(row) == -1) {
