@@ -74,7 +74,7 @@ JGBVue.module.companyManagement = ()=> {
 					],
 					linkman: [
 						{required: true, message: '请输入联系人'}
-					]
+					],
 					phoneNumber: [
 						{required: true, message: '请输入手机号码'}
 					],

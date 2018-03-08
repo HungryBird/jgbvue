@@ -26,11 +26,26 @@ ul {
   ul li {
     list-style: none; }
 
-.treeWrap {
-  border: 1px solid #ddd; }
+.jgb-title {
+  line-height: 36px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd; }
+
+.text-center {
+  text-align: center; }
+
+.text-left {
+  text-align: left;
+  text-indent: .5em; }
+
+.jgb-wrap {
+  border: 1px solid #ddd;
+  background: #fff; }
 
 .el-container {
   height: 100%; }
+  .el-container .el-main {
+    padding-top: 0; }
 
 .el-form .el-form-item {
   margin: 0;

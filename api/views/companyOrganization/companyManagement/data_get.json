@@ -9,7 +9,8 @@
 		"email": "111@163.com",
 		"fax": "000-00000",
 		"startTime": "2018-02-24",
-		"remark": ""
+		"remark": "",
+		"isAllowCheck": false
 	},
 	{
 		"name": "XXX互联网公司",
@@ -21,7 +22,8 @@
 		"email": "111@163.com",
 		"fax": "000-00000",
 		"startTime": "2018-02-24",
-		"remark": ""
+		"remark": "",
+		"isAllowCheck": true
 	},
 	{
 		"name": "XXX互联网公司",
@@ -33,6 +35,7 @@
 		"email": "111@163.com",
 		"fax": "000-00000",
 		"startTime": "2018-02-24",
-		"remark": ""
+		"remark": "",
+		"isAllowCheck": true
 	}
 ]

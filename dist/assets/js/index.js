@@ -71,7 +71,7 @@ new Vue({
             id: 'companyManagement',
             name: '公司管理'
           }, {
-            id: 'divisionalManagement',
+            id: 'departmentManagement',
             name: '部门管理'
           }, {
             id: 'xsdj003',

@@ -74,7 +74,7 @@ JGBVue.module.companyManagement = ()=> {
 					],
 					linkman: [
 						{required: true, message: '请输入联系人'}
-					]
+					],
 					phoneNumber: [
 						{required: true, message: '请输入手机号码'}
 					],
@@ -117,6 +117,11 @@ JGBVue.module.companyManagement = ()=> {
 				});
 			},
 			methods: {
+				isAllowCheck(row, index) {
+					if(index !== 0) {
+						return 1;
+					}
+				},
 				add() {
 					let _self = this;
 					this.addDialogVisiable = true;
@@ -336,7 +341,10 @@ JGBVue.module.companyManagement = ()=> {
 				remove() {
 					//
 				},
-				rowClick(row) {
+				rowClick(row, event, column) {
+					if(!row.isAllowCheck) {
+						return;
+					}
 					let _self = this;
 					this.$refs.companyTable.toggleRowSelection(row);
 					if(_self.selectedRows.indexOf(row) == -1) {

@@ -56,10 +56,10 @@ app.use('/printTemplate', printTemplateRouter);
  * 基础资料
  */
 
-const divisionalManagementRouter = require('./routers/views/companyOrganization/divisionalManagement');
+const departmentManagementRouter = require('./routers/views/companyOrganization/departmentManagement');
 const companyManagementRouter = require('./routers/views/companyOrganization/companyManagement');
 
-app.use('/divisionalManagement', divisionalManagementRouter);
+app.use('/departmentManagement', departmentManagementRouter);
 app.use('/companyManagement', companyManagementRouter);
 
 /**
