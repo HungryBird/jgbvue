@@ -3,8 +3,8 @@
 	"saleBossAudit": true,
 	"purchaseBossAudit": false,
 	"selectProcessLevel": 2,
-	"levelSelected": 2[
-		{
+	"levelSelected": 2,
+	"bosses": [{
 			"jobNumber": 10001,
 			"name": "张总",
 			"src": "../../assets/img/index/portrait.png",
@@ -19,6 +19,24 @@
 			"isBoss": false,
 			"isSelected": true,
 			"value": 10002
+		}
+	],
+	"firstLevelAuditorsGroup": [
+		{
+			"jobNumber": 10002,
+			"name": "张2",
+			"src": "../../assets/img/index/portrait.png",
+			"isBoss": false,
+			"isSelected": true,
+			"value": 10002
+		},
+		{
+			"jobNumber": 10003,
+			"name": "张3",
+			"src": "../../assets/img/index/portrait.png",
+			"isBoss": false,
+			"isSelected": true,
+			"value": 10003
 		}
 	],
 	"secondLevelAuditorsGroup": [
@@ -39,7 +57,6 @@
 			"value": 20015
 		}
 	],
-	"bosses": [],
 	"auditMethod": "2",
 	"remainWays": ["站内信息", "手机信息"]
 }

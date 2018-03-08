@@ -301,7 +301,7 @@ ul{
 }
 .auditMainWrap{
 	.el-aside{
-		max-height: 600px;
+		max-height: 600px;+
 		.departmentListWrap{
 			border: 1px solid #ddd;
 			border-top: none;
@@ -326,10 +326,19 @@ ul{
 	.el-main{
 		padding: 0;
 		.auditorsWrap{
+			position: relative;
 			display: flex;
 			flex-wrap: wrap;
 			align-content: stretch;
 			max-height: 600px;
+			.right-side{
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				width: 100px;
+				overflow-y: auto;
+			}
 			.auditor{
 				position: relative;
 				box-sizing: border-box;

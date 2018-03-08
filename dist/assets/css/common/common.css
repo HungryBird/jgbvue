@@ -293,26 +293,27 @@ ul {
 
 .auditMainWrap .el-aside {
   max-height: 600px; }
-  .auditMainWrap .el-aside .departmentListWrap {
+  .auditMainWrap .el-aside + .departmentListWrap {
     border: 1px solid #ddd;
     border-top: none;
     border-left: none; }
-    .auditMainWrap .el-aside .departmentListWrap li {
+    .auditMainWrap .el-aside + .departmentListWrap li {
       cursor: pointer;
       padding: 5px;
       border: 1px solid #ddd;
       border-bottom: none;
       border-right: none; }
-      .auditMainWrap .el-aside .departmentListWrap li:hover {
+      .auditMainWrap .el-aside + .departmentListWrap li:hover {
         background: #49beff;
         opacity: .5; }
-    .auditMainWrap .el-aside .departmentListWrap .active {
+    .auditMainWrap .el-aside + .departmentListWrap .active {
       background: #49beff;
       color: #fff; }
 
 .auditMainWrap .el-main {
   padding: 0; }
   .auditMainWrap .el-main .auditorsWrap {
+    position: relative;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -321,6 +322,13 @@ ul {
     -ms-flex-line-pack: stretch;
     align-content: stretch;
     max-height: 600px; }
+    .auditMainWrap .el-main .auditorsWrap .right-side {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100px;
+      overflow-y: auto; }
     .auditMainWrap .el-main .auditorsWrap .auditor {
       position: relative;
       -webkit-box-sizing: border-box;
