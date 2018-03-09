@@ -26,6 +26,8 @@ JGBVue.module.departmentManagement = ()=> {
 				},
 				selectedRows: [],
 				addDialogVisiable: false,
+				currentCompany: '',
+				currentDepartment: '',
 				addForm: {
 					name: '',
 					number: '',
@@ -84,8 +86,9 @@ JGBVue.module.departmentManagement = ()=> {
 				axios.get(treeDataGetUrl).then((res)=> {
 					if(res.data.status) {
 						let jdata = JSON.parse(res.data.data);
-						_self.treeData = jdata;
-					}
+						this.treeData = jdata;
+					};
+					this.currentCompany = this.treeData[0].label;
 				}).catch((err)=> {
 					console.log('err', err);
 				})
@@ -141,6 +144,12 @@ JGBVue.module.departmentManagement = ()=> {
 					//
 				},
 				handleNodeClick(obj, node, self) {
+					if(obj.children) {
+						this.currentCompany = obj.label;
+						this.currentDepartment = '';
+					}else{
+						this.currentDepartment = obj.label;
+					}
 					if(this.currentNode === obj.number) {
 						return;
 					}

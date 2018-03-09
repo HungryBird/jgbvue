@@ -20,7 +20,8 @@
 				<div class="jgb-wrap">
 					<div class="jgb-title">
 						<h5 class="text-left">
-							啊啊
+							<span>{{ currentCompany }}</span>
+							<span v-if="currentDepartment !== ''">-{{ currentDepartment }}</span>
 						</h5>
 					</div>
 					<nav style="padding: 10px;padding-bottom: 0;">
