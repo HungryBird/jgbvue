@@ -18,9 +18,13 @@ app.use(bodyParser.json());
  * routers
  */
 
+const commonRouter = require('./routers/common');
+
 const userLoginRouter = require('./routers/login');
 const indexRouter = require('./routers/index');
 const guidanceRouter = require('./routers/guidance')
+
+app.use('/common', commonRouter);
 
 app.use('/user', userLoginRouter);
 app.use('/index', indexRouter);

@@ -7,7 +7,7 @@ JGBVue.module.companyManagement = ()=> {
 	,that = {};
 
 
-	_this.init = (dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl)=> {
+	_this.init = (dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl, deteleDataUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data: {
@@ -334,7 +334,35 @@ JGBVue.module.companyManagement = ()=> {
 					}
 				},
 				remove() {
-					//
+					this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        beforeClose: function(action, instance, done) {
+                            done(action);
+                        }
+                    }).then((action)=> {
+                        if(action == 'confirm') {
+                            axios.post(deteleDataUrl, this.selectedRows).then((data)=> {
+                                if(data.data.status) {
+                                    this.$message({
+                                        type: 'success',
+                                        message: data.data.message
+                                    });
+                                }
+                            }).catch(function(err) {
+                                _self.$message({
+                                    type: 'error',
+                                    message: req.data.message || err
+                                });
+                            })
+                        }
+                    }).catch(() => {
+                       this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });
+                    });
 				},
 				rowClick(row) {
 					let _self = this;
@@ -427,8 +455,8 @@ JGBVue.module.companyManagement = ()=> {
 		})
 	}
 
-	that.init = (dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl)=> {
-		_this.init(dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl);
+	that.init = (dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl, deteleDataUrl)=> {
+		_this.init(dataGetUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getEditDataUrl, saveAddUrl, saveEditUrl, deteleDataUrl);
 	}
 
 	return that;

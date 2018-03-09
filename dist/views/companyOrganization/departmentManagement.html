@@ -36,23 +36,14 @@
 							</el-form>
 						</div>
 						<div class="pull-right">
-							<el-button-group>
-								<el-button v-on:click="add">
-									<i class="el-icon-delete"></i>
-									新增
-								</el-button>
-								<el-button v-on:click="edit">
-									<i class="el-icon-delete"></i>
-									编辑
-								</el-button>
-								<el-button v-on:click="remove">
-									<i class="el-icon-delete"></i>
-									删除
-								</el-button>
+							<el-button-group class="pull-right">
+								<el-button type="primary" v-on:click="add" icon="el-icon-plus" :disabled="data.table.length === 0">新增</el-button>
+								<el-button type="primary" v-on:click="edit" icon="el-icon-edit" :disabled="selectedRows.length !== 1">编辑</el-button>
+								<el-button type="primary" v-on:click="remove" icon="el-icon-delete" :disabled="selectedRows.length === 0">删除</el-button>
 							</el-button-group>
 						</div>
 					</nav>
-					<el-table :data="table" border v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem" ref="departmentTable">
+					<el-table :data="data.table" border v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem" ref="departmentTable">
 						<el-table-column type="selection"></el-table-column>
 						<el-table-column type="index" label="序号" width="50"></el-table-column>
 						<el-table-column label="操作">
@@ -73,6 +64,152 @@
 				</div>
 			</el-main>
 		</el-container>
+		<!-- 新增窗口 -->
+		<el-dialog :visible.sync="addDialogVisiable">
+			<div slot="title" class="title">
+				新增部门
+			</div>
+			<el-form :model="addForm" ref="addForm" :rules="formRules" label-position="top" class="el-form-dialog">
+				<el-row :gutter="24">
+					<el-col :span="12">
+						<el-form-item label="公司部门" prop="name">
+							<el-input v-model="addForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="部门编号" prop="number">
+							<el-input v-model="addForm.number"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="部门简称" prop="shortNmae">
+							<el-input v-model="addForm.shortNmae"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="负责人" prop="principal">
+							<el-input v-model="addForm.principal"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="部门性质" prop="character">
+							<el-select placeholder="请选择部门性质"  v-model="addForm.character">
+								<el-option v-for="item in data.characterOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="上级部门" prop="parentDepartment">
+							<el-select placeholder="请选择上级部门"  v-model="addForm.parentDepartment">
+								<el-option v-for="item in data.parentDepartmentOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="手机号" prop="phoneNumber">
+							<el-input v-model="addForm.phoneNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="座机" prop="telephone">
+							<el-input v-model="addForm.telephone"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="email" label="邮箱">
+							<el-input v-model="addForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="fax" label="传真">
+							<el-input v-model="addForm.fax"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="addForm.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			<div slot="footer">
+	<el-button type="primary" v-on:click="saveAdd('addForm')">保存</el-button>
+	<el-button v-on:click="closeAdd('addForm')">关闭</el-button>
+</div>
+		</el-dialog>
+		<!-- 编辑窗口 -->
+		<el-dialog :visible.sync="editDialogVisiable">
+			<div slot="title" class="title">
+				编辑部门
+			</div>
+			<el-form :model="editForm" ref="editForm" :rules="formRules" label-position="top" class="el-form-dialog">
+				<el-row :gutter="24">
+					<el-col :span="12">
+						<el-form-item label="公司部门" prop="name">
+							<el-input v-model="editForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="部门编号" prop="number">
+							<el-input v-model="editForm.number"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="部门简称" prop="shortNmae">
+							<el-input v-model="editForm.shortNmae"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="负责人" prop="principal">
+							<el-input v-model="editForm.principal"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="部门性质" prop="character">
+							<el-select placeholder="请选择部门性质"  v-model="editForm.character">
+								<el-option v-for="item in data.characterOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="上级部门" prop="parentDepartment">
+							<el-select placeholder="请选择上级部门"  v-model="editForm.parentDepartment">
+								<el-option v-for="item in data.parentDepartmentOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="手机号" prop="phoneNumber">
+							<el-input v-model="editForm.phoneNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="座机" prop="telephone">
+							<el-input v-model="editForm.telephone"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="email" label="邮箱">
+							<el-input v-model="editForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="fax" label="传真">
+							<el-input v-model="editForm.fax"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="editForm.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			<div slot="footer">
+	<el-button type="primary" v-on:click="saveEdit('editForm')">保存</el-button>
+	<el-button v-on:click="closeEdit('editForm')">关闭</el-button>
+</div>
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -80,6 +217,13 @@
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/views/companyOrganization/departmentManagement.js"></script>
 <script type="text/javascript">
-	JGBVue.module.departmentManagement().init('/departmentManagement/tree_data_get');
+	/**
+	 * 获取树数据
+	 * 获取部门信息
+	 * 删除
+	 * 保存添加
+	 * 保存编辑
+	 */
+	JGBVue.module.departmentManagement().init('/departmentManagement/tree_data_get', '/departmentManagement/data_table_get', '/common/data_delete', '/common/data_add_save', '/common/data_edit_save');
 </script>
 </html>

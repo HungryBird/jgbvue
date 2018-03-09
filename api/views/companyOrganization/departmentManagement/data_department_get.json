@@ -1,32 +1,62 @@
-[
-	{
-		"name": "采购部",
-		"number": 1111111,
-		"shortNmae": "采",
-		"character": "业务",
-		"principal": "张某",
-		"phoneNumber": "86199999999",
-		"telephone": "0771-5233005",
-		"remark": "111"
-	},
-	{
-		"name": "销售部",
-		"number": 222222,
-		"shortNmae": "销",
-		"character": "销售",
-		"principal": "张某",
-		"phoneNumber": "86199999999",
-		"telephone": "0771-5233005",
-		"remark": "22"
-	},
-	{
-		"name": "财务部",
-		"number": 33333,
-		"shortNmae": "财",
-		"character": "财务",
-		"principal": "张某",
-		"phoneNumber": "86199999999",
-		"telephone": "0771-5233005",
-		"remark": "33"
-	}
-]
+{
+	"parentDepartmentOptions": [
+		{
+			"label": "业务部",
+			"value": "yewubu"
+		},
+		{
+			"label": "采购部",
+			"value": "caigoubu"
+		},
+		{
+			"label": "销售部",
+			"value": "xiaoshoubu"
+		}
+	],
+	"characterOptions": [
+		{
+			"label": "业务",
+			"value": "yewu"
+		},
+		{
+			"label": "采购",
+			"value": "caigou"
+		},
+		{
+			"label": "销售",
+			"value": "xiaoshou"
+		}
+	],
+	"table": [
+		{
+			"name": "采购部",
+			"number": 1111111,
+			"shortNmae": "采",
+			"character": "业务",
+			"principal": "张某",
+			"phoneNumber": "86199999999",
+			"telephone": "0771-5233005",
+			"remark": "111"
+		},
+		{
+			"name": "销售部",
+			"number": 222222,
+			"shortNmae": "销",
+			"character": "销售",
+			"principal": "张某",
+			"phoneNumber": "86199999999",
+			"telephone": "0771-5233005",
+			"remark": "22"
+		},
+		{
+			"name": "财务部",
+			"number": 33333,
+			"shortNmae": "财",
+			"character": "财务",
+			"principal": "张某",
+			"phoneNumber": "86199999999",
+			"telephone": "0771-5233005",
+			"remark": "33"
+		}
+	]
+}

@@ -54,6 +54,7 @@ JGBVue.module.messageInSite = ()=> {
 								type = 'error'
 							};
 							let str = JSON.stringify(JSON.parse(JSON.stringify(jdata[i])));
+							console.log('str: ', str);
 							this.$notify({
 								title: '站内信息提醒',
 								dangerouslyUseHTMLString: true,
@@ -209,5 +210,6 @@ JGBVue.module.messageInSite = ()=> {
 }
 
 function msDialog(obj) {
+	console.log('obj: ', obj);
 	ms.vm.msDialog(obj);
 }
