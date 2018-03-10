@@ -42,6 +42,11 @@ ul {
   border: 1px solid #ddd;
   background: #fff; }
 
+.jgb-nav {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  margin: 0; }
+
 .el-container {
   height: 100%; }
   .el-container .el-main {
@@ -315,28 +320,28 @@ ul {
     #app .wrap_footer .el-pagination {
       float: right; }
 
-.auditMainWrap .el-aside {
-  max-height: 600px; }
-  .auditMainWrap .el-aside + .departmentListWrap {
+.el-aside .ul-list {
+  border: 1px solid #ddd;
+  border-top: none;
+  border-left: none; }
+  .el-aside .ul-list li {
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
     border: 1px solid #ddd;
-    border-top: none;
-    border-left: none; }
-    .auditMainWrap .el-aside + .departmentListWrap li {
-      cursor: pointer;
-      padding: 5px;
-      border: 1px solid #ddd;
-      border-bottom: none;
-      border-right: none; }
-      .auditMainWrap .el-aside + .departmentListWrap li:hover {
-        background: #49beff;
-        opacity: .5; }
-    .auditMainWrap .el-aside + .departmentListWrap .active {
+    border-bottom: none;
+    border-right: none; }
+    .el-aside .ul-list li:hover {
       background: #49beff;
-      color: #fff; }
+      opacity: .5; }
+  .el-aside .ul-list .active {
+    background: #49beff;
+    color: #fff; }
 
-.auditMainWrap .el-main {
-  padding: 0; }
-  .auditMainWrap .el-main .auditorsWrap {
+.el-main {
+  padding: 0;
+  padding-left: 8px; }
+  .el-main .auditorsWrap {
     position: relative;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -344,42 +349,41 @@ ul {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     -ms-flex-line-pack: stretch;
-    align-content: stretch;
-    max-height: 600px; }
-    .auditMainWrap .el-main .auditorsWrap .right-side {
+    align-content: stretch; }
+    .el-main .auditorsWrap .right-side {
       position: absolute;
       top: 0;
       right: 0;
       bottom: 0;
       width: 100px;
       overflow-y: auto; }
-    .auditMainWrap .el-main .auditorsWrap .auditor {
+    .el-main .auditorsWrap .auditor {
       position: relative;
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       width: 33.3%;
       padding: 5px; }
-      .auditMainWrap .el-main .auditorsWrap .auditor .selectStatus {
+      .el-main .auditorsWrap .auditor .selectStatus {
         position: absolute;
         top: 5px;
         right: 5px;
         background: #ff0000;
         color: #fff; }
-      .auditMainWrap .el-main .auditorsWrap .auditor .auditorInner {
+      .el-main .auditorsWrap .auditor .auditorInner {
         border: 1px solid #333;
         cursor: pointer; }
-        .auditMainWrap .el-main .auditorsWrap .auditor .auditorInner .auditorPicWrap {
+        .el-main .auditorsWrap .auditor .auditorInner .auditorPicWrap {
           float: left;
           width: 80px;
           height: 80px;
           background-color: black; }
-          .auditMainWrap .el-main .auditorsWrap .auditor .auditorInner .auditorPicWrap img {
+          .el-main .auditorsWrap .auditor .auditorInner .auditorPicWrap img {
             width: 100%; }
-        .auditMainWrap .el-main .auditorsWrap .auditor .auditorInner .auditorInfo {
+        .el-main .auditorsWrap .auditor .auditorInner .auditorInfo {
           float: left;
           padding-left: 4px;
           font-size: 12px; }
-          .auditMainWrap .el-main .auditorsWrap .auditor .auditorInner .auditorInfo .auditText {
+          .el-main .auditorsWrap .auditor .auditorInner .auditorInfo .auditText {
             display: block;
             float: left;
             width: 6em;
@@ -387,8 +391,8 @@ ul {
             white-space: nowrap;
             -o-text-overflow: ellipsis;
             text-overflow: ellipsis; }
-          .auditMainWrap .el-main .auditorsWrap .auditor .auditorInner .auditorInfo .leftSpan {
+          .el-main .auditorsWrap .auditor .auditorInner .auditorInfo .leftSpan {
             display: block;
             float: left; }
-    .auditMainWrap .el-main .auditorsWrap .activeSelected {
+    .el-main .auditorsWrap .activeSelected {
       border: 1px solid red !important; }

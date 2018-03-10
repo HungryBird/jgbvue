@@ -64,7 +64,8 @@ new Vue({
         id: 'nav_003',
         cls: 'fa fa-group',
         name: '基础资料',
-        menuItems: [{
+        menuItems: [
+        {
           title: '公司组织',
           parentFolder: 'companyOrganization',
           items: [{
@@ -83,28 +84,35 @@ new Vue({
             id: 'xsdj004',
             name: '用户管理'
           }]
-        }, {
+        },
+        {
           title: '客户管理',
-          items: [{
-              id: 'xsbb001',
-              name: '销售订单跟踪表'
-            }, {
+          parentFolder: 'clientManagement',
+          items: [
+            {
+              id: 'clientInfo',
+              name: '客户信息'
+            },
+            {
               id: 'xsbb002',
               name: '销售明细表'
-            }, {
+            },
+            {
               id: 'xsbb003',
               name: '销售汇总表(按商品)'
-            }, {
+            },
+            {
               id: 'xsbb004',
               name: '销售汇总表(按客户)'
-            }, {
+            },
+            {
               id: 'xsbb005',
               name: '销售汇总表(按销售人员)'
             }
-
           ]
-        }]
-      }, ]
+        }
+        ]
+      }]
     },
     action1: [{
       id: 'ac10001',

@@ -153,7 +153,7 @@
 			</nav>
 			<el-container class="auditMainWrap">
 				<el-aside width="217px">
-					<ul class="departmentListWrap" v-if="audit.departmentList.length !== 0">
+					<ul class="ul-list" v-if="audit.departmentList.length !== 0">
 						<li v-for="(item, index) in audit.departmentList" :key="item.value" :value="item.value" v-on:click="selectDepartment(item, index)" :class="{active: index === audit.activeIndex}">
 							<a href="javascript:;">
 								{{item.name}}
