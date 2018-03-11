@@ -8,8 +8,31 @@ JGBVue.module.auditProcess = ()=> {
     let _this = {},
     that = {};
 
+    _this.initAudit = {
+        company: '',
+        searchValue: '',
+        departmentList: [],
+        companyList: [],
+        activeIndex: -1,
+        auditors: [],
+        activeDepartment: '',
+        selectedAuditors: []
+    };
+
+    _this.initAddForm = {
+        selectSysModule: '',
+        saleBossAudit: false,
+        purchaseBossAudit: false,
+        levelSelected: '',
+        firstLevelAuditorsGroup: [],
+        secondLevelAuditorsGroup: [],
+        bosses: [],
+        auditMethod: '1',
+        remainWays: ['站内信息']
+    };
+
     _this.init = (getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl)=> {
-        new Vue({
+        that.vm = new Vue({
             el: '#app',
             data: {
                 /**
@@ -52,7 +75,7 @@ JGBVue.module.auditProcess = ()=> {
                     selectSysModule: '',
                     saleBossAudit: false,
                     purchaseBossAudit: false,
-                    levelSelected: '',
+                    levelSelected: 0,
                     firstLevelAuditorsGroup: [],
                     secondLevelAuditorsGroup: [],
                     bosses: [],
@@ -62,7 +85,6 @@ JGBVue.module.auditProcess = ()=> {
                 dialogAddFormVisible: false,
                 dialogEditFormVisible: false,
                 editDialogLoading: true,
-                selectProcessLevel: null,
                 firstLeveAuditHasBoss: false,
                 secondLeveAuditHasBoss: false,
                 selectedRows: [],
@@ -143,7 +165,11 @@ JGBVue.module.auditProcess = ()=> {
                                     _self.$message({
                                         type: 'success',
                                         message: data.data.message
-                                    })
+                                    });
+                                    Object.assign(this.addForm, _this.initAddForm);
+                                    Object.assign(this.audit, _this.initAudit);
+                                    console.log('_this.initAddForm', _this.initAddForm);
+                                    console.log('this.addForm', this.addForm);
                                 }else{
                                     _self.$message({
                                         type: 'error',
@@ -305,7 +331,6 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 showSelectAuditDialog(data, level) {
                     let _self = this;
-                    console.log('this.currentProcessLevel !== level:', this.currentProcessLevel !== level);
                     if(this.currentProcessLevel !== level) {
                         this.audit.auditors.splice(0, _self.audit.auditors.length);
                         this.audit.activeDepartment = '';
