@@ -22,6 +22,6 @@ router.post('/data_delete', (req, res)=> {
 		status: true,
 		message: '删除成功'
 	})
-})
+});
 
 module.exports = router;

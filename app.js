@@ -60,9 +60,11 @@ app.use('/printTemplate', printTemplateRouter);
  * 基础资料
  */
 
+const menuManagementRouter = require('./routers/views/baseData/menuManagement');
 const departmentManagementRouter = require('./routers/views/companyOrganization/departmentManagement');
 const companyManagementRouter = require('./routers/views/companyOrganization/companyManagement');
 
+app.use('/menuManagement', menuManagementRouter);
 app.use('/departmentManagement', departmentManagementRouter);
 app.use('/companyManagement', companyManagementRouter);
 

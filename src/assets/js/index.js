@@ -66,6 +66,16 @@ new Vue({
         name: '基础资料',
         menuItems: [
         {
+          parentFolder: 'baseData',
+          items: [{
+            id: 'menuManagement',
+            name: '功能菜单管理'
+          }, {
+            id: 'dataDictionary',
+            name: '数据字典'
+          }]
+        },
+        {
           title: '公司组织',
           parentFolder: 'companyOrganization',
           items: [{

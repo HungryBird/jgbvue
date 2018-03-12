@@ -1,0 +1,145 @@
+[
+	{
+		"id": "nav_001",
+		"cls": "fa fa-home"
+	},
+	{
+		"id": "nav_002",
+		"cls": "fa fa-list-ul",
+		"name": "系统设置",
+		"menuItems": [
+			{
+				"parentFolder": "systemSettings",
+				"items": [
+					{
+						"id": "systemParameter",
+						"name": "系统参数"
+					},
+					{
+						"id": "phoneInfo",
+						"name": "手机信息"
+					},
+					{
+						"id": "auditProcess",
+						"name": "审核流程"
+					},
+					{
+						"id": "systemLog",
+						"name": "系统日志"
+					},
+					{
+						"id": "printTemplate",
+						"name": "套打模板"
+					},
+					{
+						"id": "recountCost",
+						"name": "重算成本"
+					},
+					{
+						"id": "addedServer",
+						"name": "增值服务"
+					}
+				]
+			},
+			{
+				"parentFolder": "systemSettings",
+				"items": [
+					{
+						"id": "messageInSite",
+						"name": "站内信息"
+					},
+					{
+						"id": "emailInfo",
+						"name": "邮件信息"
+					},
+					{
+						"id": "administrativeRegion",
+						"name": "行政区域"
+					},
+					{
+						"id": "FBackup",
+						"name": "备份与恢复"
+					},
+					{
+						"id": "settlementNAntiSettlement",
+						"name": "结账/反结账"
+					},
+					{
+						"id": "reinitialize",
+						"name": "重新初始化"
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": "nav_003",
+		"cls": "fa fa-group",
+		"name": "基础资料",
+		"menuItems": [
+			{
+				"parentFolder": "baseData",
+				"items": [
+					{
+						"id": "menuManagement",
+						"name": "功能菜单管理"
+					},
+					{
+						"id": "dataDictionary",
+						"name": "数据字典"
+					}
+				]
+			},
+	{
+		"title": "公司组织",
+		"parentFolder": "companyOrganization",
+		"items": [
+			{
+				"id": "companyManagement",
+				"name": "公司管理"
+			},
+			{
+				"id": "departmentManagement",
+				"name": "部门管理"
+			},
+			{
+				"id": "xsdj003",
+				"name": "职位管理"
+			},
+			{
+				"id": "xsdj004",
+				"name": "角色管理"
+			},
+			{
+				"id": "xsdj004",
+				"name": "用户管理"
+			}
+		]
+	},
+	{
+		"title": "客户管理",
+		"parentFolder": "clientManagement",
+		"items": [
+			{
+				"id": "clientInfo",
+				"name": "客户信息"
+			},
+			{
+				"id": "xsbb002",
+				"name": "销售明细表"
+			},
+			{
+				"id": "xsbb003",
+				"name": "销售汇总表(按商品)"
+			},
+			{
+				"id": "xsbb004",
+				"name": "销售汇总表(按客户)"
+			},
+			{
+				"id": "xsbb005",
+				"name": "销售汇总表(按销售人员)"
+			}
+		]
+	}
+]

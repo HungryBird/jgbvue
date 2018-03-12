@@ -99,7 +99,7 @@
 								</a>
 								<ul class="base-nav-dropdown-apps" v-if="dropdownIsActive">
 									<li v-for="(menuItem,index) in navItem.menuItems" :style="{width: navItem.menuItems.length*210 + 'px'}">
-										<div class="menu-item-wrap" :style="{'borderRight': index == 0 ? '1px dashed #ddd' : 'none'}">
+										<div class="menu-item-wrap" :style="{'borderLeft': index !== 0 ? '1px dashed #ddd' : 'none'}">
 											<strong v-if="menuItem.title != undefined"><span>{{menuItem.title}}</span></strong>
 											<ul class="menu-item-group">
 												<li v-for="item in menuItem.items" :id="item.id" v-on:click="selectTab(item.id, item.name, menuItem.parentFolder)">

@@ -10,6 +10,7 @@ JGBVue.module.clientInfo = ()=> {
 		that.vm = new Vue({
 			el: '#app',
 			data: {
+				table: [],
 				search: {
 					input: '',
 					showForbiddenClients: ''
@@ -23,7 +24,9 @@ JGBVue.module.clientInfo = ()=> {
 						label: "普通客户",
 						value: "normal"
 					}
-				]
+				],
+				pageSize: 20,
+				currentPage: 1
 			},
 			mounted() {
 				//
@@ -40,8 +43,13 @@ JGBVue.module.clientInfo = ()=> {
 				},
 				changeQueryType(item) {
 					//
+				},
+				handleSizeChange() {
+					//当前页面size改变时
+				},
+				handleCurrentChange() {
+					//翻页时
 				}
-
 			}
 		})
 	}

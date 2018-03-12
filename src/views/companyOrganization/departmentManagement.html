@@ -141,23 +141,23 @@
 				编辑部门
 			</div>
 			<el-form :model="editForm" ref="editForm" :rules="formRules" label-position="top" class="el-form-dialog">
-				<el-row :gutter="24">
-					<el-col :span="12">
+				<el-row :gutter="22">
+					<el-col :span="6">
 						<el-form-item label="公司部门" prop="name">
 							<el-input v-model="editForm.name"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="12">
+					<el-col :span="6" :offset="0">
 						<el-form-item label="部门编号" prop="number">
 							<el-input v-model="editForm.number"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="12">
+					<el-col :span="6" :offset="0">
 						<el-form-item label="部门简称" prop="shortNmae">
 							<el-input v-model="editForm.shortNmae"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="12">
+					<el-col :span="6" :offset="0">
 						<el-form-item label="负责人" prop="principal">
 							<el-input v-model="editForm.principal"></el-input>
 						</el-form-item>
