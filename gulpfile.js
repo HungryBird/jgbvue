@@ -110,7 +110,6 @@ gulp.task('js', function () {
     return gulp.src('src/assets/js/*.js')
         .pipe(plumber())
         .pipe(gulp.dest('dist/assets/js'))
-        .pipe(browserSync.stream())
 });
 
 /**

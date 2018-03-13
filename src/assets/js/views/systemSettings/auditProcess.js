@@ -168,8 +168,6 @@ JGBVue.module.auditProcess = ()=> {
                                     });
                                     Object.assign(this.addForm, _this.initAddForm);
                                     Object.assign(this.audit, _this.initAudit);
-                                    console.log('_this.initAddForm', _this.initAddForm);
-                                    console.log('this.addForm', this.addForm);
                                 }else{
                                     _self.$message({
                                         type: 'error',
@@ -285,7 +283,7 @@ JGBVue.module.auditProcess = ()=> {
                     }
                 },
                 selectItem(selection, row) {
-                    let = _self = this;
+                    let _self = this;
                     this.selectedRows.splice(0, _self.selectedRows.length);
                     for(let i = 0; i < selection.length; i++) {
                         _self.selectedRows.push(selection[i]);

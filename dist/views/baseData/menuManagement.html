@@ -19,8 +19,8 @@
 				<div class="jgb-wrap">
 					<div class="jgb-title">
 						<h5 class="text-left">
-							<span>{{ currentCompany }}</span>
-							<span v-if="currentDepartment !== ''">-{{ currentDepartment }}</span>
+							<span>{{ currentModule }}</span>
+							<span v-if="currentFunction !== ''">-{{ currentFunction }}</span>
 						</h5>
 					</div>
 					<nav style="padding: 10px;padding-bottom: 0;">
@@ -37,18 +37,74 @@
 						</div>
 						<div class="pull-right">
 							<el-button-group class="pull-right">
-								<el-button type="primary" v-on:click="add" icon="el-icon-plus" :disabled="data.table.length === 0" v-if="obj">新增</el-button>
-								<el-button type="primary" v-on:click="edit" icon="el-icon-edit" :disabled="selectedRows.length !== 1">编辑</el-button>
-								<el-button type="primary" v-on:click="remove" icon="el-icon-delete" :disabled="selectedRows.length === 0">删除</el-button>
+								<el-button type="primary" v-on:click="add" icon="el-icon-plus" :disabled="data.table.length === 0" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
+								<el-button type="primary" v-on:click="edit" icon="el-icon-edit" :disabled="selectedRows.length !== 1" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
+								<el-button type="primary" v-on:click="remove" icon="el-icon-delete" :disabled="selectedRows.length === 0" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
+								<el-button v-if="permission.buttonList.indexOf('per_hide_btn') !== -1">隐藏按钮</el-button>
 							</el-button-group>
 						</div>
 					</nav>
-					<el-table :data="data.table" border v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem" ref="departmentTable">
-
+					<el-table :data="data.table" border v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem" ref="mmTable" v-loading="loading">
+						<el-table-column type="selection"></el-table-column>
+						<el-table-column type="index" label="序号" width="50px"></el-table-column>
+						<el-table-column prop="number" label="编号" v-if="permission.columnList.indexOf('per_number_col') !== -1"></el-table-column>
+						<el-table-column label="操作" v-if="permission.columnList.indexOf('per_opera_col') !== -1">
+							<template slot-scope="scope">
+								<el-button-group>
+									<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+									<el-button size="mini" type="danger" v-on:click="handleDelete(scope.$index, scope.row)">删除</el-button>
+								</el-button-group>
+							</template>
+						</el-table-column>
+						<el-table-column label="名称" prop="name" v-if="permission.columnList.indexOf('per_name_col') !== -1"></el-table-column>
+						<el-table-column label="地址" prop="address" v-if="permission.columnList.indexOf('per_add_col') !== -1"></el-table-column>
+						<el-table-column label="目标" prop="target" v-if="permission.columnList.indexOf('per_target_col') !== -1"></el-table-column>
+						<el-table-column label="菜单" v-if="permission.columnList.indexOf('per_menu_col') !== -1">
+							<template slot-scope="scope">
+								<el-switch v-model="scope.row.menu" v-on:change="handleMenu(scope.$index, scope.row)"></el-switch>
+							</template>
+						</el-table-column>
+						<el-table-column label="展开" v-if="permission.columnList.indexOf('per_unfold_col') !== -1">
+							<template slot-scope="scope">
+								<el-switch v-model="scope.row.unfold" v-on:change="handleUnfold(scope.$index, scope.row)"></el-switch>
+							</template>
+						</el-table-column>
+						<el-table-column label="公共" v-if="permission.columnList.indexOf('per_public_col') !== -1">
+							<template slot-scope="scope">
+								<el-switch v-model="scope.row.public" v-on:change="handlePublic(scope.$index, scope.row)"></el-switch>
+							</template>
+						</el-table-column>
+						<el-table-column label="有效" v-if="permission.columnList.indexOf('per_valid_col') !== -1">
+							<template slot-scope="scope">
+								<el-switch v-model="scope.row.vaild" v-on:change="handleValid(scope.$index, scope.row)"></el-switch>
+							</template>
+						</el-table-column>
+						<el-table-column label="描述" prop="describe" v-if="permission.columnList.indexOf('per_describe_col') !== -1"></el-table-column>
+						<el-table-column label="被隐藏的列" prop="hideColumn" v-if="permission.columnList.indexOf('per_hide_col') !== -1"></el-table-column>
 					</el-table>
 				</div>
 			</el-main>
 		</el-container>
+		<!-- 添加模态窗 -->
+		<el-dialog :visible.sync="addDialogVisiable" title="添加功能">
+			<!-- <div slot="title" class="title">
+				添加功能
+			</div> -->
+			<el-steps :active="addStep" simple finish-status="success">
+				<el-step title="系统功能"></el-step>
+				<el-step title="系统按钮"></el-step>
+				<el-step title="系统视图"></el-step>
+			</el-steps>
+			<el-row :gutter="4">
+				<el-form :model="addForm" ref="addForm" :rules="formRules" label-position="top" class="el-form-dialog">
+					<el-col :span="12">
+						<el-form-item prop="number" label="编号">
+							<el-input v-model="addForm.number"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-form>
+			</el-row>
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -57,8 +113,16 @@
 <script type="text/javascript" src="../../assets/js/views/baseData/menuManagement.js"></script>
 <script type="text/javascript">
 	/**
-	 * 目录
+	 * 获取目录数据
+	 * 删除数据
+	 * 获取编辑数据
+	 * 获取权限按钮
+	 * 获取权限列
+	 * 处理菜单
+	 * 处理展开
+	 * 处理公共
+	 * 处理有效
 	 */
-	JGBVue.module.menuManagement().init('/menuManagement/data_catalogue_get');
+	JGBVue.module.menuManagement().init('/menuManagement/data_catalogue_get', '/menuManagement/data_edit_get', '/common/data_delete', '/menuManagement/data_btn_get', '/menuManagement/data_col_get', '/menuManagement/menu', '/menuManagement/unfold', '/menuManagement/public', '/menuManagement/valid');
 </script>
 </html>

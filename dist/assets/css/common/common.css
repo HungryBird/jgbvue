@@ -123,6 +123,8 @@ ul {
 
 .el-dialog {
   width: 775px; }
+  .el-dialog .el-step__head {
+    line-height: 0 !important; }
   .el-dialog .el-dialog__header {
     background: #f7f7f7; }
     .el-dialog .el-dialog__header .title {

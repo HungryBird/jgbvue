@@ -1,0 +1,50 @@
+[
+	{
+		"number": "a1sd2a3s",
+		"name": "新闻中心1",
+		"address": "/address/xxx",
+		"target": "iframe",
+		"menu": true,
+		"unfold": false,
+		"public": false,
+		"valid": true,
+		"describe": "一些描述....",
+		"hideColumn": "测试"
+	},
+	{
+		"number": "a65s4dwq8789",
+		"name": "新闻中心2",
+		"address": "/address/xxx",
+		"target": "iframe",
+		"menu": true,
+		"unfold": true,
+		"public": true,
+		"valid": false,
+		"describe": "一些描述....",
+		"hideColumn": "测试"
+	},
+	{
+		"number": "zxtu321uwe6r4",
+		"name": "新闻中心3",
+		"address": "/address/xxx",
+		"target": "iframe",
+		"menu": false,
+		"unfold": false,
+		"public": true,
+		"valid": true,
+		"describe": "一些描述....",
+		"hideColumn": "测试"
+	},
+	{
+		"number": "hgf45f6d",
+		"name": "新闻中心4",
+		"address": "/address/xxx",
+		"target": "iframe",
+		"menu": true,
+		"unfold": true,
+		"public": true,
+		"valid": false,
+		"describe": "一些描述....",
+		"hideColumn": "测试"
+	}
+]
