@@ -87,23 +87,163 @@
 		</el-container>
 		<!-- 添加模态窗 -->
 		<el-dialog :visible.sync="addDialogVisiable" title="添加功能">
-			<!-- <div slot="title" class="title">
-				添加功能
-			</div> -->
 			<el-steps :active="addStep" simple finish-status="success">
 				<el-step title="系统功能"></el-step>
 				<el-step title="系统按钮"></el-step>
 				<el-step title="系统视图"></el-step>
 			</el-steps>
 			<el-row :gutter="4">
-				<el-form :model="addForm" ref="addForm" :rules="formRules" label-position="top" class="el-form-dialog">
+				<!-- 步骤1 -->
+				<el-form :model="addForm.form1" ref="addForm1" :rules="formRules" label-position="top" class="el-form-dialog" v-if="addStep === 0">
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
-							<el-input v-model="addForm.number"></el-input>
+							<el-input v-model="addForm.form1.number"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="name" label="名称">
+							<el-input v-model="addForm.form1.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="sort" label="排序">
+							<el-input v-model="addForm.form1.sort"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="target" label="目标">
+							<el-input v-model="addForm.form1.target"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="parentLevel" label="上级">
+							<div class="jgb-input-dropdown__wrap">
+								<div v-on:click="show = !show" class="el-input__inner">
+									{{ addParentLevelLabel }}
+								</div>
+								<span class="el-input__suffix">
+									<span class="el-input__suffix-inner">
+										<i class="el-select__caret el-input__icon el-icon-arrow-up" style="height: auto"></i>
+									</span>
+								</span>
+								<transition name="fade">
+									<div v-if="show" class="jgb-select-dropdown__wrap">
+										<el-tree :data="treeData" :props="defaultProps" v-on:node-click="dropDownNodeClick" :default-expand-all="true" :expand-on-click-node="false" style="max-height: 200px;overflow-y: auto;"></el-tree>
+									</div>
+								</transition>
+							</div>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="checkboxes" label="选项">
+							<el-checkbox v-for="item in checkboxes" :label="item.name" :key="item.value" border>{{item.name}}</el-checkbox>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="describe" label="描述">
+							<el-input type="textarea" v-model="addForm.form1.describe"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-form>
+				<!-- 步骤2 -->
+				<div v-if="addStep === 1">
+					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
+						<el-button-group class="pull-right">
+							<el-button type="primary" v-on:click="addStep2AddForm" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
+							<el-button type="primary" v-on:click="editStep2AddForm" icon="el-icon-edit" :disabled="selectedAddStep2Rows.length !== 1" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
+							<el-button type="primary" v-on:click="removeStep2AddForm" icon="el-icon-delete" :disabled="selectedAddStep2Rows.length === 0" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
+							<el-button v-if="permission.buttonList.indexOf('per_hide_btn') !== -1">隐藏按钮</el-button>
+						</el-button-group>
+					</nav>
+					<el-table border :data="addStep2Table">
+						<el-table-column type="index" label="序号" width="50px"></el-table-column>
+						<el-table-column label="名称" prop="name"></el-table-column>
+						<el-table-column label="编号" prop="number"></el-table-column>
+						<el-table-column label="地址" prop="address"></el-table-column>
+					</el-table>
+				</div>
+			</el-row>
+			<div slot="footer">
+				<el-button :disabled="addStep === 0" v-on:click="addStep--">上一步</el-button>
+				<el-button :disabled="addStep === 2" v-on:click="addNext">下一步</el-button>
+				<el-button v-on:click="saveAdd('addForm')">保存</el-button>
+			</div>
+		</el-dialog>
+		<!-- 添加-步骤2-新增按钮-模态窗 -->
+		<el-dialog :visible.sync="addStep2AddDialogVisiable" title="新增按钮">
+			<el-row :gutter="4">
+				<el-form :model="addStep2Form" ref="addStep2Form" :rules="formRules" label-position="top" class="el-form-dialog">
+					<el-col :span="24">
+						<el-form-item prop="parentLevel" label="上级">
+							<el-select v-model="addStep2Form.parentLevel">
+								<el-option v-for="item in addStep2Table" :key="item.value" :value="item.value" :label="item.name"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="number" label="编号">
+							<el-input v-model="addStep2Form.number"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="name" label="名称">
+							<el-input v-model="addStep2Form.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="sort" label="排序">
+							<el-input v-model="addStep2Form.sort"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="address" label="地址">
+							<el-input v-model="addStep2Form.address"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-form>
 			</el-row>
+			<div slot="footer">
+				<el-button v-on:click="saveAddStep2('addForm')" type="primary">保存</el-button>
+				<el-button v-on:click="addStep2AddDialogVisiable = false" type="primary">关闭</el-button>
+			</div>
+		</el-dialog>
+		<!-- 添加-步骤2-编辑按钮-模态窗 -->
+		<el-dialog :visible.sync="addStep2EditDialogVisiable" title="编辑按钮">
+			<el-row :gutter="4">
+				<el-form :model="editStep2Form" ref="editStep2Form" :rules="formRules" label-position="top" class="el-form-dialog">
+					<el-col :span="24">
+						<el-form-item prop="parentLevel" label="上级">
+							<el-select v-model="editStep2Form.parentLevel">
+								<el-option v-for="item in editStep2Table" :key="item.value" :value="item.value" :label="item.name"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="number" label="编号">
+							<el-input v-model="editStep2Form.number"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="name" label="名称">
+							<el-input v-model="editStep2Form.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="sort" label="排序">
+							<el-input v-model="editStep2Form.sort"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="address" label="地址">
+							<el-input v-model="editStep2Form.address"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-form>
+			</el-row>
+			<div slot="footer">
+				<el-button v-on:click="saveEditStep2()" type="primary">保存</el-button>
+				<el-button v-on:click="addStep2EditDialogVisiable = false" type="primary">关闭</el-button>
+			</div>
 		</el-dialog>
 	</div>
 </body>

@@ -30,6 +30,8 @@ JGBVue.module.menuManagement = ()=> {
 					searchValue: ''
 				},
 				selectedRows: [],
+				selectedAddStep2Rows: [],
+				selectedAddStep3Rows: [],
 				data: {
 					table: []
 				},
@@ -46,20 +48,111 @@ JGBVue.module.menuManagement = ()=> {
 				loading: false,
 				addDialogVisiable: true,
 				editDialogVisiable: false,
-				addStep: 0,
+				addStep: 1,
 				editStep: 0,
+				/**
+				 * 添加按钮三步数据
+				 * @type {Object}
+				 */
 				addForm: {
-					number: '',
-					name: ''
+					form1: {
+						number: '',
+						name: '',
+						sort: '',
+						parentLevel: '',
+						target: '',
+						checkboxes: [],
+						textarea: ''
+					},
+					step2: [],
+					step3: []
 				},
+				/**
+				 * 添加步骤1暂存上级数据
+				 * @type {String}
+				 */
+				addParentLevelLabel: '',
+				/**
+				 * 添加步骤2暂存table数据
+				 * @type {Array}
+				 */
+				addStep2Table: [],
+				editStep2Table: [],
+				/**
+				 * 添加步骤2新增模态窗口
+				 * @type {Boolean}
+				 */
+				addStep2AddDialogVisiable: false,
+				addStep2EditDialogVisiable: false,
+				/**
+				 * 添加-步骤2-添加模态框表单数据
+				 * @type {Object}
+				 */
+				addStep2Form: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					address: ''
+				},
+				/**
+				 * 添加-步骤2-已经添加的按钮数组
+				 * @type {Array}
+				 */
+				addStep2AddedBtns: [],
 				editForm: {
-					//
+					form1: {
+						number: '',
+						name: '',
+						sort: '',
+						parentLevel: '',
+						target: '',
+						checkboxes: [],
+						textarea: ''
+					},
+					step2: [],
+					step3: []
+				},
+				editStep2Form: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					address: ''
 				},
 				formRules: {
 					number: [
-						{require: true, message: '请输入编号'}
+						{required: true, message: '请输入编号'}
+					],
+					name: [
+						{required: true, message: '请输入名称'}
+					],
+					target: [
+						{required: true, message: '请输入目标'}
+					],
+					sort: [
+						{required: true, message: '请输入排序'}
 					]
-				}
+				},
+				show: false,
+				checkboxes: [
+					{
+						name: '菜单',
+						value: 'menu'
+					},
+					{
+						name: '展开',
+						value: 'unfold'
+					},
+					{
+						name: '公共',
+						value: 'public'
+					},
+					{
+						name: '有效',
+						value: 'valid'
+					}
+				]
 			},
 			mounted() {
 				const _self = this;
@@ -278,6 +371,51 @@ JGBVue.module.menuManagement = ()=> {
 					}).catch((err)=> {
 						console.log('err: ', err);
 					})
+				},
+				dropDownNodeClick(node) {
+					this.parentLevel = node.id;
+					this.parentLevelLabel = node.name;
+					this.show = !this.show;
+				},
+				addNext() {
+					if(this.addStep === 0) {
+						this.$refs['addForm1'].validate((valid) => {
+							if (valid) {
+								this.addStep++;
+							} else {
+								return false;
+							}
+						});
+					}
+					this.addStep++;
+				},
+				addStep2AddForm() {
+					this.addStep2AddDialogVisiable = true;
+				},
+				editStep2AddForm() {
+					//
+				},
+				removeStep2AddForm() {
+					//
+				},
+				saveAddStep2() {
+					let _self = this;
+					this.$refs['addStep2Form'].validate((valid) => {
+						if (valid) {
+							let arr = [];
+							for(key in _self.addStep2Form) {
+								arr[key] = _self.addStep2Form[key];
+							}
+							this.addStep2Table.push(arr);
+							this.$refs['addStep2Form'].resetFields()
+							this.addStep2AddDialogVisiable = false;
+						} else {
+							return false;
+						}
+					});
+				},
+				saveEditStep2() {
+					//
 				}
 			}
 		})
