@@ -1,0 +1,42 @@
+{
+	"number": "a1sd2a3s",
+	"name": "新闻中心1",
+	"address": "/address/xxx",
+	"target": "iframe",
+	"menu": true,
+	"unfold": false,
+	"public": false,
+	"valid": true,
+	"form1": {
+		"number": "a1sd2a3s",
+		"name": "新闻中心1",
+		"address": "/address/xxx",
+		"target": "iframe",
+		"sort": 1,
+		"menu": true,
+		"unfold": false,
+		"public": false,
+		"valid": true
+	},
+	"describe": "一些描述....",
+	"hideColumn": "测试",
+	"checkboxes": ["menu","unfold"],
+	"step2": [
+		{
+			"parentLevel": "aaa",
+			"number": "1111",
+			"name": "ashas",
+			"sort": 1,
+			"address": "某某巷子"
+		}
+	],
+	"step3": [
+		{
+			"parentLevel": "aaa",
+			"number": "1111",
+			"name": "ashas",
+			"sort": 1,
+			"describe": "某某描述"
+		}
+	]
+}

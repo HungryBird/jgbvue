@@ -9,7 +9,26 @@
 		"public": false,
 		"valid": true,
 		"describe": "一些描述....",
-		"hideColumn": "测试"
+		"hideColumn": "测试",
+		"checkboxes": ["menu","unfold"],
+		"step2": [
+			{
+				"parentLevel": "aaa",
+				"number": "1111",
+				"name": "ashas",
+				"sort": 1,
+				"address": "某某巷子"
+			}
+		],
+		"step3": [
+			{
+				"parentLevel": "aaa",
+				"number": "1111",
+				"name": "ashas",
+				"sort": 1,
+				"describe": "某某描述"
+			}
+		]
 	},
 	{
 		"number": "a65s4dwq8789",
@@ -21,7 +40,26 @@
 		"public": true,
 		"valid": false,
 		"describe": "一些描述....",
-		"hideColumn": "测试"
+		"checkboxes": ["menu","unfold"],
+		"hideColumn": "测试",
+		"step2": [
+			{
+				"parentLevel": "aaa",
+				"number": "1111",
+				"name": "ashas",
+				"sort": 1,
+				"address": "某某巷子"
+			}
+		],
+		"step3": [
+			{
+				"parentLevel": "aaa",
+				"number": "1111",
+				"name": "ashas",
+				"sort": 1,
+				"describe": "某某描述"
+			}
+		]
 	},
 	{
 		"number": "zxtu321uwe6r4",
@@ -33,7 +71,26 @@
 		"public": true,
 		"valid": true,
 		"describe": "一些描述....",
-		"hideColumn": "测试"
+		"checkboxes": ["menu","unfold"],
+		"hideColumn": "测试",
+		"step2": [
+			{
+				"parentLevel": "aaa",
+				"number": "1111",
+				"name": "ashas",
+				"sort": 1,
+				"address": "某某巷子"
+			}
+		],
+		"step3": [
+			{
+				"parentLevel": "aaa",
+				"number": "1111",
+				"name": "ashas",
+				"sort": 1,
+				"describe": "某某描述"
+			}
+		]
 	},
 	{
 		"number": "hgf45f6d",
@@ -45,6 +102,25 @@
 		"public": true,
 		"valid": false,
 		"describe": "一些描述....",
-		"hideColumn": "测试"
+		"checkboxes": ["menu","unfold"],
+		"hideColumn": "测试",
+		"step2": [
+			{
+				"parentLevel": "aaa",
+				"number": "1111",
+				"name": "ashas",
+				"sort": 1,
+				"address": "某某巷子"
+			}
+		],
+		"step3": [
+			{
+				"parentLevel": "aaa",
+				"number": "1111",
+				"name": "ashas",
+				"sort": 1,
+				"describe": "某某描述"
+			}
+		]
 	}
 ]

@@ -17,7 +17,21 @@ JGBVue.module.menuManagement = ()=> {
 	 */
 	const columnList = ['per_number_col', 'per_opera_col', 'per_add_col', 'per_target_col', 'per_menu_col', 'per_unfold_col', 'per_public_col', 'per_menu_col', 'per_valid_col', 'per_describe_col', 'per_hide_col'];
 
-	_this.init = (treeDataUrl, editDataUrl, deteleDataUrl, permissionBtnUrl, permissionColUrl, handleMenuUrl, handleUnfoldUrl, handlePubliUrl, handleValidUrl)=> {
+	const initAddForm = {
+		form1: {
+			number: '',
+			name: '',
+			sort: '',
+			parentLevel: '',
+			target: '',
+			checkboxes: [],
+			describe: ''
+		},
+		step2: [],
+		step3: []
+	}
+
+	_this.init = (treeDataUrl, dataTableUrl, editDataUrl, deteleDataUrl, permissionBtnUrl, permissionColUrl, handleMenuUrl, handleUnfoldUrl, handlePubliUrl, handleValidUrl, addStep2Delete, addStep3Delete, editStep2Delete, editStep3Delete, saveAddUrl, saveEditUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data: {
@@ -46,9 +60,9 @@ JGBVue.module.menuManagement = ()=> {
 					columnList: []
 				},
 				loading: false,
-				addDialogVisiable: true,
+				addDialogVisiable: false,
 				editDialogVisiable: false,
-				addStep: 1,
+				addStep: 0,
 				editStep: 0,
 				/**
 				 * 添加按钮三步数据
@@ -62,7 +76,20 @@ JGBVue.module.menuManagement = ()=> {
 						parentLevel: '',
 						target: '',
 						checkboxes: [],
-						textarea: ''
+						describe: ''
+					},
+					step2: [],
+					step3: []
+				},
+				editForm: {
+					form1: {
+						number: '',
+						name: '',
+						sort: '',
+						parentLevel: '',
+						target: '',
+						checkboxes: [],
+						describe: ''
 					},
 					step2: [],
 					step3: []
@@ -72,34 +99,65 @@ JGBVue.module.menuManagement = ()=> {
 				 * @type {String}
 				 */
 				addParentLevelLabel: '',
+				editParentLevelLabel: '',
 				/**
 				 * 添加步骤2暂存table数据
 				 * @type {Array}
 				 */
 				addStep2Table: [],
+				addStep3Table: [],
 				editStep2Table: [],
+				editStep3Table: [],
 				/**
 				 * 添加步骤2新增模态窗口
 				 * @type {Boolean}
 				 */
 				addStep2AddDialogVisiable: false,
 				addStep2EditDialogVisiable: false,
+				addStep3AddDialogVisiable: false,
+				addStep3EditDialogVisiable: false,
+				editStep2AddDialogVisiable: false,
+				editStep2EditDialogVisiable: false,
+				editStep3AddDialogVisiable: false,
+				editStep3EditDialogVisiable: false,
 				/**
 				 * 添加-步骤2-添加模态框表单数据
 				 * @type {Object}
 				 */
-				addStep2Form: {
+				addStep2AddForm: {
 					parentLevel: '',
 					name: '',
 					number: '',
 					sort: '',
 					address: ''
 				},
+				addStep3AddForm: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					describe: ''
+				},
+				editStep2AddForm: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					address: ''
+				},
+				editStep3AddForm: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					describe: ''
+				},
 				/**
 				 * 添加-步骤2-已经添加的按钮数组
 				 * @type {Array}
 				 */
 				addStep2AddedBtns: [],
+				addStep3AddedBtns: [],
 				editForm: {
 					form1: {
 						number: '',
@@ -108,17 +166,70 @@ JGBVue.module.menuManagement = ()=> {
 						parentLevel: '',
 						target: '',
 						checkboxes: [],
-						textarea: ''
+						describe: ''
 					},
 					step2: [],
 					step3: []
 				},
+				/**
+				 * 添加-步骤2-table-选中的行
+				 * @type {String}
+				 */
+				addStep2TableCurrent: '',
+				addStep3TableCurrent: '',
+				editStep2TableCurrent: '',
+				editStep3TableCurrent: '',
+				/**
+				 * 添加-步骤2-table-编辑-表单
+				 * @type {Object}
+				 */
+				addStep2EditForm: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					address: ''
+				},
+				addStep3EditForm: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					describe: ''
+				},
+				editStep2EditForm: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					address: ''
+				},
+				editStep3EditForm: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					describe: ''
+				},
+				/**
+				 * 添加-步骤2-table-编辑-表单-缓存
+				 * @type {Object}
+				 */
+				addStep2EditFormCache: {},
+				addStep3EditFormCache: {},
 				editStep2Form: {
 					parentLevel: '',
 					name: '',
 					number: '',
 					sort: '',
 					address: ''
+				},
+				editStep3Form: {
+					parentLevel: '',
+					name: '',
+					number: '',
+					sort: '',
+					describe: ''
 				},
 				formRules: {
 					number: [
@@ -134,7 +245,8 @@ JGBVue.module.menuManagement = ()=> {
 						{required: true, message: '请输入排序'}
 					]
 				},
-				show: false,
+				addShow: false,
+				editShow: false,
 				checkboxes: [
 					{
 						name: '菜单',
@@ -217,7 +329,7 @@ JGBVue.module.menuManagement = ()=> {
 						return;
 					}
 					this.currentNode = obj.id;
-					axios.post('/menuManagement/data_table_get', obj).then((res)=> {
+					axios.post(dataTableUrl, obj).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
 							this.data.table.splice(0, _self.data.table.length);
@@ -232,13 +344,11 @@ JGBVue.module.menuManagement = ()=> {
 				search() {
 					//
 				},
-				add() {
-					//
-				},
 				edit() {
-					axios.post('/menuManagement/data_edit_get', this.selectedRows).then((res)=> {
+					axios.post(editDataUrl, this.selectedRows).then((res)=> {
 						if(res.data.status) {
 							this.editForm = JSON.parse(res.data.data);
+							console.log('editForm: ', this.editForm);
 							this.editDialogVisiable = true;
 						}
 					}).catch((err)=> {
@@ -372,10 +482,15 @@ JGBVue.module.menuManagement = ()=> {
 						console.log('err: ', err);
 					})
 				},
-				dropDownNodeClick(node) {
-					this.parentLevel = node.id;
-					this.parentLevelLabel = node.name;
-					this.show = !this.show;
+				addDropDownNodeClick(node) {
+					this.addForm.form1.ParentLevel = node.id;
+					this.addParentLevelLabel = node.name;
+					this.addShow = !this.addShow;
+				},
+				editDropDownNodeClick(node) {
+					this.editForm.form1.ParentLevel = node.id;
+					this.editParentLevelLabel = node.name;
+					this.editShow = !this.editShow;
 				},
 				addNext() {
 					if(this.addStep === 0) {
@@ -386,43 +501,353 @@ JGBVue.module.menuManagement = ()=> {
 								return false;
 							}
 						});
+					}else{
+						this.addStep++;
 					}
-					this.addStep++;
 				},
-				addStep2AddForm() {
+				editNext() {
+					if(this.editStep === 0) {
+						this.$refs['editForm1'].validate((valid) => {
+							if (valid) {
+								this.editStep++;
+							} else {
+								return false;
+							}
+						});
+					}else{
+						this.editStep++;
+					}
+				},
+				addStep2AddFormClick() {
 					this.addStep2AddDialogVisiable = true;
 				},
-				editStep2AddForm() {
-					//
+				editStep2AddFormClick() {
+					this.editStep2AddDialogVisiable = true;
 				},
-				removeStep2AddForm() {
-					//
+				addStep3AddFormClick() {
+					this.addStep3AddDialogVisiable = true;
 				},
-				saveAddStep2() {
+				editStep3AddFormClick() {
+					this.editStep3AddDialogVisiable = true;
+				},
+				addStep2EditFormClick() {
 					let _self = this;
-					this.$refs['addStep2Form'].validate((valid) => {
+					for(key in _self.addStep2TableCurrent) {
+						_self.addStep2EditFormCache[key] = _self.addStep2TableCurrent[key];
+					}
+					this.addStep2EditForm = this.addStep2TableCurrent;
+					this.addStep2EditDialogVisiable = true;
+				},
+				addStep3EditFormClick() {
+					let _self = this;
+					for(key in _self.addStep3TableCurrent) {
+						_self.addStep3EditFormCache[key] = _self.addStep3TableCurrent[key];
+					}
+					this.addStep3EditForm = this.addStep3TableCurrent;
+					this.addStep3EditDialogVisiable = true;
+				},
+				editStep2EditFormClick() {
+					let _self = this;
+					for(key in _self.editStep2TableCurrent) {
+						_self.editStep2EditFormCache[key] = _self.editStep2TableCurrent[key];
+					}
+					this.editStep2EditForm = this.editStep2TableCurrent;
+					this.editStep2EditDialogVisiable = true;
+				},
+				editStep3EditFormClick() {
+					let _self = this;
+					for(key in _self.editStep3TableCurrent) {
+						_self.editStep3EditFormCache[key] = _self.editStep3TableCurrent[key];
+					}
+					this.editStep3EditForm = this.editStep3TableCurrent;
+					this.editStep3EditDialogVisiable = true;
+				},
+				addRemoveStep2AddForm() {
+					let _self = this;
+					this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        beforeClose: function(action, instance, done) {
+                            done(action);
+                        }
+                    }).then((action)=> {
+                        if(action == 'confirm') {
+                            axios.post(addStep2Delete, this.addStep2TableCurrent).then((res)=> {
+                                if(res.data.status) {
+                                    this.$message({
+                                        type: 'success',
+                                        message: res.data.message
+                                    });
+                                }
+                            }).catch(function(err) {
+                                _self.$message({
+                                    type: 'error',
+                                    message: res.data.message || err
+                                });
+                            })
+                        }
+                    }).catch((err) => {
+                       this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });
+                    });
+				},
+				editRemoveStep2AddForm() {
+					let _self = this;
+					this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        beforeClose: function(action, instance, done) {
+                            done(action);
+                        }
+                    }).then((action)=> {
+                        if(action == 'confirm') {
+                            axios.post(addStep2Delete, this.addStep2TableCurrent).then((res)=> {
+                                if(res.data.status) {
+                                    this.$message({
+                                        type: 'success',
+                                        message: res.data.message
+                                    });
+                                }
+                            }).catch(function(err) {
+                                _self.$message({
+                                    type: 'error',
+                                    message: res.data.message || err
+                                });
+                            })
+                        }
+                    }).catch((err) => {
+                       this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });
+                    });
+				},
+				addRemoveStep3AddForm() {
+					let _self = this;
+					this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        beforeClose: function(action, instance, done) {
+                            done(action);
+                        }
+                    }).then((action)=> {
+                        if(action == 'confirm') {
+                            axios.post(addStep3Delete, this.addStep3TableCurrent).then((res)=> {
+                                if(res.data.status) {
+                                    this.$message({
+                                        type: 'success',
+                                        message: res.data.message
+                                    });
+                                }
+                            }).catch(function(err) {
+                                _self.$message({
+                                    type: 'error',
+                                    message: res.data.message || err
+                                });
+                            })
+                        }
+                    }).catch((err) => {
+                       this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });
+                    });
+				},
+				editRemoveStep3AddForm() {
+					let _self = this;
+					this.$confirm('确定删除?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        beforeClose: function(action, instance, done) {
+                            done(action);
+                        }
+                    }).then((action)=> {
+                        if(action == 'confirm') {
+                            axios.post(editStep3Delete, this.editStep3TableCurrent).then((res)=> {
+                                if(res.data.status) {
+                                    this.$message({
+                                        type: 'success',
+                                        message: res.data.message
+                                    });
+                                }
+                            }).catch(function(err) {
+                                _self.$message({
+                                    type: 'error',
+                                    message: res.data.message || err
+                                });
+                            })
+                        }
+                    }).catch((err) => {
+                       this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });
+                    });
+				},
+				addSaveAddStep2() {
+					let _self = this;
+					this.$refs['addStep2AddFormRef'].validate((valid) => {
 						if (valid) {
-							let arr = [];
-							for(key in _self.addStep2Form) {
-								arr[key] = _self.addStep2Form[key];
+							let obj = {};
+							for(key in _self.addStep2AddForm) {
+								obj[key] = _self.addStep2AddForm[key]
 							}
-							this.addStep2Table.push(arr);
-							this.$refs['addStep2Form'].resetFields()
+							this.addStep2Table.push(obj);
+							this.$refs['addStep2AddFormRef'].resetFields()
 							this.addStep2AddDialogVisiable = false;
 						} else {
 							return false;
 						}
 					});
 				},
-				saveEditStep2() {
-					//
+				editSaveAddStep2() {
+					let _self = this;
+					this.$refs['editStep2AddFormRef'].validate((valid) => {
+						if (valid) {
+							let obj = {};
+							for(key in _self.editStep2AddForm) {
+								obj[key] = _self.editStep2AddForm[key]
+							}
+							this.editStep2Table.push(obj);
+							this.$refs['editStep2AddFormRef'].resetFields()
+							this.editStep2AddDialogVisiable = false;
+						} else {
+							return false;
+						}
+					});
+				},
+				addSaveAddStep3() {
+					let _self = this;
+					this.$refs['addStep3AddFormRef'].validate((valid) => {
+						if (valid) {
+							let obj = {};
+							for(key in _self.addStep3AddForm) {
+								obj[key] = _self.addStep3AddForm[key]
+							}
+							this.addStep3Table.push(obj);
+							this.$refs['addStep3AddFormRef'].resetFields()
+							this.addStep3AddDialogVisiable = false;
+						} else {
+							return false;
+						}
+					});
+				},
+				editSaveAddStep3() {
+					let _self = this;
+					this.$refs['editStep3AddFormRef'].validate((valid) => {
+						if (valid) {
+							let obj = {};
+							for(key in _self.editStep3AddForm) {
+								obj[key] = _self.editStep3AddForm[key]
+							}
+							this.editStep3Table.push(obj);
+							this.$refs['editStep3AddFormRef'].resetFields()
+							this.editStep3AddDialogVisiable = false;
+						} else {
+							return false;
+						}
+					});
+				},
+				addStep2EditFormCancel() {
+					let _self = this;
+					let index = this.addStep2Table.indexOf(_self.addStep2TableCurrent);
+					this.addStep2Table.splice(index, 1, _self.addStep2EditFormCache);
+					this.addStep2EditDialogVisiable = false;
+				},
+				editStep2EditFormCancel() {
+					let _self = this;
+					let index = this.editStep2Table.indexOf(_self.editStep2TableCurrent);
+					this.editStep2Table.splice(index, 1, _self.editStep2EditFormCache);
+					this.editStep2EditDialogVisiable = false;
+				},
+				addStep3EditFormCancel() {
+					let _self = this;
+					let index = this.addStep3Table.indexOf(_self.addStep3TableCurrent);
+					this.addStep3Table.splice(index, 1, _self.addStep3EditFormCache);
+					this.addStep3EditDialogVisiable = false;
+				},
+				editStep3EditFormCancel() {
+					let _self = this;
+					let index = this.editStep3Table.indexOf(_self.editStep3TableCurrent);
+					this.editStep3Table.splice(index, 1, _self.editStep3EditFormCache);
+					this.editStep3EditDialogVisiable = false;
+				},
+				addStep2TableSetCurrent(row) {
+					this.addStep2TableCurrent = row;
+				},
+				editStep2TableSetCurrent(row) {
+					this.editStep2TableCurrent = row;
+				},
+				addStep3TableSetCurrent(row) {
+					this.addStep3TableCurrent = row;
+				},
+				editStep3TableSetCurrent(row) {
+					this.editStep3TableCurrent = row;
+				},
+				saveAdd() {
+					let _self = this;
+					this.addStep2Table.forEach((item)=> {
+						_self.addForm.step2.push(item);
+					});
+					this.addStep3Table.forEach((item)=> {
+						_self.addForm.step3.push(item);
+					});
+					axios.post(saveAddUrl, this.addForm).then((res)=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							/**
+							 * 清空addForm
+							 */
+							Object.assign(_self.addForm, initAddForm);
+							/**
+							 * 清空dialog的table
+							 */
+							this.addStep2Table.splice(0, _self.addStep2Table.length);
+							this.addStep3Table.splice(0, _self.addStep3Table.length);
+						}
+					}).catch((err)=> {
+						console.log('err: ', err);
+					})
+				},
+				saveEdit() {
+					let _self = this;
+					this.editStep2Table.forEach((item)=> {
+						_self.editForm.step2.push(item);
+					});
+					this.editStep3Table.forEach((item)=> {
+						_self.editForm.step3.push(item);
+					});
+					axios.post(saveEditUrl, this.editForm).then((res)=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							/**
+							 * 清空dialog的table
+							 */
+							this.editStep2Table.splice(0, _self.editStep2Table.length);
+							this.editStep3Table.splice(0, _self.editStep3Table.length);
+						}
+					}).catch((err)=> {
+						console.log('err: ', err);
+					})
 				}
 			}
 		})
 	}
 
-	that.init = (treeDataUrl, editDataUrl, deteleDataUrl, permissionBtnUrl, permissionColUrl, handleMenuUrl, handleUnfoldUrl, handlePubliUrl, handleValidUrl)=> {
-		_this.init(treeDataUrl, editDataUrl, deteleDataUrl, permissionBtnUrl, permissionColUrl, handleMenuUrl, handleUnfoldUrl, handlePubliUrl, handleValidUrl);
+	that.init = (treeDataUrl, dataTableUrl, editDataUrl, deteleDataUrl, permissionBtnUrl, permissionColUrl, handleMenuUrl, handleUnfoldUrl, handlePubliUrl, handleValidUrl, addStep2Delete, addStep3Delete, editStep2Delete, editStep3Delete, saveAddUrl, saveEditUrl)=> {
+		_this.init(treeDataUrl, dataTableUrl, editDataUrl, deteleDataUrl, permissionBtnUrl, permissionColUrl, handleMenuUrl, handleUnfoldUrl, handlePubliUrl, handleValidUrl, addStep2Delete, addStep3Delete,  editStep2Delete, editStep3Delete, saveAddUrl, saveEditUrl);
 	}
 
 	return that;

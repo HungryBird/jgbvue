@@ -41,6 +41,25 @@ router.post('/data_table_get', (req, res)=> {
 	})
 });
 
+router.post('/data_edit_get', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/baseData/menuManagement/data_edit_get.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			}).end();
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end();
+	})
+})
+
 router.get('/data_btn_get', (req, res)=> {
 	const buttonList = ['per_add_btn', 'per_edit_btn', 'per_remove_btn'];
 	res.send({
