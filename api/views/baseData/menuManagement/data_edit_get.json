@@ -16,11 +16,11 @@
 		"menu": true,
 		"unfold": false,
 		"public": false,
-		"valid": true
+		"valid": true,
+		"checkboxes": ["菜单","展开"]
 	},
 	"describe": "一些描述....",
 	"hideColumn": "测试",
-	"checkboxes": ["menu","unfold"],
 	"step2": [
 		{
 			"parentLevel": "aaa",

@@ -401,7 +401,7 @@
 					</el-col>
 					<el-col :span="24">
 						<el-form-item prop="checkboxes" label="选项">
-							<el-checkbox-group v-model="editForm.form1.checkboxes">
+							<el-checkbox-group v-model="editForm.form1.checkboxes" @change="test">
 								<el-checkbox v-for="item in checkboxes" :label="item.name" :key="item.value" border>{{item.name}}</el-checkbox>
 							</el-checkbox-group>
 						</el-form-item>

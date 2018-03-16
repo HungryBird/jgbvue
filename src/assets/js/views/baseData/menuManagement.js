@@ -841,7 +841,7 @@ JGBVue.module.menuManagement = ()=> {
 					this.editStep3Table.forEach((item)=> {
 						_self.editForm.step3.push(item);
 					});
-					this.$refs['addForm1'].validate((valid) => {
+					this.$refs['editForm1'].validate((valid) => {
 						if(valid) {
 							axios.post(saveEditUrl, this.editForm).then((res)=> {
 								if(res.data.status) {
@@ -862,7 +862,10 @@ JGBVue.module.menuManagement = ()=> {
 						}else{
 							return false;
 						}
-					}
+					})
+				},
+				test(val){
+					console.log('val', val);
 				}
 			}
 		})
