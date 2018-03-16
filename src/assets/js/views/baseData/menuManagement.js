@@ -345,10 +345,19 @@ JGBVue.module.menuManagement = ()=> {
 					//
 				},
 				edit() {
+					let _self = this;
 					axios.post(editDataUrl, this.selectedRows).then((res)=> {
 						if(res.data.status) {
-							this.editForm = JSON.parse(res.data.data);
-							console.log('editForm: ', this.editForm);
+							let jdata = JSON.parse(res.data.data);
+							this.editForm = jdata;
+							this.editStep2Table.splice(0, _self.editStep2Table.length);
+							jdata.step2.forEach((item)=> {
+								_self.editStep2Table.push(item);
+							})
+							this.editStep3Table.splice(0, _self.editStep3Table.length);
+							jdata.step3.forEach((item)=> {
+								_self.editStep3Table.push(item);
+							})
 							this.editDialogVisiable = true;
 						}
 					}).catch((err)=> {
@@ -716,7 +725,7 @@ JGBVue.module.menuManagement = ()=> {
 							}
 							this.editStep2Table.push(obj);
 							this.$refs['editStep2AddFormRef'].resetFields()
-							this.editStep2AddDialogVisiable = false;
+							this.editStep2AddDialogVisiable = true;
 						} else {
 							return false;
 						}
@@ -838,6 +847,7 @@ JGBVue.module.menuManagement = ()=> {
 							this.editStep2Table.splice(0, _self.editStep2Table.length);
 							this.editStep3Table.splice(0, _self.editStep3Table.length);
 						}
+						this.editDialogVisiable = false;
 					}).catch((err)=> {
 						console.log('err: ', err);
 					})
