@@ -18,24 +18,12 @@
 		methods: {
 			a() {
 				axios.get('/demo/a').then((res)=> {
-					if(res.data.status) {
-						this.b(res.data.message);
+					if(res.data.status&&res.data.number !== 0) {
+						this.$message({
+							message: res.data.number
+						})
+						this.a();
 					}
-				})
-			},
-			b(message) {
-				this.$message({
-					message: message
-				});
-				axios.get('/demo/b').then((res)=> {
-					if(res.data.status) {
-						this.c(res.data.message);
-					}
-				})
-			},
-			c(message) {
-				this.$message({
-					message: message
 				})
 			}
 		}
