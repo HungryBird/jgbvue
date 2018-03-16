@@ -132,7 +132,7 @@
 		<!-- 选择审核人员窗口 -->
 		<el-dialog :visible.sync="dialogSelectAuditVisible" width="900px">
 			<div slot="title">
-				选择审核人员
+				选择{{auditorLevel}}审核人员
 			</div>
 			<nav style="margin: 0;">
 				<el-form :inline="true">
@@ -154,7 +154,7 @@
 				</el-form>
 			</nav>
 			<el-container class="auditMainWrap">
-				<el-aside width="217px">
+				<el-aside :style="{width: asideWidth + 'px'}">
 					<ul class="ul-list" v-if="audit.departmentList.length !== 0">
 						<li v-for="(item, index) in audit.departmentList" :key="item.value" :value="item.value" v-on:click="selectDepartment(item, index)" :class="{active: index === audit.activeIndex}">
 							<a href="javascript:;">
@@ -189,7 +189,7 @@
 										<span class="leftSpan">
 											部门：
 										</span>
-										<a class="auditText">{{ audit.activeDepartment }}</a>
+										<a class="auditText">{{ item.department.name }}</a>
 									</div>
 								</div>
 								<div style="clear: both;"></div>
@@ -297,7 +297,8 @@
 	 * 打开编辑窗口获取url
 	 * 保存编辑数据url
 	 * 数据删除url
+	 * 获取审核人员
 	 */
-	JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_save', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_delete');
+	JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_save', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_delete', '/auditProcess/getAuditors');
 </script>
 </html>

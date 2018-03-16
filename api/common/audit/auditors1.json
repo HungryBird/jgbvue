@@ -5,7 +5,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": true,
 		"isSelected": false,
-		"value": 10001
+		"value": 10001,
+		"department": {
+			"name": "财务部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 10002,
@@ -13,7 +17,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 10002
+		"value": 10002,
+		"department": {
+			"name": "财务部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 10003,
@@ -21,7 +29,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 10003
+		"value": 10003,
+		"department": {
+			"name": "财务部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 10004,
@@ -29,7 +41,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 10004
+		"value": 10004,
+		"department": {
+			"name": "财务部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 10005,
@@ -37,7 +53,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 10005
+		"value": 10005,
+		"department": {
+			"name": "财务部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 10006,
@@ -45,7 +65,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 10006
+		"value": 10006,
+		"department": {
+			"name": "财务部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 10007,
@@ -53,6 +77,10 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 10007
+		"value": 10007,
+		"department": {
+			"name": "财务部",
+			"value": "finance"
+		}
 	}
 ]

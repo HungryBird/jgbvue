@@ -31,7 +31,7 @@ JGBVue.module.auditProcess = ()=> {
         remainWays: ['站内信息']
     };
 
-    _this.init = (getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl)=> {
+    _this.init = (getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl, getAuditorsUrl)=> {
         that.vm = new Vue({
             el: '#app',
             data: {
@@ -138,7 +138,9 @@ JGBVue.module.auditProcess = ()=> {
                 addBosses: [],
                 editFirstLevelAuditorsGroup: [],
                 editSecondLevelAuditorsGroup: [],
-                editBosses: []
+                editBosses: [],
+                auditorLevel: '',
+                asideWidth: 217
             },
             mounted() {
                 axios.get(getDataUrl).then((req)=> {
@@ -154,6 +156,7 @@ JGBVue.module.auditProcess = ()=> {
             methods: {
                 add() {
                     this.dialogAddFormVisible = true;
+                    this.changeLevel();
                 },
                 saveAdd(formName) {
                     let _self = this;
@@ -197,7 +200,18 @@ JGBVue.module.auditProcess = ()=> {
                         if(data.data.status) {
                             let jdata = JSON.parse(data.data.message);
                             this.editForm = jdata;
-                            console.log('jdata: ', jdata);
+                            if(jdata.firstLevelAuditorsGroup.length !== 0) {
+                                this.editFirstLevelAuditorsGroup.splice(0, _self.editFirstLevelAuditorsGroup.length);
+                                jdata.firstLevelAuditorsGroup.forEach((item)=> {
+                                    _self.editFirstLevelAuditorsGroup.push(item);
+                                })
+                            }
+                            if(jdata.secondLevelAuditorsGroup.length !== 0) {
+                                this.editSecondLevelAuditorsGroup.splice(0, _self.editSecondLevelAuditorsGroup.length);
+                                jdata.secondLevelAuditorsGroup.forEach((item)=> {
+                                    _self.editSecondLevelAuditorsGroup.push(item);
+                                })
+                            }
                             this.editDialogLoading = false;
                         }
                     })
@@ -295,7 +309,9 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 changeLevel(val) {
                     let _self = this;
-                    this.selectProcessLevel = val;
+                    if(val) {
+                        this.selectProcessLevel = val;
+                    }
                     this.addForm.firstLevelAuditorsGroup.splice(0, _self.addForm.firstLevelAuditorsGroup.length);
                     this.addForm.secondLevelAuditorsGroup.splice(0, _self.addForm.secondLevelAuditorsGroup.length);
                     this.addForm.bosses.splice(0, _self.addForm.bosses.length);
@@ -328,12 +344,36 @@ JGBVue.module.auditProcess = ()=> {
                     this.$refs.auditTable.clearSelection();
                     this.remove();
                 },
+                /**
+                 * 打开选择审核人员dialog
+                 * @param  {[type]} data  [description]
+                 * @param  {[type]} level [description]
+                 * @return {[type]}       [description]
+                 */
                 showSelectAuditDialog(data, level) {
                     let _self = this;
                     if(this.currentProcessLevel !== level) {
-                        this.audit.auditors.splice(0, _self.audit.auditors.length);
                         this.audit.activeDepartment = '';
                         this.audit.activeIndex = '';
+                    }
+                    if(level === 1) {
+                        this.auditorLevel = '一级'
+                        this.audit.auditors.splice(0, _self.audit.auditors.length);
+                        this.asideWidth = 0;
+                        if(this.dialogEditFormVisible) {
+                            this.editForm.firstLevelAuditorsGroup.forEach((item)=> {
+                                _self.audit.auditors.push(item);
+                            });
+                        }
+                    }else{
+                        this.auditorLevel = '二级'
+                        this.audit.auditors.splice(0, _self.audit.auditors.length);
+                        this.asideWidth = 0;
+                        if(this.dialogEditFormVisible) {
+                            this.editForm.secondLevelAuditorsGroup.forEach((item)=> {
+                                _self.audit.auditors.push(item);
+                            });
+                        }
                     }
                     this.currentProcessLevel = level;
                     axios.post('/auditProcess/getAudit', data).then((res)=> {
@@ -347,7 +387,11 @@ JGBVue.module.auditProcess = ()=> {
                     })
                 },
                 searchEmployee() {
-                    //
+                    /**
+                     * 折叠aside
+                     * @type {Number}
+                     */
+                    this.asideWidth = 0;
                 },
                 checkSelectedemployees() {
                     //
@@ -357,6 +401,7 @@ JGBVue.module.auditProcess = ()=> {
                     this.audit.activeDepartment = '';
                     this.audit.searchValue = '';
                     this.audit.activeIndex = '';
+                    this.asideWidth = 217;
                     this.audit.departmentList.splice(0, _self.audit.departmentList.length);
                     this.audit.auditors.splice(0, _self.audit.auditors.length);
                     axios.post('/auditProcess/getDepartments', {company: this.audit.company}).then((res)=> {
@@ -390,7 +435,7 @@ JGBVue.module.auditProcess = ()=> {
                      * @param  {[type]} this.dialogAddFormVisible [description]
                      * @return {[type]}                           [description]
                      */
-                    axios.post('/auditProcess/getAuditors', item).then((res)=> {
+                    axios.post(getAuditorsUrl, item).then((res)=> {
                         if(res.data.status) {
                             let jdata = JSON.parse(res.data.data);
                             this.audit.auditors.splice(0, _self.audit.auditors.length);
@@ -403,6 +448,19 @@ JGBVue.module.auditProcess = ()=> {
                                         for(let i = 0; i < _self.addFirstLevelAuditorsGroup.length; i++ ) {
                                             for(let j = 0; j < _self.audit.auditors.length; j++) {
                                                 if(_self.audit.auditors[j].jobNumber == _self.addFirstLevelAuditorsGroup[i].jobNumber) {
+                                                    _self.audit.auditors[j].isSelected = !_self.audit.auditors[j].isSelected;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if(this.dialogEditFormVisible) {
+                                if(this.currentProcessLevel === 1) {
+                                    if(this.editFirstLevelAuditorsGroup.length !== 0) {
+                                        for(let i = 0; i < _self.editFirstLevelAuditorsGroup.length; i++ ) {
+                                            for(let j = 0; j < _self.audit.auditors.length; j++) {
+                                                if(_self.audit.auditors[j].jobNumber == _self.editFirstLevelAuditorsGroup[i].jobNumber) {
                                                     _self.audit.auditors[j].isSelected = !_self.audit.auditors[j].isSelected;
                                                 }
                                             }
@@ -527,8 +585,8 @@ JGBVue.module.auditProcess = ()=> {
         })
     }
 
-    that.init = (getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl)=> {
-        _this.init(getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl);
+    that.init = (getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl, getAuditorsUrl)=> {
+        _this.init(getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl, getAuditorsUrl);
     }
     return that;
 }

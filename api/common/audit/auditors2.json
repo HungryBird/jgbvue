@@ -5,7 +5,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": true,
 		"isSelected": false,
-		"value": 20011
+		"value": 20011,
+		"department": {
+			"name": "采购部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 20012,
@@ -13,7 +17,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 20012
+		"value": 20012,
+		"department": {
+			"name": "采购部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 20013,
@@ -21,7 +29,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 20013
+		"value": 20013,
+		"department": {
+			"name": "采购部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 20014,
@@ -29,7 +41,11 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 20014
+		"value": 20014,
+		"department": {
+			"name": "采购部",
+			"value": "finance"
+		}
 	},
 	{
 		"jobNumber": 20015,
@@ -37,6 +53,10 @@
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 20015
+		"value": 20015,
+		"department": {
+			"name": "采购部",
+			"value": "finance"
+		}
 	}
 ]

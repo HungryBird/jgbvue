@@ -12,7 +12,11 @@
 			"src": "../../assets/img/index/portrait.png",
 			"isBoss": false,
 			"isSelected": true,
-			"value": 10002
+			"value": 10002,
+			"department": {
+				"name": "财务部",
+				"value": "finance"
+			}
 		},
 		{
 			"jobNumber": 10003,
@@ -20,7 +24,11 @@
 			"src": "../../assets/img/index/portrait.png",
 			"isBoss": false,
 			"isSelected": true,
-			"value": 10003
+			"value": 10003,
+			"department": {
+				"name": "财务部",
+				"value": "finance"
+			}
 		}
 	],
 	"secondLevelAuditorsGroup": [
@@ -30,7 +38,11 @@
 			"src": "../../assets/img/index/portrait.png",
 			"isBoss": false,
 			"isSelected": true,
-			"value": 20014
+			"value": 20014,
+			"department": {
+				"name": "采购部",
+				"value": "finance"
+			}
 		},
 		{
 			"jobNumber": 20015,
@@ -38,7 +50,11 @@
 			"src": "../../assets/img/index/portrait.png",
 			"isBoss": false,
 			"isSelected": true,
-			"value": 20015
+			"value": 20015,
+			"department": {
+				"name": "采购部",
+				"value": "finance"
+			}
 		}
 	],
 	"auditMethod": "2",
