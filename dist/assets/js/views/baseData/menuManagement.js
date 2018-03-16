@@ -75,6 +75,7 @@ JGBVue.module.menuManagement = ()=> {
 						sort: '',
 						parentLevel: '',
 						target: '',
+						url: '',
 						checkboxes: [],
 						describe: ''
 					},
@@ -88,6 +89,7 @@ JGBVue.module.menuManagement = ()=> {
 						sort: '',
 						parentLevel: '',
 						target: '',
+						url: '',
 						checkboxes: [],
 						describe: ''
 					},

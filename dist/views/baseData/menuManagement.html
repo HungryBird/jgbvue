@@ -140,6 +140,11 @@
 						</el-form-item>
 					</el-col>
 					<el-col :span="24">
+						<el-form-item prop="url" label="url地址">
+							<el-input v-model="addForm.form1.url" placeholder="请输入url地址"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
 						<el-form-item prop="checkboxes" label="选项">
 							<el-checkbox-group v-model="addForm.form1.checkboxes">
 								<el-checkbox v-for="item in checkboxes" :label="item.name" :key="item.value" border>{{item.name}}</el-checkbox>
@@ -273,13 +278,6 @@
 		<el-dialog :visible.sync="addStep3AddDialogVisiable" title="新增视图">
 			<el-row :gutter="4">
 				<el-form :model="addStep3AddForm" ref="addStep3AddFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
-					<el-col :span="24">
-						<el-form-item prop="parentLevel" label="上级">
-							<el-select v-model="addStep3AddForm.parentLevel">
-								<el-option v-for="item in addStep3Table" :key="item.value" :value="item.value" :label="item.name"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="addStep3AddForm.number"></el-input>
@@ -311,13 +309,6 @@
 		<el-dialog :visible.sync="addStep3EditDialogVisiable" title="编辑视图">
 			<el-row :gutter="4">
 				<el-form :model="addStep3EditForm" ref="addStep3EditFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
-					<el-col :span="24">
-						<el-form-item prop="parentLevel" label="上级">
-							<el-select v-model="addStep3EditForm.parentLevel">
-								<el-option v-for="item in editStep3Table" :key="item.value" :value="item.value" :label="item.name"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="addStep3EditForm.number"></el-input>
@@ -397,6 +388,11 @@
 									</div>
 								</transition>
 							</div>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="url" label="url地址">
+							<el-input v-model="editForm.form1.url" placeholder="请输入url地址"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="24">
@@ -533,13 +529,6 @@
 		<el-dialog :visible.sync="editStep3AddDialogVisiable" title="新增视图">
 			<el-row :gutter="4">
 				<el-form :model="editStep3AddForm" ref="editStep3AddFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
-					<el-col :span="24">
-						<el-form-item prop="parentLevel" label="上级">
-							<el-select v-model="editStep3AddForm.parentLevel">
-								<el-option v-for="item in editStep3Table" :key="item.value" :value="item.value" :label="item.name"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="editStep3AddForm.number"></el-input>
@@ -571,13 +560,6 @@
 		<el-dialog :visible.sync="editStep3EditDialogVisiable" title="编辑视图">
 			<el-row :gutter="4">
 				<el-form :model="editStep3EditForm" ref="editStep3EditFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
-					<el-col :span="24">
-						<el-form-item prop="parentLevel" label="上级">
-							<el-select v-model="editStep3EditForm.parentLevel">
-								<el-option v-for="item in editStep3Table" :key="item.value" :value="item.value" :label="item.name"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="editStep3EditForm.number"></el-input>
