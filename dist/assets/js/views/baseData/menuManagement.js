@@ -807,25 +807,31 @@ JGBVue.module.menuManagement = ()=> {
 					this.addStep3Table.forEach((item)=> {
 						_self.addForm.step3.push(item);
 					});
-					axios.post(saveAddUrl, this.addForm).then((res)=> {
-						if(res.data.status) {
-							this.$message({
-								type: 'success',
-								message: res.data.message
-							})
-							/**
-							 * 清空addForm
-							 */
-							Object.assign(_self.addForm, initAddForm);
-							/**
-							 * 清空dialog的table
-							 */
-							this.addStep2Table.splice(0, _self.addStep2Table.length);
-							this.addStep3Table.splice(0, _self.addStep3Table.length);
-						}
-					}).catch((err)=> {
-						console.log('err: ', err);
-					})
+					this.$refs['addForm1'].validate((valid) => {
+							if (valid) {
+								axios.post(saveAddUrl, this.addForm).then((res)=> {
+									if(res.data.status) {
+										this.$message({
+											type: 'success',
+											message: res.data.message
+										})
+										/**
+										 * 清空addForm
+										 */
+										Object.assign(_self.addForm, initAddForm);
+										/**
+										 * 清空dialog的table
+										 */
+										this.addStep2Table.splice(0, _self.addStep2Table.length);
+										this.addStep3Table.splice(0, _self.addStep3Table.length);
+									}
+								}).catch((err)=> {
+									console.log('err: ', err);
+								})
+							} else {
+								return false;
+							}
+						});
 				},
 				saveEdit() {
 					let _self = this;
@@ -835,22 +841,28 @@ JGBVue.module.menuManagement = ()=> {
 					this.editStep3Table.forEach((item)=> {
 						_self.editForm.step3.push(item);
 					});
-					axios.post(saveEditUrl, this.editForm).then((res)=> {
-						if(res.data.status) {
-							this.$message({
-								type: 'success',
-								message: res.data.message
+					this.$refs['addForm1'].validate((valid) => {
+						if(valid) {
+							axios.post(saveEditUrl, this.editForm).then((res)=> {
+								if(res.data.status) {
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+									/**
+									 * 清空dialog的table
+									 */
+									this.editStep2Table.splice(0, _self.editStep2Table.length);
+									this.editStep3Table.splice(0, _self.editStep3Table.length);
+								}
+								this.editDialogVisiable = false;
+							}).catch((err)=> {
+								console.log('err: ', err);
 							})
-							/**
-							 * 清空dialog的table
-							 */
-							this.editStep2Table.splice(0, _self.editStep2Table.length);
-							this.editStep3Table.splice(0, _self.editStep3Table.length);
+						}else{
+							return false;
 						}
-						this.editDialogVisiable = false;
-					}).catch((err)=> {
-						console.log('err: ', err);
-					})
+					}
 				}
 			}
 		})
