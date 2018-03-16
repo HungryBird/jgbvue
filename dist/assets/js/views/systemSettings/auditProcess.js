@@ -196,6 +196,7 @@ JGBVue.module.auditProcess = ()=> {
                     axios.post(getEditDataUrl, this.selectedRows).then((data)=> {
                         if(data.data.status) {
                             let jdata = JSON.parse(data.data.message);
+                            console.log('audit.companyList: ', jdata);
                             this.editForm = jdata;
                             this.editDialogLoading = false;
                         }
