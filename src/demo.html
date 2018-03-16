@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>demo</title>
+	<link rel="stylesheet" href="./element-ui-2.0.11/lib/theme-chalk/index.css">
+</head>
+<body>
+	<div id="app">
+		<el-button v-on:click="a">测试</el-button>
+	</div>
+</body>
+<script type="text/javascript" src="./vue/vue.js"></script>
+<script type="text/javascript" src="./element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../axios/axios.min.js"></script>
+<script type="text/javascript">
+	new Vue({
+		el: '#app',
+		methods: {
+			a() {
+				axios.get('/demo/a').then((res)=> {
+					if(res.data.status) {
+						this.b(res.data.message);
+					}
+				})
+			},
+			b(message) {
+				this.$message({
+					message: message
+				});
+				axios.get('/demo/b').then((res)=> {
+					if(res.data.status) {
+						this.c(res.data.message);
+					}
+				})
+			},
+			c(message) {
+				this.$message({
+					message: message
+				})
+			}
+		}
+	})
+</script>
+</html>

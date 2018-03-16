@@ -96,7 +96,7 @@
 				<!-- 当选择1级审核方式时，审核人员没有老板时显示老板选项 -->
 				<el-form-item v-if="(addForm.selectSysModule == '选项1'&&addForm.purchaseBossAudit||addForm.selectSysModule == '选项2'&&addForm.saleBossAudit)&&addForm.levelSelected == '1'&&!firstLeveAuditHasBoss&&addForm.firstLevelAuditorsGroup.length != 0" prop="bosses">
 					<label>选择老板</label>
-					<el-select multiple placeholder="请选择" v-model="addForm.bosses" width="100%">
+					<el-select multiple placeholder="请选择" v-model="addForm.bosses" width="100%" @change="test">
 						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
 					</el-select>
 				</el-form-item>

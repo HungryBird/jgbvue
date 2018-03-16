@@ -197,6 +197,7 @@ JGBVue.module.auditProcess = ()=> {
                         if(data.data.status) {
                             let jdata = JSON.parse(data.data.message);
                             this.editForm = jdata;
+                            console.log('jdata: ', jdata);
                             this.editDialogLoading = false;
                         }
                     })

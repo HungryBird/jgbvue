@@ -1,26 +1,10 @@
 {
 	"selectSysModule": "选项1",
 	"saleBossAudit": true,
-	"purchaseBossAudit": false,
+	"purchaseBossAudit": true,
 	"selectProcessLevel": 2,
 	"levelSelected": 2,
-	"bosses": [{
-			"jobNumber": 10001,
-			"name": "张总",
-			"src": "../../assets/img/index/portrait.png",
-			"isBoss": true,
-			"isSelected": true,
-			"value": 10001
-		},
-		{
-			"jobNumber": 10002,
-			"name": "张2",
-			"src": "../../assets/img/index/portrait.png",
-			"isBoss": false,
-			"isSelected": true,
-			"value": 10002
-		}
-	],
+	"bosses": [10001, 20011],
 	"firstLevelAuditorsGroup": [
 		{
 			"jobNumber": 10002,
