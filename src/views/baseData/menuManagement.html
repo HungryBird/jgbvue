@@ -99,7 +99,7 @@
 			</el-steps>
 			<el-row :gutter="4">
 				<!-- 步骤1 -->
-				<el-form :model="addForm.form1" ref="addForm1" :rules="formRules" label-position="top" class="el-form-dialog" v-if="addStep === 0">
+				<el-form :model="addForm.form1" ref="addForm1" :rules="formRules" label-position="top" class="el-form-dialog" v-show="addStep === 0">
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="addForm.form1.number"></el-input>
@@ -158,7 +158,7 @@
 					</el-col>
 				</el-form>
 				<!-- 步骤2 -->
-				<div v-if="addStep === 1">
+				<div v-show="addStep === 1">
 					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
 						<el-button-group class="pull-right">
 							<el-button type="primary" v-on:click="addStep2AddFormClick" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
@@ -175,7 +175,7 @@
 					</el-table>
 				</div>
 				<!-- 步骤3 -->
-				<div v-if="addStep === 2">
+				<div v-show="addStep === 2">
 					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
 						<el-button-group class="pull-right">
 							<el-button type="primary" v-on:click="addStep3AddFormClick" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
@@ -350,7 +350,7 @@
 			</el-steps>
 			<el-row :gutter="4">
 				<!-- 步骤1 -->
-				<el-form :model="editForm.form1" ref="editForm1" :rules="formRules" label-position="top" class="el-form-dialog" v-if="editStep === 0">
+				<el-form :model="editForm.form1" ref="editForm1" :rules="formRules" label-position="top" class="el-form-dialog" v-show="editStep === 0">
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="editForm.form1.number"></el-input>
@@ -409,7 +409,7 @@
 					</el-col>
 				</el-form>
 				<!-- 步骤2 -->
-				<div v-if="editStep === 1">
+				<div v-show="editStep === 1">
 					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
 						<el-button-group class="pull-right">
 							<el-button type="primary" v-on:click="editStep2AddFormClick" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
@@ -426,7 +426,7 @@
 					</el-table>
 				</div>
 				<!-- 步骤3 -->
-				<div v-if="editStep === 2">
+				<div v-show="editStep === 2">
 					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
 						<el-button-group class="pull-right">
 							<el-button type="primary" v-on:click="editStep3AddFormClick" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>

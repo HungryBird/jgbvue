@@ -181,6 +181,11 @@ ul {
   .el-dialog .el-dialog__footer {
     border-top: 1px solid #dbdfe7;
     padding: 10px; }
+  .el-dialog nav, .el-dialog .nav {
+    margin: 0;
+    line-height: 0;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ddd; }
 
 .info {
   font-weight: 900; }
@@ -383,7 +388,7 @@ ul {
       top: 0;
       right: 0;
       bottom: 0;
-      width: 100px;
+      width: 200px;
       overflow-y: auto; }
     .el-main .auditorsWrap .auditor {
       position: relative;

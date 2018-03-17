@@ -31,6 +31,8 @@ JGBVue.module.auditProcess = ()=> {
         remainWays: ['站内信息']
     };
 
+    let asideWidth = 217;
+
     _this.init = (getDataUrl, saveDataUrl, getEditDataUrl, saveEditDataUrl, deteleDataUrl, getAuditorsUrl)=> {
         that.vm = new Vue({
             el: '#app',
@@ -133,6 +135,10 @@ JGBVue.module.auditProcess = ()=> {
                  * @type {Number}
                  */
                 currentProcessLevel: -1,
+                /**
+                 * 选择审核人员，未点确定时暂存数组
+                 * @type {Array}
+                 */
                 addFirstLevelAuditorsGroup: [],
                 addSecondLevelAuditorsGroup: [],
                 addBosses: [],
@@ -140,7 +146,7 @@ JGBVue.module.auditProcess = ()=> {
                 editSecondLevelAuditorsGroup: [],
                 editBosses: [],
                 auditorLevel: '',
-                asideWidth: 217
+                asideWidth: asideWidth
             },
             mounted() {
                 axios.get(getDataUrl).then((req)=> {
@@ -156,6 +162,7 @@ JGBVue.module.auditProcess = ()=> {
             methods: {
                 add() {
                     this.dialogAddFormVisible = true;
+                    this.asideWidth = asideWidth;
                     this.changeLevel();
                 },
                 saveAdd(formName) {
@@ -200,6 +207,7 @@ JGBVue.module.auditProcess = ()=> {
                         if(data.data.status) {
                             let jdata = JSON.parse(data.data.message);
                             this.editForm = jdata;
+                            this.currentProcessLevel = jdata.selectProcessLevel;
                             if(jdata.firstLevelAuditorsGroup.length !== 0) {
                                 this.editFirstLevelAuditorsGroup.splice(0, _self.editFirstLevelAuditorsGroup.length);
                                 jdata.firstLevelAuditorsGroup.forEach((item)=> {
@@ -352,6 +360,8 @@ JGBVue.module.auditProcess = ()=> {
                  */
                 showSelectAuditDialog(data, level) {
                     let _self = this;
+                    this.asideWidth = asideWidth;
+                    this.audit.company = '';
                     if(this.currentProcessLevel !== level) {
                         this.audit.activeDepartment = '';
                         this.audit.activeIndex = '';
@@ -401,7 +411,7 @@ JGBVue.module.auditProcess = ()=> {
                     this.audit.activeDepartment = '';
                     this.audit.searchValue = '';
                     this.audit.activeIndex = '';
-                    this.asideWidth = 217;
+                    this.asideWidth = asideWidth;
                     this.audit.departmentList.splice(0, _self.audit.departmentList.length);
                     this.audit.auditors.splice(0, _self.audit.auditors.length);
                     axios.post('/auditProcess/getDepartments', {company: this.audit.company}).then((res)=> {
@@ -453,6 +463,16 @@ JGBVue.module.auditProcess = ()=> {
                                             }
                                         }
                                     }
+                                }else if(this.currentProcessLevel === 2) {
+                                    if(this.addSecondLevelAuditorsGroup.length !== 0) {
+                                        for(let i = 0; i < _self.addSecondLevelAuditorsGroup.length; i++ ) {
+                                            for(let j = 0; j < _self.audit.auditors.length; j++) {
+                                                if(_self.audit.auditors[j].jobNumber == _self.addSecondLevelAuditorsGroup[i].jobNumber) {
+                                                    _self.audit.auditors[j].isSelected = !_self.audit.auditors[j].isSelected;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             if(this.dialogEditFormVisible) {
@@ -466,6 +486,16 @@ JGBVue.module.auditProcess = ()=> {
                                             }
                                         }
                                     }
+                                }else if(this.currentProcessLevel === 2) {
+                                    if(this.editSecondLevelAuditorsGroup.length !== 0) {
+                                        for(let i = 0; i < _self.editSecondLevelAuditorsGroup.length; i++ ) {
+                                            for(let j = 0; j < _self.audit.auditors.length; j++) {
+                                                if(_self.audit.auditors[j].jobNumber == _self.editSecondLevelAuditorsGroup[i].jobNumber) {
+                                                    _self.audit.auditors[j].isSelected = !_self.audit.auditors[j].isSelected;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -473,6 +503,12 @@ JGBVue.module.auditProcess = ()=> {
                         console.log('err: ', err);
                     })
                 },
+                /**
+                 * 切换已选择审核人员
+                 * @param  {[type]} item  [description]
+                 * @param  {[type]} index [description]
+                 * @return {[type]}       [description]
+                 */
                 toggleSelected(item,index) {
                     let _self = this;
                     /**
@@ -480,14 +516,17 @@ JGBVue.module.auditProcess = ()=> {
                      * @type {Boolean}
                      */
                     this.audit.auditors[index].isSelected = !this.audit.auditors[index].isSelected;
+                    /**
+                     * 点击被选中
+                     * @param  {[type]} this.audit.auditors[index].isSelected [description]
+                     * @return {[type]}                                       [description]
+                     */
                     if(this.audit.auditors[index].isSelected) {
                         if(this.currentProcessLevel === 1) {
                             if(this.dialogAddFormVisible) {
                                 if(this.addFirstLevelAuditorsGroup.indexOf(item) === -1) {
                                     this.addFirstLevelAuditorsGroup.push(item);
-                                }
-                            }else{
-                                if(this.dialogAddFormVisible) {
+                                }else{
                                     this.addFirstLevelAuditorsGroup.splice(_self.addFirstLevelAuditorsGroup.indexOf(item), 1);
                                 }
                             }
@@ -498,6 +537,11 @@ JGBVue.module.auditProcess = ()=> {
                                 }
                             }
                         }
+                    /**
+                     * 点击取消选中
+                     * @param  {[type]} !this.audit.auditors[index].isSelected [description]
+                     * @return {[type]}                                        [description]
+                     */
                     }else if(!this.audit.auditors[index].isSelected){
                         if(this.addFirstLevelAuditorsGroup.indexOf(item) !== -1) {
                             if(this.dialogAddFormVisible) {
@@ -511,6 +555,7 @@ JGBVue.module.auditProcess = ()=> {
                     if(this.dialogAddFormVisible) {
                         if(this.currentProcessLevel === 1) {
                             this.addForm.firstLevelAuditorsGroup.splice(0, _self.addForm.firstLevelAuditorsGroup.length);
+                            console.log('addFirstLevelAuditorsGroup: ', this.addFirstLevelAuditorsGroup);
                             this.addFirstLevelAuditorsGroup.forEach((item)=> {
                                 _self.addForm.firstLevelAuditorsGroup.push(item);
                             })
