@@ -136,7 +136,6 @@ router.post('/getDepartments', (req, res)=> {
 
 router.post('/getAuditors', (req, res)=> {
 	let jdata = '';
-	console.log(req.body)
 	if(req.body.value == 'finance') {
 		fs.readFile('api/common/audit/auditors1.json', (err, data)=> {
 			if(err) {
@@ -179,7 +178,6 @@ router.post('/getAuditors', (req, res)=> {
 				console.log('err: ', err);
 			}
 			jdata += data;
-			console.log('jdata: ', jdata);
 			res.send({
 				status: true,
 				data: jdata

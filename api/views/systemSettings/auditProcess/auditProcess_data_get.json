@@ -88,5 +88,22 @@
 			"name": "王总",
 			"jobNumber": 30031
 		}
+	],
+	"companyList": [
+		{
+			"uid": "u001",
+			"name": "公司甲",
+			"value": "companyOne"
+		},
+		{
+			"uid": "u002",
+			"name": "公司乙",
+			"value": "companyTwo"
+		},
+		{
+			"uid": "u003",
+			"name": "公司丙",
+			"value": "companyThree"
+		}
 	]
 }
