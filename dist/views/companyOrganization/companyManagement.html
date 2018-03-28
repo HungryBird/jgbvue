@@ -44,22 +44,22 @@
 			</div>
 			<el-form :model="addForm" ref="addForm" :rules="formRules" label-position="top" class="el-form-dialog">
 				<el-row :gutter="24">
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="公司名称" prop="name">
 							<el-input v-model="addForm.name"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="联系人" prop="linkman">
 							<el-input v-model="addForm.linkman"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="公司电话" prop="telephone">
 							<el-input v-model="addForm.telephone"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="24">
+					<el-col :span="12">
 						<el-form-item label="公司行业" prop="trade">
 							<el-select placeholder="请选择行业"  v-model="addForm.trade">
 								<el-option v-for="item in tradeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
@@ -143,39 +143,39 @@
 			</div>
 			<el-form :model="editForm" ref="editForm" :rules="formRules" label-position="top" class="el-form-dialog">
 				<el-row :gutter="24">
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="公司名称" prop="name">
 							<el-input v-model="editForm.name"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="联系人" prop="linkman">
 							<el-input v-model="editForm.linkman"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="公司电话" prop="telephone">
 							<el-input v-model="editForm.telephone"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="24">
+					<el-col :span="12">
 						<el-form-item label="公司行业" prop="trade">
 							<el-select placeholder="请选择行业"  v-model="editForm.trade">
 								<el-option v-for="item in tradeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="手机电话" prop="phoneNumber">
 							<el-input v-model="editForm.phoneNumber"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="12">
 						<el-form-item label="邮箱" prop="email">
 							<el-input v-model="editForm.email"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="24">
 						<el-form-item label="传真" prop="fax">
 							<el-input v-model="editForm.fax"></el-input>
 						</el-form-item>

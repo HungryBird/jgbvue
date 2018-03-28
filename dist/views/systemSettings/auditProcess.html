@@ -48,7 +48,7 @@
 		<div class="wrap_footer">
 			<el-pagination class="pull-right" v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="data.pageIndex" :page-sizes="[100, 200, 300, 400]" :page-size="data.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="data.total"></el-pagination>
 		</div>
-		<!-- 新增窗口 -->
+		<!-- 新增审核流程窗口 -->
 		<el-dialog :visible.sync="dialogAddFormVisible">
 			<div slot="title" class="title">
 				新增审核流程
@@ -88,7 +88,7 @@
 					</div>
 				</el-form-item>
 				<el-form-item v-if="addForm.levelSelected == 2" prop="secondLevelAuditorsGroup" label="选择二级审核人员">
-					<el-button icon="el-icon-plus" size="mini" v-on:click="addShowSelectAuditDialog(addForm, 2)"></el-button>
+					<el-button icon="el-icon-plus" size="mini" v-on:click="addSelectSecondAuditDialog(addForm)"></el-button>
 					<div style="padding: 4px;border-radius: 4px;border: 1px solid rgba(64,158,255,.2)" v-show="addForm.secondLevelAuditorsGroup.length !== 0">
 						<el-tag v-for="tag in addForm.secondLevelAuditorsGroup" :key="tag.jobNumber" :type="tag.type" closable v-on:close="addCloseSecondLevelTag(tag)">{{tag.name}}</el-tag>
 					</div>
@@ -96,7 +96,7 @@
 				<!-- 当选择1级审核方式时，审核人员没有老板时显示老板选项 -->
 				<el-form-item v-if="(addForm.selectSysModule == '选项1'&&addForm.purchaseBossAudit||addForm.selectSysModule == '选项2'&&addForm.saleBossAudit)&&addForm.levelSelected == '1'&&!firstLeveAuditHasBoss&&addForm.firstLevelAuditorsGroup.length != 0" prop="bosses">
 					<label>选择老板</label>
-					<el-select multiple placeholder="请选择" v-model="addForm.bosses" width="100%" @change="test">
+					<el-select multiple placeholder="请选择" v-model="addForm.bosses" width="100%">
 						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
 					</el-select>
 				</el-form-item>
@@ -129,20 +129,20 @@
 				<el-button v-on:click="closeAdd('addForm')">关闭</el-button>
 			</div>
 		</el-dialog>
-		<!-- 选择审核人员窗口 -->
-		<el-dialog :visible.sync="dialogSelectAuditVisible" width="900px">
+		<!-- 新增-选择一级审核人员窗口 -->
+		<el-dialog :visible.sync="addDialogSelectFirstAuditVisible" width="900px">
 			<div slot="title">
-				选择{{auditorLevel}}审核人员
+				选择一级审核人员
 			</div>
 			<nav>
 				<el-form :inline="true">
 					<el-form-item>
-						<el-select placeholder="请选择公司" v-model="audit.company" v-on:change="changeCompany">
-							<el-option v-for="item in audit.companyList" :key="item.uid" :value="item.value" :label="item.name"></el-option>
+						<el-select placeholder="请选择公司" v-model="addFirstAudit.company" v-on:change="addFirstChangeCompany">
+							<el-option v-for="item in addFirstAudit.companyList" :key="item.uid" :value="item.value" :label="item.name"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-input v-model="audit.searchValue" placeholder="请输入关键词查询">
+						<el-input v-model="addFirstAudit.searchValue" placeholder="请输入关键词查询">
 							<template slot="append">
 								<el-button v-on:click="searchEmployee">搜索</el-button>
 							</template>
@@ -155,8 +155,8 @@
 			</nav>
 			<el-container class="auditMainWrap">
 				<el-aside width="217px">
-					<ul class="ul-list" v-if="audit.departmentList.length !== 0">
-						<li v-for="(item, index) in audit.departmentList" :key="item.value" :value="item.value" v-on:click="selectDepartment(item, index)" :class="{active: index === audit.activeIndex}">
+					<ul class="ul-list" v-if="addFirstAudit.departmentList.length !== 0">
+						<li v-for="(item, index) in addFirstAudit.departmentList" :key="item.value" :value="item.value" v-on:click="addFirstSelectDepartment(item, index)" :class="{active: index === addFirstAudit.activeIndex}">
 							<a href="javascript:;">
 								{{item.name}}
 							</a>
@@ -165,7 +165,7 @@
 				</el-aside>
 				<el-main>
 					<div class="auditorsWrap">
-						<div v-for="(item, index) in audit.auditors" class="auditor" v-on:click ="toggleSelected(item,index)">
+						<div v-for="(item, index) in addFirstAudit.auditorList" class="auditor" v-on:click ="addFirstToggleSelected(item,index)">
 							<i class="el-icon-check selectStatus" v-if="item.isSelected"></i>
 							<div class="auditorInner" :class="{activeSelected: item.isSelected}">
 								<div class="auditorPicWrap">
@@ -194,12 +194,12 @@
 				</el-main>
 			</el-container>
 			<div slot="footer">
-				<el-button type="primary" v-on:click="confirmSelectAuditors">确认</el-button>
-				<el-button v-on:click="dialogSelectAuditVisible = false">关闭</el-button>
+				<el-button type="primary" v-on:click="addConfirmSelectFirstAuditors">确认</el-button>
+				<el-button v-on:click="dialogSelectFirstAuditVisible = false">关闭</el-button>
 			</div>
 		</el-dialog>
 		<!-- 编辑窗口 -->
-		<!-- <el-dialog :visible.sync="dialogEditFormVisible">
+		<el-dialog :visible.sync="dialogEditFormVisible">
 			<div slot="title" class="title">
 				编辑审核流程
 			</div>
@@ -278,7 +278,7 @@
 				<el-button type="primary" v-on:click="saveEdit('editForm')">保存</el-button>
 				<el-button v-on:click="closeEdit('editForm')">关闭</el-button>
 			</div>
-		</el-dialog> -->
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -292,8 +292,7 @@
 	 * 打开编辑窗口获取url
 	 * 保存编辑数据url
 	 * 数据删除url
-	 * 获取审核人员
 	 */
-	JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_save', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_delete', '/auditProcess/getAuditors');
+	JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_save', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_delete');
 </script>
 </html>
