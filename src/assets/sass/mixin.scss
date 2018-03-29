@@ -20,7 +20,7 @@ $border:1px solid #ddd;
   border-top:$border;
 }
 @mixin line-clamp ($orient: vertical, $clamp: 1, $type: ellipsis) {
-  display: -webkit-box; 
+  display: -webkit-box;
   overflow:hidden;
   -webkit-box-orient:$orient;
   -webkit-line-clamp:$clamp;

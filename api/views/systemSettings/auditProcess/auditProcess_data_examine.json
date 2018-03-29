@@ -1,0 +1,14 @@
+{
+	"bossAudit": {
+		"status": true,
+		"describe": "当商品采购价高于预采购价时需老板角色审核"
+	},
+	"processLevel": "二级",
+	"auditors": {
+		"firstLevel": ["张三", "李四"],
+		"secondLevel": ["王五"],
+		"bosses": ["孙总", "赵总"]
+	},
+	"auditMethod": "只要有一个通过审核即可向下流转",
+	"remainWays": ["站内信息", "手机短信"]
+}
