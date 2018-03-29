@@ -91,7 +91,7 @@ new Vue({
             id: 'xsdj004',
             name: '角色管理'
           }, {
-            id: 'xsdj004',
+            id: 'userManagement',
             name: '用户管理'
           }]
         },

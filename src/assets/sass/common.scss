@@ -1,3 +1,4 @@
+@import './mixin.scss';
 html,body{
 	height: 100%;
 }
@@ -449,4 +450,31 @@ ul{
 			border: 1px solid red !important;
 		}
 	}
+}
+
+//用户管理
+.userManagement {
+ .w-main-header {
+	 @include w-flex(row, nowrap, space-between, center);
+	 width:100%;
+	 padding: 10px;
+	 .pull-left{
+		@include w-flex-grow(0, 0);
+		width:50%;
+	 } 
+	 .pull-right {
+		@include w-flex-grow(0, 0);
+		 width:45%;
+	 }
+	 .w-bottom {
+		 @include w-flex(row, nowrap, flex-start, center);
+		 .w-btn {
+			 @include w-flex(row, nowrap, flex-start, center);
+		 }
+		 .w-select {
+			 @include w-flex-grow(0, 1);
+			 margin-left:5px;
+		 }
+	 }
+ }
 }

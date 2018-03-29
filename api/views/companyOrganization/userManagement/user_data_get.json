@@ -1,0 +1,47 @@
+[
+  {
+    "number": "100001",
+    "account": "demo001",
+    "password": "123456",
+    "name": "张一",
+    "sex": "男",
+    "phone": "15977785678",
+    "tel": "020-1234567",
+    "position": {
+      "label": "销售",
+      "value": "xiaoshou"
+    },
+    "department": {
+      "label": "业务部",
+      "value": "yewubu"
+    },
+    "status": true,
+    "birthday" : 1522224813,
+    "email": "1015100@qq.com",
+    "QQ": "1015100",
+    "wx": "15977785678",
+    "remark": "啊？"
+  },{
+    "number": "100002",
+    "account": "demo002",
+    "password": "123456",
+    "name": "李二",
+    "sex": "女",
+    "phone": "15977785678",
+    "tel": "020-1234567",
+    "position": {
+      "label": "销售",
+      "value": "xiaoshou"
+    },
+    "department": {
+      "label": "销售部",
+      "value": "xiaoshoubu"
+    },
+    "status": false,
+    "birthday" : 1522224813,
+    "email": "1015100@qq.com",
+    "QQ": "1015100",
+    "wx": "15977785678",
+    "remark": ""
+  }
+]

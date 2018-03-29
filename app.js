@@ -67,11 +67,12 @@ app.use('/printTemplate', printTemplateRouter);
 const menuManagementRouter = require('./routers/views/baseData/menuManagement');
 const departmentManagementRouter = require('./routers/views/companyOrganization/departmentManagement');
 const companyManagementRouter = require('./routers/views/companyOrganization/companyManagement');
+const userManagementRouter = require('./routers/views/companyOrganization/userManagement');
 
 app.use('/menuManagement', menuManagementRouter);
 app.use('/departmentManagement', departmentManagementRouter);
 app.use('/companyManagement', companyManagementRouter);
-
+app.use('/userManagement', userManagementRouter);
 /**
  * server running at port 3333
  */

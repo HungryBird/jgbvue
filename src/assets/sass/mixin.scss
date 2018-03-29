@@ -1,0 +1,28 @@
+
+@mixin w-flex( $mainShaft: row, $isWrap: wrap, $mainAlign: flex-start, $AuxiliaryAlign: center ) {
+  display: flex;
+  flex-flow: $mainShaft $isWrap;
+  justify-content: $mainAlign;
+  align-items: $AuxiliaryAlign;
+}
+@mixin w-flex-grow ($grow: 0, $shrink: 0) {
+  flex-grow: $grow;
+  flex-shrink: $shrink;
+}
+$border:1px solid #ddd;
+  @mixin common-border {
+  border:$border;
+}
+@mixin common-border-bottom {
+  border-bottom:$border;
+}
+@mixin common-border-top {
+  border-top:$border;
+}
+@mixin line-clamp ($orient: vertical, $clamp: 1, $type: ellipsis) {
+  display: -webkit-box; 
+  overflow:hidden;
+  -webkit-box-orient:$orient;
+  -webkit-line-clamp:$clamp;
+  text-overflow:$type;
+}

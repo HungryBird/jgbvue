@@ -429,3 +429,33 @@ ul {
             float: left; }
     .el-main .auditorsWrap .activeSelected {
       border: 1px solid red !important; }
+
+.userManagement .w-main-header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px; }
+  .userManagement .w-main-header .pull-left {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 50%; }
+  .userManagement .w-main-header .pull-right {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 45%; }
+  .userManagement .w-main-header .w-bottom {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center; }
+    .userManagement .w-main-header .w-bottom .w-btn {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center; }
+    .userManagement .w-main-header .w-bottom .w-select {
+      flex-grow: 0;
+      flex-shrink: 1;
+      margin-left: 5px; }
