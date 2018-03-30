@@ -268,7 +268,6 @@ JGBVue.module.userManagement = ()=>{
               // axios.get(accountTimeGet, selectedRows[0].number).then(res=> {
               //   this.accessTimeList = JSOn.parse(res.data.data)
               // }).catch()
-              this.currentAccessTime = []
               this.showTimeAccess = true
               break
             case 'ip': 
