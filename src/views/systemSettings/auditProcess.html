@@ -138,7 +138,7 @@
 					<el-form-item>
 						<el-input v-model="firstAudit.searchValue" placeholder="请输入关键词查询">
 							<template slot="append">
-								<el-button v-on:click="searchEmployee">搜索</el-button>
+								<el-button v-on:click="searchFirstEmployee">搜索</el-button>
 							</template>
 						</el-input>
 					</el-form-item>
@@ -207,7 +207,7 @@
 					<el-form-item>
 						<el-input v-model="secondAudit.searchValue" placeholder="请输入关键词查询">
 							<template slot="append">
-								<el-button v-on:click="searchEmployee">搜索</el-button>
+								<el-button v-on:click="searchSecondEmployee">搜索</el-button>
 							</template>
 						</el-input>
 					</el-form-item>
@@ -334,6 +334,6 @@
 	 * 查看
 	 * 启用
 	 */
-	JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_examine', '/common/switch');
+	JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_examine', '/common/switch', '/auditProcess/searchEmployee');
 </script>
 </html>
