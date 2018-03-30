@@ -478,6 +478,10 @@ ul {
   .userManagement .w-main-header .w-right {
     flex-grow: 0;
     flex-shrink: 0;
+    width: 50%; }
+  .userManagement .w-main-header .pull-right {
+    flex-grow: 0;
+    flex-shrink: 0;
     width: 45%; }
   .userManagement .w-main-header .w-bottom {
     display: flex;

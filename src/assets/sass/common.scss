@@ -497,6 +497,13 @@ ul{
 	}
 }
 
+
+
+
+
+
+
+
 //用户管理
 .userManagement {
 	.w-main-header {
@@ -508,7 +515,11 @@ ul{
 			width:50%;
 		} 
 		.w-right {
-		@include w-flex-grow(0, 0);
+			@include w-flex-grow(0, 0);
+			width:50%;
+		} 
+	 	.pull-right {
+			@include w-flex-grow(0, 0);
 			width:45%;
 		}
 		.w-bottom {
