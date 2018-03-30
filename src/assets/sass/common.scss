@@ -177,13 +177,23 @@ ul{
 	}
 	.el-dialog__body{
 		padding: 10px 16px;
-		h1,h2,h3,h4,h5,h6{
+		.title{
+			font-weight: 400;
+			color: #1f2f3d;
+			h3{
+				font-size: 22px;
+			}
+			h4{
+				font-size: 20px;
+			}
+			h5{
+				font-size: 18px;
+			}
+		}
+		>h1,>h2,>h3,>h4,>h5,>h6{
 			margin-bottom: 4px;
 			background: #f7f7f7;
 			padding: 6px 4px;
-		}
-		.checkbox{
-			margin-left: 40px;
 		}
 		.el-checkbox-group{
 			display: flex;
@@ -364,6 +374,41 @@ ul{
 		}
 	}
 }
+.form-border{
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	.title{
+		font-weight: 400;
+		color: #1f2f3d;
+		h3{
+			font-size: 22px;
+		}
+		h4{
+			font-size: 20px;
+		}
+		h5{
+			font-size: 18px;
+		}
+	}
+	>div{
+		padding: 0 10px;
+		line-height: 32px;
+		border-right: 1px solid #ddd;
+		border-bottom: 1px solid #ddd;
+		>span{
+			display: inline-block;
+			height: 100%;
+			padding: 0 10px 0 10px;
+			border-right: 1px solid #ddd;
+			&:last-child{
+				border-right: none;
+			}
+			&:first-child{
+				padding-left: 0;
+			}
+		}
+	}
+}
 .el-aside{
 	.ul-list{
 		border: 1px solid #ddd;
@@ -461,8 +506,13 @@ ul{
 		.w-left{
 		@include w-flex-grow(0, 0);
 		width:50%;
+<<<<<<< HEAD
 		} 
 		.w-right {
+=======
+	 }
+	 .pull-right {
+>>>>>>> 7b4218dc8b616f39ee1547d34b4b4b8559fae622
 		@include w-flex-grow(0, 0);
 			width:45%;
 		}

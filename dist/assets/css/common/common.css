@@ -157,12 +157,19 @@ ul {
       font-size: 14px; }
   .el-dialog .el-dialog__body {
     padding: 10px 16px; }
-    .el-dialog .el-dialog__body h1, .el-dialog .el-dialog__body h2, .el-dialog .el-dialog__body h3, .el-dialog .el-dialog__body h4, .el-dialog .el-dialog__body h5, .el-dialog .el-dialog__body h6 {
+    .el-dialog .el-dialog__body .title {
+      font-weight: 400;
+      color: #1f2f3d; }
+      .el-dialog .el-dialog__body .title h3 {
+        font-size: 22px; }
+      .el-dialog .el-dialog__body .title h4 {
+        font-size: 20px; }
+      .el-dialog .el-dialog__body .title h5 {
+        font-size: 18px; }
+    .el-dialog .el-dialog__body > h1, .el-dialog .el-dialog__body > h2, .el-dialog .el-dialog__body > h3, .el-dialog .el-dialog__body > h4, .el-dialog .el-dialog__body > h5, .el-dialog .el-dialog__body > h6 {
       margin-bottom: 4px;
       background: #f7f7f7;
       padding: 6px 4px; }
-    .el-dialog .el-dialog__body .checkbox {
-      margin-left: 40px; }
     .el-dialog .el-dialog__body .el-checkbox-group {
       display: -webkit-box;
       display: -ms-flexbox;
@@ -352,6 +359,33 @@ ul {
     background: #f7f7f7; }
     #app .wrap_footer .el-pagination {
       float: right; }
+
+.form-border {
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd; }
+  .form-border .title {
+    font-weight: 400;
+    color: #1f2f3d; }
+    .form-border .title h3 {
+      font-size: 22px; }
+    .form-border .title h4 {
+      font-size: 20px; }
+    .form-border .title h5 {
+      font-size: 18px; }
+  .form-border > div {
+    padding: 0 10px;
+    line-height: 32px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd; }
+    .form-border > div > span {
+      display: inline-block;
+      height: 100%;
+      padding: 0 10px 0 10px;
+      border-right: 1px solid #ddd; }
+      .form-border > div > span:last-child {
+        border-right: none; }
+      .form-border > div > span:first-child {
+        padding-left: 0; }
 
 .el-aside .ul-list {
   border: 1px solid #ddd;

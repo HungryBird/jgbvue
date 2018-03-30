@@ -1,7 +1,9 @@
 {
-	"selectSysModule": "选项1",
-	"saleBossAudit": true,
-	"purchaseBossAudit": true,
+	"title": "采购申请单审核",
+	"bossAudit": {
+		"status": true,
+		"describe": "当商品采购价高于预采购价时需老板角色审核"
+	},
 	"selectProcessLevel": 2,
 	"levelSelected": 2,
 	"bosses": [10001, 20011],
@@ -13,48 +15,20 @@
 			"isBoss": false,
 			"isSelected": true,
 			"value": 10002,
-			"department": {
-				"name": "财务部",
-				"value": "finance"
-			}
-		},
-		{
-			"jobNumber": 10003,
-			"name": "张3",
-			"src": "../../assets/img/index/portrait.png",
-			"isBoss": false,
-			"isSelected": true,
-			"value": 10003,
-			"department": {
-				"name": "财务部",
-				"value": "finance"
-			}
+			"department": "finance1",
+			"company": "companyOne"
 		}
 	],
 	"secondLevelAuditorsGroup": [
 		{
-			"jobNumber": 20014,
-			"name": "李4",
+			"jobNumber": 30033,
+			"name": "王3",
 			"src": "../../assets/img/index/portrait.png",
 			"isBoss": false,
 			"isSelected": true,
-			"value": 20014,
-			"department": {
-				"name": "采购部",
-				"value": "finance"
-			}
-		},
-		{
-			"jobNumber": 20015,
-			"name": "李5",
-			"src": "../../assets/img/index/portrait.png",
-			"isBoss": false,
-			"isSelected": true,
-			"value": 20015,
-			"department": {
-				"name": "采购部",
-				"value": "finance"
-			}
+			"value": 30033,
+			"department": "personnel1",
+			"company": "companyOne"
 		}
 	],
 	"auditMethod": "2",
