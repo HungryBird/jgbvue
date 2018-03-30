@@ -10,7 +10,7 @@ JGBVue.module.auditProcess = ()=> {
 
     //let asideWidth = 217;
 
-    _this.init = (getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl, searchEmployeeUrl)=> {
+    _this.init = (getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl, searchEmployeeUrl, getEmployeeUrl)=> {
         that.vm = new Vue({
             el: '#app',
             data: {
@@ -357,13 +357,7 @@ JGBVue.module.auditProcess = ()=> {
                     this.firstAudit.activeDepartment = item.name;
                     this.firstAudit.auditorList.splice(0, _self.firstAudit.auditorList.length);
 
-                    /**
-                     * 审核人员选择-填入部门人员
-                     * @param  {Number} let               i             [description]
-                     * @param  {[type]} companyListLength [description]
-                     * @return {[type]}                   [description]
-                     */
-                    for(let i = 0, companyListLength = this.firstAudit.companyList.length; i < companyListLength; i++) {
+                    /*for(let i = 0, companyListLength = this.firstAudit.companyList.length; i < companyListLength; i++) {
                         if(this.firstAudit.companyList[i].value === this.firstAudit.curCompanyVal) {
                             for(let j = 0, departmentLength = _self.firstAudit.companyList[i].department.length; j < departmentLength; j++ ) {
                                 if(_self.firstAudit.companyList[i].department[j].value === item.value) {
@@ -373,24 +367,34 @@ JGBVue.module.auditProcess = ()=> {
                                 }
                             }
                         }
-                    }
+                    }*/
 
-                    /**
-                     * 遍历一级审核人员tag数组，存在则把isSelected渲染为true
-                     * @param  {Number} let        i             [description]
-                     * @param  {[type]} edAuLength [description]
-                     * @return {[type]}            [description]
-                     */
+                    axios.post(getEmployeeUrl, item).then((res)=> {
+                        if(res.data.status) {
+                            let jdata = JSON.parse(res.data.data);
+                            this.firstAudit.auditorList.splice(0, _self.firstAudit.auditorList.length);
+                            jdata.forEach((item)=> {
+                                _self.firstAudit.auditorList.push(item);
+                            })
+                            /**
+                             * 遍历一级审核人员tag数组，存在则把isSelected渲染为true
+                             * @param  {Number} let        i             [description]
+                             * @param  {[type]} edAuLength [description]
+                             * @return {[type]}            [description]
+                             */
 
-                    for(let i = 0, edAuLength = this.editForm.firstLevelAuditorsGroup.length; i < edAuLength; i++ ) {
-                        for(let j = 0, auditorListLength = this.firstAudit.auditorList.length; j < auditorListLength; j++ ) {
-                            if(this.editForm.firstLevelAuditorsGroup[i].isSelected) {
-                                if(this.editForm.firstLevelAuditorsGroup[i].jobNumber === this.firstAudit.auditorList[j].jobNumber) {
-                                    this.firstAudit.auditorList[j].isSelected = true;
+                            for(let i = 0, edAuLength = this.editForm.firstLevelAuditorsGroup.length; i < edAuLength; i++ ) {
+                                for(let j = 0, auditorListLength = this.firstAudit.auditorList.length; j < auditorListLength; j++ ) {
+                                    if(this.editForm.firstLevelAuditorsGroup[i].isSelected) {
+                                        if(this.editForm.firstLevelAuditorsGroup[i].jobNumber === this.firstAudit.auditorList[j].jobNumber) {
+                                            this.firstAudit.auditorList[j].isSelected = true;
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
+                    })
+
                 },
                 secondSelectDepartment(item, i) {
                     if(this.secondAudit.activeIndex === i) return;
@@ -407,27 +411,25 @@ JGBVue.module.auditProcess = ()=> {
                     this.secondAudit.activeDepartment = item.name;
                     this.secondAudit.auditorList.splice(0, _self.secondAudit.auditorList.length);
 
-                    for(let i = 0, companyListLength = this.secondAudit.companyList.length; i < companyListLength; i++) {
-                        if(this.secondAudit.companyList[i].value === this.secondAudit.curCompanyVal) {
-                            for(let j = 0, departmentLength = _self.secondAudit.companyList[i].department.length; j < departmentLength; j++ ) {
-                                if(_self.secondAudit.companyList[i].department[j].value === item.value) {
-                                    _self.secondAudit.companyList[i].department[j].auditors.forEach((item)=> {
-                                        _self.secondAudit.auditorList.push(item);
-                                    });
+                    axios.post(getEmployeeUrl, item).then((res)=> {
+                        if(res.data.status) {
+                            let jdata = JSON.parse(res.data.data);
+                            this.secondAudit.auditorList.splice(0, _self.secondAudit.auditorList.length);
+                            jdata.forEach((item)=> {
+                                _self.secondAudit.auditorList.push(item);
+                            })
+                            for(let i = 0, edAuLength = this.editForm.secondLevelAuditorsGroup.length; i < edAuLength; i++ ) {
+                                for(let j = 0, auditorListLength = this.secondAudit.auditorList.length; j < auditorListLength; j++ ) {
+                                    if(this.editForm.secondLevelAuditorsGroup[i].isSelected) {
+                                        if(this.editForm.secondLevelAuditorsGroup[i].jobNumber === this.secondAudit.auditorList[j].jobNumber) {
+                                            this.secondAudit.auditorList[j].isSelected = true;
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
+                    })
 
-                    for(let i = 0, edAuLength = this.editForm.secondLevelAuditorsGroup.length; i < edAuLength; i++ ) {
-                        for(let j = 0, auditorListLength = this.secondAudit.auditorList.length; j < auditorListLength; j++ ) {
-                            if(this.editForm.secondLevelAuditorsGroup[i].isSelected) {
-                                if(this.editForm.secondLevelAuditorsGroup[i].jobNumber === this.secondAudit.auditorList[j].jobNumber) {
-                                    this.secondAudit.auditorList[j].isSelected = true;
-                                }
-                            }
-                        }
-                    }
                 },
                 /**
                  * 一级审核人员-切换已选择审核人员
@@ -498,12 +500,13 @@ JGBVue.module.auditProcess = ()=> {
                  * 新增-点击保存-选择审核人员流程
                  */
                 confirmSelectFirstAuditors() {
-                    let _self = this;
+                    let _self = this
+                    ,arr = [];
                     this.editForm.firstLevelAuditorsGroup.splice(0, _self.editForm.firstLevelAuditorsGroup.length);
+                    
                     this.tempFirstLevelAuditorsGroup.forEach((item)=> {
                         _self.editForm.firstLevelAuditorsGroup.push(item);
-                    })
-
+                    });
                     this.dialogSelectFirstAuditVisible = false;
                 },
                 confirmSelectSecondAuditors() {
@@ -608,8 +611,8 @@ JGBVue.module.auditProcess = ()=> {
         })
     }
 
-    that.init = (getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl, searchEmployeeUrl)=> {
-        _this.init(getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl, searchEmployeeUrl);
+    that.init = (getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl, searchEmployeeUrl, getEmployeeUrl)=> {
+        _this.init(getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl, searchEmployeeUrl, getEmployeeUrl);
     }
     return that;
 }

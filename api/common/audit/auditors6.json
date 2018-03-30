@@ -1,52 +1,52 @@
 [
 	{
-		"jobNumber": 20011,
+		"jobNumber": 60031,
 		"name": "李总",
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": true,
 		"isSelected": false,
-		"value": 20011,
-		"department": "purchase1",
-		"company": "companyOne"
+		"value": 60031,
+		"department": "personnel2",
+		"company": "companyTwo"
 	},
 	{
-		"jobNumber": 20012,
+		"jobNumber": 60032,
 		"name": "李2",
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 20012,
-		"department": "purchase1",
-		"company": "companyOne"
+		"value": 60032,
+		"department": "personnel2",
+		"company": "companyTwo"
 	},
 	{
-		"jobNumber": 20013,
+		"jobNumber": 60033,
 		"name": "李3",
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 20013,
-		"department": "purchase1",
-		"company": "companyOne"
+		"value": 60033,
+		"department": "personnel2",
+		"company": "companyTwo"
 	},
 	{
-		"jobNumber": 20014,
+		"jobNumber": 60034,
 		"name": "李4",
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 20014,
-		"department": "purchase1",
-		"company": "companyOne"
+		"value": 60034,
+		"department": "personnel2",
+		"company": "companyTwo"
 	},
 	{
-		"jobNumber": 20015,
+		"jobNumber": 60035,
 		"name": "李5",
 		"src": "../../assets/img/index/portrait.png",
 		"isBoss": false,
 		"isSelected": false,
-		"value": 20015,
-		"department": "purchase1",
-		"company": "companyOne"
+		"value": 60035,
+		"department": "personnel2",
+		"company": "companyTwo"
 	}
 ]
