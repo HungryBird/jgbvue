@@ -24,4 +24,11 @@ router.post('/data_delete', (req, res)=> {
 	})
 });
 
+router.post('/switch', (req, res)=> {
+	res.send({
+		status: true,
+		message: 'success!'
+	})
+})
+
 module.exports = router;

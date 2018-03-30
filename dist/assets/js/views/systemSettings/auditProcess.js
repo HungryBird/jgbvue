@@ -32,7 +32,7 @@ JGBVue.module.auditProcess = ()=> {
 
     //let asideWidth = 217;
 
-    _this.init = (getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl)=> {
+    _this.init = (getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl)=> {
         that.vm = new Vue({
             el: '#app',
             data: {
@@ -572,6 +572,20 @@ JGBVue.module.auditProcess = ()=> {
                         }
                     }
                     this.editForm.secondLevelAuditorsGroup.splice(this.editForm.secondLevelAuditorsGroup.indexOf(tag), 1);
+                },
+                handleStartUsing(index, row) {
+                    axios.post(handleStartUsingUrl, row).then((res)=> {
+                        this.loading = true;
+                        if(res.data.status) {
+                            this.$message({
+                                type: 'success',
+                                message: res.data.message
+                            })
+                            this.loading = false;
+                        }
+                    }).catch((err)=> {
+                        console.log('err: ', err);
+                    })
                 }
             },
             filters: {
@@ -609,8 +623,8 @@ JGBVue.module.auditProcess = ()=> {
         })
     }
 
-    that.init = (getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl)=> {
-        _this.init(getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl);
+    that.init = (getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl)=> {
+        _this.init(getDataUrl, getEditDataUrl, saveEditDataUrl, examineUrl, handleStartUsingUrl);
     }
     return that;
 }

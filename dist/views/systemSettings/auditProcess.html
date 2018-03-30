@@ -34,6 +34,11 @@
 							{{ scope.row.remarkWay | auditorFilter }}
 						</template>
 					</el-table-column>
+					<el-table-column label="启用" prop="startUsing">
+						<template slot-scope="scope">
+							<el-switch v-model="scope.row.startUsing" v-on:change="handleStartUsing(scope.$index, scope.row)"></el-switch>
+						</template>
+					</el-table-column>
 				</el-table>
 			</div>
 		</div>
@@ -83,14 +88,14 @@
 					</div>
 				</el-form-item>
 				<!-- 当选择1级审核方式时，审核人员没有老板时显示老板选项 -->
-				<el-form-item v-if="editForm.levelSelected == '1'&&!firstLeveAuditHasBoss&&editForm.firstLevelAuditorsGroup.length != 0" prop="bosses">
+				<el-form-item v-if="editForm.bossAudit.status&&editForm.levelSelected == '1'&&!firstLeveAuditHasBoss&&editForm.firstLevelAuditorsGroup.length != 0" prop="bosses">
 					<label>选择老板</label>
 					<el-select multiple placeholder="请选择" v-model="editForm.bosses" width="100%">
 						<el-option v-for="item in data.bosses" :key="item.value" :label="item.name" :value="item.value"></el-option>
 					</el-select>
 				</el-form-item>
 				<!-- 当选择2级审核方式时，审核人员没有老板时显示老板选项 -->
-				<el-form-item v-if="editForm.levelSelected == '2'&&!firstLeveAuditHasBoss&&!secondLeveAuditHasBoss&&editForm.firstLevelAuditorsGroup.length != 0&&editForm.secondLevelAuditorsGroup.length != 0" prop="bosses" label="选择老板">
+				<el-form-item v-if="editForm.bossAudit.status&&editForm.levelSelected == '2'&&!firstLeveAuditHasBoss&&!secondLeveAuditHasBoss&&editForm.firstLevelAuditorsGroup.length != 0&&editForm.secondLevelAuditorsGroup.length != 0" prop="bosses" label="选择老板">
 					<el-select multiple placeholder="请选择" v-model="editForm.bosses" width="100%" multiple>
 						<el-option v-for="item in data.bosses" :key="item.jobNumber" :label="item.name" :value="item.value"></el-option>
 					</el-select>
@@ -327,7 +332,8 @@
 	 * 打开编辑窗口获取url
 	 * 保存编辑数据url
 	 * 查看
+	 * 启用
 	 */
-	JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_examine');
+	JGBVue.module.auditProcess().init('/auditProcess/data_get', '/auditProcess/data_edit_get', '/auditProcess/data_edit_save', '/auditProcess/data_examine', '/common/switch');
 </script>
 </html>
