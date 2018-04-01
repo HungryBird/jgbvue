@@ -142,8 +142,9 @@
 							</template>
 						</el-input>
 					</el-form-item>
-					<el-button v-on:click="checkSelectedemployees" class="pull-right">
+					<el-button v-on:click="showFirstSelectedAuditors = !showFirstSelectedAuditors" class="pull-right">
 						已选择人员
+						<i :class="{'el-icon-caret-left':showFirstSelectedAuditors, 'el-icon-caret-right':!showFirstSelectedAuditors}"></i>
 					</el-button>
 				</el-form>
 			</nav>
@@ -184,6 +185,13 @@
 								<div style="clear: both;"></div>
 							</div>
 						</div>
+						<transition name="slide-fade">
+							<ul class="right-side" v-if="firstAudit.auditorList.length !== 0&&showFirstSelectedAuditors">
+								<li v-for="item in tempFirstLevelAuditorsGroup">
+									{{item.name}}
+								</li>
+							</ul>
+						</transition>
 					</div>
 				</el-main>
 			</el-container>
@@ -211,7 +219,7 @@
 							</template>
 						</el-input>
 					</el-form-item>
-					<el-button v-on:click="checkSelectedemployees" class="pull-right">
+					<el-button v-on:click="showSecondSelectedAuditors = !showSecondSelectedAuditors" class="pull-right">
 						已选择人员
 					</el-button>
 				</el-form>
@@ -253,6 +261,13 @@
 								<div style="clear: both;"></div>
 							</div>
 						</div>
+						<transition name="slide-fade">
+							<ul class="right-side" v-if="secondAudit.auditorList.length !== 0&&showSecondSelectedAuditors">
+								<li v-for="item in tempSecondLevelAuditorsGroup">
+									{{item.name}}
+								</li>
+							</ul>
+						</transition>
 					</div>
 				</el-main>
 			</el-container>

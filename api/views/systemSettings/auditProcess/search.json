@@ -1,0 +1,22 @@
+[
+	{
+		"jobNumber": 30034,
+		"name": "王4",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 30034,
+		"department": "personnel1",
+		"company": "companyOne"
+	},
+	{
+		"jobNumber": 30035,
+		"name": "王5",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 30035,
+		"department": "personnel1",
+		"company": "companyOne"
+	}
+]

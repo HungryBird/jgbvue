@@ -423,7 +423,13 @@ ul {
       right: 0;
       bottom: 0;
       width: 200px;
-      overflow-y: auto; }
+      overflow-y: auto;
+      background: #EEEEEE;
+      padding: 4px;
+      border: 1px solid #ddd; }
+      .el-main .auditorsWrap .right-side li {
+        padding: 4px;
+        border-bottom: 1px solid #ddd; }
     .el-main .auditorsWrap .auditor {
       position: relative;
       -webkit-box-sizing: border-box;
@@ -463,6 +469,22 @@ ul {
             float: left; }
     .el-main .auditorsWrap .activeSelected {
       border: 1px solid red !important; }
+
+.slide-fade-enter-active {
+  -webkit-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease; }
+
+.slide-fade-leave-active {
+  -webkit-transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+  -o-transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1); }
+
+.slide-fade-enter, .slide-fade-leave-to {
+  -webkit-transform: translateX(40px);
+  -ms-transform: translateX(40px);
+  transform: translateX(40px);
+  opacity: 0; }
 
 .userManagement .w-main-header {
   display: flex;

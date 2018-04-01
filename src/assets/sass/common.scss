@@ -447,6 +447,13 @@ ul{
 			bottom: 0;
 			width: 200px;
 			overflow-y: auto;
+			background: #EEEEEE;
+			padding: 4px;
+			border: 1px solid #ddd;
+			li{
+				padding: 4px;
+				border-bottom: 1px solid #ddd;
+			}
 		}
 		.auditor{
 			position: relative;
@@ -496,7 +503,17 @@ ul{
 		}
 	}
 }
-
+.slide-fade-enter-active {
+	transition: all .3s ease;
+}
+.slide-fade-leave-active {
+	transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+	transform: translateX(40px);
+	opacity: 0;
+}
 
 
 
