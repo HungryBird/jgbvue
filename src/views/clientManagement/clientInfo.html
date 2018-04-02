@@ -19,7 +19,7 @@
 						</el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-checkbox label="显示禁用客户" v-model="search.showForbiddenClients"></el-checkbox>
+						<el-checkbox label="显示禁用客户" v-model="isShowForbiddenClients" v-on:change="toggleForbiddenClients"></el-checkbox>
 					</el-form-item>
 				</el-form>
 			</el-header>
@@ -42,34 +42,43 @@
 							</el-button>
 							<el-button-group class="pull-right">
 								<el-button icon="el-icon-plus">新增</el-button>
-								<el-button icon="el-icon-minus">删除</el-button>
-								<el-button>禁用</el-button>
-								<el-button>启动</el-button>
+								<el-button icon="el-icon-minus" :disabled="selectedRows.length === 0" v-on:click="remove">删除</el-button>
+								<el-button :disabled="selectedRows.length === 0" v-on:click="forbidden">禁用</el-button>
+								<el-button :disabled="selectedRows.length === 0" v-on:click="startUsing">启用</el-button>
 								<el-button>导入</el-button>
 								<el-button>导出</el-button>
 							</el-button-group>
 						</nav>
-						<el-table :data="table" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem">
+						<el-table :data="table" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" :row-class-name="rowStatusClassName">
 							<el-table-column type="selection"></el-table-column>
-							<el-table-column type="index"></el-table-column>
-							<el-table-column label="操作" prop="">
-								<template scope-slot="scope">
-									<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-									<el-button size="mini" type="danger" v-on:click="handleDelete(scope.$index, scope.row)">删除</el-button>
+							<el-table-column type="index" label="序号" width="50px"></el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="scope">
+									<el-button-group>
+										<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)" type="primary">查看</el-button>
+										<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+										<el-button size="mini" type="danger" v-on:click="handleDelete(scope.$index, scope.row)">删除</el-button>
+									</el-button-group>
 								</template>
 							</el-table-column>
-							<el-table-column label="客户等级" prop=""></el-table-column>
-							<el-table-column label="客户编号" prop=""></el-table-column>
-							<el-table-column label="客户名称" prop=""></el-table-column>
-							<el-table-column label="销售人员" prop=""></el-table-column>
-							<el-table-column label="联系人" prop=""></el-table-column>
-							<el-table-column label="手机" prop=""></el-table-column>
-							<el-table-column label="座机" prop=""></el-table-column>
-							<el-table-column label="QQ/微信" prop=""></el-table-column>
-							<el-table-column label="应收款余额" prop=""></el-table-column>
-							<el-table-column label="地址" prop=""></el-table-column>
-							<el-table-column label="协助人员" prop=""></el-table-column>
-							<el-table-column label="状态" prop=""></el-table-column>
+							<el-table-column label="客户等级" prop="clientLevel"></el-table-column>
+							<el-table-column label="客户编号" prop="clientNumber"></el-table-column>
+							<el-table-column label="客户名称" prop="clientName"></el-table-column>
+							<el-table-column label="销售人员" prop="saleman"></el-table-column>
+							<el-table-column label="联系人" prop="linkman"></el-table-column>
+							<el-table-column label="手机" prop="phone"></el-table-column>
+							<el-table-column label="座机" prop="tel"></el-table-column>
+							<el-table-column label="QQ/微信" prop="QQOrWechat"></el-table-column>
+							<el-table-column label="应收款余额" prop="balance"></el-table-column>
+							<el-table-column label="地址" prop="address"></el-table-column>
+							<el-table-column label="协助人员" prop="assistant"></el-table-column>
+							<el-table-column label="状态" prop="status">
+								<template slot-scope="scope">
+									<el-button-group>
+										<el-switch v-model="scope.row.status" v-on:change="handleStatus(scope.$index, scope.row)"></el-switch>
+									</el-button-group>
+								</template>
+							</el-table-column>
 						</el-table>
 					</div>
 				</el-main>
@@ -85,6 +94,11 @@
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/views/clientManagement/clientInfo.js"></script>
 <script type="text/javascript">
-	JGBVue.module.clientInfo().init();
+	/**
+	 * 初始信息
+	 * 切换状态
+	 * 删除
+	 */
+	JGBVue.module.clientInfo().init('/clientInfo/data_init', '/common/switch', '/common/data_delete');
 </script>
 </html>

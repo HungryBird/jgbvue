@@ -76,7 +76,22 @@ router.post('/data_examine', (req, res)=> {
 	})
 });
 
-
+router.post('/searchEmployee', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/systemSettings/auditProcess/search.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			})
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		})
+	})
+})
 
 
 module.exports = router;

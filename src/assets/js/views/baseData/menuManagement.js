@@ -17,20 +17,6 @@ JGBVue.module.menuManagement = ()=> {
 	 */
 	const columnList = ['per_number_col', 'per_opera_col', 'per_add_col', 'per_target_col', 'per_menu_col', 'per_unfold_col', 'per_public_col', 'per_menu_col', 'per_valid_col', 'per_describe_col', 'per_hide_col'];
 
-	const initAddForm = {
-		form1: {
-			number: '',
-			name: '',
-			sort: '',
-			parentLevel: '',
-			target: '',
-			checkboxes: [],
-			describe: ''
-		},
-		step2: [],
-		step3: []
-	}
-
 	_this.init = (treeDataUrl, dataTableUrl, editDataUrl, deteleDataUrl, permissionBtnUrl, permissionColUrl, handleMenuUrl, handleUnfoldUrl, handlePubliUrl, handleValidUrl, addStep2Delete, addStep3Delete, editStep2Delete, editStep3Delete, saveAddUrl, saveEditUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
@@ -177,10 +163,10 @@ JGBVue.module.menuManagement = ()=> {
 				 * 添加-步骤2-table-选中的行
 				 * @type {String}
 				 */
-				addStep2TableCurrent: '',
-				addStep3TableCurrent: '',
-				editStep2TableCurrent: '',
-				editStep3TableCurrent: '',
+				addStep2TableCurrent: null,
+				addStep3TableCurrent: null,
+				editStep2TableCurrent: null,
+				editStep3TableCurrent: null,
 				/**
 				 * 添加-步骤2-table-编辑-表单
 				 * @type {Object}
@@ -219,6 +205,8 @@ JGBVue.module.menuManagement = ()=> {
 				 */
 				addStep2EditFormCache: {},
 				addStep3EditFormCache: {},
+				editStep2EditFormCache: {},
+				editStep3EditFormCache: {},
 				editStep2Form: {
 					parentLevel: '',
 					name: '',
@@ -543,7 +531,7 @@ JGBVue.module.menuManagement = ()=> {
 				},
 				addStep2EditFormClick() {
 					let _self = this;
-					for(key in _self.addStep2TableCurrent) {
+					for(let key in _self.addStep2TableCurrent) {
 						_self.addStep2EditFormCache[key] = _self.addStep2TableCurrent[key];
 					}
 					this.addStep2EditForm = this.addStep2TableCurrent;
@@ -559,7 +547,8 @@ JGBVue.module.menuManagement = ()=> {
 				},
 				editStep2EditFormClick() {
 					let _self = this;
-					for(key in _self.editStep2TableCurrent) {
+					console.log('editStep2TableCurrent: ', this.editStep2TableCurrent);
+					for(let key in _self.editStep2TableCurrent) {
 						_self.editStep2EditFormCache[key] = _self.editStep2TableCurrent[key];
 					}
 					this.editStep2EditForm = this.editStep2TableCurrent;
@@ -727,7 +716,7 @@ JGBVue.module.menuManagement = ()=> {
 							}
 							this.editStep2Table.push(obj);
 							this.$refs['editStep2AddFormRef'].resetFields()
-							this.editStep2AddDialogVisiable = true;
+							this.editStep2AddDialogVisiable = false;
 						} else {
 							return false;
 						}
@@ -816,11 +805,13 @@ JGBVue.module.menuManagement = ()=> {
 										this.$message({
 											type: 'success',
 											message: res.data.message
-										})
+										});
+										this.addDialogVisiable = false;
+										this.addStep = 0;
 										/**
 										 * 清空addForm
 										 */
-										Object.assign(_self.addForm, initAddForm);
+										this.$refs['addForm1'].resetFields();
 										/**
 										 * 清空dialog的table
 										 */
@@ -851,11 +842,16 @@ JGBVue.module.menuManagement = ()=> {
 										type: 'success',
 										message: res.data.message
 									})
+									this.editDialogVisiable = false;
+									this.editStep = 0;
+									this.$refs['editForm1'].resetFields();
 									/**
 									 * 清空dialog的table
 									 */
 									this.editStep2Table.splice(0, _self.editStep2Table.length);
 									this.editStep3Table.splice(0, _self.editStep3Table.length);
+									this.editStep2TableCurrent = null;
+									this.editStep3TableCurrent = null;
 								}
 								this.editDialogVisiable = false;
 							}).catch((err)=> {
@@ -865,9 +861,16 @@ JGBVue.module.menuManagement = ()=> {
 							return false;
 						}
 					})
-				},
-				test(val){
-					console.log('val', val);
+				}
+			},
+			watch: {
+				editDialogVisiable(visiable) {
+					if(!visiable) {
+						this.editStep2TableCurrent = null;
+						this.editStep2TableCurrent = null;
+						this.editStep3TableCurrent = null;
+						this.editStep3TableCurrent = null;
+					}
 				}
 			}
 		})

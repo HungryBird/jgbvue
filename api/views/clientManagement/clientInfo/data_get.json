@@ -1,0 +1,63 @@
+{
+	"pageSize": 20,
+	"pageIndex": 1,
+	"total": 1000,
+	"table": [
+		{
+			"clientLevel": "零售",
+			"clientNumber": "001",
+			"clientName": "华盛顿武警医院",
+			"saleman": "小明",
+			"linkman": "李雷",
+			"phone": 11111111,
+			"tel": "0771444455",
+			"QQOrWechat": "11122222",
+			"balance": 111.00,
+			"address": "某某地区XX胡同",
+			"assistant": "小红",
+			"status": true
+		},
+		{
+			"clientLevel": "批发",
+			"clientNumber": "002",
+			"clientName": "纽约市人民医院",
+			"saleman": "小明",
+			"linkman": "李雷",
+			"phone": 11111111,
+			"tel": "0771444455",
+			"QQOrWechat": "11122222",
+			"balance": 111.00,
+			"address": "某某地区XX胡同",
+			"assistant": "小红",
+			"status": true
+		},
+		{
+			"clientLevel": "批发",
+			"clientNumber": "003",
+			"clientName": "加州老西医",
+			"saleman": "小明",
+			"linkman": "李雷",
+			"phone": 11111111,
+			"tel": "0771444455",
+			"QQOrWechat": "11122222",
+			"balance": 111.00,
+			"address": "某某地区XX胡同",
+			"assistant": "小红",
+			"status": false
+		},
+		{
+			"clientLevel": "零售",
+			"clientNumber": "004",
+			"clientName": "华盛顿街道办事处",
+			"saleman": "小明",
+			"linkman": "李雷",
+			"phone": 11111111,
+			"tel": "0771444455",
+			"QQOrWechat": "11122222",
+			"balance": 111.00,
+			"address": "某某地区XX胡同",
+			"assistant": "小红",
+			"status": true
+		}
+	]
+}

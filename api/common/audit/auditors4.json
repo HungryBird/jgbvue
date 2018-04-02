@@ -1,0 +1,72 @@
+[
+	{
+		"jobNumber": 40001,
+		"name": "赵总",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": true,
+		"isSelected": false,
+		"value": 40001,
+		"department": "finance2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 40002,
+		"name": "赵2",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 40002,
+		"department": "finance2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 40003,
+		"name": "赵3",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 40003,
+		"department": "finance2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 40004,
+		"name": "赵4",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 40004,
+		"department": "finance2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 40005,
+		"name": "赵5",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 40005,
+		"department": "finance2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 40006,
+		"name": "赵6",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 40006,
+		"department": "finance2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 40007,
+		"name": "赵7",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 40007,
+		"department": "finance2",
+		"company": "companyTwo"
+	}
+]

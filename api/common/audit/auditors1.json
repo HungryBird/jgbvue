@@ -6,10 +6,8 @@
 		"isBoss": true,
 		"isSelected": false,
 		"value": 10001,
-		"department": {
-			"name": "财务部",
-			"value": "finance"
-		}
+		"department": "finance1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 10002,
@@ -18,10 +16,8 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 10002,
-		"department": {
-			"name": "财务部",
-			"value": "finance"
-		}
+		"department": "finance1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 10003,
@@ -30,10 +26,8 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 10003,
-		"department": {
-			"name": "财务部",
-			"value": "finance"
-		}
+		"department": "finance1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 10004,
@@ -42,10 +36,8 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 10004,
-		"department": {
-			"name": "财务部",
-			"value": "finance"
-		}
+		"department": "finance1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 10005,
@@ -54,10 +46,8 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 10005,
-		"department": {
-			"name": "财务部",
-			"value": "finance"
-		}
+		"department": "finance1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 10006,
@@ -66,10 +56,8 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 10006,
-		"department": {
-			"name": "财务部",
-			"value": "finance"
-		}
+		"department": "finance1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 10007,
@@ -78,9 +66,7 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 10007,
-		"department": {
-			"name": "财务部",
-			"value": "finance"
-		}
+		"department": "finance1",
+		"company": "companyOne"
 	}
 ]

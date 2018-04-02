@@ -6,10 +6,8 @@
 		"isBoss": true,
 		"isSelected": false,
 		"value": 30031,
-		"department": {
-			"name": "人事部",
-			"value": "personnel"
-		}
+		"department": "personnel1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 30032,
@@ -18,10 +16,8 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 30032,
-		"department": {
-			"name": "人事部",
-			"value": "personnel"
-		}
+		"department": "personnel1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 30033,
@@ -30,10 +26,8 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 30033,
-		"department": {
-			"name": "人事部",
-			"value": "personnel"
-		}
+		"department": "personnel1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 30034,
@@ -42,10 +36,8 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 30034,
-		"department": {
-			"name": "人事部",
-			"value": "personnel"
-		}
+		"department": "personnel1",
+		"company": "companyOne"
 	},
 	{
 		"jobNumber": 30035,
@@ -54,9 +46,7 @@
 		"isBoss": false,
 		"isSelected": false,
 		"value": 30035,
-		"department": {
-			"name": "人事部",
-			"value": "personnel"
-		}
+		"department": "personnel1",
+		"company": "companyOne"
 	}
 ]

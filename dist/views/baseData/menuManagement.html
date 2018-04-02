@@ -162,8 +162,8 @@
 					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
 						<el-button-group class="pull-right">
 							<el-button type="primary" v-on:click="addStep2AddFormClick" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
-							<el-button type="primary" v-on:click="addStep2EditFormClick" icon="el-icon-edit" :disabled="addStep2TableCurrent === ''" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
-							<el-button type="primary" v-on:click="addRemoveStep2AddForm" icon="el-icon-delete" :disabled="addStep2TableCurrent === ''" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
+							<el-button type="primary" v-on:click="addStep2EditFormClick" icon="el-icon-edit" :disabled="addStep2TableCurrent === null" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
+							<el-button type="primary" v-on:click="addRemoveStep2AddForm" icon="el-icon-delete" :disabled="addStep2TableCurrent === null" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
 							<el-button v-if="permission.buttonList.indexOf('per_hide_btn') !== -1">隐藏按钮</el-button>
 						</el-button-group>
 					</nav>
@@ -179,12 +179,12 @@
 					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
 						<el-button-group class="pull-right">
 							<el-button type="primary" v-on:click="addStep3AddFormClick" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
-							<el-button type="primary" v-on:click="addStep3EditFormClick" icon="el-icon-edit" :disabled="addStep3TableCurrent === ''" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
-							<el-button type="primary" v-on:click="addRemoveStep3AddForm" icon="el-icon-delete" :disabled="addStep3TableCurrent === ''" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
+							<el-button type="primary" v-on:click="addStep3EditFormClick" icon="el-icon-edit" :disabled="addStep3TableCurrent === null" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
+							<el-button type="primary" v-on:click="addRemoveStep3AddForm" icon="el-icon-delete" :disabled="addStep3TableCurrent === null" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
 							<el-button v-if="permission.buttonList.indexOf('per_hide_btn') !== -1">隐藏按钮</el-button>
 						</el-button-group>
 					</nav>
-					<el-table border :data="addStep3Table" highlight-current-row v-on:current-change="addStep2TableSetCurrent">
+					<el-table border :data="addStep3Table" highlight-current-row v-on:current-change="addStep3TableSetCurrent">
 						<el-table-column label="序号" type="index" width="50px"></el-table-column>
 						<el-table-column label="名称" prop="name"></el-table-column>
 						<el-table-column label="编号" prop="number"></el-table-column>
@@ -397,7 +397,7 @@
 					</el-col>
 					<el-col :span="24">
 						<el-form-item prop="checkboxes" label="选项">
-							<el-checkbox-group v-model="editForm.form1.checkboxes" @change="test">
+							<el-checkbox-group v-model="editForm.form1.checkboxes">
 								<el-checkbox v-for="item in checkboxes" :label="item.name" :key="item.value" border>{{item.name}}</el-checkbox>
 							</el-checkbox-group>
 						</el-form-item>
@@ -413,8 +413,8 @@
 					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
 						<el-button-group class="pull-right">
 							<el-button type="primary" v-on:click="editStep2AddFormClick" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
-							<el-button type="primary" v-on:click="editStep2EditFormClick" icon="el-icon-edit" :disabled="editStep2TableCurrent === ''" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
-							<el-button type="primary" v-on:click="editRemoveStep2AddForm" icon="el-icon-delete" :disabled="editStep2TableCurrent === ''" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
+							<el-button type="primary" v-on:click="editStep2EditFormClick" icon="el-icon-edit" :disabled="editStep2TableCurrent === null" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
+							<el-button type="primary" v-on:click="editRemoveStep2AddForm" icon="el-icon-delete" :disabled="editStep2TableCurrent === null" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
 							<el-button v-if="permission.buttonList.indexOf('per_hide_btn') !== -1">隐藏按钮</el-button>
 						</el-button-group>
 					</nav>
@@ -430,12 +430,12 @@
 					<nav style="line-height: 0;padding: 10px 10px 0 10px;">
 						<el-button-group class="pull-right">
 							<el-button type="primary" v-on:click="editStep3AddFormClick" icon="el-icon-plus" v-if="permission.buttonList.indexOf('per_add_btn') !== -1">新增</el-button>
-							<el-button type="primary" v-on:click="editStep3EditFormClick" icon="el-icon-edit" :disabled="editStep3TableCurrent === ''" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
-							<el-button type="primary" v-on:click="editRemoveStep3AddForm" icon="el-icon-delete" :disabled="editStep3TableCurrent === ''" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
+							<el-button type="primary" v-on:click="editStep3EditFormClick" icon="el-icon-edit" :disabled="editStep3TableCurrent === null" v-if="permission.buttonList.indexOf('per_edit_btn') !== -1">编辑</el-button>
+							<el-button type="primary" v-on:click="editRemoveStep3AddForm" icon="el-icon-delete" :disabled="editStep3TableCurrent === null" v-if="permission.buttonList.indexOf('per_remove_btn') !== -1">删除</el-button>
 							<el-button v-if="permission.buttonList.indexOf('per_hide_btn') !== -1">隐藏按钮</el-button>
 						</el-button-group>
 					</nav>
-					<el-table border :data="editStep3Table" highlight-current-row v-on:current-change="editStep2TableSetCurrent">
+					<el-table border :data="editStep3Table" highlight-current-row v-on:current-change="editStep3TableSetCurrent" style="width: 100%;">
 						<el-table-column label="序号" type="index" width="50px"></el-table-column>
 						<el-table-column label="名称" prop="name"></el-table-column>
 						<el-table-column label="编号" prop="number"></el-table-column>

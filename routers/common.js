@@ -31,4 +31,63 @@ router.post('/switch', (req, res)=> {
 	})
 })
 
+router.post('/getEmployee', (req, res)=> {
+	console.log(req.body.value)
+	if(req.body.value === 'finance1') {
+		let jdata = '';
+		fs.readFile('api/common/audit/auditors1.json', 'utf-8', (err, data)=> {
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	}else if(req.body.value === 'purchase1') {
+		let jdata = '';
+		fs.readFile('api/common/audit/auditors2.json', 'utf-8', (err, data)=> {
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	}else if(req.body.value === 'personnel1') {
+		let jdata = '';
+		fs.readFile('api/common/audit/auditors3.json', 'utf-8', (err, data)=> {
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	}else if(req.body.value === 'finance2') {
+		let jdata = '';
+		fs.readFile('api/common/audit/auditors4.json', 'utf-8', (err, data)=> {
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	}else if(req.body.value === 'purchase2') {
+		let jdata = '';
+		fs.readFile('api/common/audit/auditors5.json', 'utf-8', (err, data)=> {
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	}else if(req.body.value === 'personnel2') {
+		let jdata = '';
+		fs.readFile('api/common/audit/auditors6.json', 'utf-8', (err, data)=> {
+			jdata += data;
+			res.send({
+				status: true,
+				data: jdata
+			})
+		})
+	}
+})
+
 module.exports = router;

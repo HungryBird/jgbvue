@@ -18,15 +18,11 @@ app.use(bodyParser.json());
  * routers
  */
 
-const demoRouter = require('./routers/demo');
-
 const commonRouter = require('./routers/common');
 
 const userLoginRouter = require('./routers/login');
 const indexRouter = require('./routers/index');
 const guidanceRouter = require('./routers/guidance');
-
-app.use('/demo', demoRouter);
 
 app.use('/common', commonRouter);
 
@@ -68,11 +64,14 @@ const menuManagementRouter = require('./routers/views/baseData/menuManagement');
 const departmentManagementRouter = require('./routers/views/companyOrganization/departmentManagement');
 const companyManagementRouter = require('./routers/views/companyOrganization/companyManagement');
 const userManagementRouter = require('./routers/views/companyOrganization/userManagement');
+const clientInfoRouter = require('./routers/views/clientManagement/clientInfo');
 
 app.use('/menuManagement', menuManagementRouter);
 app.use('/departmentManagement', departmentManagementRouter);
 app.use('/companyManagement', companyManagementRouter);
 app.use('/userManagement', userManagementRouter);
+app.use('/clientInfo', clientInfoRouter);
+
 /**
  * server running at port 3333
  */

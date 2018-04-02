@@ -1,0 +1,52 @@
+[
+	{
+		"jobNumber": 50011,
+		"name": "孙总",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": true,
+		"isSelected": false,
+		"value": 50011,
+		"department": "purchase2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 50012,
+		"name": "孙2",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 50012,
+		"department": "purchase2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 50013,
+		"name": "孙3",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 50013,
+		"department": "purchase2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 50014,
+		"name": "孙4",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 50014,
+		"department": "purchase2",
+		"company": "companyTwo"
+	},
+	{
+		"jobNumber": 50015,
+		"name": "孙5",
+		"src": "../../assets/img/index/portrait.png",
+		"isBoss": false,
+		"isSelected": false,
+		"value": 50015,
+		"department": "purchase2",
+		"company": "companyTwo"
+	}
+]
