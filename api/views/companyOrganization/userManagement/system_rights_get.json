@@ -1,0 +1,125 @@
+[
+  {
+    "uid": "001",
+    "label": "系统设置",
+    "leaf": false,
+    "checked": false,
+    "children": [
+      {
+        "uid": "002",
+        "label": "系统参数",
+        "checked": true,
+        "leaf": true
+      },{
+        "uid": "003",
+        "label": "行政区域",
+        "checked": false,
+        "leaf": true
+      },{
+        "uid": "004",
+        "label": "系统日志",
+        "checked": false,
+        "leaf": true
+      },{
+        "uid": "005",
+        "label": "备份与恢复",
+        "checked": false,
+        "leaf": true
+      },{
+        "uid": "006",
+        "label": "套打模板",
+        "checked": false,
+        "leaf": false,
+        "children": [
+          {
+            "uid": "007",
+            "label": "导入模板",
+            "checked": false,
+            "leaf": true
+          },{
+            "uid": "008",
+            "label": "导出模板",
+            "checked": false,
+            "leaf": true
+          }
+        ]
+      }
+    ]
+  },{
+    "uid": "009",
+    "label": "基础资料",
+    "leaf": false,
+    "checked": true,
+    "children": [
+      {
+        "uid": "010",
+        "label": "单位组织",
+        "leaf": false,
+        "children": [
+          {
+            "uid": "011",
+            "label": "公司管理",
+            "checked": true,
+            "leaf": true
+          },{
+            "uid": "012",
+            "label": "部门管理",
+            "checked": true,
+            "leaf": true
+          },{
+            "uid": "013",
+            "label": "职位管理",
+            "checked": true,
+            "leaf": true
+          },{
+            "uid": "014",
+            "label": "角色管理",
+            "checked": false,
+            "leaf": true
+          },{
+            "uid": "015",
+            "label": "用户管理",
+            "leaf": true,
+            "checked": true
+          }
+        ]
+      },{
+        "uid": "016",
+        "label": "客户管理",
+        "leaf": false,
+        "checked": false,
+        "children": [
+          {
+            "uid": "017",
+            "label": "客户信息",
+            "checked": false,
+            "leaf": true
+          },{
+            "uid": "018",
+            "label": "客户类别",
+            "checked": true,
+            "leaf": true
+          }
+        ]
+      },{
+        "uid": "019",
+        "label": "供应商管理",
+        "leaf": false,
+        "checked": false,
+        "children": [
+          {
+            "uid": "020",
+            "label": "供应商信息",
+            "checked": false,
+            "leaf": true
+          },{
+            "uid": "021",
+            "label": "供应商类别",
+            "checked": true,
+            "leaf": true
+          }
+        ]
+      }
+    ]
+  }
+]

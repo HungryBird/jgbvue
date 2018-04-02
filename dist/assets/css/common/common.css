@@ -510,3 +510,7 @@ ul {
   padding: 15px;
   border: 1px solid #e4e7ed;
   border-top: 0; }
+
+.userManagement .w-rights-management .el-tree {
+  height: 360px;
+  overflow: auto; }

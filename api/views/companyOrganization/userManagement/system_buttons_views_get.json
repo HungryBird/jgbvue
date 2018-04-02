@@ -1,0 +1,242 @@
+{
+  "buttons": [
+    {
+      "uid": "101",
+      "label": "系统设置",
+      "leaf": false,
+      "checked": false,
+      "children": [
+        {
+          "uid": "102",
+          "label": "系统参数",
+          "leaf": false,
+          "checked": false,
+          "children": [
+            {
+              "uid": "1021",
+              "label": "修改",
+              "checked": true,
+              "leaf": true
+            },{
+              "uid": "1022",
+              "label": "保存",
+              "checked": false,
+              "leaf": true
+            }
+          ]
+        },{
+          "uid": "103",
+          "label": "行政区域",
+          "leaf": false,
+          "checked": true,
+          "children": [
+            {
+              "uid": "1031",
+              "label": "查询",
+              "checked": true,
+              "leaf": true
+            },{
+              "uid": "1032",
+              "label": "新增",
+              "checked": false,
+              "leaf": true
+            },{
+              "uid": "1033",
+              "label": "修改",
+              "checked": true,
+              "leaf": true
+            },{
+              "uid": "1034",
+              "label": "删除",
+              "checked": false,
+              "leaf": true
+            }
+          ]
+        },{
+          "uid": "104",
+          "label": "系统日志",
+          "leaf": false,
+          "checked": true,
+          "children": [
+            {
+              "uid": "1041",
+              "label": "查询",
+              "checked": true,
+              "leaf": true
+            },{
+              "uid": "1042",
+              "label": "导出",
+              "checked": false,
+              "leaf": true
+            },{
+              "uid": "1043",
+              "label": "删除",
+              "checked": false,
+              "leaf": true
+            }
+          ]
+        }
+      ]
+    },{
+      "uid": "109",
+      "label": "基础资料",
+      "leaf": false,
+      "children": [
+        {
+          "uid": "1091",
+          "label": "单位组织",
+          "leaf": false,
+          "checked": false,
+          "children": [
+            {
+              "uid": "1092",
+              "label": "公司管理",
+              "leaf": true,
+              "checked": false
+            },{
+              "uid": "1093",
+              "label": "部门管理",
+              "leaf": true,
+              "checked": false
+            },{
+              "uid": "1094",
+              "label": "职位管理",
+              "leaf": true,
+              "checked": false
+            },{
+              "uid": "1095",
+              "label": "角色管理",
+              "leaf": false,
+              "checked": false
+            },{
+              "uid": "1096",
+              "label": "用户管理",
+              "leaf": true,
+              "checked": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "views": [
+    {
+      "uid": "101",
+      "label": "系统设置",
+      "leaf": false,
+      "checked": false,
+      "children": [
+        {
+          "uid": "102",
+          "label": "系统参数",
+          "leaf": false,
+          "checked": false,
+          "children": [
+            {
+              "uid": "1021",
+              "label": "修改",
+              "checked": true,
+              "leaf": true
+            },{
+              "uid": "1022",
+              "label": "保存",
+              "checked": false,
+              "leaf": true
+            }
+          ]
+        },{
+          "uid": "103",
+          "label": "行政区域",
+          "leaf": false,
+          "checked": true,
+          "children": [
+            {
+              "uid": "1031",
+              "label": "查询",
+              "checked": true,
+              "leaf": true
+            },{
+              "uid": "1032",
+              "label": "新增",
+              "checked": false,
+              "leaf": true
+            },{
+              "uid": "1033",
+              "label": "修改",
+              "checked": true,
+              "leaf": true
+            },{
+              "uid": "1034",
+              "label": "删除",
+              "checked": false,
+              "leaf": true
+            }
+          ]
+        },{
+          "uid": "104",
+          "label": "系统日志",
+          "leaf": false,
+          "checked": true,
+          "children": [
+            {
+              "uid": "1041",
+              "label": "查询",
+              "checked": true,
+              "leaf": true
+            },{
+              "uid": "1042",
+              "label": "导出",
+              "checked": false,
+              "leaf": true
+            },{
+              "uid": "1043",
+              "label": "删除",
+              "checked": false,
+              "leaf": true
+            }
+          ]
+        }
+      ]
+    },{
+      "uid": "109",
+      "label": "基础资料",
+      "leaf": false,
+      "children": [
+        {
+          "uid": "1091",
+          "label": "单位组织",
+          "leaf": false,
+          "checked": false,
+          "children": [
+            {
+              "uid": "1092",
+              "label": "公司管理",
+              "leaf": true,
+              "checked": false
+            },{
+              "uid": "1093",
+              "label": "部门管理",
+              "leaf": true,
+              "checked": false
+            },{
+              "uid": "1094",
+              "label": "职位管理",
+              "leaf": true,
+              "checked": false
+            },{
+              "uid": "1095",
+              "label": "角色管理",
+              "leaf": false,
+              "checked": false
+            },{
+              "uid": "1096",
+              "label": "用户管理",
+              "leaf": true,
+              "checked": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

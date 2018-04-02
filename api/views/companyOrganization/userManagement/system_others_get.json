@@ -1,0 +1,13 @@
+[
+  {
+    "uid": "401",
+    "label": "系统设置",
+    "info":"系统设置的说明",
+    "checked": false
+  },{
+    "uid": "402",
+    "label": "基础资料",
+    "info":"基础资料1的说明",
+    "checked": true
+  }
+]
