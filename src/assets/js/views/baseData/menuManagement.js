@@ -163,10 +163,10 @@ JGBVue.module.menuManagement = ()=> {
 				 * 添加-步骤2-table-选中的行
 				 * @type {String}
 				 */
-				addStep2TableCurrent: '',
-				addStep3TableCurrent: '',
-				editStep2TableCurrent: '',
-				editStep3TableCurrent: '',
+				addStep2TableCurrent: null,
+				addStep3TableCurrent: null,
+				editStep2TableCurrent: null,
+				editStep3TableCurrent: null,
 				/**
 				 * 添加-步骤2-table-编辑-表单
 				 * @type {Object}
@@ -782,7 +782,6 @@ JGBVue.module.menuManagement = ()=> {
 					this.addStep2TableCurrent = row;
 				},
 				editStep2TableSetCurrent(row) {
-					console.log('row: ', row)
 					this.editStep2TableCurrent = row;
 				},
 				addStep3TableSetCurrent(row) {
@@ -851,8 +850,8 @@ JGBVue.module.menuManagement = ()=> {
 									 */
 									this.editStep2Table.splice(0, _self.editStep2Table.length);
 									this.editStep3Table.splice(0, _self.editStep3Table.length);
-									this.editStep2TableCurrent = '';
-									this.editStep3TableCurrent = '';
+									this.editStep2TableCurrent = null;
+									this.editStep3TableCurrent = null;
 								}
 								this.editDialogVisiable = false;
 							}).catch((err)=> {
@@ -862,9 +861,16 @@ JGBVue.module.menuManagement = ()=> {
 							return false;
 						}
 					})
-				},
-				test(val){
-					console.log('val', val);
+				}
+			},
+			watch: {
+				editDialogVisiable(visiable) {
+					if(!visiable) {
+						this.editStep2TableCurrent = null;
+						this.editStep2TableCurrent = null;
+						this.editStep3TableCurrent = null;
+						this.editStep3TableCurrent = null;
+					}
 				}
 			}
 		})
