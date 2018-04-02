@@ -215,6 +215,8 @@ ul {
   margin-bottom: 20px; }
   .el-table .default-row {
     background: #f8f8f8; }
+  .el-table .forbidden-row > td > div {
+    color: #f56c6c; }
   .el-table th.is-leaf {
     background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#efefef));
     background: -o-linear-gradient(#f8f8f8, #efefef);

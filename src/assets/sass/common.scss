@@ -243,6 +243,13 @@ ul{
 	.default-row{
 		background: #f8f8f8;
 	}
+	.forbidden-row{
+		>td{
+			>div{
+				color: #f56c6c;
+			}
+		}
+	}
 	th.is-leaf{
 		background: linear-gradient(#f8f8f8, #efefef);
 	}
