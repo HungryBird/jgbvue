@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>角色管理</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+<body>
+	<div id="app" v-cloak class="userManagement">
+		<el-container>
+			<el-aside width="200px" class="jgb-wrap">
+				<div class="jgb-title">
+					<h5 class="text-center">公司信息</h5>
+				</div>
+				<el-tree v-if="treeData.length"
+					:data="treeData" 
+					:props="defaultProps" 
+					node-key="label"
+					:default-expanded-keys="defaultExpandedKeys"
+					v-on:node-click="handleNodeClick">
+				</el-tree>
+			</el-aside>
+			<el-main>
+				<div class="jgb-wrap">
+					<div class="jgb-title">
+						<h5 class="text-left">
+							<span>{{ currentCompany }}</span>
+							<span>-用户管理</span>
+						</h5>
+					</div>
+					<nav class="w-main-header">
+						<div class="w-left">
+							<el-form>
+								<el-form-item>
+									<el-select v-model="currentDepartment" placeholder="请选择部门" style="padding-bottom:10px;">
+										<el-option v-if="currentDepartmentList.length"
+											v-for="d in currentDepartmentList"
+											:key="d.value"
+											:label="d.label"
+											:value="d.value">
+										</el-option>
+									</el-select>
+									<el-input v-model="keyword" placeholder="请输入关键词">
+										<template slot="append">
+											<el-button v-on:click="search" icon="el-icon-search">搜索</el-button>
+										</template>
+									</el-input>
+								</el-form-item>
+							</el-form>
+						</div>
+						<div class="w-right">
+							<el-button-group style="margin-bottom:10px;">
+								<el-button type="primary" size="mini"
+									v-on:click="btnAdd">
+									新增
+								</el-button>
+								<el-button type="primary" size="mini"
+									:disabled="selectedRows.length == 0"
+									v-on:click="btnRemove">
+									删除
+								</el-button>
+								<el-button type="primary" size="mini"
+									:disabled="selectedRows.length == 0"
+									v-on:click="btnDisabled(false)">
+									禁用
+								</el-button>
+								<el-button type="primary" size="mini"
+									:disabled="selectedRows.length == 0"
+									v-on:click="btnDisabled(true)">
+									启用
+								</el-button>
+								<el-button type="primary" size="mini"
+									v-on:click="btnExport">
+									导出
+								</el-button>
+								<el-button type="primary" size="mini"
+									:disabled="selectedRows.length == 0"
+									v-on:click="btnReset">
+									重置密码
+								</el-button>
+							</el-button-group>
+							<div class="w-bottom">
+								<el-button-group class="w-btn">
+									<el-button type="primary" size="mini" :disabled="selectedRows.length != 1"
+										v-on:click="btnRights">
+										权限设置
+									</el-button>
+									<el-button type="primary" size="mini" disabled>用户数据授权</el-button>
+									<el-button type="primary" size="mini" disabled>接口数据授权</el-button>
+								</el-button-group>
+								<el-select class="w-select" placeholder="访问过滤" size="mini" style="width:120px;"
+									v-model="currentAccess"
+									:disabled="selectedRows.length != 1" 
+									v-on:blur="currentAccess=''"
+									v-on:change="handleAccess()">
+									<!-- <el-option key="ip" label="ip访问" value="ip"></el-option> -->
+									<el-option key="time" label="时段访问" value="time">
+									</el-option>
+								</el-select>
+							</div>
+						</div>
+					</nav>
+					<el-table :data="userList" ref="userTable"
+						border highlight-current-row
+						v-on:row-click="rowClick" 
+						v-on:select-all="selectAll" 
+						v-on:select="selectItem" >
+						<el-table-column type="selection" align="center" width="40"></el-table-column>
+						<el-table-column label="操作" align="center" width="150">
+							<template slot-scope="scope">
+								<el-button-group>
+									<el-button size="mini" v-on:click.stop="handleEdit(scope.$index, scope.row)">修改</el-button>
+									<el-button size="mini" type="danger" v-on:click.stop="handleDelete(scope.$index, scope.row)">删除</el-button>
+								</el-button-group>
+							</template>
+						</el-table-column>
+						<el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+						<el-table-column label="账号" prop="account" align="center"></el-table-column>
+						<el-table-column label="姓名" prop="name" align="center" width="90"></el-table-column>
+						<el-table-column label="性别" prop="sex" align="center" width="50"></el-table-column>
+						<el-table-column label="手机" prop="phone" align="center" width="120"></el-table-column>
+						<el-table-column label="部门" prop="department.label" align="center"></el-table-column>
+						<el-table-column label="状态" prop="status" align="center">
+							<template slot-scope="scope">
+								<el-switch v-model="scope.row.status" v-on:change="handleStatus(scope.$index, scope.row)"/> 
+							</template>
+						</el-table-column>
+						<el-table-column label="备注" prop="remark" align="center"></el-table-column>
+					</el-table>
+				</div>
+			</el-main>
+		</el-container>
+		<!-- 新增窗口 -->
+		<el-dialog :visible.sync="showAddUserDialog">
+			<div slot="title" class="title">
+				新增用户
+			</div>
+			<el-form ref="addForm" label-position="right" label-width="100px" 
+			 :model="addForm"  
+			 :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="账号" prop="account">
+							<el-input v-model="addForm.account"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="密码" prop="password">
+							<el-input v-model="addForm.password"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="姓名" prop="name">
+							<el-input v-model="addForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="部门" prop="department">
+							<el-select placeholder="请选择"  v-model="addForm.department"
+								v-on:change="handleFormDepartment(addForm.department)">
+								<el-option v-if="formDepartmentList.length" v-for="d in formDepartmentList" 
+									:key="d.value" :value="d.value" :label="d.label">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="职位" prop="position">
+							<el-select placeholder="请选择"  v-model="addForm.position">
+								<el-option v-if="formPositionList.length" v-for="p in formPositionList" :key="p.value" :value="p.value" :label="p.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="工号" prop="number">
+							<el-input v-model="addForm.number"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="性别" prop="sex">
+							<el-select placeholder="请选择"  v-model="addForm.sex">
+								<el-option key="male" value="male" label="男"></el-option>
+								<el-option key="female" value="female" label="女"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="生日" prop="birthday">
+							<el-date-picker
+								v-model="addForm.birthday"
+								type="date"
+								placeholder="选择日期"
+								value-format="timestamp">
+							</el-date-picker>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="邮箱" prop="email">
+							<el-input v-model="addForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="手机" prop="phone">
+							<el-input v-model="addForm.phone"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="电话" prop="tel">
+							<el-input v-model="addForm.tel"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="QQ" prop="QQ">
+							<el-input v-model="addForm.QQ"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="微信" prop="wx">
+							<el-input v-model="addForm.wx"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="addForm.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			<div slot="footer">
+	<el-button type="primary" v-on:click="saveAdd('addForm')">保存</el-button>
+	<el-button v-on:click="closeAdd('addForm')">关闭</el-button>
+</div>
+		</el-dialog>
+		<!-- 修改窗口 -->
+		<el-dialog :visible.sync="showEditUserDialog">
+			<div slot="title" class="title">
+				修改用户
+			</div>
+			<el-form ref="editForm" label-position="right" label-width="100px" 
+			 :model="editForm"  
+			 :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="账号" prop="account">
+							<el-input v-model="editForm.account"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="密码" prop="password">
+							<el-input v-model="editForm.password"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="姓名" prop="name">
+							<el-input v-model="editForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="部门" prop="department">
+							<el-select placeholder="请选择"  v-model="editForm.department"
+								v-on:change="handleFormDepartment(editForm.department)">
+								<el-option v-if="formDepartmentList.length" v-for="d in formDepartmentList" 
+									:key="d.value" :value="d.value" :label="d.label">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="职位" prop="position">
+							<el-select placeholder="请选择"  v-model="editForm.position">
+								<el-option v-if="formPositionList.length" 
+									v-for="p in formPositionList" 
+									:key="p.value" :value="p.value" :label="p.label">
+							</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="工号" prop="number">
+							<el-input v-model="editForm.number"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="性别" prop="sex">
+							<el-select placeholder="请选择"  v-model="editForm.sex">
+								<el-option key="male" value="male" label="男"></el-option>
+								<el-option key="female" value="female" label="女"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="生日" prop="birthday">
+							<el-date-picker
+								v-model="editForm.birthday"
+								type="date"
+								placeholder="选择日期"
+								value-format="timestamp">
+							</el-date-picker>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="邮箱" prop="email">
+							<el-input v-model="editForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="手机" prop="phone">
+							<el-input v-model="editForm.phone"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="电话" prop="tel">
+							<el-input v-model="editForm.tel"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="QQ" prop="QQ">
+							<el-input v-model="editForm.QQ"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="微信" prop="wx">
+							<el-input v-model="editForm.wx"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="editForm.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			<div slot="footer">
+	<el-button type="primary" v-on:click="saveEdit('editForm')">保存</el-button>
+	<el-button v-on:click="closeEdit('editForm')">关闭</el-button>
+</div>
+		</el-dialog>
+		<!-- 时段访问窗口 -->
+		<el-dialog :visible.sync="showTimeAccess" width="620px">
+			<div slot="title" class="title" v-if="selectedRows.length">
+				时段访问过滤-{{selectedRows[0].name}}
+			</div>
+			<el-alert title="已添加的时段不允许访问！" type="warning" style="margin-bottom:10px;"
+				:closable="false">
+			</el-alert>
+			<el-tabs v-model="accessDialogActive" type="border-card" class="tabs-no-content">
+				<el-tab-pane label="星期一" name="monday"></el-tab-pane>
+				<el-tab-pane label="星期二" name="tuesday"></el-tab-pane>
+				<el-tab-pane label="星期三" name="wednesday"></el-tab-pane>
+				<el-tab-pane label="星期四" name="thursday"></el-tab-pane>
+				<el-tab-pane label="星期五" name="friday"></el-tab-pane>
+				<el-tab-pane label="星期六" name="saturday"></el-tab-pane>
+				<el-tab-pane label="星期日" name="sunday"></el-tab-pane>
+			</el-tabs>
+			<div class="common-tab-content">
+				<div style="margin-bottom:10px;">
+					<span>设置时段：</span>
+					<el-time-picker is-range :editable="false"
+						v-model="currentAccessTime"
+						range-separator="至"
+						start-placeholder="开始时间"
+						end-placeholder="结束时间"
+						placeholder="选择时间范围">
+					</el-time-picker>
+					<el-button type="primary"style="margin-left:10px;"
+						:disabled="currentAccessTime.length != 2"
+						v-on:click="handleAddAccessTime" >
+						添加
+					</el-button>
+				</div>
+				<el-table :data="accessTimeList" ref="timeTable" border highlight-current-row>
+					<el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+					<el-table-column label="星期" prop="weekday" align="center"></el-table-column>
+					<el-table-column label="时间段" prop="time" align="center"></el-table-column>
+					<el-table-column label="操作" align="center" width="150">
+						<template slot-scope="scope">
+							<el-button-group>
+								<el-button size="mini" type="danger" v-on:click="handleDeleteTime(scope.$index, scope.row)">删除</el-button>
+							</el-button-group>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+		</el-dialog>
+		<!-- 权限管理窗口 -->
+		<el-dialog :visible.sync="showRightsManagement" class="w-rights-management">
+			<div slot="title" class="title">权限设置</div>
+			<el-steps :active="rightsStepActive" finish-status="success" simple style="margin-top: 20px">
+				<el-step title="系统功能" ></el-step>
+				<el-step title="系统按钮" ></el-step>
+				<el-step title="系统视图" ></el-step>
+				<el-step title="其他权限" ></el-step>
+			</el-steps>
+			<!-- 系统功能 -->
+			<el-tree v-if="systemModules.length && rightsStepActive == 0"
+				ref="systemModules" show-checkbox node-key="uid"
+				:data="systemModules" 
+				:props="defaultProps" 
+				:default-expanded-keys="systemModulesCheckedKeys"
+				:default-checked-keys="systemModulesCheckedKeys"
+				v-on:check-change="handleSystemModulesCheckChange">
+			</el-tree>
+			<!-- 系统按钮 -->
+			<el-tree v-else-if="systemButtonsCheckedKeys.length && rightsStepActive == 1"
+				ref="systemButtons" show-checkbox node-key="uid"
+				:data="systemButtons" 
+				:props="defaultProps" 
+				:default-expanded-keys="systemButtonsCheckedKeys"
+				:default-checked-keys="systemButtonsCheckedKeys"
+				v-on:check-change="handleSystemButtonsCheckChange">
+			</el-tree>
+			<!-- 系统视图 -->
+			<el-tree v-else-if="systemViewsCheckedKeys.length && rightsStepActive == 2"
+				ref="systemViews" show-checkbox node-key="uid"
+				:data="systemViews" 
+				:props="defaultProps" 
+				:default-expanded-keys="systemViewsCheckedKeys"
+				:default-checked-keys="systemViewsCheckedKeys"
+				v-on:check-change="handleSystemViewsCheckChange">
+			</el-tree>
+			<!-- 其他权限 -->
+			<el-table v-else style="margin-top:10px;"
+				:data="systemOthers" ref="systemOthers"
+				border highlight-current-row
+				v-on:row-click="rightsRowClick" 
+				v-on:select-all="rightsSelectAll" 
+				v-on:select="rightsSelectItem" >
+				<el-table-column type="selection" align="center" width="40"></el-table-column>
+				<el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+				<el-table-column label="权限名称" prop="label" align="center"></el-table-column>
+				<el-table-column label="权限说明" prop="info" align="center"></el-table-column>
+			</el-table>
+			<el-row :gutter="20" type="flex" justify="end" style="padding:20px 20px 0;">
+				<el-button v-if="rightsStepActive > 0" type="primary" 
+					:disabled="rightsStepActive < 1"
+					v-on:click="handleSystemStep('prev')">
+					上一步
+				</el-button>
+				<el-button v-if="rightsStepActive < 3" type="primary"
+					:disabled="rightsStepActive > 2"
+					v-on:click="handleSystemStep('next')">
+					下一步
+				</el-button>
+				<el-button :disabled="rightsStepActive != 3" v-on:click="completeRights">完成</el-button>
+			</el-row>
+		</el-dialog>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/companyOrganization/roleManagement.js"></script>
+<script type="text/javascript">
+	JGBVue.module.roleManagement().init(
+		'/departmentManagement/tree_data_get', //获取公司数据
+		'/departmentManagement/data_table_get', //获取部门信息
+		'/positionManagement/position_data_get', //获取职位
+		'/userManagement/user_data_get', //获取用户列表
+		'/userManagement/user_data_status', //禁用/启用用户状态
+		'/userManagement/user_data_delete', //删除用户
+		'/userManagement/user_pw_reset', //重置密码
+		'/userManagement/user_add', //新增用户
+		'/userManagement/user_edit', //修改用户
+		'/addAccessTimeUrl', //增加访问时段
+		'/delAccessTimeUrl', //删除访问时段
+		'/getAccessTimeUrl', //获取访问时段
+		'/userManagement/getSystemModulesUrl', //权限设置-获取系统功能
+		'/userManagement/getSystemButtonViewUrl', //权限设置-获取系统按钮、系统视图
+		'/userManagement/getSystemOtherRightsUrl', //权限设置-获取其他权限
+		'/userManagement/updateSystemRightsUrl', //更新权限设置
+	);
+</script>
+</html>
