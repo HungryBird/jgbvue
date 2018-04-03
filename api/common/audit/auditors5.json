@@ -7,7 +7,9 @@
 		"isSelected": false,
 		"value": 50011,
 		"department": "purchase2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 50012,
@@ -17,7 +19,9 @@
 		"isSelected": false,
 		"value": 50012,
 		"department": "purchase2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 50013,
@@ -27,7 +31,9 @@
 		"isSelected": false,
 		"value": 50013,
 		"department": "purchase2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 50014,
@@ -37,7 +43,9 @@
 		"isSelected": false,
 		"value": 50014,
 		"department": "purchase2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 50015,
@@ -47,6 +55,8 @@
 		"isSelected": false,
 		"value": 50015,
 		"department": "purchase2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	}
 ]

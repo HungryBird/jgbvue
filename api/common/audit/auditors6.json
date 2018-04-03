@@ -7,7 +7,9 @@
 		"isSelected": false,
 		"value": 60031,
 		"department": "personnel2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "人事部"
 	},
 	{
 		"jobNumber": 60032,
@@ -17,7 +19,9 @@
 		"isSelected": false,
 		"value": 60032,
 		"department": "personnel2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "人事部"
 	},
 	{
 		"jobNumber": 60033,
@@ -27,7 +31,9 @@
 		"isSelected": false,
 		"value": 60033,
 		"department": "personnel2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "人事部"
 	},
 	{
 		"jobNumber": 60034,
@@ -37,7 +43,9 @@
 		"isSelected": false,
 		"value": 60034,
 		"department": "personnel2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "人事部"
 	},
 	{
 		"jobNumber": 60035,
@@ -47,6 +55,8 @@
 		"isSelected": false,
 		"value": 60035,
 		"department": "personnel2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "人事部"
 	}
 ]

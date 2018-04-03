@@ -149,8 +149,8 @@
 				</el-form>
 			</nav>
 			<el-container class="auditMainWrap">
-				<el-aside width="217px">
-					<ul class="ul-list" v-if="firstAudit.departmentList.length !== 0">
+				<el-aside width="217px" class="jgb-wrap" v-show="firstAudit.departmentList.length !== 0">
+					<ul class="ul-list">
 						<li v-for="(item, index) in firstAudit.departmentList" :key="item.value" :value="item.value" v-on:click="firstSelectDepartment(item, index)" :class="{active: index === firstAudit.activeIndex}">
 							<a href="javascript:;">
 								{{item.name}}
@@ -179,7 +179,7 @@
 										<span class="leftSpan">
 											部门：
 										</span>
-										<a class="auditText">{{ item.department.name }}</a>
+										<a class="auditText">{{ item.departmentName }}</a>
 									</div>
 								</div>
 								<div style="clear: both;"></div>
@@ -188,7 +188,16 @@
 						<transition name="slide-fade">
 							<ul class="right-side" v-if="firstAudit.auditorList.length !== 0&&showFirstSelectedAuditors">
 								<li v-for="item in tempFirstLevelAuditorsGroup">
-									{{item.name}}
+									<div>
+										{{ item.companyName }}
+									</div>
+									<div>
+										<span>{{ item.departmentName }}</span>
+										<i>【</i>
+										<span>{{ item.name }}</span>
+										<i>】</i>
+									</div>
+									<el-button icon="el-icon-close" type="danger" circle class="close"></el-button>
 								</li>
 							</ul>
 						</transition>
@@ -225,8 +234,8 @@
 				</el-form>
 			</nav>
 			<el-container class="auditMainWrap">
-				<el-aside width="217px">
-					<ul class="ul-list" v-if="secondAudit.departmentList.length !== 0">
+				<el-aside width="217px" v-show="secondAudit.departmentList.length !== 0" class="jgb-wrap">
+					<ul class="ul-list">
 						<li v-for="(item, index) in secondAudit.departmentList" :key="item.value" :value="item.value" v-on:click="secondSelectDepartment(item, index)" :class="{active: index === secondAudit.activeIndex}">
 							<a href="javascript:;">
 								{{item.name}}
@@ -284,7 +293,7 @@
 			<div class="form-border">
 				<div class="text-center title">
 					<h3>
-						采购单审核
+						{{ examineForm.title }}
 					</h3>
 				</div>
 				<div v-if="examineForm.bossAudit.status">

@@ -91,6 +91,8 @@ JGBVue.module.auditProcess = ()=> {
                  */
                 firstAudit: {
                     company: '',
+                    companyName: '',
+                    departmentName: '',
                     searchValue: '',
                     companyList: [],
                     departmentList: [],
@@ -102,6 +104,8 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 secondAudit: {
                     company: '',
+                    companyName: '',
+                    departmentName: '',
                     searchValue: '',
                     companyList: [],
                     departmentList: [],

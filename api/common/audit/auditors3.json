@@ -7,7 +7,9 @@
 		"isSelected": false,
 		"value": 30031,
 		"department": "personnel1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "人事部"
 	},
 	{
 		"jobNumber": 30032,
@@ -17,7 +19,9 @@
 		"isSelected": false,
 		"value": 30032,
 		"department": "personnel1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "人事部"
 	},
 	{
 		"jobNumber": 30033,
@@ -27,7 +31,9 @@
 		"isSelected": false,
 		"value": 30033,
 		"department": "personnel1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "人事部"
 	},
 	{
 		"jobNumber": 30034,
@@ -37,7 +43,9 @@
 		"isSelected": false,
 		"value": 30034,
 		"department": "personnel1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "人事部"
 	},
 	{
 		"jobNumber": 30035,
@@ -47,6 +55,8 @@
 		"isSelected": false,
 		"value": 30035,
 		"department": "personnel1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "人事部"
 	}
 ]

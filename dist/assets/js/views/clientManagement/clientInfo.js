@@ -16,7 +16,12 @@ JGBVue.module.clientInfo = ()=> {
 					input: ''
 				},
 				isShowForbiddenClients: false,
+				activeIndex: -1,
 				queryType: [
+					{
+						label: "客户类别",
+						value: "clientCategory"
+					},
 					{
 						label: "重点客户",
 						value: "mvp"
@@ -44,7 +49,7 @@ JGBVue.module.clientInfo = ()=> {
 							}else{
 								_self.table.push(item);
 							}
-						})
+						});
 					}
 				}).catch((err)=> {
 					console.log('axios err: ', err);
@@ -122,8 +127,33 @@ JGBVue.module.clientInfo = ()=> {
                         });
                     });
 				},
-				changeQueryType(item) {
-					//
+				changeQueryType(item, index) {
+					if(this.activeIndex === index) return;
+					let _self = this;
+					this.activeIndex = index;
+					axios.get(initDataUrl, item.value).then((res)=> {
+						if(res.data.status) {
+							let jdata = JSON.parse(res.data.data);
+							this.table.splice(0, _self.table.length);
+							this.tempTable.splice(0, _self.tempTable.length);
+							jdata.table.forEach((item)=> {
+								_self.tempTable.push(item);
+							});
+							this.tempTable.forEach((item)=> {
+								if(!_self.isShowForbiddenClients) {
+									if(item.status) {
+										_self.table.push(item);
+									}
+								}else{
+									_self.table.push(item);
+								}
+							});
+							this.$message({
+								type: 'success',
+								message: 'success'
+							})
+						}
+					})
 				},
 				handleSizeChange() {
 					//当前页面size改变时

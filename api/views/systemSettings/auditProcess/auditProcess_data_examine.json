@@ -1,4 +1,5 @@
 {
+	"title": "采购单审核",
 	"bossAudit": {
 		"status": true,
 		"describe": "当商品采购价高于预采购价时需老板角色审核"

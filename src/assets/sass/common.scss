@@ -244,6 +244,9 @@ ul{
 	.default-row{
 		background: #f8f8f8;
 	}
+	.forbidden-row{
+		color: #f56c6c;
+	}
 	th.is-leaf{
 		background: linear-gradient(#f8f8f8, #efefef);
 	}
@@ -374,6 +377,11 @@ ul{
 			float: right;
 		}
 	}
+	.details-wrap{
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
 }
 .form-border{
 	border-top: 1px solid #ddd;
@@ -412,16 +420,11 @@ ul{
 }
 .el-aside{
 	.ul-list{
-		border: 1px solid #ddd;
-		border-top: none;
-		border-left: none;
 		li{
 			text-align: center;
 			cursor: pointer;
 			padding: 5px;
-			border: 1px solid #ddd;
-			border-bottom: none;
-			border-right: none;
+			border-bottom: 1px solid #ddd;
 			&:hover{
 				background: #49beff;
 				opacity: .5;
@@ -448,6 +451,22 @@ ul{
 			bottom: 0;
 			width: 200px;
 			overflow-y: auto;
+			background: #EEEEEE;
+			padding: 4px;
+			border: 1px solid #ddd;
+			>li{
+				position: relative;
+				padding: 4px;
+				border-bottom: 1px solid #ddd;
+				.close{
+					position: absolute;
+					/* background-color: red; */
+					top: 4px;
+					right: 4px;
+					border-radius: 50%;
+					padding: 12px;
+				}
+			}
 		}
 		.auditor{
 			position: relative;
@@ -497,12 +516,17 @@ ul{
 		}
 	}
 }
-
-
-
-
-
-
+.slide-fade-enter-active {
+	transition: all .3s ease;
+}
+.slide-fade-leave-active {
+	transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+	transform: translateX(40px);
+	opacity: 0;
+}
 
 
 //用户管理
@@ -514,11 +538,11 @@ ul{
 		.w-left{
 			@include w-flex-grow(0, 0);
 			width:50%;
-		} 
+		}
 		.w-right {
 			@include w-flex-grow(0, 0);
 			width:50%;
-		} 
+		}
 	 	.pull-right {
 			@include w-flex-grow(0, 0);
 			width:45%;
