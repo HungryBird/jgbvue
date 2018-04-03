@@ -15,6 +15,7 @@ JGBVue.module.clientInfo = ()=> {
 				search: {
 					input: ''
 				},
+				detailsInfo: {},
 				isShowForbiddenClients: false,
 				activeIndex: -1,
 				queryType: [

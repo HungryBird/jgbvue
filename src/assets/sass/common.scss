@@ -378,9 +378,40 @@ ul{
 		}
 	}
 	.details-wrap{
-		position: absolute;
+		position: fixed;
 		top: 0;
 		right: 0;
+		bottom: 0;
+		width: 640px;
+		background: #fff;
+		padding: 4px;
+	    background: none repeat scroll 0 0 #fff;
+	    border-left: 1px solid #e1e1e1;
+	    bottom: 0;
+	    box-shadow: -3px 0 11px rgba(0,0,0,0.2);
+		.details-inner{
+			height: 100%;
+			overflow-x: auto;
+			overflow-y: auto;
+		}
+		.toggle-button-wrap{
+			position: absolute;
+			z-index: 10000;
+			top: 50%;
+			left: -18px;
+			width: 16px;
+			height: 92px;
+			display: inline-block;
+			background: #f00;
+		    background-color: #fff;
+		    border-bottom-left-radius: 12px;
+		    border-left: 1px solid #e1e1e1;
+		    border-right: 1px solid #fff;
+		    border-top: 1px solid #e1e1e1;
+		    border-top-left-radius: 12px;
+		    box-shadow: -7px 0 11px rgba(0,0,0,0.2);
+		    cursor: pointer;
+		}
 	}
 }
 .form-border{
@@ -527,7 +558,23 @@ ul{
 	transform: translateX(40px);
 	opacity: 0;
 }
-
+.row-border{
+	line-height: 1.5;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	>.el-col{
+		border-bottom: 1px solid #ddd;
+		>div{
+			border-right: 1px solid #ddd;
+			>span{
+				border-right: 1px solid #ddd;
+				&:last-child{
+					border-right: 0;
+				}
+			}
+		}
+	}
+}
 
 //用户管理
 .userManagement {
