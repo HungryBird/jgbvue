@@ -449,7 +449,7 @@
 				v-on:check-change="handleSystemViewsCheckChange">
 			</el-tree>
 			<!-- 其他权限 -->
-			<el-table v-else
+			<el-table v-else style="margin-top:10px;"
 				:data="systemOthers" ref="systemOthers"
 				border highlight-current-row
 				v-on:row-click="rightsRowClick" 
@@ -461,17 +461,17 @@
 				<el-table-column label="权限说明" prop="info" align="center"></el-table-column>
 			</el-table>
 			<el-row :gutter="20" type="flex" justify="end" style="padding:20px 20px 0;">
-				<el-button type="primary" 
+				<el-button v-if="rightsStepActive > 0" type="primary" 
 					:disabled="rightsStepActive < 1"
 					v-on:click="handleSystemStep('prev')">
 					上一步
 				</el-button>
-				<el-button type="primary"
+				<el-button v-if="rightsStepActive < 3" type="primary"
 					:disabled="rightsStepActive > 2"
 					v-on:click="handleSystemStep('next')">
 					下一步
 				</el-button>
-				<el-button v-on:click="completeRights">完成</el-button>
+				<el-button :disabled="rightsStepActive != 3" v-on:click="completeRights">完成</el-button>
 			</el-row>
 		</el-dialog>
 	</div>
