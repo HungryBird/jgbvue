@@ -10,41 +10,15 @@
 <body>
 	<div id="app" v-cloak class="userManagement">
 		<el-container>
-			<el-aside width="200px" class="jgb-wrap">
-				<div class="jgb-title">
-					<h5 class="text-center">公司信息</h5>
-				</div>
-				<el-tree v-if="treeData.length"
-					:data="treeData" 
-					:props="defaultProps" 
-					node-key="label"
-					:default-expanded-keys="defaultExpandedKeys"
-					v-on:node-click="handleNodeClick">
-				</el-tree>
-			</el-aside>
 			<el-main>
 				<div class="jgb-wrap">
-					<div class="jgb-title">
-						<h5 class="text-left">
-							<span>{{ currentCompany }}</span>
-							<span>-用户管理</span>
-						</h5>
-					</div>
 					<nav class="w-main-header">
 						<div class="w-left">
 							<el-form>
 								<el-form-item>
-									<el-select v-model="currentDepartment" placeholder="请选择部门" style="padding-bottom:10px;">
-										<el-option v-if="currentDepartmentList.length"
-											v-for="d in currentDepartmentList"
-											:key="d.value"
-											:label="d.label"
-											:value="d.value">
-										</el-option>
-									</el-select>
-									<el-input v-model="keyword" placeholder="请输入关键词">
+									<el-input v-model="keyword" placeholder="请输入关键词" style="width:300px;">
 										<template slot="append">
-											<el-button v-on:click="search" icon="el-icon-search">搜索</el-button>
+											<el-button v-on:click="search" icon="el-icon-search">查询</el-button>
 										</template>
 									</el-input>
 								</el-form-item>
@@ -53,82 +27,74 @@
 						<div class="w-right">
 							<el-button-group style="margin-bottom:10px;">
 								<el-button type="primary" size="mini"
-									v-on:click="btnAdd">
+									v-on:click="">
 									新增
 								</el-button>
 								<el-button type="primary" size="mini"
+									:disabled="selectedRows.length != 1"
+									v-on:click="">
+									修改
+								</el-button>
+								<el-button type="primary" size="mini"
 									:disabled="selectedRows.length == 0"
-									v-on:click="btnRemove">
+									v-on:click="">
 									删除
 								</el-button>
 								<el-button type="primary" size="mini"
-									:disabled="selectedRows.length == 0"
-									v-on:click="btnDisabled(false)">
-									禁用
+									:disabled="selectedRows.length != 1"
+									v-on:click="">
+									设置成员
 								</el-button>
 								<el-button type="primary" size="mini"
 									:disabled="selectedRows.length == 0"
-									v-on:click="btnDisabled(true)">
-									启用
-								</el-button>
-								<el-button type="primary" size="mini"
-									v-on:click="btnExport">
-									导出
-								</el-button>
-								<el-button type="primary" size="mini"
-									:disabled="selectedRows.length == 0"
-									v-on:click="btnReset">
-									重置密码
+									v-on:click="">
+									查看成员
 								</el-button>
 							</el-button-group>
 							<div class="w-bottom">
 								<el-button-group class="w-btn">
 									<el-button type="primary" size="mini" :disabled="selectedRows.length != 1"
-										v-on:click="btnRights">
-										权限设置
+										v-on:click="">
+										功能授权
 									</el-button>
-									<el-button type="primary" size="mini" disabled>用户数据授权</el-button>
 									<el-button type="primary" size="mini" disabled>接口数据授权</el-button>
+									<el-button type="primary" size="mini" disabled>ip访问过滤</el-button>
+									<el-button type="primary" size="mini" 
+										:disabled="selectedRows.length != 1">
+										时段访问过滤
+									</el-button>
 								</el-button-group>
-								<el-select class="w-select" placeholder="访问过滤" size="mini" style="width:120px;"
-									v-model="currentAccess"
-									:disabled="selectedRows.length != 1" 
-									v-on:blur="currentAccess=''"
-									v-on:change="handleAccess()">
-									<!-- <el-option key="ip" label="ip访问" value="ip"></el-option> -->
-									<el-option key="time" label="时段访问" value="time">
-									</el-option>
-								</el-select>
 							</div>
 						</div>
 					</nav>
-					<el-table :data="userList" ref="userTable"
-						border highlight-current-row
-						v-on:row-click="rowClick" 
-						v-on:select-all="selectAll" 
-						v-on:select="selectItem" >
-						<el-table-column type="selection" align="center" width="40"></el-table-column>
-						<el-table-column label="操作" align="center" width="150">
-							<template slot-scope="scope">
-								<el-button-group>
-									<el-button size="mini" v-on:click.stop="handleEdit(scope.$index, scope.row)">修改</el-button>
-									<el-button size="mini" type="danger" v-on:click.stop="handleDelete(scope.$index, scope.row)">删除</el-button>
-								</el-button-group>
-							</template>
-						</el-table-column>
-						<el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
-						<el-table-column label="账号" prop="account" align="center"></el-table-column>
-						<el-table-column label="姓名" prop="name" align="center" width="90"></el-table-column>
-						<el-table-column label="性别" prop="sex" align="center" width="50"></el-table-column>
-						<el-table-column label="手机" prop="phone" align="center" width="120"></el-table-column>
-						<el-table-column label="部门" prop="department.label" align="center"></el-table-column>
-						<el-table-column label="状态" prop="status" align="center">
-							<template slot-scope="scope">
-								<el-switch v-model="scope.row.status" v-on:change="handleStatus(scope.$index, scope.row)"/> 
-							</template>
-						</el-table-column>
-						<el-table-column label="备注" prop="remark" align="center"></el-table-column>
-					</el-table>
+					<div class="w-main-table">
+						<el-table :data="userList" ref="userTable"
+							border highlight-current-row
+							v-on:row-click="rowClick" 
+							v-on:select-all="selectAll" 
+							v-on:select="selectItem" >
+							<el-table-column type="selection" align="center" width="40"></el-table-column>
+							<!-- <el-table-column label="操作" align="center" width="150">
+								<template slot-scope="scope">
+									<el-button-group>
+										<el-button size="mini" v-on:click.stop="handleEdit(scope.$index, scope.row)">修改</el-button>
+										<el-button size="mini" type="danger" v-on:click.stop="handleDelete(scope.$index, scope.row)">删除</el-button>
+									</el-button-group>
+								</template>
+							</el-table-column> -->
+							<el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+							<el-table-column label="角色编号" prop="account" align="center"></el-table-column>
+							<el-table-column label="角色姓名" prop="name" align="center" width="120"></el-table-column>
+							<el-table-column label="创建时间" prop="sex" align="center"></el-table-column>
+							<el-table-column label="创建人" prop="phone" align="center" width="120"></el-table-column>
+							<el-table-column label="状态" prop="status" align="center">
+								<template slot-scope="scope">
+									<el-switch v-model="scope.row.status" v-on:change="handleStatus(scope.$index, scope.row)"/> 
+								</template>
+							</el-table-column>
+							<el-table-column label="角色描述" prop="remark" align="center"></el-table-column>
+						</el-table>
+					</div>
 				</div>
 			</el-main>
 		</el-container>

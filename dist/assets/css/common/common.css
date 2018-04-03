@@ -500,7 +500,6 @@ ul {
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   padding: 10px; }
   .userManagement .w-main-header .w-left {
     flex-grow: 0;
@@ -508,8 +507,13 @@ ul {
     width: 50%; }
   .userManagement .w-main-header .w-right {
     flex-grow: 0;
-    flex-shrink: 0;
-    width: 50%; }
+    flex-shrink: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: flex-end;
+    width: 50%;
+    margin-left: 10px; }
   .userManagement .w-main-header .pull-right {
     flex-grow: 0;
     flex-shrink: 0;
@@ -545,3 +549,6 @@ ul {
 .userManagement .w-rights-management .el-tree {
   height: 360px;
   overflow: auto; }
+
+.userManagement .w-main-table {
+  padding: 0 10px; }
