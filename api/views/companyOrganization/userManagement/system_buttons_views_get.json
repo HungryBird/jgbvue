@@ -122,7 +122,7 @@
   "views": [
     {
       "uid": "101",
-      "label": "系统设置",
+      "label": "系统设置视图",
       "leaf": false,
       "checked": false,
       "children": [

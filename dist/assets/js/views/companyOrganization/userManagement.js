@@ -193,7 +193,6 @@ JGBVue.module.userManagement = ()=>{
         },
         //权限管理
         btnRights: function() {
-          this.showRightsManagement = true;
           axios.post(getSystemModulesUrl, {
             user: this.selectedRows[0].number
           }).then(req=> {
@@ -202,6 +201,8 @@ JGBVue.module.userManagement = ()=>{
               this.systemModules = _data.concat()
               //设置默认展开、选中
               this.systemModulesCheckedKeys = this.defaultChecked(this.systemModules)
+              this.showRightsManagement = true;
+              this.rightsStepActive = 0;
             }
           }).catch(err=> {})
         },
@@ -367,7 +368,6 @@ JGBVue.module.userManagement = ()=>{
               this.rightsStepActive = this.rightsStepActive < 1 ? 0 : this.rightsStepActive-1
               break;
             case 'next':
-            default:
               if(this.rightsStepActive == 0) { //系统功能
                 //获取按钮 视图 组
                 axios.post(getSystemButtonViewUrl, 
@@ -389,7 +389,7 @@ JGBVue.module.userManagement = ()=>{
                   user: this.selectedRows[0].number
                 }).then(req=> {
                   if(req.data.status) {
-                    this.systemOthers = JSON.parse(req.data.data)
+                    this.systemOthers = JSON.parse(req.data.data).concat()
                     //获取其他权限选中组 并配置表格选项
                     let checked = []
                     for(let i = 0; i < this.systemOthers.length; i++) {
@@ -399,50 +399,56 @@ JGBVue.module.userManagement = ()=>{
                         this.systemOthersChecked.push(item.uid)
                       }
                     }
-                    // this.systemOthersChecked = checked.concat()
-                    console.log('uid',this.systemOthersChecked)
-                    console.log('checked', checked)
-                    if (checked) {
-                      checked.forEach(checked => { console.log(checked)
-                        this.$refs.systemOthers.toggleRowSelection(checked, true);
-                      });
-                    } else {
-                      this.$refs.systemOthers.clearSelection();
-                    };
+                    //数据更新触发toggleSelection 否则不生效
+                    this.$nextTick(function(){
+                      this.toggleSelection(checked)
+                   })
+                    
                   }
                 }).catch(err=> {})
               }
-              this.rightsStepActive = this.rightsStepActive > 3 ? 0: this.rightsStepActive+1
+              this.rightsStepActive++
               break;
+          }
+        },
+        //切换其他权限表格selected状态
+        toggleSelection(rows) {
+          if (rows) {
+            rows.forEach(row => {
+              this.$refs.systemOthers.toggleRowSelection(row, true)
+            });
+          } else {
+            this.$refs.systemOthers.clearSelection()
           }
         },
         //权限-表格列点击选中
         rightsRowClick: function(row) {
-					this.$refs.systemOthers.toggleRowSelection(row);
-					if(this.systemOthersChecked.indexOf(row) == -1) {
-						this.systemOthersChecked.push(row)
+          let uid = row.uid
+					this.$refs.systemOthers.toggleRowSelection(uid);
+					if(this.systemOthersChecked.indexOf(uid) == -1) {
+            this.systemOthersChecked.push(uid)
+            this.$refs.systemOthers.toggleRowSelection(row, true);
 					}else{
-						this.systemOthersChecked.splice(this.systemOthersChecked.indexOf(row), 1);
-					}
+						this.systemOthersChecked.splice(this.systemOthersChecked.indexOf(uid), 1);
+            this.$refs.systemOthers.toggleRowSelection(row, false);
+          }
         },
         //权限-全选
 				rightsSelectAll(selection) {
-					let _self = this;
-          if(selection.length == 0) {
-            _self.systemOthersChecked.splice(0, _self.systemOthersChecked.length);
-          }else{
-            _self.systemOthersChecked.splice(0, _self.systemOthersChecked.length);
-            selection.forEach((item)=> {
-                _self.systemOthersChecked.push(item);
+          this.systemOthersChecked = []
+          if(selection.length) { 
+            this.systemOthers.forEach(item=> { console.log(item)
+              this.systemOthersChecked.push(item.uid)
             })
-          }
+          };
         },
         //权限-单选
         rightsSelectItem: function(selection, row) {
-          let _self = this;
-          this.systemOthersChecked.splice(0, _self.systemOthersChecked.length);
-          for(let i = 0; i < selection.length; i++) {
-            _self.systemOthersChecked.push(selection[i]);
+          if(this.systemOthersChecked.indexOf(row.uid) == -1) {
+            this.systemOthersChecked.push(row.uid)
+          }
+          else {
+            this.systemOthersChecked.splice(this.systemOthersChecked.indexOf(row.uid), 1)
           }
         },
         //更新权限设置
@@ -451,6 +457,7 @@ JGBVue.module.userManagement = ()=>{
             modules: this.systemModulesCheckedKeys,
             buttons: this.systemButtonsCheckedKeys,
             views: this.systemViewsCheckedKeys,
+            others: this.systemOthersChecked,
             user: this.selectedRows[0].number
           }).then(req=> {}).catch(err=> {})
           this.showRightsManagement = false //应在数据处理成功后关闭
