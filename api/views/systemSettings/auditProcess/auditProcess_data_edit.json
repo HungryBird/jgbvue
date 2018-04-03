@@ -16,7 +16,8 @@
 			"isSelected": true,
 			"value": 10002,
 			"department": "finance1",
-			"company": "companyOne"
+			"company": "companyOne",
+			"companyName": "公司甲"
 		}
 	],
 	"secondLevelAuditorsGroup": [
@@ -28,7 +29,8 @@
 			"isSelected": true,
 			"value": 30033,
 			"department": "personnel1",
-			"company": "companyOne"
+			"company": "companyOne",
+			"companyName": "公司甲"
 		}
 	],
 	"auditMethod": "2",

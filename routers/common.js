@@ -29,6 +29,13 @@ router.post('/switch', (req, res)=> {
 		status: true,
 		message: 'success!'
 	})
+});
+
+router.post('/search', (req, res)=> {
+	res.sedn({
+		status: true,
+		message: 'success'
+	})
 })
 
 router.post('/getEmployee', (req, res)=> {

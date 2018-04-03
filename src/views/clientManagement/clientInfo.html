@@ -29,7 +29,7 @@
 						<h5 class="text-center">快速查询</h5>
 					</div>
 					<ul class="ul-list">
-						<li v-for="(item, index) in queryType" :key="item.value" :value="item.value" v-on:click="changeQueryType(item)">
+						<li v-for="(item, index) in queryType" :key="item.value" :value="item.value" v-on:click="changeQueryType(item, index)" :class="{active: index === activeIndex}">
 							{{ item.label }}
 						</li>
 					</ul>
@@ -87,6 +87,9 @@
 		<div class="wrap_footer">
 			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
 		</div>
+		<div class="details-wrap">
+			
+		</div>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -95,7 +98,7 @@
 <script type="text/javascript" src="../../assets/js/views/clientManagement/clientInfo.js"></script>
 <script type="text/javascript">
 	/**
-	 * 初始信息
+	 * 初始信息/搜索
 	 * 切换状态
 	 * 删除
 	 */

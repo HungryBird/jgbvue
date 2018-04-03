@@ -5,10 +5,12 @@ new Vue({
       name: '赵某',
       portrait: './assets/img/index/portrait.png',
       teamName: '我的团队001',
-      navItems: [{
+      navItems: [
+      {
         id: 'nav_001',
         cls: 'fa fa-home'
-      }, {
+      },
+      {
         id: 'nav_002',
         cls: 'fa fa-list-ul',
         name: '系统设置',
@@ -67,13 +69,39 @@ new Vue({
         menuItems: [
         {
           parentFolder: 'baseData',
-          items: [{
-            id: 'menuManagement',
-            name: '功能菜单管理'
-          }, {
-            id: 'dataDictionary',
-            name: '数据字典'
-          }]
+          items: [
+            {
+              id: 'menuManagement',
+              name: '功能菜单管理'
+            }, {
+              id: 'dataDictionary',
+              name: '数据字典'
+            },{
+              id: 'warehouseManagement',
+              name: '仓库管理'
+            },{
+              id: 'accountManagement',
+              name: '账户管理'
+            },{
+              id: 'payCategory',
+              name: '支出类别'
+            },{
+              id: 'incomeCategory',
+              name: '收入类别'
+            },{
+              id: 'settleAccountsMethod',
+              name: '结算方式'
+            },{
+              id: 'unitOfMeasurement',
+              name: '计量单位'
+            },{
+              id: 'clientMaterialCoding',
+              name: '客户物料编码'
+            },{
+              id: 'invoiceCodingRules',
+              name: '单据编码规则'
+            }
+          ]
         },
         {
           title: '公司组织',
@@ -104,20 +132,8 @@ new Vue({
               name: '客户信息'
             },
             {
-              id: 'xsbb002',
-              name: '销售明细表'
-            },
-            {
-              id: 'xsbb003',
-              name: '销售汇总表(按商品)'
-            },
-            {
-              id: 'xsbb004',
-              name: '销售汇总表(按客户)'
-            },
-            {
-              id: 'xsbb005',
-              name: '销售汇总表(按销售人员)'
+              id: 'clientCategory',
+              name: '客户类别'
             }
           ]
         }

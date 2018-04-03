@@ -7,7 +7,9 @@
 		"isSelected": false,
 		"value": 20011,
 		"department": "purchase1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "采购部"
 	},
 	{
 		"jobNumber": 20012,
@@ -17,7 +19,9 @@
 		"isSelected": false,
 		"value": 20012,
 		"department": "purchase1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "采购部"
 	},
 	{
 		"jobNumber": 20013,
@@ -27,7 +31,9 @@
 		"isSelected": false,
 		"value": 20013,
 		"department": "purchase1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "采购部"
 	},
 	{
 		"jobNumber": 20014,
@@ -37,7 +43,9 @@
 		"isSelected": false,
 		"value": 20014,
 		"department": "purchase1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "采购部"
 	},
 	{
 		"jobNumber": 20015,
@@ -47,6 +55,8 @@
 		"isSelected": false,
 		"value": 20015,
 		"department": "purchase1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "采购部"
 	}
 ]

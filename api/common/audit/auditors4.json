@@ -7,7 +7,9 @@
 		"isSelected": false,
 		"value": 40001,
 		"department": "finance2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 40002,
@@ -17,7 +19,9 @@
 		"isSelected": false,
 		"value": 40002,
 		"department": "finance2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 40003,
@@ -27,7 +31,9 @@
 		"isSelected": false,
 		"value": 40003,
 		"department": "finance2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 40004,
@@ -37,7 +43,9 @@
 		"isSelected": false,
 		"value": 40004,
 		"department": "finance2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 40005,
@@ -47,7 +55,9 @@
 		"isSelected": false,
 		"value": 40005,
 		"department": "finance2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 40006,
@@ -57,7 +67,9 @@
 		"isSelected": false,
 		"value": 40006,
 		"department": "finance2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	},
 	{
 		"jobNumber": 40007,
@@ -67,6 +79,8 @@
 		"isSelected": false,
 		"value": 40007,
 		"department": "finance2",
-		"company": "companyTwo"
+		"company": "companyTwo",
+		"companyName": "公司乙",
+		"departmentName": "财政部"
 	}
 ]

@@ -7,7 +7,9 @@
 		"isSelected": false,
 		"value": 10001,
 		"department": "finance1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "财务部"
 	},
 	{
 		"jobNumber": 10002,
@@ -17,7 +19,9 @@
 		"isSelected": false,
 		"value": 10002,
 		"department": "finance1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "财务部"
 	},
 	{
 		"jobNumber": 10003,
@@ -27,7 +31,9 @@
 		"isSelected": false,
 		"value": 10003,
 		"department": "finance1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "财务部"
 	},
 	{
 		"jobNumber": 10004,
@@ -37,7 +43,9 @@
 		"isSelected": false,
 		"value": 10004,
 		"department": "finance1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "财务部"
 	},
 	{
 		"jobNumber": 10005,
@@ -47,7 +55,9 @@
 		"isSelected": false,
 		"value": 10005,
 		"department": "finance1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "财务部"
 	},
 	{
 		"jobNumber": 10006,
@@ -57,7 +67,9 @@
 		"isSelected": false,
 		"value": 10006,
 		"department": "finance1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "财务部"
 	},
 	{
 		"jobNumber": 10007,
@@ -67,6 +79,8 @@
 		"isSelected": false,
 		"value": 10007,
 		"department": "finance1",
-		"company": "companyOne"
+		"company": "companyOne",
+		"companyName": "公司甲",
+		"departmentName": "财务部"
 	}
 ]
