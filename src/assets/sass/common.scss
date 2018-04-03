@@ -580,15 +580,18 @@ ul{
 .userManagement {
 	.w-main-header {
 		@include w-flex(row, nowrap, space-between, center);
-		width:100%;
+
+
 		padding: 10px;
 		.w-left{
 			@include w-flex-grow(0, 0);
 			width:50%;
 		}
 		.w-right {
-			@include w-flex-grow(0, 0);
+			@include w-flex-grow(0, 1);
+			@include w-flex(column, nowrap, center, flex-end);
 			width:50%;
+			margin-left:10px;
 		}
 	 	.pull-right {
 			@include w-flex-grow(0, 0);
@@ -624,5 +627,8 @@ ul{
 			height:360px;
 			overflow:auto;
 		}
+	}
+	.w-main-table {
+		padding: 0 10px;
 	}
 }
