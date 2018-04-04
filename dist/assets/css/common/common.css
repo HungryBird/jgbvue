@@ -596,3 +596,44 @@ ul {
 
 .userManagement .w-main-table {
   padding: 0 10px; }
+
+.w-member-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center; }
+  .w-member-list .member-item {
+    flex-grow: 0;
+    flex-shrink: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: stretch;
+    border: 1px solid #ddd;
+    width: 30%;
+    margin-right: 10px;
+    margin-bottom: 10px; }
+    .w-member-list .member-item:nth-child(3n) {
+      margin-right: 0; }
+    .w-member-list .member-item .member-pic {
+      flex-grow: 0;
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px; }
+    .w-member-list .member-item .member-info {
+      flex-grow: 1;
+      flex-shrink: 1;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-around;
+      align-items: flex-start;
+      margin-left: 5px;
+      font-size: 12px;
+      color: #666;
+      line-height: 18px; }
+      .w-member-list .member-item .member-info .info-item {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        text-overflow: ellipsis; }

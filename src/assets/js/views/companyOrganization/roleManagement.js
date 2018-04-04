@@ -13,9 +13,8 @@ JGBVue.module.roleManagement = () => {
     departmentGetUrl,
     positionListGetUrl,
     roleListGetUrl,
-    userStatus,
-    userDelete,
-    userPasswordReset,
+    roleStatus,
+    roleDelete,
     roleAddUrl,
     roleEditUrl,
     addAccountTimeUrl,
@@ -24,7 +23,8 @@ JGBVue.module.roleManagement = () => {
     getSystemModulesUrl,
     getSystemButtonViewUrl,
     getSystemOtherRightsUrl,
-    updateSystemRightsUrl) => {
+    updateSystemRightsUrl,
+    roleMemberListUrl) => {
     that.vm = new Vue({
       el: '#app',
       data: function () {
@@ -40,7 +40,6 @@ JGBVue.module.roleManagement = () => {
           currentNode: '', //当前公司
           currentDepartmentList: [], //当前公司部门列表
           currentDepartment: '', //当前部门
-          currentAccess: '',//当前访问过滤类型
           keyword: '', //搜索
 
           roleList: [],
@@ -79,8 +78,10 @@ JGBVue.module.roleManagement = () => {
           accessDialogActive: 'monday', //时段访问标签页
           currentAccessTime: [new Date(2017, 7, 7, 0, 0), new Date(2017, 7, 8, 23, 0)], //选择的禁止访问时段
           accessTimeList: [], //当前用户的禁止访问时段
+          isAddingAccessTime: false, //是否添加时段中
 
           showRightsManagement: false, //权限管理窗
+          isUpdatingRight: false, //更新数据中
           rightsStepActive: 0, //步骤进度
           systemModules: [], //系统功能列
           systemButtons: [], //系统按钮列
@@ -90,6 +91,10 @@ JGBVue.module.roleManagement = () => {
           systemButtonsCheckedKeys: [], //系统按钮选中组
           systemViewsCheckedKeys: [], //系统视图选中组
           systemOthersChecked: [], //其他权限选中组
+
+          showRoleMember: false, //查看角色成员组 窗
+          isLoadingRoleMember: false, //正在获取成员组
+          roleMemberList: [], //角色成员组
         }
       },
       methods: {
@@ -146,58 +151,26 @@ JGBVue.module.roleManagement = () => {
           this.$confirm('是否删除选中用户?', '提示').then(() => {
             let list = []
             for (let i = 0; i < this.selectedRows.length; i++) {
-              list.push(this.selectedRows[i].number)
+              list.push(this.selectedRows[i].uid)
             }
-            axios.post(userDelete, list).then((res) => {
-              // this.$alert(res.data.message, '提示')
-              //更新用户列表
-              this.getRoleList()
+            axios.post(roleDelete, list).then((res) => {
+              if (res.data.status) {
+                //更新用户列表
+                this.getRoleList()
+                this.$message({
+                  message: res.data.message,
+                  type: 'success'
+                })
+              }
+              else {
+                this.$alert(res.data.message, '提示')
+              }
             }).catch((err) => {
               this.$alert(err, '错误')
             })
           }).catch(() => {
             //to do
           });
-        },
-        /**
-         * 禁用 启用
-         * @param {*} type 启用/禁用标识
-         */
-        btnDisabled: function (type) {
-          this.$confirm(`是否${type ? '启' : '禁'}用选中用户?`, '提示').then(() => {
-            let list = []
-            for (let i = 0; i < this.selectedRows.length; i++) {
-              list.push(this.selectedRows[i].number)
-            }
-            axios.post(userStatus, {
-              list: list,
-              type: type
-            }).then((res) => {
-              // this.$alert(res.data.message, '提示')
-              //更新用户列表
-            }).catch((err) => {
-              this.$alert(err, '错误')
-            })
-          }).catch(() => {
-            //todo
-          });
-        },
-        //启用
-        /*btnEnable: function() {
-          this.$confirm('是否启用选中用户?', '提示').then(()=> {
-            //ajax
-          }).catch(()=>{
-            //ajax
-          });
-        },*/
-        //导出
-        btnExport: function () { },
-        //重置密码
-        btnReset: function () {
-          this.$confirm('是否重置选中用户密码?', '提示').then(() => {
-            //ajax
-            this.$alert('账户密码重置到默认密码：123456', '提示')
-          }).catch();
         },
         //权限管理
         btnRights: function () {
@@ -213,6 +186,10 @@ JGBVue.module.roleManagement = () => {
               this.rightsStepActive = 0;
             }
           }).catch(err => { })
+        },
+        //查看成员
+        btnGetMember: function() {
+          this.getRoleMemberList()
         },
         /**
          * 获取所有checked的数据 返回一个uid的数组
@@ -304,12 +281,21 @@ JGBVue.module.roleManagement = () => {
         },
         //单个用户删除
         handleDelete: function (index, row) {
-          console.log(index, row)
           let list = []
-          list.push(row.number)
+          list.push(row.uid)
           this.$confirm('确认删除该用户?', '提示').then(() => {
-            axios.post(userDelete, list).then((res) => {
-              this.$alert(res.data.message, '提示')
+            axios.post(roleDelete, list).then((res) => {
+              if (res.data.status) {
+                //更新用户列表
+                this.getRoleList()
+                this.$message({
+                  message: res.data.message,
+                  type: 'success'
+                })
+              }
+              else {
+                this.$alert(res.data.message, '提示')
+              }
             }).catch(err => {
               this.$alert(err, '错误')
             })
@@ -317,16 +303,21 @@ JGBVue.module.roleManagement = () => {
         },
         //单个用户 启用/禁用
         handleStatus: function (index, row) {
-          axios.post(userStatus, {
-            number: row.number,
+          axios.post(roleStatus, {
+            number: row.uid,
             status: row.status
           }).then((res) => {
-            //操作失败
-            if (!res.data.status) {
-              this.$confirm(res.data.message, '提示')
+            if(res.data.status) {
+              this.$message({
+                message: res.data.message,
+                type: 'success'
+              })
+            }
+            else {
+              this.$alert(res.data.message, '提示')
             }
           }).catch(err => {
-            this.$confirm(err, '错误')
+            this.$alert(err, '错误')
           })
         },
         //表单选择部门 获取职位数据
@@ -338,27 +329,21 @@ JGBVue.module.roleManagement = () => {
           })
         },
         //访问过滤
-        handleAccess: function () {
-          switch (this.currentAccess) {
+        handleAccess: function (type) {
+          switch (type) {
             case 'time':
-              //test data
-              this.accessTimeList = [{
-                'weekday': '星期一',
-                'time': '上午10:00--下午15:00'
-              }, {
-                'weekday': '星期二',
-                'time': '上午10:00--下午15:00'
-              }, {
-                'weekday': '星期三',
-                'time': '上午10:00--下午15:00'
-              }, {
-                'weekday': '星期四',
-                'time': '上午10:00--下午15:00'
-              }]
-              // axios.get(accountTimeGet, selectedRows[0].number).then(res=> {
-              //   this.accessTimeList = JSOn.parse(res.data.data)
-              // }).catch()
-              this.showTimeAccess = true
+              this.isAddingAccessTime = false
+              axios.post(accessTimeGetUrl, this.selectedRows[0].uid).then(res=> {
+                if(res.data.status) {
+                  this.accessTimeList = JSON.parse(res.data.data).concat()
+                  this.showTimeAccess = true
+                }
+                else {
+                  this.$alert(res.data.message, '提示')
+                }
+              }).catch(err => {
+                this.$alert(err, '提示')
+              })
               break
             case 'ip':
               break
@@ -366,16 +351,45 @@ JGBVue.module.roleManagement = () => {
         },
         //添加禁止访问时段
         handleAddAccessTime: function () {
+          this.isAddingAccessTime = true
           axios.post(addAccountTimeUrl, {
-            user: this.selectedRows[0].number,
+            role: this.selectedRows[0].uid,
             weekday: this.accessDialogActive,
             time: this.currentAccessTime
-          }).then().catch()
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                message: res.data.message, 
+                type: 'success'
+              })
+              //更新访问时段列表
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+            this.isAddingAccessTime = false
+          }).catch(err=> {
+            this.$alert(err, '提示')
+            this.isAddingAccessTime = false
+          })
         },
         //删除禁止访问时段
         handleDeleteTime: function (index, row) {
-          // row { weekday, time }
-          axios.post(delAccountTimeUrl).then().catch()
+          axios.post(delAccountTimeUrl, {
+            //send data
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                message: res.data.message,
+                type: 'success'
+              })
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+          }).catch(err=> {
+            this.$alert(err, '提示')
+          })
         },
         /**
          * 系统功能树形菜单
@@ -493,14 +507,29 @@ JGBVue.module.roleManagement = () => {
         },
         //更新权限设置
         completeRights: function () {
+          this.isUpdatingRight = true
           axios.post(updateSystemRightsUrl, {
             modules: this.systemModulesCheckedKeys,
             buttons: this.systemButtonsCheckedKeys,
             views: this.systemViewsCheckedKeys,
             others: this.systemOthersChecked,
             user: this.selectedRows[0].number
-          }).then(req => { }).catch(err => { })
-          this.showRightsManagement = false //应在数据处理成功后关闭
+          }).then(res => {
+            this.isUpdatingRight = false
+            if(res.data.status) {
+              this.$message({
+                message: res.data.message,
+                type: 'success'
+              })
+              this.showRightsManagement = false
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+          }).catch(err => {
+            this.$alert(err, '提示')
+            this.isUpdatingRight = false
+          })
         },
         //获取用户列表
         getRoleList: function () {
@@ -514,6 +543,25 @@ JGBVue.module.roleManagement = () => {
             };
           }).catch((err) => {
             console.log('err', err);
+          })
+        },
+        //获取角色成员组
+        getRoleMemberList: function() {
+          this.isLoadingRoleMember = true
+          axios.post(roleMemberListUrl, {
+            uid: this.selectedRows[0].uid
+          }).then(res=> {
+            if(res.data.status) {
+              this.roleMemberList = JSON.parse(res.data.data).concat()
+              this.showRoleMember = true
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            }
+            this.isLoadingRoleMember = false
+          }).catch(err=> {
+            this.$alert(err, '提示')
+            this.isLoadingRoleMember = false
           })
         },
       },
@@ -558,9 +606,8 @@ JGBVue.module.roleManagement = () => {
     departmentGetUrl,
     positionListGetUrl,
     roleListGetUrl,
-    userStatus,
-    userDelete,
-    userPasswordReset,
+    roleStatus,
+    roleDelete,
     roleAddUrl,
     roleEditUrl,
     addAccountTimeUrl,
@@ -569,15 +616,15 @@ JGBVue.module.roleManagement = () => {
     getSystemModulesUrl,
     getSystemButtonViewUrl,
     getSystemOtherRightsUrl,
-    updateSystemRightsUrl) => {
+    updateSystemRightsUrl,
+    roleMemberListUrl) => {
     _this.init(
       treeDataGetUrl,
       departmentGetUrl,
       positionListGetUrl,
       roleListGetUrl,
-      userStatus,
-      userDelete,
-      userPasswordReset,
+      roleStatus,
+      roleDelete,
       roleAddUrl,
       roleEditUrl,
       addAccountTimeUrl,
@@ -586,7 +633,8 @@ JGBVue.module.roleManagement = () => {
       getSystemModulesUrl,
       getSystemButtonViewUrl,
       getSystemOtherRightsUrl,
-      updateSystemRightsUrl)
+      updateSystemRightsUrl,
+      roleMemberListUrl)
   }
   return that
 }

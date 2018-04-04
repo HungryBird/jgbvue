@@ -31,29 +31,28 @@
 								<el-button type="primary" size="mini" v-on:click="btnAdd">
 									新增
 								</el-button>
-								<!-- <el-button type="primary" size="mini"
-									:disabled="selectedRows.length != 1"
-									v-on:click="">
-									修改
-								</el-button> -->
 								<el-button type="primary" size="mini" :disabled="selectedRows.length == 0" v-on:click="">
 									删除
 								</el-button>
 								<el-button type="primary" size="mini" :disabled="selectedRows.length != 1" v-on:click="">
 									设置成员
 								</el-button>
-								<el-button type="primary" size="mini" :disabled="selectedRows.length != 0" v-on:click="">
+								<el-button type="primary" size="mini" :disabled="selectedRows.length != 1" v-on:click="btnGetMember">
 									查看成员
 								</el-button>
 							</el-button-group>
 							<div class="w-bottom">
 								<el-button-group class="w-btn">
-									<el-button type="primary" size="mini" :disabled="selectedRows.length != 1" v-on:click="">
+									<el-button type="primary" size="mini" 
+										:disabled="selectedRows.length != 1" 
+										v-on:click="btnRights">
 										功能授权
 									</el-button>
 									<el-button type="primary" size="mini" disabled>接口数据授权</el-button>
 									<el-button type="primary" size="mini" disabled>ip访问过滤</el-button>
-									<el-button type="primary" size="mini" :disabled="selectedRows.length != 1">
+									<el-button type="primary" size="mini" 
+										:disabled="selectedRows.length != 1"
+										v-on:click="handleAccess('time')">
 										时段访问过滤
 									</el-button>
 								</el-button-group>
@@ -61,8 +60,11 @@
 						</div>
 					</nav>
 					<div class="w-main-table">
-						<el-table :data="roleList" ref="roleTable" border highlight-current-row v-on:row-click="rowClick" v-on:select-all="selectAll"
-						 v-on:select="selectItem">
+						<!-- 角色列表 -->
+						<el-table :data="roleList" ref="roleTable" 
+							border highlight-current-row 
+							v-on:row-click="rowClick" v-on:select-all="selectAll"
+							v-on:select="selectItem">
 							<el-table-column type="selection" align="center" width="40"></el-table-column>
 							<el-table-column label="操作" align="center" width="150">
 								<template slot-scope="scope">
@@ -145,10 +147,17 @@
 			<div class="common-tab-content">
 				<div style="margin-bottom:10px;">
 					<span>设置时段：</span>
-					<el-time-picker is-range :editable="false" v-model="currentAccessTime" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间"
-					 placeholder="选择时间范围">
+					<el-time-picker is-range 
+						:editable="false" v-model="currentAccessTime" 
+						range-separator="至" 
+						start-placeholder="开始时间" 
+						end-placeholder="结束时间"
+						placeholder="选择时间范围">
 					</el-time-picker>
-					<el-button type="primary" style="margin-left:10px;" :disabled="currentAccessTime.length != 2" v-on:click="handleAddAccessTime">
+					<el-button type="primary" style="margin-left:10px;" 
+						:disabled="currentAccessTime.length != 2 || isAddingAccessTime" 
+						:loading="isAddingAccessTime"
+						v-on:click="handleAddAccessTime">
 						添加
 					</el-button>
 				</div>
@@ -159,7 +168,10 @@
 					<el-table-column label="操作" align="center" width="150">
 						<template slot-scope="scope">
 							<el-button-group>
-								<el-button size="mini" type="danger" v-on:click="handleDeleteTime(scope.$index, scope.row)">删除</el-button>
+								<el-button size="mini" type="danger" 
+									v-on:click="handleDeleteTime(scope.$index, scope.row)">
+									删除
+								</el-button>
 							</el-button-group>
 						</template>
 					</el-table-column>
@@ -176,37 +188,76 @@
 				<el-step title="其他权限"></el-step>
 			</el-steps>
 			<!-- 系统功能 -->
-			<el-tree v-if="systemModules.length && rightsStepActive == 0" ref="systemModules" show-checkbox node-key="uid" :data="systemModules"
-			 :props="defaultProps" :default-expanded-keys="systemModulesCheckedKeys" :default-checked-keys="systemModulesCheckedKeys"
-			 v-on:check-change="handleSystemModulesCheckChange">
+			<el-tree v-if="systemModules.length && rightsStepActive == 0" 
+				ref="systemModules" show-checkbox node-key="uid" 
+				:data="systemModules"
+				:props="defaultProps" 
+				:default-expanded-keys="systemModulesCheckedKeys" 
+				:default-checked-keys="systemModulesCheckedKeys"
+				v-on:check-change="handleSystemModulesCheckChange">
 			</el-tree>
 			<!-- 系统按钮 -->
-			<el-tree v-else-if="systemButtonsCheckedKeys.length && rightsStepActive == 1" ref="systemButtons" show-checkbox node-key="uid"
-			 :data="systemButtons" :props="defaultProps" :default-expanded-keys="systemButtonsCheckedKeys" :default-checked-keys="systemButtonsCheckedKeys"
-			 v-on:check-change="handleSystemButtonsCheckChange">
+			<el-tree v-else-if="systemButtonsCheckedKeys.length && rightsStepActive == 1" 
+				ref="systemButtons" show-checkbox node-key="uid"
+				:data="systemButtons" 
+				:props="defaultProps" 
+				:default-expanded-keys="systemButtonsCheckedKeys" 
+				:default-checked-keys="systemButtonsCheckedKeys"
+				v-on:check-change="handleSystemButtonsCheckChange">
 			</el-tree>
 			<!-- 系统视图 -->
-			<el-tree v-else-if="systemViewsCheckedKeys.length && rightsStepActive == 2" ref="systemViews" show-checkbox node-key="uid"
-			 :data="systemViews" :props="defaultProps" :default-expanded-keys="systemViewsCheckedKeys" :default-checked-keys="systemViewsCheckedKeys"
-			 v-on:check-change="handleSystemViewsCheckChange">
+			<el-tree v-else-if="systemViewsCheckedKeys.length && rightsStepActive == 2" 
+				ref="systemViews" show-checkbox node-key="uid"
+				:data="systemViews" 
+				:props="defaultProps" 
+				:default-expanded-keys="systemViewsCheckedKeys" 
+				:default-checked-keys="systemViewsCheckedKeys"
+				v-on:check-change="handleSystemViewsCheckChange">
 			</el-tree>
 			<!-- 其他权限 -->
-			<el-table v-else style="margin-top:10px;" :data="systemOthers" ref="systemOthers" border highlight-current-row v-on:row-click="rightsRowClick"
-			 v-on:select-all="rightsSelectAll" v-on:select="rightsSelectItem">
+			<el-table v-else style="margin-top:10px;" 
+				ref="systemOthers" border highlight-current-row 
+				:data="systemOthers"
+				v-on:row-click="rightsRowClick"
+				v-on:select-all="rightsSelectAll" 
+				v-on:select="rightsSelectItem">
 				<el-table-column type="selection" align="center" width="40"></el-table-column>
 				<el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
 				<el-table-column label="权限名称" prop="label" align="center"></el-table-column>
 				<el-table-column label="权限说明" prop="info" align="center"></el-table-column>
 			</el-table>
 			<el-row :gutter="20" type="flex" justify="end" style="padding:20px 20px 0;">
-				<el-button v-if="rightsStepActive > 0" type="primary" :disabled="rightsStepActive < 1" v-on:click="handleSystemStep('prev')">
+				<el-button v-if="rightsStepActive > 0" type="primary" 
+					:disabled="rightsStepActive < 1" 
+					v-on:click="handleSystemStep('prev')">
 					上一步
 				</el-button>
-				<el-button v-if="rightsStepActive < 3" type="primary" :disabled="rightsStepActive > 2" v-on:click="handleSystemStep('next')">
+				<el-button v-if="rightsStepActive < 3" type="primary" 
+					:disabled="rightsStepActive > 2" 
+					v-on:click="handleSystemStep('next')">
 					下一步
 				</el-button>
-				<el-button :disabled="rightsStepActive != 3" v-on:click="completeRights">完成</el-button>
+				<el-button :disabled="rightsStepActive != 3 || isUpdatingRight" 
+					:loading="isUpdatingRight"
+					v-on:click="completeRights">
+					完成
+				</el-button>
 			</el-row>
+		</el-dialog>
+		<!-- 查看角色成员 -->
+		<el-dialog :visible.sync="showRoleMember">
+			<div slot="title" class="title">查看角色成员</div>
+			<div class="w-member-list" v-if="roleMemberList.length" v-loading="isLoadingRoleMember">
+				<div v-for="member in roleMemberList" class="member-item">
+					<img class="member-pic" :src="member.pic_url" :alt="member.name"/>
+					<div class="member-info">
+						<div class="info-item">工号：{{member.uid}}</div>
+						<div class="info-item">姓名：{{member.name}}</div>
+						<div class="info-item">公司：{{member.companyName}}</div>
+						<div class="info-item">部门：{{member.department}}</div>
+					</div>
+				</div>
+			</div>
 		</el-dialog>
 	</div>
 </body>
@@ -221,18 +272,18 @@
 		'/departmentManagement/data_table_get', //获取部门信息
 		'/positionManagement/position_data_get', //获取职位
 		'/roleManagement/role_data_get', //获取角色列表
-		'/userManagement/user_data_status', //禁用/启用用户状态
-		'/userManagement/user_data_delete', //删除用户
-		'/userManagement/user_pw_reset', //重置密码
+		'/roleManagement/role_status', //禁用/启用用户状态
+		'/roleManagement/role_delete', //删除用户
 		'/roleManagement/role_add', //新增角色
 		'/roleManagement/role_edit', //修改角色
-		'/addAccessTimeUrl', //增加访问时段
-		'/delAccessTimeUrl', //删除访问时段
-		'/getAccessTimeUrl', //获取访问时段
+		'/roleManagement/add_access_time', //增加访问时段
+		'/roleManagement/del_access_time', //删除访问时段
+		'/roleManagement/role_access_time_get', //获取访问时段
 		'/userManagement/getSystemModulesUrl', //权限设置-获取系统功能
 		'/userManagement/getSystemButtonViewUrl', //权限设置-获取系统按钮、系统视图
 		'/userManagement/getSystemOtherRightsUrl', //权限设置-获取其他权限
 		'/userManagement/updateSystemRightsUrl', //更新权限设置
+		'/roleManagement/role_member_get', //获取角色成员组
 	);
 </script>
 

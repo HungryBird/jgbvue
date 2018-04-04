@@ -632,3 +632,37 @@ ul{
 		padding: 0 10px;
 	}
 }
+
+//查看成员列表
+.w-member-list {
+	@include w-flex(row, wrap, flex-start, center);
+	.member-item {
+		$height:80px;
+		@include w-flex-grow(0, 1);
+		@include w-flex(row, nowrap, space-between, stretch);
+		@include common-border;
+		width:30%;
+		// height:$height;
+		margin-right:10px;
+		margin-bottom:10px;
+		&:nth-child(3n) {
+			margin-right:0;
+		}
+		.member-pic {
+			@include w-flex-grow(0, 0);
+			width:$height;
+			height:$height;
+		}
+		.member-info {
+			@include w-flex-grow(1, 1);
+			@include w-flex(column, nowrap, space-around, flex-start);
+			margin-left:5px;
+			font-size:$fs-small;
+			color:$fc-normal;
+			line-height:$fs-small*1.5;
+			.info-item {
+				@include line-clamp;
+			}
+		}
+	}
+}
