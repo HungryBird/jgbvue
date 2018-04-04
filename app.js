@@ -65,12 +65,14 @@ const departmentManagementRouter = require('./routers/views/companyOrganization/
 const companyManagementRouter = require('./routers/views/companyOrganization/companyManagement');
 const userManagementRouter = require('./routers/views/companyOrganization/userManagement');
 const clientInfoRouter = require('./routers/views/clientManagement/clientInfo');
+const roleManagementRouter = require('./routers/views/companyOrganization/roleManagement');
 
 app.use('/menuManagement', menuManagementRouter);
 app.use('/departmentManagement', departmentManagementRouter);
 app.use('/companyManagement', companyManagementRouter);
 app.use('/userManagement', userManagementRouter);
 app.use('/clientInfo', clientInfoRouter);
+app.use('/roleManagement', roleManagementRouter);
 
 /**
  * server running at port 3333

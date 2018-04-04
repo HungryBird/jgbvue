@@ -6,11 +6,11 @@ JGBVue = {
   module: {}
 }
 
-JGBVue.module.userManagement = ()=>{
-  let _this = {},that = {}
+JGBVue.module.userManagement = () => {
+  let _this = {}, that = {}
   _this.init = (
-    treeDataGetUrl, 
-    departmentGetUrl, 
+    treeDataGetUrl,
+    departmentGetUrl,
     positionListGetUrl,
     userListGetUrl,
     userStatus,
@@ -24,10 +24,10 @@ JGBVue.module.userManagement = ()=>{
     getSystemModulesUrl,
     getSystemButtonViewUrl,
     getSystemOtherRightsUrl,
-    updateSystemRightsUrl)=> {
+    updateSystemRightsUrl) => {
     that.vm = new Vue({
       el: '#app',
-      data: function() {
+      data: function () {
         return {
           treeData: [], //公司列
           defaultProps: {
@@ -86,13 +86,13 @@ JGBVue.module.userManagement = ()=>{
             account: [
               { required: true, message: '请输入帐号', trigger: 'blur' },
             ],
-            password:[
+            password: [
               { required: true, message: '请输入密码', trigger: 'blur' },
             ],
-            name:[
+            name: [
               { required: true, message: '请输入姓名', trigger: 'blur' },
             ],
-            department:[
+            department: [
               { required: true, message: '请选择部门', trigger: 'blur' },
             ],
           },
@@ -118,36 +118,36 @@ JGBVue.module.userManagement = ()=>{
       },
       methods: {
         //公司树形节点控制
-				handleNodeClick(obj, node, self) {
-					if(!obj.children) {
+        handleNodeClick(obj, node, self) {
+          if (!obj.children) {
             this.currentCompany = obj.label;
             this.currentNode = obj.number
-					}
+          }
         },
         //查询
-        search: function() {
+        search: function () {
           this.getUserList()
         },
         //新增
-        btnAdd: function() {
+        btnAdd: function () {
           this.showAddUserDialog = true
           this.formDepartmentList = this.currentDepartmentList.concat()
         },
         //删除
-        btnRemove: function() {
-          this.$confirm('是否删除选中用户?', '提示').then(()=> {
+        btnRemove: function () {
+          this.$confirm('是否删除选中用户?', '提示').then(() => {
             let list = []
-            for(let i = 0; i < this.selectedRows.length; i++) {
+            for (let i = 0; i < this.selectedRows.length; i++) {
               list.push(this.selectedRows[i].number)
             }
-            axios.post(userDelete, list).then((res)=> {
+            axios.post(userDelete, list).then((res) => {
               // this.$alert(res.data.message, '提示')
               //更新用户列表
               this.getUserList()
-            }).catch((err)=> {
+            }).catch((err) => {
               this.$alert(err, '错误')
             })
-          }).catch(()=>{
+          }).catch(() => {
             //to do
           });
         },
@@ -155,22 +155,22 @@ JGBVue.module.userManagement = ()=>{
          * 禁用 启用
          * @param {*} type 启用/禁用标识
          */
-        btnDisabled: function(type) {
-          this.$confirm(`是否${type? '启': '禁'}用选中用户?`, '提示').then(()=> {
+        btnDisabled: function (type) {
+          this.$confirm(`是否${type ? '启' : '禁'}用选中用户?`, '提示').then(() => {
             let list = []
-            for(let i = 0; i < this.selectedRows.length; i++) {
+            for (let i = 0; i < this.selectedRows.length; i++) {
               list.push(this.selectedRows[i].number)
             }
             axios.post(userStatus, {
               list: list,
               type: type
-            }).then((res)=> {
-                // this.$alert(res.data.message, '提示')
-                //更新用户列表
-            }).catch((err)=> {
+            }).then((res) => {
+              // this.$alert(res.data.message, '提示')
+              //更新用户列表
+            }).catch((err) => {
               this.$alert(err, '错误')
             })
-          }).catch(()=>{
+          }).catch(() => {
             //todo
           });
         },
@@ -183,20 +183,20 @@ JGBVue.module.userManagement = ()=>{
           });
         },*/
         //导出
-        btnExport: function() {},
+        btnExport: function () { },
         //重置密码
-        btnReset: function() {
-          this.$confirm('是否重置选中用户密码?', '提示').then(()=> {
+        btnReset: function () {
+          this.$confirm('是否重置选中用户密码?', '提示').then(() => {
             //ajax
             this.$alert('账户密码重置到默认密码：123456', '提示')
           }).catch();
         },
         //权限管理
-        btnRights: function() {
+        btnRights: function () {
           axios.post(getSystemModulesUrl, {
             user: this.selectedRows[0].number
-          }).then(req=> {
-            if(req.data.status) {
+          }).then(req => {
+            if (req.data.status) {
               let _data = JSON.parse(req.data.data)
               this.systemModules = _data.concat()
               //设置默认展开、选中
@@ -204,72 +204,72 @@ JGBVue.module.userManagement = ()=>{
               this.showRightsManagement = true;
               this.rightsStepActive = 0;
             }
-          }).catch(err=> {})
+          }).catch(err => { })
         },
         /**
          * 获取所有checked的数据 返回一个uid的数组
          */
-        defaultChecked: function(_data) {
+        defaultChecked: function (_data) {
           let arr = []
-          for(let i = 0; i < _data.length; i++) {
+          for (let i = 0; i < _data.length; i++) {
             let item = _data[i]
-            if(typeof item.children == 'object') {
+            if (typeof item.children == 'object') {
               let arr2 = this.defaultChecked(item.children)
-              for(let j = 0; j < arr2.length; j++) {
+              for (let j = 0; j < arr2.length; j++) {
                 arr.push(arr2[j])
               }
             }
-            else if(item.checked) { //else if 防止父级checked=true, 会覆盖children中有false的情况
+            else if (item.checked) { //else if 防止父级checked=true, 会覆盖children中有false的情况
               arr.push(item.uid)
             };
           }
           return arr
         },
         //页面-表格列点击选中
-        rowClick: function(row) {
-					this.$refs.userTable.toggleRowSelection(row);
-					if(this.selectedRows.indexOf(row) == -1) {
-						this.selectedRows.push(row)
-					}else{
-						this.selectedRows.splice(this.selectedRows.indexOf(row), 1);
-					}
+        rowClick: function (row) {
+          this.$refs.userTable.toggleRowSelection(row);
+          if (this.selectedRows.indexOf(row) == -1) {
+            this.selectedRows.push(row)
+          } else {
+            this.selectedRows.splice(this.selectedRows.indexOf(row), 1);
+          }
         },
         //页面-全选
-				selectAll(selection) {
-					let _self = this;
-          if(selection.length == 0) {
+        selectAll(selection) {
+          let _self = this;
+          if (selection.length == 0) {
             _self.selectedRows.splice(0, _self.selectedRows.length);
-          }else{
+          } else {
             _self.selectedRows.splice(0, _self.selectedRows.length);
-            selection.forEach((item)=> {
-                _self.selectedRows.push(item);
+            selection.forEach((item) => {
+              _self.selectedRows.push(item);
             })
           }
         },
         //页面-单选
-        selectItem: function(selection, row) {
+        selectItem: function (selection, row) {
           let _self = this;
           this.selectedRows.splice(0, _self.selectedRows.length);
-          for(let i = 0; i < selection.length; i++) {
+          for (let i = 0; i < selection.length; i++) {
             _self.selectedRows.push(selection[i]);
           }
         },
         //修改
-        handleEdit: function(index, row) {
+        handleEdit: function (index, row) {
           this.formDepartmentList = this.currentDepartmentList.concat()
           this.editForm = this.$deepCopy(row)
           this.editForm.department = row.department.value
-          this.editForm.birthday = new Date(row.birthday*1000)//后端需要日期格式非时间戳再更改html, js
+          this.editForm.birthday = new Date(row.birthday * 1000)//后端需要日期格式非时间戳再更改html, js
           this.handleFormDepartment(row.department.value)
           this.showEditUserDialog = true
         },
         //单个用户删除
-        handleDelete: function(index, row) {
+        handleDelete: function (index, row) {
           console.log(index, row)
           let list = []
           list.push(row.number)
-          this.$confirm('确认删除该用户?', '提示').then(()=> {
-            axios.post(userDelete, list).then((res)=> {
+          this.$confirm('确认删除该用户?', '提示').then(() => {
+            axios.post(userDelete, list).then((res) => {
               this.$alert(res.data.message, '提示')
             }).catch(err => {
               this.$alert(err, '错误')
@@ -277,13 +277,13 @@ JGBVue.module.userManagement = ()=>{
           }).catch()
         },
         //单个用户 启用/禁用
-        handleStatus: function(index, row) {
+        handleStatus: function (index, row) {
           axios.post(userStatus, {
             number: row.number,
             status: row.status
-          }).then((res)=> {
+          }).then((res) => {
             //操作失败
-            if(!res.data.status) {
+            if (!res.data.status) {
               this.$confirm(res.data.message, '提示')
             }
           }).catch(err => {
@@ -291,17 +291,17 @@ JGBVue.module.userManagement = ()=>{
           })
         },
         //表单选择部门 获取职位数据
-        handleFormDepartment: function(d) {
-          axios.post(positionListGetUrl, d).then(res=> {
-            if(res.data.status) {
+        handleFormDepartment: function (d) {
+          axios.post(positionListGetUrl, d).then(res => {
+            if (res.data.status) {
               this.addForm.currentPositionList = JSON.parse(res.data.data).concat()
             }
           })
         },
         //访问过滤
-        handleAccess: function() {
-          switch(this.currentAccess) {
-            case 'time': 
+        handleAccess: function () {
+          switch (this.currentAccess) {
+            case 'time':
               //test data
               this.accessTimeList = [{
                 'weekday': '星期一',
@@ -321,12 +321,12 @@ JGBVue.module.userManagement = ()=>{
               // }).catch()
               this.showTimeAccess = true
               break
-            case 'ip': 
+            case 'ip':
               break
           }
         },
         //添加禁止访问时段
-        handleAddAccessTime: function() {
+        handleAddAccessTime: function () {
           axios.post(addAccountTimeUrl, {
             user: this.selectedRows[0].number,
             weekday: this.accessDialogActive,
@@ -334,7 +334,7 @@ JGBVue.module.userManagement = ()=>{
           }).then().catch()
         },
         //删除禁止访问时段
-        handleDeleteTime: function(index, row) {
+        handleDeleteTime: function (index, row) {
           // row { weekday, time }
           axios.post(delAccountTimeUrl).then().catch()
         },
@@ -344,17 +344,17 @@ JGBVue.module.userManagement = ()=>{
          * @param {boolean} checked 节点本身是否被选中
          * @param {boolean} children 节点的子树中是否有被选中的节点
          */
-        handleSystemModulesCheckChange: function(obj, checked, children) {
+        handleSystemModulesCheckChange: function (obj, checked, children) {
           // console.log(this.$refs.systemModules.getCheckedKeys())
           //同步系统功能选中组
           this.systemModulesCheckedKeys = this.$refs.systemModules.getCheckedKeys().concat()
         },
         //系统按钮树形菜单
-        handleSystemButtonsCheckChange: function(obj, checked, children) {
+        handleSystemButtonsCheckChange: function (obj, checked, children) {
           this.systemButtonsCheckedKeys = this.$refs.systemButtons.getCheckedKeys().concat()
         },
         //系统视图树形菜单
-        handleSystemViewsCheckChange: function(obj, checked, children) {
+        handleSystemViewsCheckChange: function (obj, checked, children) {
           this.systemViewsCheckedKeys = this.$refs.systemViews.getCheckedKeys().concat()
         },
         /**
@@ -362,17 +362,17 @@ JGBVue.module.userManagement = ()=>{
          * 在进入下一步前获取相应数据
          * @param {String} type 上一步'prev', 下一步'next'
          */
-        handleSystemStep: function(type) {
-          switch(type) {
+        handleSystemStep: function (type) {
+          switch (type) {
             case 'prev':
-              this.rightsStepActive = this.rightsStepActive < 1 ? 0 : this.rightsStepActive-1
+              this.rightsStepActive = this.rightsStepActive < 1 ? 0 : this.rightsStepActive - 1
               break;
             case 'next':
-              if(this.rightsStepActive == 0) { //系统功能
+              if (this.rightsStepActive == 0) { //系统功能
                 //获取按钮 视图 组
-                axios.post(getSystemButtonViewUrl, 
-                  this.systemModulesCheckedKeys).then(req=> {
-                    if(req.data.status) {
+                axios.post(getSystemButtonViewUrl,
+                  this.systemModulesCheckedKeys).then(req => {
+                    if (req.data.status) {
                       let _data = JSON.parse(req.data.data)
                       this.systemButtons = _data.buttons.concat()
                       this.systemViews = _data.views.concat()
@@ -380,32 +380,32 @@ JGBVue.module.userManagement = ()=>{
                       this.systemButtonsCheckedKeys = this.defaultChecked(this.systemButtons)
                       this.systemViewsCheckedKeys = this.defaultChecked(this.systemViews)
                     }
-                }).catch(err=> {
-                  // 应该在此处处理返回的错误，并阻止rightsStepActive自增？
-                })
+                  }).catch(err => {
+                    // 应该在此处处理返回的错误，并阻止rightsStepActive自增？
+                  })
               }
-              else if(this.rightsStepActive == 2) { //其他权限
+              else if (this.rightsStepActive == 2) { //其他权限
                 axios.post(getSystemOtherRightsUrl, {
                   user: this.selectedRows[0].number
-                }).then(req=> {
-                  if(req.data.status) {
+                }).then(req => {
+                  if (req.data.status) {
                     this.systemOthers = JSON.parse(req.data.data).concat()
                     //获取其他权限选中组 并配置表格选项
                     let checked = []
-                    for(let i = 0; i < this.systemOthers.length; i++) {
+                    for (let i = 0; i < this.systemOthers.length; i++) {
                       let item = this.systemOthers[i]
-                      if(item.checked) {
+                      if (item.checked) {
                         checked.push(item)
                         this.systemOthersChecked.push(item.uid)
                       }
                     }
                     //数据更新触发toggleSelection 否则不生效
-                    this.$nextTick(function(){
+                    this.$nextTick(function () {
                       this.toggleSelection(checked)
-                   })
-                    
+                    })
+
                   }
-                }).catch(err=> {})
+                }).catch(err => { })
               }
               this.rightsStepActive++
               break;
@@ -422,29 +422,30 @@ JGBVue.module.userManagement = ()=>{
           }
         },
         //权限-表格列点击选中
-        rightsRowClick: function(row) {
+        rightsRowClick: function (row) {
           let uid = row.uid
-					this.$refs.systemOthers.toggleRowSelection(uid);
-					if(this.systemOthersChecked.indexOf(uid) == -1) {
+          this.$refs.systemOthers.toggleRowSelection(uid);
+          if (this.systemOthersChecked.indexOf(uid) == -1) {
             this.systemOthersChecked.push(uid)
             this.$refs.systemOthers.toggleRowSelection(row, true);
-					}else{
-						this.systemOthersChecked.splice(this.systemOthersChecked.indexOf(uid), 1);
+          } else {
+            this.systemOthersChecked.splice(this.systemOthersChecked.indexOf(uid), 1);
             this.$refs.systemOthers.toggleRowSelection(row, false);
           }
         },
         //权限-全选
-				rightsSelectAll(selection) {
+        rightsSelectAll(selection) {
           this.systemOthersChecked = []
-          if(selection.length) { 
-            this.systemOthers.forEach(item=> { console.log(item)
+          if (selection.length) {
+            this.systemOthers.forEach(item => {
+              console.log(item)
               this.systemOthersChecked.push(item.uid)
             })
           };
         },
         //权限-单选
-        rightsSelectItem: function(selection, row) {
-          if(this.systemOthersChecked.indexOf(row.uid) == -1) {
+        rightsSelectItem: function (selection, row) {
+          if (this.systemOthersChecked.indexOf(row.uid) == -1) {
             this.systemOthersChecked.push(row.uid)
           }
           else {
@@ -452,102 +453,127 @@ JGBVue.module.userManagement = ()=>{
           }
         },
         //更新权限设置
-        completeRights: function() {
+        completeRights: function () {
           axios.post(updateSystemRightsUrl, {
             modules: this.systemModulesCheckedKeys,
             buttons: this.systemButtonsCheckedKeys,
             views: this.systemViewsCheckedKeys,
             others: this.systemOthersChecked,
             user: this.selectedRows[0].number
-          }).then(req=> {}).catch(err=> {})
+          }).then(req => { }).catch(err => { })
           this.showRightsManagement = false //应在数据处理成功后关闭
         },
         //获取用户列表
-        getUserList: function() {
+        getUserList: function () {
           axios.get(userListGetUrl, {
             currentCompany: this.currentCompany,
             currentDepartment: this.currentDepartment,
             keyword: this.keyword
-          }).then((res)=> {
-            if(res.data.status) {
+          }).then((res) => {
+            if (res.data.status) {
               let _data = JSON.parse(res.data.data)
               this.userList = _data
               // console.log(this.userList)
             };
-          }).catch((err)=> {
+          }).catch((err) => {
             console.log('err', err);
           })
         },
         //保存新增表单
-        saveAdd: function() {
+        saveAdd: function () {
           // console.log(this.addForm)
-          axios.post(userAddUrl, this.addForm).then(res=> {
-            //添加成功
-            if(res.data.status) {
-              this.$alert(res.data.message, '提示')
-              this.addForm = this.addFormDefault
+          this.$refs.addForm.validate((valid) => {
+            if (valid) {
+              axios.post(userAddUrl, this.addForm).then(res => {
+                //添加成功
+                if (res.data.status) {
+                  this.$message({
+                    message: res.data.message,
+                    type: 'success'
+                  });
+                  this.addForm = this.addFormDefault
+                }
+                else {
+                  this.$alert(res.data.message, '提示')
+                }
+              }).catch()
+            } else {
+              console.log('error submit!!');
+              return false;
             }
-            else {
-              this.$alert(res.data.message, '提示')
-            }
-          }).catch()
+          });
         },
         //关闭新增表单
-        closeAdd: function() {
+        closeAdd: function () {
           this.showAddUserDialog = false;
         },
         //保存修改表单
-        saveEdit: function() {
-          axios.post(userEditUrl, this.editForm).then(res=> {
-            this.$alert(res.data.message, '提示')
-          }).catch(err => {
-            this.$alert(err, '提示')
-          })
+        saveEdit: function () {
+          this.$refs.editForm.validate((valid) => {
+            if (valid) {
+              axios.post(userEditUrl, this.editForm).then(res => {
+                if (res.data.status) {
+                  this.$message({
+                    message: res.data.message,
+                    type: 'success'
+                  });
+                }
+                else {
+                  this.$alert(res.data.message, '提示')
+                }
+              }).catch(err => {
+                this.$alert(err, '提示')
+              })
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
         },
         //关闭修改表单
-        closeEdit: function() {
+        closeEdit: function () {
           this.showEditUserDialog = false;
         },
       },
       watch: {
-        currentCompany: function() {
+        currentCompany: function () {
           let data = {
             label: this.currentCompany,
             number: this.currentNode
           }
-          axios.post(departmentGetUrl, data).then((res)=> {
-            if(res.data.status) {
+          axios.post(departmentGetUrl, data).then((res) => {
+            if (res.data.status) {
               let _data = JSON.parse(res.data.data)
               this.currentDepartmentList = _data.parentDepartmentOptions.concat()
             }
-          }).catch((err)=> {
+          }).catch((err) => {
             console.log('err: ', err)
           })
           this.currentDepartment = ''
           this.getUserList()
         },
-        currentDepartment: function() {
+        currentDepartment: function () {
           this.getUserList()
         },
       },
-      created: function() {
-				axios.get(treeDataGetUrl).then((res)=> {
-					if(res.data.status) {
-						let _data = JSON.parse(res.data.data)
+      created: function () {
+        axios.get(treeDataGetUrl).then((res) => {
+          if (res.data.status) {
+            let _data = JSON.parse(res.data.data)
             this.treeData = _data
-					};
+          };
           this.currentCompany = this.treeData[0].children[0].label
           this.currentNode = this.treeData[0].children[0].number
           this.defaultExpandedKeys.push(this.treeData[0].label)
-				}).catch((err)=> {
-					console.log('err', err);
-				})
+        }).catch((err) => {
+          console.log('err', err);
+        })
       },
     })
   }
   that.init = (
-    treeDataGetUrl, 
-    departmentGetUrl, 
+    treeDataGetUrl,
+    departmentGetUrl,
     positionListGetUrl,
     userListGetUrl,
     userStatus,
@@ -561,10 +587,10 @@ JGBVue.module.userManagement = ()=>{
     getSystemModulesUrl,
     getSystemButtonViewUrl,
     getSystemOtherRightsUrl,
-    updateSystemRightsUrl)=> {
+    updateSystemRightsUrl) => {
     _this.init(
-      treeDataGetUrl, 
-      departmentGetUrl, 
+      treeDataGetUrl,
+      departmentGetUrl,
       positionListGetUrl,
       userListGetUrl,
       userStatus,

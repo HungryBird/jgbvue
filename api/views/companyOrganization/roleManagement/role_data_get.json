@@ -1,0 +1,24 @@
+[
+  {
+    "uid": "10001",
+    "name": "仓库管理员",
+    "create_time": 1522807605,
+    "create_name": "wobao123",
+    "status": false,
+    "info": "这里是仓库管理员职位描述"
+  }, {
+    "uid": "10002",
+    "name": "财务管理员",
+    "create_time": 1522000605,
+    "create_name": "wobao456",
+    "status": true,
+    "info": "这里是财务管理员职位描述"
+  },{
+    "uid": "10003",
+    "name": "外卖管理员",
+    "create_time": 1522111605,
+    "create_name": "wobao789",
+    "status": true,
+    "info": "这里是外卖管理员职位描述"
+  }
+]
