@@ -197,7 +197,7 @@
 										<span>{{ item.name }}</span>
 										<i>】</i>
 									</div>
-									<el-button icon="el-icon-close" type="danger" circle class="close"></el-button>
+									<el-button icon="el-icon-close" type="danger" circle class="closeBtn" v-on:click="cancelFirstAudit(item)"></el-button>
 								</li>
 							</ul>
 						</transition>
@@ -273,7 +273,16 @@
 						<transition name="slide-fade">
 							<ul class="right-side" v-if="secondAudit.auditorList.length !== 0&&showSecondSelectedAuditors">
 								<li v-for="item in tempSecondLevelAuditorsGroup">
-									{{item.name}}
+									<div>
+										{{ item.companyName }}
+									</div>
+									<div>
+										<span>{{ item.departmentName }}</span>
+										<i>【</i>
+										<span>{{ item.name }}</span>
+										<i>】</i>
+									</div>
+									<el-button icon="el-icon-close" type="danger" circle class="closeBtn" v-on:click="cancelSecondAudit(item)"></el-button>
 								</li>
 							</ul>
 						</transition>

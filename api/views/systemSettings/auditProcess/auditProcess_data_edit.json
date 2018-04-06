@@ -17,6 +17,7 @@
 			"value": 10002,
 			"department": "finance1",
 			"company": "companyOne",
+			"departmentName": "财务部",
 			"companyName": "公司甲"
 		}
 	],
@@ -29,6 +30,7 @@
 			"isSelected": true,
 			"value": 30033,
 			"department": "personnel1",
+			"departmentName": "人事部",
 			"company": "companyOne",
 			"companyName": "公司甲"
 		}

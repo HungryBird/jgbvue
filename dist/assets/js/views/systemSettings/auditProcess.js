@@ -596,6 +596,32 @@ JGBVue.module.auditProcess = ()=> {
                     }).catch((err)=> {
                         console.log('err: ', err);
                     })
+                },
+                cancelFirstAudit(item) {
+                    let _self = this;
+                    for(let i = 0; i < this.tempFirstLevelAuditorsGroup.length; i++ ) {
+                        if(this.tempFirstLevelAuditorsGroup[i].jobNumber === item.jobNumber) {
+                            this.tempFirstLevelAuditorsGroup.splice(i, 1);
+                        }
+                    }
+                    for(let j = 0; j < this.firstAudit.auditorList.length; j++ ) {
+                        if(this.firstAudit.auditorList[j].jobNumber === item.jobNumber) {
+                            this.firstAudit.auditorList[j].isSelected = false;
+                        }
+                    }
+                },
+                cancelSecondAudit(item) {
+                    let _self = this;
+                    for(let i = 0; i < this.tempSecondLevelAuditorsGroup.length; i++ ) {
+                        if(this.tempSecondLevelAuditorsGroup[i].jobNumber === item.jobNumber) {
+                            this.tempSecondLevelAuditorsGroup.splice(i, 1);
+                        }
+                    }
+                    for(let j = 0; j < this.secondAudit.auditorList.length; j++ ) {
+                        if(this.firstAudit.auditorList[j].jobNumber === item.jobNumber) {
+                            this.firstAudit.auditorList[j].isSelected = false;
+                        }
+                    }
                 }
             },
             filters: {
