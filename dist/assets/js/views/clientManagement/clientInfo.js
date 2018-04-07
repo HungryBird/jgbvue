@@ -6,7 +6,7 @@ JGBVue.module.clientInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (initDataUrl, startUsingUrl, deleteUrl)=> {
+	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data: {
@@ -32,6 +32,10 @@ JGBVue.module.clientInfo = ()=> {
 						value: "normal"
 					}
 				],
+				clientInfo: {
+					info: [],
+					update: []
+				},
 				selectedRows: [],
 				pageSize: 20,
 				currentPage: 1
@@ -84,8 +88,14 @@ JGBVue.module.clientInfo = ()=> {
                         _self.selectedRows.push(selection[i]);
                     }
 				},
-				handleExamine() {
-					//
+				handleExamine(index, row) {
+					axios.post(examineUrl, row).then((res)=> {
+						if(res.data.status) {
+							let jdata = JSON.parse(res.data.data);
+							this.clientInfo = jdata;
+							console.log(this.clientInfo)
+						}
+					})
 				},
 				handleEdit() {
 					//
@@ -234,8 +244,8 @@ JGBVue.module.clientInfo = ()=> {
 		})
 	}
 
-	that.init = (initDataUrl, startUsingUrl, deleteUrl)=> {
-		_this.init(initDataUrl, startUsingUrl, deleteUrl);
+	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl)=> {
+		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl);
 	}
 
 	return that;

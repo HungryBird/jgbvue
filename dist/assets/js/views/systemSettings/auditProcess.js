@@ -618,8 +618,8 @@ JGBVue.module.auditProcess = ()=> {
                         }
                     }
                     for(let j = 0; j < this.secondAudit.auditorList.length; j++ ) {
-                        if(this.firstAudit.auditorList[j].jobNumber === item.jobNumber) {
-                            this.firstAudit.auditorList[j].isSelected = false;
+                        if(this.secondAudit.auditorList[j].jobNumber === item.jobNumber) {
+                            this.secondAudit.auditorList[j].isSelected = false;
                         }
                     }
                 }
