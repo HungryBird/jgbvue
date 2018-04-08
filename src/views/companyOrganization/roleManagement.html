@@ -34,7 +34,7 @@
 								<el-button type="primary" size="mini" :disabled="selectedRows.length == 0" v-on:click="">
 									删除
 								</el-button>
-								<el-button type="primary" size="mini" :disabled="selectedRows.length != 1" v-on:click="">
+								<el-button type="primary" size="mini" :disabled="selectedRows.length != 1" v-on:click="btnSetMember">
 									设置成员
 								</el-button>
 								<el-button type="primary" size="mini" :disabled="selectedRows.length != 1" v-on:click="btnGetMember">
@@ -246,7 +246,7 @@
 		</el-dialog>
 		<!-- 查看角色成员 -->
 		<el-dialog :visible.sync="showRoleMember">
-			<div slot="title" class="title">查看角色成员</div>
+			<div slot="title" class="title">查看角色成员-{{selectedRows.length ? selectedRows[0].name : ''}}</div>
 			<div class="w-member-list" v-if="roleMemberList.length" v-loading="isLoadingRoleMember">
 				<div v-for="member in roleMemberList" class="member-item">
 					<img class="member-pic" :src="member.pic_url" :alt="member.name"/>
@@ -259,6 +259,20 @@
 				</div>
 			</div>
 		</el-dialog>
+		<!-- 设置角色成员 -->
+		<el-dialog :visible.sync="showSetRoleMember" class="set-member">
+			<div slot="title" class="title">设置角色成员-{{selectedRows.length ? selectedRows[0].name : ''}}</div>
+			<jgb-set-member v-if="showSetRoleMember" ref="setRoleMember"
+				v-model="checkedRoleMember"
+				:company="companyListGetUrl"
+				:department-url="departmentListGetUrl"
+				:user-url="userListGetUrl">
+			</jgb-set-member>
+			<jgb-form-footer slot="footer"
+				:loading="loadingSetRoleMember"
+				@save="saveSetRoleMember"
+				@close="closeSetRoleMember">
+			</jgb-form-footer>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -270,7 +284,6 @@
 	JGBVue.module.roleManagement().init(
 		'/departmentManagement/tree_data_get', //获取公司数据
 		'/departmentManagement/data_table_get', //获取部门信息
-		'/positionManagement/position_data_get', //获取职位
 		'/roleManagement/role_data_get', //获取角色列表
 		'/roleManagement/role_status', //禁用/启用用户状态
 		'/roleManagement/role_delete', //删除用户
@@ -284,6 +297,8 @@
 		'/userManagement/getSystemOtherRightsUrl', //权限设置-获取其他权限
 		'/userManagement/updateSystemRightsUrl', //更新权限设置
 		'/roleManagement/role_member_get', //获取角色成员组
+		'/roleManagement/department_member_get', //获取部门成员组
+		'/roleManagement/update_role_member', //更新角色成员
 	);
 </script>
 

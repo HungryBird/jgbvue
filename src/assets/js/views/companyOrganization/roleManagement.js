@@ -9,37 +9,33 @@ JGBVue = {
 JGBVue.module.roleManagement = () => {
   let _this = {}, that = {}
   _this.init = (
-    treeDataGetUrl,
-    departmentGetUrl,
-    positionListGetUrl,
-    roleListGetUrl,
-    roleStatus,
-    roleDelete,
-    roleAddUrl,
-    roleEditUrl,
-    addAccountTimeUrl,
-    delAccountTimeUrl,
-    accessTimeGetUrl,
-    getSystemModulesUrl,
-    getSystemButtonViewUrl,
-    getSystemOtherRightsUrl,
-    updateSystemRightsUrl,
-    roleMemberListUrl) => {
+    treeDataGetUrl,//1-获取公司数据
+    departmentGetUrl,//2-获取部门信息
+    positionListGetUrl, //3-获取职位
+    roleListGetUrl,//4-获取角色列表
+    roleStatus,//5-禁用/启用用户状态
+    roleDelete,//6-删除用户
+    roleAddUrl,//7-新增角色
+    roleEditUrl,//8-修改角色
+    addAccessTimeUrl,//9-增加访问时段
+    delAccessTimeUrl,//10-删除访问时段
+    accessTimeGetUrl,//11-获取访问时段
+    getSystemModulesUrl,//12-权限设置-获取系统功能
+    getSystemButtonViewUrl,//13-权限设置-获取系统按钮、系统视图
+    getSystemOtherRightsUrl,//14-权限设置-获取其他权限
+    updateSystemRightsUrl,//15-更新权限设置
+    roleMemberListUrl,//16-获取角色成员组
+    departmentMemberGetUrl, //17-获取部门成员组
+    setRoleMemberUrl//18 - 更新角色成员
+    ) => {
     that.vm = new Vue({
       el: '#app',
       data: function () {
         return {
-          treeData: [], //公司列
-          defaultProps: {
-            label: 'label',
-            children: 'children'
-          },
-          defaultExpandedKeys: [], //默认展开公司
+          companyListGetUrl: treeDataGetUrl, //公司列表地址
+          departmentListGetUrl: departmentGetUrl, //部门列表地址
+          userListGetUrl: departmentMemberGetUrl,//获取部门对应成员地址
 
-          currentCompany: '',//当前公司
-          currentNode: '', //当前公司
-          currentDepartmentList: [], //当前公司部门列表
-          currentDepartment: '', //当前部门
           keyword: '', //搜索
 
           roleList: [],
@@ -95,18 +91,22 @@ JGBVue.module.roleManagement = () => {
           showRoleMember: false, //查看角色成员组 窗
           isLoadingRoleMember: false, //正在获取成员组
           roleMemberList: [], //角色成员组
+
+          showSetRoleMember: false, //设置成员 窗
+          checkedRoleMember: [], //选中成员
+          loadingSetRoleMember: false, //正在成员更新数据
         }
       },
       methods: {
-        //公司树形节点控制
-        handleNodeClick(obj, node, self) {
-          if (!obj.children) {
-            this.currentCompany = obj.label;
-            this.currentNode = obj.number
-          }
-        },
         //查询
         search: function () {
+          if(!this.keyword) {
+            this.$message({
+              type:'error',
+              message: '请输入查询关键词'
+            })
+            return;
+          }
           this.getRoleList()
         },
         //新增
@@ -190,6 +190,10 @@ JGBVue.module.roleManagement = () => {
         //查看成员
         btnGetMember: function() {
           this.getRoleMemberList()
+        },
+        //设置成员
+        btnSetMember: function () {
+          this.showSetRoleMember = true
         },
         /**
          * 获取所有checked的数据 返回一个uid的数组
@@ -279,6 +283,38 @@ JGBVue.module.roleManagement = () => {
         closeEdit: function () {
           this.showEditRoleDialog = false;
         },
+        //保存设置角色成员
+        saveSetRoleMember: function() {
+          let arr = []
+          this.checkedRoleMember.forEach(item=> {
+            arr.push(item.uid)
+          })
+          this.loadingSetRoleMember = true
+          axios.post(setRoleMemberUrl, {
+            role: this.selectedRows[0].uid,
+            member: arr
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              })
+              this.showSetRoleMember = false
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            }
+            this.loadingSetRoleMember = false
+          }).catch(err=> {
+            this.$alert(err, '提示')
+            this.loadingSetRoleMember = false
+          })
+        },
+        //关闭设置角色成员
+        closeSetRoleMember: function () {
+          this.showSetRoleMember = false
+          this.checkedRoleMember = []
+        },
         //单个用户删除
         handleDelete: function (index, row) {
           let list = []
@@ -352,7 +388,7 @@ JGBVue.module.roleManagement = () => {
         //添加禁止访问时段
         handleAddAccessTime: function () {
           this.isAddingAccessTime = true
-          axios.post(addAccountTimeUrl, {
+          axios.post(addAccessTimeUrl, {
             role: this.selectedRows[0].uid,
             weekday: this.accessDialogActive,
             time: this.currentAccessTime
@@ -375,7 +411,7 @@ JGBVue.module.roleManagement = () => {
         },
         //删除禁止访问时段
         handleDeleteTime: function (index, row) {
-          axios.post(delAccountTimeUrl, {
+          axios.post(delAccessTimeUrl, {
             //send data
           }).then(res=> {
             if(res.data.status) {
@@ -548,6 +584,7 @@ JGBVue.module.roleManagement = () => {
         //获取角色成员组
         getRoleMemberList: function() {
           this.isLoadingRoleMember = true
+          this.roleMemberList = []
           axios.post(roleMemberListUrl, {
             uid: this.selectedRows[0].uid
           }).then(res=> {
@@ -565,40 +602,9 @@ JGBVue.module.roleManagement = () => {
           })
         },
       },
-      watch: {
-        currentCompany: function () {
-          let data = {
-            label: this.currentCompany,
-            number: this.currentNode
-          }
-          axios.post(departmentGetUrl, data).then((res) => {
-            if (res.data.status) {
-              let _data = JSON.parse(res.data.data)
-              this.currentDepartmentList = _data.parentDepartmentOptions.concat()
-            }
-          }).catch((err) => {
-            console.log('err: ', err)
-          })
-          this.currentDepartment = ''
-          this.getRoleList()
-        },
-        currentDepartment: function () {
-          this.getRoleList()
-        },
-      },
       created: function () {
-        axios.get(treeDataGetUrl).then((res) => {
-          if (res.data.status) {
-            let _data = JSON.parse(res.data.data)
-            this.treeData = _data
-          };
-          this.currentCompany = this.treeData[0].children[0].label
-          this.currentNode = this.treeData[0].children[0].number
-          this.defaultExpandedKeys.push(this.treeData[0].label)
-        }).catch((err) => {
-          console.log('err', err);
-        })
-      },
+        this.getRoleList()
+      }
     })
   }
   that.init = (
@@ -610,14 +616,16 @@ JGBVue.module.roleManagement = () => {
     roleDelete,
     roleAddUrl,
     roleEditUrl,
-    addAccountTimeUrl,
-    delAccountTimeUrl,
+    addAccessTimeUrl,
+    delAccessTimeUrl,
     accessTimeGetUrl,
     getSystemModulesUrl,
     getSystemButtonViewUrl,
     getSystemOtherRightsUrl,
     updateSystemRightsUrl,
-    roleMemberListUrl) => {
+    roleMemberListUrl,
+    departmentMemberGetUrl,
+    setRoleMemberUrl) => {
     _this.init(
       treeDataGetUrl,
       departmentGetUrl,
@@ -627,14 +635,16 @@ JGBVue.module.roleManagement = () => {
       roleDelete,
       roleAddUrl,
       roleEditUrl,
-      addAccountTimeUrl,
-      delAccountTimeUrl,
+      addAccessTimeUrl,
+      delAccessTimeUrl,
       accessTimeGetUrl,
       getSystemModulesUrl,
       getSystemButtonViewUrl,
       getSystemOtherRightsUrl,
       updateSystemRightsUrl,
-      roleMemberListUrl)
+      roleMemberListUrl,
+      departmentMemberGetUrl,
+      setRoleMemberUrl)
   }
   return that
 }
