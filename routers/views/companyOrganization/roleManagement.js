@@ -99,4 +99,26 @@ router.post('/role_member_get', (req, res) => {
   });
 })
 
-module.exports = router;
+router.post('/department_member_get', (req, res) => {
+  let jdata = '';
+  fs.readFile('api/views/companyOrganization/roleManagement/department_member_get.json', 'utf-8', (err, data) => {
+    if (err) {
+      console.log('err: ', err);
+      return;
+    }
+    jdata += data;
+    res.send({
+      status: true,
+      data: jdata
+    }).end();
+  });
+})
+
+router.post('/update_role_member', (req, res) => {
+  res.send({
+    status: true,
+    message: '设置角色成员成功'
+  }).end();
+})
+
+module.exports = router; 

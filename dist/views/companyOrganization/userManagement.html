@@ -242,10 +242,11 @@
 					</el-col>
 				</el-row>
 			</el-form>
-			<div slot="footer">
-	<el-button type="primary" v-on:click="saveAdd('addForm')">保存</el-button>
-	<el-button v-on:click="closeAdd('addForm')">关闭</el-button>
-</div>
+			<jgb-form-footer slot="footer" 
+				:loading="loadingSaveAdd" 
+				@save="saveAdd"
+				@close="closeAdd">
+			</jgb-form-footer>
 		</el-dialog>
 		<!-- 修改窗口 -->
 		<el-dialog :visible.sync="showEditUserDialog">
@@ -360,10 +361,11 @@
 					</el-col>
 				</el-row>
 			</el-form>
-			<div slot="footer">
-	<el-button type="primary" v-on:click="saveEdit('editForm')">保存</el-button>
-	<el-button v-on:click="closeEdit('editForm')">关闭</el-button>
-</div>
+			<jgb-form-footer slot="footer" 
+				:loading="loadingSaveEdit" 
+				@save="saveEdit" 
+				@close="closeEdit">
+			</jgb-form-footer>
 		</el-dialog>
 		<!-- 时段访问窗口 -->
 		<el-dialog :visible.sync="showTimeAccess" width="620px">
@@ -393,7 +395,8 @@
 						placeholder="选择时间范围">
 					</el-time-picker>
 					<el-button type="primary"style="margin-left:10px;"
-						:disabled="currentAccessTime.length != 2"
+						:disabled="currentAccessTime.length != 2 || isAddingAccessTime" 
+						:loading="isAddingAccessTime"
 						v-on:click="handleAddAccessTime" >
 						添加
 					</el-button>
@@ -471,7 +474,12 @@
 					v-on:click="handleSystemStep('next')">
 					下一步
 				</el-button>
-				<el-button :disabled="rightsStepActive != 3" v-on:click="completeRights">完成</el-button>
+				<el-button 
+					:disabled="rightsStepActive != 3 || isUpdatingRight" 
+					:loading="isUpdatingRight" 
+					v-on:click="completeRights">
+					完成
+				</el-button>			
 			</el-row>
 		</el-dialog>
 	</div>

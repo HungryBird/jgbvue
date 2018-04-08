@@ -641,18 +641,21 @@ table{
 	}
 }
 
-//查看成员列表
+//成员列表
 .w-member-list {
-	@include w-flex(row, wrap, flex-start, center);
+	@include w-flex(row, wrap, flex-start, flex-start);
+	height:350px;
+	overflow:auto;
 	.member-item {
 		$height:80px;
 		@include w-flex-grow(0, 1);
 		@include w-flex(row, nowrap, space-between, stretch);
 		@include common-border;
 		width:30%;
-		// height:$height;
-		margin-right:10px;
+		height:$height;
+		margin-right:4%;
 		margin-bottom:10px;
+		cursor:pointer;
 		&:nth-child(3n) {
 			margin-right:0;
 		}
@@ -670,7 +673,114 @@ table{
 			line-height:$fs-small*1.5;
 			.info-item {
 				@include line-clamp;
+				cursor:text;
+				&:hover {
+					overflow:visible;
+				}
 			}
 		}
+		&.checked {
+			border-color:#ff0000;
+			position:relative;
+			.checked-tag {
+				position: absolute;
+				top: 0;
+				right: 0;
+				background: #ff0000;
+				color: #fff;
+			}
+		}
+	}
+	
+}
+
+//设置成员弹窗
+.set-member {
+	.el-dialog {
+		width:850px;
+	}
+}
+.set-member-wrap {
+	$aside-width: 200px;
+	$aside-height: 350px;
+	$checked-list-width: 180px;
+	.set-member-header {
+		@include w-flex(row, nowrap, space-between, center);
+		width:100%;
+		padding:10px 0;
+		margin-bottom:10px;
+		border-bottom: 1px dashed #ddd;
+	}
+	.set-member-company {
+		width:$aside-width;
+		&.single {
+			@include common-border;
+			@include line-clamp;
+			height:36px;
+			background:#f5f5f5;
+			box-sizing: border-box;
+			font-weight:bold;
+			font-size:$fs-normal;
+			color:$fc-import;
+			text-align:center;
+			line-height:36px;
+		}
+	}
+	.set-member-search {
+		width:$aside-width;
+	}
+	.set-member-aside {
+		@include common-border;
+		width: $aside-width !important;
+		height:$aside-height;
+		overflow:auto;
+		margin-right:10px;
+	}
+	.el-main {
+		position:relative;
+		overflow:hidden;
+	}
+	.btn-check-list {
+		width:$checked-list-width;
+	}
+	.w-checked-list {
+		@include common-border;
+		width:$checked-list-width;
+		height:$aside-height;
+		background:#fff;
+		overflow-x:hidden;
+		overflow-y:auto;
+		box-sizing:border-box;
+		position:absolute;
+		top:0;
+		right:0;
+		z-index:2;
+		.checked-item {
+			@include w-flex(column, nowrap, center, center);
+			border-bottom:1px dashed #ddd;
+			margin:0 8px 5px;
+			font-size:$fs-small;
+			position:relative;
+			box-sizing:border-box;
+			&:last-child {
+				margin-bottom:0;
+				border-bottom:none;
+			}
+		}
+		.checked-close {
+			font-size:16px;
+			color:#ff0000;
+			position:absolute;
+			top:5px;
+			right:0;
+			cursor:pointer;
+		}
+	}
+	.slide-from-right-enter-active,
+	.slide-from-right-leave-active {
+		transition: all .3s ease;
+	}
+	.slide-from-right-enter, .slide-from-right-leave-to {
+		transform: translateX($aside-width);
 	}
 }

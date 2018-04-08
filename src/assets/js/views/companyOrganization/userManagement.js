@@ -18,8 +18,8 @@ JGBVue.module.userManagement = () => {
     userPasswordReset,
     userAddUrl,
     userEditUrl,
-    addAccountTimeUrl,
-    delAccountTimeUrl,
+    addAccessTimeUrl,
+    delAccessTimeUrl,
     accessTimeGetUrl,
     getSystemModulesUrl,
     getSystemButtonViewUrl,
@@ -64,7 +64,9 @@ JGBVue.module.userManagement = () => {
             remark: ''
           },
           addFormDefault: {},//新增用户表单默认
+          loadingSaveAdd: false, //是否在新增用户表单传输
           showEditUserDialog: false, //修改用户模态框
+          loadingSaveEdit: false, //是否在新增用户表单传输
           editForm: { //修改用户表单
             number: '',
             account: '',
@@ -103,8 +105,10 @@ JGBVue.module.userManagement = () => {
           accessDialogActive: 'monday', //时段访问标签页
           currentAccessTime: [new Date(2017, 7, 7, 0, 0), new Date(2017, 7, 8, 23, 0)], //选择的禁止访问时段
           accessTimeList: [], //当前用户的禁止访问时段
+          isAddingAccessTime: false, //是否正在添加时段
 
           showRightsManagement: false, //权限管理窗
+          isUpdatingRight: false, //正在更新用户权限
           rightsStepActive: 0, //步骤进度
           systemModules: [], //系统功能列
           systemButtons: [], //系统按钮列
@@ -327,16 +331,31 @@ JGBVue.module.userManagement = () => {
         },
         //添加禁止访问时段
         handleAddAccessTime: function () {
-          axios.post(addAccountTimeUrl, {
+          this.isAddingAccessTime = true
+          axios.post(addAccessTimeUrl, {
             user: this.selectedRows[0].number,
             weekday: this.accessDialogActive,
             time: this.currentAccessTime
-          }).then().catch()
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              })
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+            this.isAddingAccessTime = false
+          }).catch(err=> {
+            this.$alert(err, '提示')
+            this.isAddingAccessTime = false
+          })
         },
         //删除禁止访问时段
         handleDeleteTime: function (index, row) {
           // row { weekday, time }
-          axios.post(delAccountTimeUrl).then().catch()
+          axios.post(delAccessTimeUrl).then().catch()
         },
         /**
          * 系统功能树形菜单
@@ -454,14 +473,29 @@ JGBVue.module.userManagement = () => {
         },
         //更新权限设置
         completeRights: function () {
+          this.isUpdatingRight = true
           axios.post(updateSystemRightsUrl, {
             modules: this.systemModulesCheckedKeys,
             buttons: this.systemButtonsCheckedKeys,
             views: this.systemViewsCheckedKeys,
             others: this.systemOthersChecked,
             user: this.selectedRows[0].number
-          }).then(req => { }).catch(err => { })
-          this.showRightsManagement = false //应在数据处理成功后关闭
+          }).then(res => {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              })
+              this.showRightsManagement = false
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+            this.isUpdatingRight = false
+          }).catch(err => {
+            this.$alert(err, '提示')
+            this.isUpdatingRight = false
+          })
         },
         //获取用户列表
         getUserList: function () {
@@ -484,6 +518,7 @@ JGBVue.module.userManagement = () => {
           // console.log(this.addForm)
           this.$refs.addForm.validate((valid) => {
             if (valid) {
+              this.loadingSaveAdd = true
               axios.post(userAddUrl, this.addForm).then(res => {
                 //添加成功
                 if (res.data.status) {
@@ -495,8 +530,12 @@ JGBVue.module.userManagement = () => {
                 }
                 else {
                   this.$alert(res.data.message, '提示')
-                }
-              }).catch()
+                };
+                this.loadingSaveAdd = false
+              }).catch(err => {
+                this.$alert(err, '提示')
+                this.loadingSaveAdd = false
+              })
             } else {
               console.log('error submit!!');
               return false;
@@ -511,6 +550,7 @@ JGBVue.module.userManagement = () => {
         saveEdit: function () {
           this.$refs.editForm.validate((valid) => {
             if (valid) {
+              this.loadingSaveEdit = true
               axios.post(userEditUrl, this.editForm).then(res => {
                 if (res.data.status) {
                   this.$message({
@@ -520,9 +560,12 @@ JGBVue.module.userManagement = () => {
                 }
                 else {
                   this.$alert(res.data.message, '提示')
-                }
+                };
+                this.loadingSaveEdit = false
+                this.showEditUserDialog = false
               }).catch(err => {
                 this.$alert(err, '提示')
+                this.loadingSaveEdit = false
               })
             } else {
               console.log('error submit!!');
@@ -581,8 +624,8 @@ JGBVue.module.userManagement = () => {
     userPasswordReset,
     userAddUrl,
     userEditUrl,
-    addAccountTimeUrl,
-    delAccountTimeUrl,
+    addAccessTimeUrl,
+    delAccessTimeUrl,
     accessTimeGetUrl,
     getSystemModulesUrl,
     getSystemButtonViewUrl,
@@ -598,8 +641,8 @@ JGBVue.module.userManagement = () => {
       userPasswordReset,
       userAddUrl,
       userEditUrl,
-      addAccountTimeUrl,
-      delAccountTimeUrl,
+      addAccessTimeUrl,
+      delAccessTimeUrl,
       accessTimeGetUrl,
       getSystemModulesUrl,
       getSystemButtonViewUrl,
