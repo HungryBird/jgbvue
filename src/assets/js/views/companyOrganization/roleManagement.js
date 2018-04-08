@@ -9,24 +9,23 @@ JGBVue = {
 JGBVue.module.roleManagement = () => {
   let _this = {}, that = {}
   _this.init = (
-    treeDataGetUrl,//1-获取公司数据
-    departmentGetUrl,//2-获取部门信息
-    positionListGetUrl, //3-获取职位
-    roleListGetUrl,//4-获取角色列表
-    roleStatus,//5-禁用/启用用户状态
-    roleDelete,//6-删除用户
-    roleAddUrl,//7-新增角色
-    roleEditUrl,//8-修改角色
-    addAccessTimeUrl,//9-增加访问时段
-    delAccessTimeUrl,//10-删除访问时段
-    accessTimeGetUrl,//11-获取访问时段
-    getSystemModulesUrl,//12-权限设置-获取系统功能
-    getSystemButtonViewUrl,//13-权限设置-获取系统按钮、系统视图
-    getSystemOtherRightsUrl,//14-权限设置-获取其他权限
-    updateSystemRightsUrl,//15-更新权限设置
-    roleMemberListUrl,//16-获取角色成员组
-    departmentMemberGetUrl, //17-获取部门成员组
-    setRoleMemberUrl//18 - 更新角色成员
+    treeDataGetUrl,//获取公司数据
+    departmentGetUrl,//获取部门信息
+    roleListGetUrl,//获取角色列表
+    roleStatus,//禁用/启用用户状态
+    roleDelete,//删除用户
+    roleAddUrl,//新增角色
+    roleEditUrl,//修改角色
+    addAccessTimeUrl,//增加访问时段
+    delAccessTimeUrl,//删除访问时段
+    accessTimeGetUrl,//获取访问时段
+    getSystemModulesUrl,//权限设置-获取系统功能
+    getSystemButtonViewUrl,//权限设置-获取系统按钮、系统视图
+    getSystemOtherRightsUrl,//权限设置-获取其他权限
+    updateSystemRightsUrl,//-更新权限设置
+    roleMemberListUrl,//获取角色成员组
+    departmentMemberGetUrl, //获取部门成员组
+    setRoleMemberUrl//更新角色成员
     ) => {
     that.vm = new Vue({
       el: '#app',
@@ -356,14 +355,6 @@ JGBVue.module.roleManagement = () => {
             this.$alert(err, '错误')
           })
         },
-        //表单选择部门 获取职位数据
-        handleFormDepartment: function (d) {
-          axios.post(positionListGetUrl, d).then(res => {
-            if (res.data.status) {
-              this.addForm.currentPositionList = JSON.parse(res.data.data).concat()
-            }
-          })
-        },
         //访问过滤
         handleAccess: function (type) {
           switch (type) {
@@ -610,7 +601,6 @@ JGBVue.module.roleManagement = () => {
   that.init = (
     treeDataGetUrl,
     departmentGetUrl,
-    positionListGetUrl,
     roleListGetUrl,
     roleStatus,
     roleDelete,
@@ -629,7 +619,6 @@ JGBVue.module.roleManagement = () => {
     _this.init(
       treeDataGetUrl,
       departmentGetUrl,
-      positionListGetUrl,
       roleListGetUrl,
       roleStatus,
       roleDelete,
