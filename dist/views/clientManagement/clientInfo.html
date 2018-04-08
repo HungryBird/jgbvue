@@ -87,30 +87,32 @@
 		<div class="wrap_footer">
 			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
 		</div>
-		<div class="details-wrap">
-			<div class="details-inner">
-				<el-row class="row-border">
-					<div class="title text-center">
-						<h3>客户详细信息</h3>
+		<transition name="slide-fade">
+			<div class="details-wrap" v-show="isUnfold">
+				<div class="details-inner">
+					<el-row class="row-border">
+						<div class="title text-center">
+							<h3>客户详细信息</h3>
+						</div>
+						<el-col v-for="item in clientInfo.info" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.name">
+							<div>{{ item.name }}</div>
+							<div>{{ item.value }}</div>
+						</el-col>
+					</el-row>
+					<el-table v-if="clientInfo.update.length !== 0" :data="clientInfo.update">
+						<el-table-column label="修改记录" align="center">
+							<el-table-column type="index" label="序号" width="50px"></el-table-column>
+							<el-table-column prop="modifier" label="修改人"></el-table-column>
+							<el-table-column prop="time" label="修改时间"></el-table-column>
+						</el-table-column>
+					</el-table>
+					<div class="toggle-button-wrap" v-on:click="isUnfold = false">
+						<span class="jgbvue_arrow_icon"></span>
+						<span class="jgbvue_arrow_line"></span>
 					</div>
-					<el-col v-for="item in clientInfo.info" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.name">
-						<div>{{ item.name }}</div>
-						<div>{{ item.value }}</div>
-					</el-col>
-				</el-row>
-				<el-table v-if="clientInfo.update.length !== 0" :data="clientInfo.update">
-					<el-table-column label="修改记录" align="center">
-						<el-table-column type="index" label="序号" width="50px"></el-table-column>
-						<el-table-column prop="modifier" label="修改人"></el-table-column>
-						<el-table-column prop="time" label="修改时间"></el-table-column>
-					</el-table-column>
-				</el-table>
-				<div class="toggle-button-wrap">
-					<span class="jgbvue_arrow_icon"></span>
-					<span class="jgbvue_arrow_line"></span>
 				</div>
 			</div>
-		</div>
+		</transition>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>

@@ -38,7 +38,8 @@ JGBVue.module.clientInfo = ()=> {
 				},
 				selectedRows: [],
 				pageSize: 20,
-				currentPage: 1
+				currentPage: 1,
+				isUnfold: false
 			},
 			mounted() {
 				let _self = this;
@@ -89,13 +90,22 @@ JGBVue.module.clientInfo = ()=> {
                     }
 				},
 				handleExamine(index, row) {
-					axios.post(examineUrl, row).then((res)=> {
-						if(res.data.status) {
-							let jdata = JSON.parse(res.data.data);
-							this.clientInfo = jdata;
-							console.log(this.clientInfo)
-						}
-					})
+					if(this.isUnfold) {
+						//this.selectedRows = [];
+						//this.$refs['table'].clearSelection();
+						this.isUnfold = false;
+					}else{
+						axios.post(examineUrl, row).then((res)=> {
+							if(res.data.status) {
+								let jdata = JSON.parse(res.data.data);
+								this.clientInfo = jdata;
+								this.isUnfold = true;
+								/*this.isUnfold = true;
+								this.selectedRows = [];
+								this.selectedRows.push(row);*/
+							}
+						})
+					}
 				},
 				handleEdit() {
 					//

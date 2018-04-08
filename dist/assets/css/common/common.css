@@ -525,9 +525,9 @@ table {
   transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1); }
 
 .slide-fade-enter, .slide-fade-leave-to {
-  -webkit-transform: translateX(40px);
-  -ms-transform: translateX(40px);
-  transform: translateX(40px);
+  -webkit-transform: translateX(100%);
+  -ms-transform: translateX(100%);
+  transform: translateX(100%);
   opacity: 0; }
 
 .row-border {
