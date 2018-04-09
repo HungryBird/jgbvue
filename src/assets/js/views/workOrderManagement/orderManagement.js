@@ -23,10 +23,10 @@ JGBVue.module.workOrderManagement = () => {
             maintenanceCurrent: '', //维修人员
             keyword: '', //查询关键词
             checkedStatus: [], //工单状态
-            sort: {
+            sort: { //默认按工单日期排序
               prop: "date",
               order: "descending"
-            } ,//按工单日期排序
+            },
           },
           formTimeRangeDefault: ['00:00:00', '23:59:59'], //表单 默认起止时间
           formBusinessList: [], //表单 业务人员组
@@ -50,6 +50,11 @@ JGBVue.module.workOrderManagement = () => {
           formStatusCheckAll: true, //绑定工单状态全选
 
           orderList: [], //工单数据
+          orderPage: { //工单分页
+            page_current: 0,
+            page_size: 10,
+            page_total: 0,
+          }, 
           tableHeader: [], //表头
         }
       },
@@ -76,11 +81,13 @@ JGBVue.module.workOrderManagement = () => {
         //获取工单数据
         getWorkOrderData: function() {
           axios.post(workOrderDataGetUrl, {
-            filter: this.selectForm
+            filter: this.selectForm,
+            page_current: this.orderPage.page_current+1
           }).then(res=> {
             if(res.data.status) {
               let _data = JSON.parse(res.data.data)
               this.orderList = _data.data
+              this.orderPage = this.$deepCopy(_data.page) //真实数据使用
               if(!this.tableHeader.length) {
                 this.tableHeader = _data.header.concat()
               }
@@ -119,6 +126,10 @@ JGBVue.module.workOrderManagement = () => {
             prop: obj.prop,
             order: obj.order
           }
+          this.getWorkOrderData()
+        },
+        //工单 分页
+        handleOrderCurrentChange: function(val) {
           this.getWorkOrderData()
         },
       },

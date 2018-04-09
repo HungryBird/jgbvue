@@ -88,13 +88,104 @@
                 :prop="item.prop"
                 :label="item.label">
               </el-table-column>
-							<el-table-column label="操作" align="center" width="150">
+							<el-table-column label="操作" align="center" min-width="150">
 								<template slot-scope="scope">
-                  <el-button type="primary" size="mini">查看</el-button>
-                  <el-button v-if="scope.row.status_value==0" type="primary" size="mini">{{scope.row.status_label}}</el-button>
+                  <!-- 委派 -->
+                  <div v-if="scope.row.status_value == 0" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">领取</el-button>
+                    <el-button type="" size="mini">退回</el-button>
+                    <el-button type="" size="mini">撤回</el-button>
+                  </div>
+                  <!-- 待接 -->
+                  <div v-else-if="scope.row.status_value == 1" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">领取</el-button>
+                    <el-button type="" size="mini">撤回</el-button>
+                  </div>
+                  <!-- 待诊断 -->
+                  <div v-else-if="scope.row.status_value == 2" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">设备定位</el-button>
+                    <el-button type="" size="mini">故障诊断</el-button>
+                  </div>
+                  <!-- 诊断中 -->
+                  <div v-else-if="scope.row.status_value == 3" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">设备定位</el-button>
+                    <el-button type="" size="mini">故障诊断</el-button>
+                  </div>
+                  <!-- 待报价 -->
+                  <div v-else-if="scope.row.status_value == 4" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">维修报价</el-button>
+                  </div>
+                  <!-- 报价中 -->
+                  <div v-else-if="scope.row.status_value == 5" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">维修报价</el-button>
+                    <el-button type="" size="mini">维修合同</el-button>
+                  </div>
+                  <!-- 待维修 -->
+                  <div v-else-if="scope.row.status_value == 6" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">设备定位</el-button>
+                    <el-button type="" size="mini">开始维修</el-button>
+                    <el-button type="" size="mini">开票申请</el-button>
+                  </div>
+                  <!-- 维修中 -->
+                  <div v-else-if="scope.row.status_value == 7" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">测试报告</el-button>
+                    <el-button type="" size="mini">换人修</el-button>
+                    <el-button type="" size="mini">送外修</el-button>
+                    <el-button type="" size="mini">再次诊断</el-button>
+                    <el-button type="" size="mini">开票申请</el-button>
+                  </div>
+                  <!-- 完成维修 -->
+                  <div v-else-if="scope.row.status_value == 8" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">维修报告</el-button>
+                    <el-button type="" size="mini">最终成本</el-button>
+                    <el-button type="" size="mini">开票申请</el-button>
+                  </div>
+                  <!-- 待交付 -->
+                  <div v-else-if="scope.row.status_value == 9" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">交付单</el-button>
+                  </div>
+                  <!-- 交付中 -->
+                  <div v-else-if="scope.row.status_value == 10" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">交付单</el-button>
+                    <el-button type="" size="mini">快递单</el-button>
+                    <el-button type="" size="mini">开票申请</el-button>
+                  </div>
+                  <!-- 已交付 -->
+                  <div v-else-if="scope.row.status_value == 11" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">客户回访</el-button>
+                  </div>
+                  <!-- 作废 -->
+                  <div v-else-if="scope.row.status_value == 12" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                  </div>
+                  <!-- 撤回、退回 -->
+                  <div v-else-if="scope.row.status_value == 13" class="order-button">
+                    <el-button type="" size="mini">查看</el-button>
+                    <el-button type="" size="mini">修改</el-button>
+                  </div>
 								</template>
 							</el-table-column>
             </el-table>
+            <el-pagination class="w-table-pagination"
+              layout="prev, pager, total, next, jumper"
+              prev-text="上一页" next-text="下一页"
+              :current-page="orderPage.page_current"
+              :page-size="orderPage.page_size"
+              :total="orderPage.page_total"
+              v-on:current-change="handleOrderCurrentChange">
+          </el-pagination>
           </div>
 				</div>
 			</el-main>
@@ -110,7 +201,7 @@
 	JGBVue.module.workOrderManagement().init(
     '/orderManagement/get_business_data', //获取业务人员数据
     '/orderManagement/get_maintenance_data', //获取维修人员数据
-    '/orderManagement/get_work_order_data', //获取工单数据
+    '/orderManagement/get_work_order_data' //获取工单数据
 	);
 </script>
 
