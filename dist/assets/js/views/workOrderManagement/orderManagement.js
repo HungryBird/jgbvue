@@ -24,14 +24,14 @@ JGBVue.module.workOrderManagement = () => {
             keyword: '', //查询关键词
             checkedStatus: [], //工单状态
             sort: {
-              prop: "",
-              order: ""
+              prop: "date",
+              order: "descending"
             } ,//按工单日期排序
           },
           formTimeRangeDefault: ['00:00:00', '23:59:59'], //表单 默认起止时间
           formBusinessList: [], //表单 业务人员组
           formMaintenanceList: [], //表单 维修人员组
-          formOrderStatus: [ //工单状态
+          formOrderStatus: [ //工单状态 *value会关联html显示按钮组的判断条件,v-if需同步修改
             { label: '委派', value: 0 },
             { label: '待接', value: 1 },
             { label: '待诊断', value: 2 },
@@ -111,18 +111,14 @@ JGBVue.module.workOrderManagement = () => {
         },
         /**
          * 按工单日期排序
-         * @param {Object} column 行属性
-         * @param {String} prop 排序列的prop
-         * @param {String} order 排序方式 "descending" "ascending"
+         * @param {Object} obj { column行属性, prop, order排序方式}
          */
-        handleOrderSort: function(column, prop, order) {
-          console.log(column, prop, order)
+        handleOrderSort: function(obj) {
+          // console.log(obj.column, obj.prop, obj.order)
           this.selectForm.sort = {
-            prop: prop,
-            order: order
+            prop: obj.prop,
+            order: obj.order
           }
-          console.log(this.selectForm.sort)
-          console.log()
           this.getWorkOrderData()
         },
       },

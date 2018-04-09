@@ -16,6 +16,7 @@
   "data": [
     {
       "status_label": "委派",
+      "status_value": 0,
       "aging": "",
       "date": "",
       "order_id": "",
@@ -33,6 +34,7 @@
       "remark": ""
     },{
       "status_label": "",
+      "status_value": 0,
       "aging": "",
       "date": "",
       "order_id": "",

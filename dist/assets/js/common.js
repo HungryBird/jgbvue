@@ -171,6 +171,10 @@ let setMember = Vue.extend({
       let arr = []
       for (let i = 0; i < _data.length; i++) {
         if (_data[i].children) {
+          arr.push({
+            label: _data[i].label,
+            number: _data[i].number
+          })
           arr = arr.concat(this.getAllChildrenCompany(_data[i].children))
         }
         else {
