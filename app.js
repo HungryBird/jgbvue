@@ -75,6 +75,14 @@ app.use('/clientInfo', clientInfoRouter);
 app.use('/roleManagement', roleManagementRouter);
 
 /**
+ * 售后
+ */
+
+const orderManagementRouter = require('./routers/views/workOrderManagement/orderManagement');
+
+app.use('/orderManagement', orderManagementRouter);
+
+/**
  * server running at port 3333
  */
 

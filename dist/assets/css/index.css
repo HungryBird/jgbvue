@@ -225,7 +225,8 @@ dd {
 }
 .menu-item-wrap {
   float: left;
-  width: 210px;
+  /*width: 210px; 2018-4-9 edit by lanw*/
+  width:180px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }

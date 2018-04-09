@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>工单管理</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body>
+	<div id="app" v-cloak class="workOrderManagement">
+		<el-container>
+			<el-main>
+				<div class="jgb-wrap">
+          <div class="w-main-header">
+            <el-form inline label-width="80px" :model="selectForm">
+              <el-form-item label="日期:">
+                <el-date-picker
+                  v-model="selectForm.dateRange"
+                  format="yyyy-MM-dd"
+                  type="datetimerange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  :default-time="formTimeRangeDefault">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="业务人员:">
+                <el-select v-model="selectForm.businessCurrent" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in formBusinessList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="维修人员:">
+                <el-select v-model="selectForm.maintenanceCurrent" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in formMaintenanceList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+              </el-form-item>
+              <el-form-item>
+                <el-input v-model="selectForm.keyword" placeholder="工单编号、客户名称、设备名称、维修日志" style="width:300px;">
+                  <template slot="append">
+                    <el-button v-on:click="search">查询</el-button>
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="工单状态:" class="order-status">
+                <el-checkbox v-model="formStatusCheckAll" @change="handleFormCheckAllChange">全选</el-checkbox>
+                <el-checkbox-group v-model="selectForm.checkedStatus" @change="handleFormCheckStatusChange">
+                  <el-checkbox v-for="item in formOrderStatus" :label="item" :key="item.value">{{item.label}}</el-checkbox>
+                </el-checkbox-group>
+                <el-button-group>
+                  <el-button type="primary" size="mini">列设置</el-button>
+                  <el-button type="primary" size="mini">新增</el-button>
+                  <el-button type="primary" size="mini">导出</el-button>
+                  <el-button type="primary" size="mini">打印</el-button>
+                  <el-button type="primary" size="mini">
+                    作废
+                  </el-button>
+                </el-button-group>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div class="w-main-table">
+            <el-table border highlight-current-row style="width: 100%"
+              :data="orderList"
+              v-on:sort-change="handleOrderSort">
+							<el-table-column type="selection" align="center" width="40"></el-table-column>
+							<el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+              <el-table-column v-for="item in tableHeader"
+                align="center"
+                :sortable="item.sortable"
+                :width="item.width"
+                :key="item.prop"
+                :prop="item.prop"
+                :label="item.label">
+              </el-table-column>
+							<el-table-column label="操作" align="center" width="150">
+								<template slot-scope="scope">
+									<el-button-group>
+										<el-button size="mini" v-on:click.stop="">修改</el-button>
+										<el-button size="mini" type="danger" v-on:click.stop="">删除</el-button>
+									</el-button-group>
+								</template>
+							</el-table-column>
+            </el-table>
+          </div>
+				</div>
+			</el-main>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/workOrderManagement/orderManagement.js"></script>
+<script type="text/javascript">
+	JGBVue.module.workOrderManagement().init(
+    '/orderManagement/get_business_data', //获取业务人员数据
+    '/orderManagement/get_maintenance_data', //获取维修人员数据
+    '/orderManagement/get_work_order_data', //获取工单数据
+	);
+</script>
+
+</html>

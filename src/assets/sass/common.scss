@@ -794,3 +794,51 @@ table{
 		transform: translateX($aside-width);
 	}
 }
+
+//工单管理
+.workOrderManagement {
+	.w-main-header {
+		padding:0 10px;
+		margin-bottom:20px;
+		.el-date-editor--datetimerange.el-input__inner {
+			width: 220px;
+		}
+		.el-form {
+			.el-form-item {
+				padding-bottom:0;
+				.el-input {
+					width: 150px;
+				}
+			}
+		} 
+		.order-status {
+			$status-height:25px;
+			@include w-flex(row, nowrap, flex-start, flex-start);
+			.el-form-item__label {
+				height:$status-height;
+				line-height:$status-height;
+			}
+			.el-form-item__content {
+				@include w-flex(row, nowrap, flex-start, flex-start);
+				line-height:$status-height;
+			}
+			.el-checkbox-group {
+				width:650px;
+			}
+			.el-checkbox {
+				width:70px;
+				margin-right:20px;
+				margin-left:0;
+				&:last-child {
+					margin-right:0;
+				}
+			}
+			.el-button-group {
+				margin:10px 0;
+			}
+		}
+	}
+	.w-main-table {
+		padding: 0 10px;
+	}
+}
