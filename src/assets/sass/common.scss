@@ -168,6 +168,13 @@ table{
     background-color: #2dc3e8;
     border-color: #2dc3e8;
 }
+.required{
+	&:before{
+		content: '*';
+		color: #f56c6c;
+		margin-right: 4px;
+	}
+}
 .el-dialog{
 	width: 775px;
 	.el-step__head{

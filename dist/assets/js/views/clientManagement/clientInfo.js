@@ -416,6 +416,17 @@ JGBVue.module.clientInfo = ()=> {
 						this.addForm.block = '';
 					}
 				},
+				renderHeader(createElement, { _self }) {
+					return createElement(
+						'div',
+						{'class': 'renderTableHead'},[
+								createElement('div', {
+									attrs: { type: 'text' },
+									class: 'required'
+								}, ['联系人'])
+						]
+					)
+				},
 				saveAdd(formName) {
 					this.$refs[formName].validate((valid)=> {
 						if(valid) {

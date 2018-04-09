@@ -192,9 +192,9 @@ router.get('/getCompany', (req, res)=> {
 	})
 });
 
-router.get('/getDepartment', (req, res)=> {
+router.post('/getDepartment', (req, res)=> {
 	let jdata = '';
-	fs.readFile('api/common/audit/department1.json', 'utf-8', (err, data)=> {
+	fs.readFile('api/common/company/department.json', 'utf-8', (err, data)=> {
 		if(err) {
 			res.send({
 				status: false,
@@ -211,7 +211,7 @@ router.get('/getDepartment', (req, res)=> {
 	})
 });
 
-router.get('/getUser', (req, res)=> {
+router.post('/getUser', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/common/audit/auditors1.json', 'utf-8', (err, data)=> {
 		if(err) {
