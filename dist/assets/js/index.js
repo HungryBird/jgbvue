@@ -124,6 +124,89 @@ new Vue({
           ]
         }
         ]
+      }, {
+        id: 'nav_004',
+        cls: 'fa fa-group',
+        name: '售后',
+        menuItems: [
+        {
+          parentFolder: 'afterSale',
+          items: [{
+            id: '201804061000',
+            name: '客户回访'
+          }, {
+            id: '201804061001',
+            name: '统计报表'
+          }]
+        },
+        {
+          title: '设备管理',
+          parentFolder: 'equipmentManagement',
+          items: [{
+            id: 'equipmentCategory',
+            name: '设备类别'
+          }, {
+            id: 'equipmentBrand',
+            name: '设备品牌'
+          }, {
+            id: 'auxiliaryAttributes',
+            name: '辅助属性'
+          }]
+        },
+        {
+          // title: '工单管理',
+          parentFolder: 'workOrderManagement',
+          items: [{
+              id: 'orderManagement',
+              name: '工单管理'
+            },
+            {
+              id: 'waitingOrder',
+              name: '待接工单'
+            },
+            {
+              id: 'entryOrder',
+              name: '工单录入'
+            },
+            {
+              id: 'faultDiagnosis',
+              name: '故障诊断'
+            },
+            {
+              id: 'offerAndContract',
+              name: '报价与合同'
+            }
+          ]
+        },
+        {
+          title: '维修管理',
+          parentFolder: '201804090948',
+          items: [
+            {
+              id: '201804090949',
+              name: '维修'
+            },
+            {
+              id: '201804090950',
+              name: '维修报告与成本'
+            }
+          ]
+        },
+        {
+          title: '交付与回访',
+          parentFolder: '201804090954',
+          items: [
+            {
+              id: '201804090955',
+              name: '交付单'
+            },
+            {
+              id: '201804090956',
+              name: '快递单'
+            }
+          ]
+        }
+        ]
       }]
     },
     action1: [{

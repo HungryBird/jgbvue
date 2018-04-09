@@ -760,3 +760,40 @@ table {
   -webkit-transform: translateX(200px);
   -ms-transform: translateX(200px);
   transform: translateX(200px); }
+
+.workOrderManagement .w-main-header {
+  padding: 0 10px;
+  margin-bottom: 20px; }
+  .workOrderManagement .w-main-header .el-date-editor--datetimerange.el-input__inner {
+    width: 220px; }
+  .workOrderManagement .w-main-header .el-form .el-form-item {
+    padding-bottom: 0; }
+    .workOrderManagement .w-main-header .el-form .el-form-item .el-input {
+      width: 150px; }
+  .workOrderManagement .w-main-header .order-status {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-start; }
+    .workOrderManagement .w-main-header .order-status .el-form-item__label {
+      height: 25px;
+      line-height: 25px; }
+    .workOrderManagement .w-main-header .order-status .el-form-item__content {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: flex-start;
+      line-height: 25px; }
+    .workOrderManagement .w-main-header .order-status .el-checkbox-group {
+      width: 650px; }
+    .workOrderManagement .w-main-header .order-status .el-checkbox {
+      width: 70px;
+      margin-right: 20px;
+      margin-left: 0; }
+      .workOrderManagement .w-main-header .order-status .el-checkbox:last-child {
+        margin-right: 0; }
+    .workOrderManagement .w-main-header .order-status .el-button-group {
+      margin: 10px 0; }
+
+.workOrderManagement .w-main-table {
+  padding: 0 10px; }
