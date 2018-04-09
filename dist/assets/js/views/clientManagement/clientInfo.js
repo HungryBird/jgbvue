@@ -6,7 +6,7 @@ JGBVue.module.clientInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl)=> {
+	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -35,6 +35,8 @@ JGBVue.module.clientInfo = ()=> {
 					],
 					category:[],
 					level: [],
+					sale: [],
+					companyList: [],
 					clientInfo: {
 						info: [],
 						update: []
@@ -80,7 +82,7 @@ JGBVue.module.clientInfo = ()=> {
 						companyTel: '',
 						companyAddress: '',
 						sale: '',
-						assistants: '',
+						assistants: [],
 						table: []
 					},
 					addAddress: {
@@ -94,7 +96,11 @@ JGBVue.module.clientInfo = ()=> {
 						cities: [],
 						districts: [],
 						blocks: []
-					}
+					},
+					setMemberVisible: false,
+					getCompanyUrl: getCompanyUrl,
+					getDepartmentUrl: getDepartmentUrl,
+					getUserUrl: getUserUrl
 				}
 			},
 			mounted() {
@@ -104,6 +110,8 @@ JGBVue.module.clientInfo = ()=> {
 						let jdata = JSON.parse(res.data.data);
 						this.category = jdata.category;
 						this.level = jdata.level;
+						this.sale = jdata.sale;
+						this.companyList = jdata.companyList;
 						this.tempTable = jdata.table;
 						this.tempTable.forEach((item)=> {
 							if(!_self.isShowForbiddenClients) {
@@ -429,12 +437,15 @@ JGBVue.module.clientInfo = ()=> {
 				closeAdd() {
 					//
 				},
+				closeTag(tag) {
+					//
+				}
 			}
 		})
 	}
 
-	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl)=> {
-		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl);
+	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl)=> {
+		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl);
 	}
 
 	return that;

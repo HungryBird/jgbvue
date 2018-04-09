@@ -173,4 +173,61 @@ router.post('/get_block', (req, res)=> {
 	})
 });
 
+router.get('/getCompany', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/company/company.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
+
+router.get('/getDepartment', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/audit/department1.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
+
+router.get('/getUser', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/audit/auditors1.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
+
 module.exports = router;

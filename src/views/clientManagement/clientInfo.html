@@ -5,6 +5,17 @@
 	<title>客户信息</title>
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+	<style type="text/css">
+		.select-region .el-input{
+			width: 100% !important;
+		}
+		.select-region .el-form-item__content {
+			margin-left: 100px !important;
+		}
+		.select-region .el-form-item__content:first-child {
+			margin-left: 20px !important;
+		}
+	</style>
 </head>
 <body>
 	<div id="app" v-cloak>
@@ -170,7 +181,7 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
-				<el-row :gutter="4">
+				<el-row class="select-region" :gutter="0">
 					<el-col :span="6">
 						<el-form-item label="公司地址" prop="province">
 							<el-select placeholder="省份" v-model="addForm.province" v-on:focus="foucsAddProvince" v-on:change="changeAddProvince">
@@ -179,36 +190,50 @@
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
-						<el-form-item prop="city" label="城市" class="hide-label">
+						<el-form-item prop="city" class="hide-label">
 							<el-select placeholder="城市" v-model="addForm.city" :disabled="addAddress.provinces.length === 0" v-on:focus="foucsAddCity" v-on:change="changeAddCities">
 								<el-option v-for="item in addAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
-						<el-form-item prop="district" label="地区" class="hide-label">
+						<el-form-item prop="district" class="hide-label">
 							<el-select  placeholder="地区" v-model="addForm.district" :disabled="addAddress.cities.length === 0" v-on:focus="foucsAddDistrict" v-on:change="changeAddDistrict">
 								<el-option v-for="item in addAddress.districts" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6">
-						<el-form-item prop="block" label="街道" class="hide-label">
+						<el-form-item prop="block" class="hide-label">
 							<el-select  placeholder="街道" v-model="addForm.block" :disabled="addAddress.districts.length === 0" v-on:focus="foucsAddBlock">
 								<el-option v-for="item in addAddress.blocks" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row>
 					<el-col :span="24">
-						<el-form-item prop="moreInfo" label="详细地址" class="hide-label hide-label-hight">
-							<el-input v-model="addForm.moreInfo" placeholder="详细地址"></el-input>
+						<el-form-item prop="moreInfo" class="hide-label hide-label-hight">
+							<el-input v-model="addForm.moreInfo" placeholder="详细地址" style="width: 100%"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="微信" prop="wx">
-							<el-input v-model="addForm.wx"></el-input>
+					<el-col :span="24">
+						<el-form-item label="销售人员" prop="sale">
+							<el-select placeholder="销售人员"  v-model="addForm.sale">
+								<el-option v-for="p in sale" :key="p.value" :value="p.value" :label="p.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item label="协助人员" prop="assistants">
+							<el-button icon="el-icon-plus" size="mini" v-on:click="setMemberVisible = true">协助人员</el-button>
+							<div style="padding: 4px;border-radius: 4px;border: 1px solid rgba(64,158,255,.2)" v-show="addForm.assistants.length !== 0">
+								<el-tag v-for="tag in addForm.assistants" :key="tag.jobNumber" :type="tag.type" closable v-on:close="closeTag(tag)">{{tag.name}}</el-tag>
+							</div>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -221,6 +246,9 @@
 				</el-row>
 			</el-form>
 			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd" v-on:close="closeAdd"></jgb-form-footer>
+		</el-dialog>
+		<el-dialog :visible.sync="setMemberVisible">
+			<jgb-set-member :company="getCompanyUrl" :departmentUrl="getDepartmentUrl" :userUrl="getUserUrl"></jgb-set-member>
 		</el-dialog>
 	</div>
 </body>
@@ -238,7 +266,8 @@
 	 * 省
 	 * ...
 	 * 街区
+	 * 获取公司
 	 */
-	JGBVue.module.clientInfo().init('/clientInfo/data_init', '/common/switch', '/common/data_delete', '/clientInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block');
+	JGBVue.module.clientInfo().init('/clientInfo/data_init', '/common/switch', '/common/data_delete', '/clientInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/common/getDepartment');
 </script>
 </html>

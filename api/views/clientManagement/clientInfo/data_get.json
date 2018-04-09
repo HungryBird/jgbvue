@@ -22,6 +22,16 @@
 			"value": 2
 		}
 	],
+	"sale": [
+		{
+			"label": "销售人员1",
+			"value": 1
+		},
+		{
+			"label": "销售人员2",
+			"value": 2
+		}
+	],
 	"table": [
 		{
 			"clientLevel": "零售",
