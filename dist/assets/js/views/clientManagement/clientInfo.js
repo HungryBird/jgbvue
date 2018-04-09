@@ -6,46 +6,104 @@ JGBVue.module.clientInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl)=> {
+	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
-			data: {
-				table: [],
-				tempTable: [],
-				search: {
-					input: ''
-				},
-				detailsInfo: {},
-				isShowForbiddenClients: false,
-				activeIndex: -1,
-				queryType: [
-					{
-						label: "客户类别",
-						value: "clientCategory"
+			data() {
+				return {
+					table: [],
+					tempTable: [],
+					search: {
+						input: ''
 					},
-					{
-						label: "重点客户",
-						value: "mvp"
+					detailsInfo: {},
+					isShowForbiddenClients: false,
+					activeIndex: -1,
+					queryType: [
+						{
+							label: "客户类别",
+							value: "clientCategory"
+						},
+						{
+							label: "重点客户",
+							value: "mvp"
+						},
+						{
+							label: "普通客户",
+							value: "normal"
+						}
+					],
+					category:[],
+					level: [],
+					clientInfo: {
+						info: [],
+						update: []
 					},
-					{
-						label: "普通客户",
-						value: "normal"
+					selectedRows: [],
+					pageSize: 20,
+					currentPage: 1,
+					isUnfold: false,
+					examinCurRow: null,
+					addVisible: true,
+					loadingSaveAdd: false,
+					loadingDetailInfo: false,
+					formRules: {
+						number: [
+							{required: true, message: '请输入客户编号'}
+						],
+						name: [
+							{required: true, message: '请输入客户名称'}
+						]
+					},
+					addForm: {
+						number: '',
+						name: '',
+						category: '',
+						level: null,
+						identifyNumber: '',
+						bankName: '',
+						bankAccount: '',
+						companyTel: '',
+						companyAddress: '',
+						sale: '',
+						assistants: '',
+						table: []
+					},
+					editForm: {
+						number: '',
+						name: '',
+						category: '',
+						level: null,
+						identifyNumber: '',
+						bankName: '',
+						bankAccount: '',
+						companyTel: '',
+						companyAddress: '',
+						sale: '',
+						assistants: '',
+						table: []
+					},
+					addAddress: {
+						provinces: [],
+						cities: [],
+						districts: [],
+						blocks: []
+					},
+					editAddress: {
+						provinces: [],
+						cities: [],
+						districts: [],
+						blocks: []
 					}
-				],
-				clientInfo: {
-					info: [],
-					update: []
-				},
-				selectedRows: [],
-				pageSize: 20,
-				currentPage: 1,
-				isUnfold: false
+				}
 			},
 			mounted() {
 				let _self = this;
 				axios.get(initDataUrl).then((res)=> {
 					if(res.data.status) {
 						let jdata = JSON.parse(res.data.data);
+						this.category = jdata.category;
+						this.level = jdata.level;
 						this.tempTable = jdata.table;
 						this.tempTable.forEach((item)=> {
 							if(!_self.isShowForbiddenClients) {
@@ -90,22 +148,32 @@ JGBVue.module.clientInfo = ()=> {
                     }
 				},
 				handleExamine(index, row) {
-					if(this.isUnfold) {
-						//this.selectedRows = [];
-						//this.$refs['table'].clearSelection();
-						this.isUnfold = false;
-					}else{
-						axios.post(examineUrl, row).then((res)=> {
-							if(res.data.status) {
-								let jdata = JSON.parse(res.data.data);
-								this.clientInfo = jdata;
-								this.isUnfold = true;
-								/*this.isUnfold = true;
-								this.selectedRows = [];
-								this.selectedRows.push(row);*/
-							}
-						})
+					let _self = this;
+					if(this.examinCurRow === row) {
+						if(this.isUnfold) {
+							this.isUnfold = false;
+						}else{
+							this.toggleInfo();
+							this.isUnfold = true;
+						}
+						return;
 					}
+					this.examinCurRow = row;
+					this.$refs['table'].clearSelection();
+					this.loadingDetailInfo = true;
+					axios.post(examineUrl, row).then((res)=> {
+						if(res.data.status) {
+							let jdata = JSON.parse(res.data.data);
+							this.clientInfo = jdata;
+							this.isUnfold = true;
+							this.loadingDetailInfo = false;
+						}
+					});
+				},
+				toggleInfo() {
+					this.$refs['table'].clearSelection();
+					this.selectedRows = [];
+					this.isUnfold = false;
 				},
 				handleEdit() {
 					//
@@ -249,13 +317,124 @@ JGBVue.module.clientInfo = ()=> {
 					if(!row.status) {
 						return 'forbidden-row';
 					}
-				}
+				},
+				foucsAddProvince() {
+					let _self = this;
+					if(this.addAddress.provinces.length === 0) {
+						axios.get(getProvincesUrl).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.addAddress.provinces.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				foucsAddCity() {
+					let _self = this;
+					if(this.addAddress.cities.length === 0) {
+						axios.post(getCitiesUrl, this.addAddress.provinces).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.addAddress.cities.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				foucsAddDistrict() {
+					let _self = this;
+					if(this.addAddress.districts.length === 0) {
+						axios.post(getDistrictsUrl, this.addAddress.cities).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.addAddress.districts.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				foucsAddBlock() {
+					let _self = this;
+					if(this.addAddress.blocks.length === 0) {
+						axios.post(getBlocksUrl, this.addAddress.districts).then((req)=> {
+							if(req.data.status) {
+								let jdata = JSON.parse(req.data.data);
+								jdata.forEach((item)=> {
+									_self.addAddress.blocks.push(item);
+								});
+							}
+						}).catch((err)=> {
+							console.log('err: ', err);
+						})
+					}
+				},
+				changeAddProvince(val) {
+					if(this.addAddress.cities.length !== 0) {
+						this.addAddress.cities.splice(0, this.addAddress.cities.length);
+						this.addForm.city = '';
+					}
+					if(this.addAddress.districts.length !== 0) {
+						this.addAddress.districts.splice(0, this.addAddress.districts.length);
+						this.addForm.district = '';
+					}
+					if(this.addAddress.blocks.length !== 0) {
+						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
+						this.addForm.block = '';
+					}
+				},
+				changeAddCities() {
+					if(this.addAddress.districts.length !== 0) {
+						this.addAddress.districts.splice(0, this.addAddress.districts.length);
+						this.addForm.district = '';
+					}
+					if(this.addAddress.blocks.length !== 0) {
+						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
+						this.addForm.block = '';
+					}
+				},
+				changeAddDistrict() {
+					if(this.addAddress.blocks.length !== 0) {
+						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
+						this.addForm.block = '';
+					}
+				},
+				saveAdd(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveAddUrl, this.addForm).then((res)=> {
+								if(res.data.status) {
+									this.$refs[formName].resetFields();
+									this.addDialogVisiable = false;
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+								}
+							})
+						}else{
+							return false;
+						}
+					})
+				},
+				closeAdd() {
+					//
+				},
 			}
 		})
 	}
 
-	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl)=> {
-		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl);
+	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl)=> {
+		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl);
 	}
 
 	return that;

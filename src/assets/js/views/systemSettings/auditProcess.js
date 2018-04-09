@@ -515,7 +515,7 @@ JGBVue.module.auditProcess = ()=> {
                     let _self = this
                     ,arr = [];
                     this.editForm.firstLevelAuditorsGroup.splice(0, _self.editForm.firstLevelAuditorsGroup.length);
-                    
+
                     this.tempFirstLevelAuditorsGroup.forEach((item)=> {
                         for(let i = 0; i < _self.editForm.firstLevelAuditorsGroup.length; i++ ) {
                             if(_self.editForm.firstLevelAuditorsGroup[i].jobNumber === item.jobNumber) {
@@ -541,11 +541,6 @@ JGBVue.module.auditProcess = ()=> {
                 },
                 closeFirstLevelTag(tag) {
                     let _self = this;
-                    /*for(let i = 0; i < this.firstLevelAuditorsGroup.length; i++) {
-                        if(this.firstLevelAuditorsGroup[i] === tag) {
-                            this.firstLevelAuditorsGroup.splice(_self.firstLevelAuditorsGroup.indexOf(_self.firstLevelAuditorsGroup[i]), 1);
-                        }
-                    };*/
                     for(let i = 0, companyLength = this.firstAudit.companyList.length; i < companyLength; i++) {
                         if(this.firstAudit.companyList[i].value === tag.company) {
                             for(let j = 0, departmentLength = _self.firstAudit.departmentList.length; j < departmentLength; j++) {
@@ -560,14 +555,10 @@ JGBVue.module.auditProcess = ()=> {
                         }
                     }
                     this.editForm.firstLevelAuditorsGroup.splice(this.editForm.firstLevelAuditorsGroup.indexOf(tag), 1);
+                    this.tempFirstLevelAuditorsGroup.splice(this.tempFirstLevelAuditorsGroup.indexOf(tag), 1);
                 },
                 closeSecondLevelTag(tag) {
                     let _self = this;
-                    /*for(let i = 0; i < this.secondLevelAuditorsGroup.length; i++) {
-                        if(this.secondLevelAuditorsGroup[i] === tag) {
-                            this.secondLevelAuditorsGroup.splice(_self.secondLevelAuditorsGroup.indexOf(_self.secondLevelAuditorsGroup[i]), 1);
-                        }
-                    };*/
                     for(let i = 0, companyLength = this.secondAudit.companyList.length; i < companyLength; i++) {
                         if(this.secondAudit.companyList[i].value === tag.company) {
                             for(let j = 0, departmentLength = _self.secondAudit.departmentList.length; j < departmentLength; j++) {
@@ -582,6 +573,7 @@ JGBVue.module.auditProcess = ()=> {
                         }
                     }
                     this.editForm.secondLevelAuditorsGroup.splice(this.editForm.secondLevelAuditorsGroup.indexOf(tag), 1);
+                    this.tempSecondLevelAuditorsGroup.splice(this.tempSecondLevelAuditorsGroup.indexOf(tag), 1);
                 },
                 handleStartUsing(index, row) {
                     axios.post(handleStartUsingUrl, row).then((res)=> {

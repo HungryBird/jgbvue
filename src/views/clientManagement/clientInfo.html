@@ -49,7 +49,7 @@
 								<el-button>导出</el-button>
 							</el-button-group>
 						</nav>
-						<el-table :data="table" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" :row-class-name="rowStatusClassName">
+						<el-table :data="table" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" :row-class-name="rowStatusClassName" v-loading="loadingDetailInfo">
 							<el-table-column type="selection"></el-table-column>
 							<el-table-column type="index" label="序号" width="50px"></el-table-column>
 							<el-table-column label="操作">
@@ -89,7 +89,7 @@
 		</div>
 		<transition name="slide-fade">
 			<div class="details-wrap" v-show="isUnfold">
-				<div class="details-inner">
+				<div class="details-inner" v-loading="loadingDetailInfo">
 					<el-row class="row-border">
 						<div class="title text-center">
 							<h3>客户详细信息</h3>
@@ -106,18 +106,128 @@
 							<el-table-column prop="time" label="修改时间"></el-table-column>
 						</el-table-column>
 					</el-table>
-					<div class="toggle-button-wrap" v-on:click="isUnfold = false">
-						<span class="jgbvue_arrow_icon"></span>
-						<span class="jgbvue_arrow_line"></span>
+					<div class="toggle-button-wrap" v-on:click="toggleInfo">
+						<span class="jgbvue_arrow_icon" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -9px -85px;position: absolute;top: 50%;right: 0;transform: translateY(-50%);"></span>
+						<span class="jgbvue_arrow_line" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -123px -2px;margin-left: 16px;"></span>
 					</div>
 				</div>
 			</div>
 		</transition>
+		<el-dialog :visible.sync="addVisible" title="新增客户">
+			<div slot="title" class="title">
+				新增用户
+			</div>
+			<el-form ref="addForm" label-position="right" label-width="100px" :model="addForm" :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="客户编号" prop="number">
+							<el-input v-model="addForm.number"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="客户名称" prop="name">
+							<el-input v-model="addForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="客户类别" prop="category">
+							<el-select placeholder="请选择"  v-model="addForm.category">
+								<el-option v-for="p in category" :key="p.value" :value="p.value" :label="p.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="客户等级" prop="level">
+							<el-select placeholder="请选择"  v-model="addForm.level">
+								<el-option v-for="p in level" :key="p.value" :value="p.value" :label="p.label"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="纳税人识别号" prop="identifyNumber">
+							<el-input v-model="addForm.identifyNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="开户银行" prop="bankName">
+							<el-input v-model="addForm.bankName"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="银行账号" prop="bankAccount">
+							<el-input v-model="addForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="公司电话" prop="companyTel">
+							<el-input v-model="addForm.companyTel"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="6">
+						<el-form-item label="公司地址" prop="province">
+							<el-select placeholder="省份" v-model="addForm.province" v-on:focus="foucsAddProvince" v-on:change="changeAddProvince">
+								<el-option v-for="item in addAddress.provinces" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="city" label="城市" class="hide-label">
+							<el-select placeholder="城市" v-model="addForm.city" :disabled="addAddress.provinces.length === 0" v-on:focus="foucsAddCity" v-on:change="changeAddCities">
+								<el-option v-for="item in addAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="district" label="地区" class="hide-label">
+							<el-select  placeholder="地区" v-model="addForm.district" :disabled="addAddress.cities.length === 0" v-on:focus="foucsAddDistrict" v-on:change="changeAddDistrict">
+								<el-option v-for="item in addAddress.districts" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="block" label="街道" class="hide-label">
+							<el-select  placeholder="街道" v-model="addForm.block" :disabled="addAddress.districts.length === 0" v-on:focus="foucsAddBlock">
+								<el-option v-for="item in addAddress.blocks" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item prop="moreInfo" label="详细地址" class="hide-label hide-label-hight">
+							<el-input v-model="addForm.moreInfo" placeholder="详细地址"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="微信" prop="wx">
+							<el-input v-model="addForm.wx"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="addForm.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd" v-on:close="closeAdd"></jgb-form-footer>
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/clientManagement/clientInfo.js"></script>
 <script type="text/javascript">
 	/**
@@ -125,7 +235,10 @@
 	 * 切换状态
 	 * 删除
 	 * 查看
+	 * 省
+	 * ...
+	 * 街区
 	 */
-	JGBVue.module.clientInfo().init('/clientInfo/data_init', '/common/switch', '/common/data_delete', '/clientInfo/examine');
+	JGBVue.module.clientInfo().init('/clientInfo/data_init', '/common/switch', '/common/data_delete', '/clientInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block');
 </script>
 </html>

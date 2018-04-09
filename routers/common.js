@@ -36,7 +36,7 @@ router.post('/search', (req, res)=> {
 		status: true,
 		message: 'success'
 	})
-})
+});
 
 router.post('/getEmployee', (req, res)=> {
 	console.log(req.body.value)
@@ -95,6 +95,82 @@ router.post('/getEmployee', (req, res)=> {
 			})
 		})
 	}
-})
+});
+
+router.get('/get_provinces', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/address/beijing0.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
+
+router.post('/get_cities', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/address/beijing1.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
+
+router.post('/get_district', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/address/beijing2.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
+
+router.post('/get_block', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/address/beijing3.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
 
 module.exports = router;

@@ -564,131 +564,19 @@ JGBVue.module.menuManagement = ()=> {
 				},
 				addRemoveStep2AddForm() {
 					let _self = this;
-					this.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        beforeClose: function(action, instance, done) {
-                            done(action);
-                        }
-                    }).then((action)=> {
-                        if(action == 'confirm') {
-                            axios.post(addStep2Delete, this.addStep2TableCurrent).then((res)=> {
-                                if(res.data.status) {
-                                    this.$message({
-                                        type: 'success',
-                                        message: res.data.message
-                                    });
-                                }
-                            }).catch(function(err) {
-                                _self.$message({
-                                    type: 'error',
-                                    message: res.data.message || err
-                                });
-                            })
-                        }
-                    }).catch((err) => {
-                       this.$message({
-                            type: 'info',
-                            message: '已取消'
-                        });
-                    });
+					this.addStep2Table.splice(_self.addStep2Table.indexOf(_self.addStep2TableCurrent), 1);
 				},
 				editRemoveStep2AddForm() {
 					let _self = this;
-					this.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        beforeClose: function(action, instance, done) {
-                            done(action);
-                        }
-                    }).then((action)=> {
-                        if(action == 'confirm') {
-                            axios.post(addStep2Delete, this.addStep2TableCurrent).then((res)=> {
-                                if(res.data.status) {
-                                    this.$message({
-                                        type: 'success',
-                                        message: res.data.message
-                                    });
-                                }
-                            }).catch(function(err) {
-                                _self.$message({
-                                    type: 'error',
-                                    message: res.data.message || err
-                                });
-                            })
-                        }
-                    }).catch((err) => {
-                       this.$message({
-                            type: 'info',
-                            message: '已取消'
-                        });
-                    });
+					this.editStep2Table.splice(_self.editStep2Table.indexOf(_self.editStep2TableCurrent), 1);
 				},
 				addRemoveStep3AddForm() {
 					let _self = this;
-					this.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        beforeClose: function(action, instance, done) {
-                            done(action);
-                        }
-                    }).then((action)=> {
-                        if(action == 'confirm') {
-                            axios.post(addStep3Delete, this.addStep3TableCurrent).then((res)=> {
-                                if(res.data.status) {
-                                    this.$message({
-                                        type: 'success',
-                                        message: res.data.message
-                                    });
-                                }
-                            }).catch(function(err) {
-                                _self.$message({
-                                    type: 'error',
-                                    message: res.data.message || err
-                                });
-                            })
-                        }
-                    }).catch((err) => {
-                       this.$message({
-                            type: 'info',
-                            message: '已取消'
-                        });
-                    });
+					this.addStep3Table.splice(_self.addStep3Table.indexOf(_self.addStep3TableCurrent), 1);
 				},
 				editRemoveStep3AddForm() {
 					let _self = this;
-					this.$confirm('确定删除?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        beforeClose: function(action, instance, done) {
-                            done(action);
-                        }
-                    }).then((action)=> {
-                        if(action == 'confirm') {
-                            axios.post(editStep3Delete, this.editStep3TableCurrent).then((res)=> {
-                                if(res.data.status) {
-                                    this.$message({
-                                        type: 'success',
-                                        message: res.data.message
-                                    });
-                                }
-                            }).catch(function(err) {
-                                _self.$message({
-                                    type: 'error',
-                                    message: res.data.message || err
-                                });
-                            })
-                        }
-                    }).catch((err) => {
-                       this.$message({
-                            type: 'info',
-                            message: '已取消'
-                        });
-                    });
+					this.editStep3Table.splice(_self.editStep3Table.indexOf(_self.editStep3TableCurrent), 1);
 				},
 				addSaveAddStep2() {
 					let _self = this;
@@ -799,32 +687,36 @@ JGBVue.module.menuManagement = ()=> {
 						_self.addForm.step3.push(item);
 					});
 					this.$refs['addForm1'].validate((valid) => {
-							if (valid) {
-								axios.post(saveAddUrl, this.addForm).then((res)=> {
-									if(res.data.status) {
-										this.$message({
-											type: 'success',
-											message: res.data.message
-										});
-										this.addDialogVisiable = false;
-										this.addStep = 0;
-										/**
-										 * 清空addForm
-										 */
-										this.$refs['addForm1'].resetFields();
-										/**
-										 * 清空dialog的table
-										 */
-										this.addStep2Table.splice(0, _self.addStep2Table.length);
-										this.addStep3Table.splice(0, _self.addStep3Table.length);
-									}
-								}).catch((err)=> {
-									console.log('err: ', err);
-								})
-							} else {
-								return false;
-							}
-						});
+						if (valid) {
+							axios.post(saveAddUrl, this.addForm).then((res)=> {
+								if(res.data.status) {
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									});
+									this.addDialogVisiable = false;
+									this.addStep = 0;
+									/**
+									 * 清空addForm
+									 */
+									this.$refs['addForm1'].resetFields();
+									this.addForm.step2 = [];
+									this.addForm.step3 = [];
+									/**
+									 * 清空dialog的table
+									 */
+									this.addStep2Table.splice(0, _self.addStep2Table.length);
+									this.addStep3Table.splice(0, _self.addStep3Table.length);
+
+									console.log(this.addForm)
+								}
+							}).catch((err)=> {
+								console.log('err: ', err);
+							})
+						} else {
+							return false;
+						}
+					});
 				},
 				saveEdit() {
 					let _self = this;
@@ -845,6 +737,8 @@ JGBVue.module.menuManagement = ()=> {
 									this.editDialogVisiable = false;
 									this.editStep = 0;
 									this.$refs['editForm1'].resetFields();
+									this.editForm.step2 = [];
+									this.editForm.step3 = [];
 									/**
 									 * 清空dialog的table
 									 */

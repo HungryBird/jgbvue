@@ -1,6 +1,6 @@
 /**
  * 对象深拷贝
- * @param {*} obj 
+ * @param {*} obj
  * created by lanw 2018-4-2
  */
 let deepCopy = function(obj) {
@@ -22,7 +22,7 @@ Vue.prototype.$deepCopy = deepCopy
  */
 let formFooter = Vue.extend({
   template: `<div>
-              <el-button type="primary" 
+              <el-button type="primary"
                 :loading="loading"
                 :disable="loading"
                 v-on:click="btnSave">
@@ -86,7 +86,7 @@ let setMember = Vue.extend({
               <el-container v-if="departmentList.length">
                 <el-aside class="set-member-aside">
                   <ul class="ul-list">
-                    <li v-for="(item, index) in departmentList" 
+                    <li v-for="(item, index) in departmentList"
                       :class="departmentId == item.value ? 'active' : ''"
                       v-on:click="departmentId = item.value">
                       {{item.label}}
@@ -95,7 +95,7 @@ let setMember = Vue.extend({
                 </el-aside>
                 <el-main>
                   <div class="w-member-list" v-if="userList.length">
-                    <div v-for="(member, index) in userList" class="member-item" 
+                    <div v-for="(member, index) in userList" class="member-item"
                       :class="member.checked ? 'checked': ''"
                       v-on:click="toggleMemberChecked(member, index)">
                       <img class="member-pic" :src="member.pic_url" :alt="member.name"/>
