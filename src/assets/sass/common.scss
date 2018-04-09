@@ -847,5 +847,20 @@ table{
 	}
 	.w-main-table {
 		padding: 0 10px;
+		.order-button {
+			@include w-flex(row, wrap, flex-start, flex-start);
+			.el-button--mini {
+				padding: 3px 5px;
+				margin-right:3px;
+				margin-bottom:2px;
+				&+.el-button--mini {
+					margin-left:0;
+				}
+			}
+		}
+	}
+	.w-table-pagination {
+		@include w-flex(row, nowrap, center, center);
+		margin-bottom:20px;
 	}
 }

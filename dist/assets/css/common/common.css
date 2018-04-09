@@ -812,3 +812,21 @@ table {
 
 .workOrderManagement .w-main-table {
   padding: 0 10px; }
+  .workOrderManagement .w-main-table .order-button {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: flex-start; }
+    .workOrderManagement .w-main-table .order-button .el-button--mini {
+      padding: 3px 5px;
+      margin-right: 3px;
+      margin-bottom: 2px; }
+      .workOrderManagement .w-main-table .order-button .el-button--mini + .el-button--mini {
+        margin-left: 0; }
+
+.workOrderManagement .w-table-pagination {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px; }
