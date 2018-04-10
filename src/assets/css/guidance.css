@@ -3,17 +3,27 @@ html,body{
 	margin: 0;
 }
 #app{
+	width:100%;
 	height: 100%;
+	background: #EEEADE;
 }
-.wrap-guidance{
+/*2018-4-10 edity by lanw*/
+/* .wrap-guidance{ 
 	position: relative;
 	background: #EEEADE;
 	height: 100%;
-}
-.wrap-guidance .inner-guidance{
-	margin: 0 auto;
+} */
+.inner-guidance{
+	/*2018-4-10 edity by lanw*/
+	/* margin: 0 auto;
 	padding: 40px 0;
 	width: 1292px;
 	height: 592px;
-	background: url(../../assets/img/index/guidance.jpg) center center no-repeat;
+	background: url(../../assets/img/index/guidance.jpg) center center no-repeat; */
+	width:100%;
+	height:0;
+	padding-bottom:45.82%;
+}
+.inner-guidance img {
+	width:100%;
 }

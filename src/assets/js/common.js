@@ -124,8 +124,8 @@ let setMember = Vue.extend({
   props: {
     value: Array,
     company: [String, Object],
-    departmenturl: String,
-    userurl: String,
+    departmentUrl: String,
+    userUrl: String,
   },
   computed: {
     /**
@@ -199,7 +199,7 @@ let setMember = Vue.extend({
     },
     //根据部门， 关键字 获取数据
     getUserList: function() {
-      axios.post(this.userurl, {
+      axios.post(this.userUrl, {
         deparment: this.departmentId,
         keyword: this.keyword
       }).then(res => {
@@ -261,7 +261,7 @@ let setMember = Vue.extend({
   watch: {
     //公司id改变获取对应部门数据
     companyId: function() {
-      axios.post(this.departmenturl, {
+      axios.post(this.departmentUrl, {
         company: this.companyId
       }).then(res=> {
         if(res.data.status) {
@@ -278,7 +278,6 @@ let setMember = Vue.extend({
     },
     //部门id改变获取对应成员数据
     departmentId: function () {
-      console.log(111)
       this.getUserList()
     },
     //更新绑定数据

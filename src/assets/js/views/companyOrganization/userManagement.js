@@ -507,6 +507,7 @@ JGBVue.module.userManagement = () => {
             if (res.data.status) {
               let _data = JSON.parse(res.data.data)
               this.userList = _data
+              this.selectedRows = []
               // console.log(this.userList)
             };
           }).catch((err) => {
