@@ -386,23 +386,22 @@ JGBVue.module.auditProcess = ()=> {
                             this.firstAudit.auditorList.splice(0, _self.firstAudit.auditorList.length);
                             jdata.forEach((item)=> {
                                 _self.firstAudit.auditorList.push(item);
-                            })
+                            });
+
                             /**
-                             * 遍历一级审核人员tag数组，存在则把isSelected渲染为true
+                             * 遍历一级审核人员已选人员数组，改变firstAudit.audtorList[i].isSelected的值
                              * @param  {Number} let        i             [description]
                              * @param  {[type]} edAuLength [description]
                              * @return {[type]}            [description]
                              */
 
-                            for(let i = 0, edAuLength = this.editForm.firstLevelAuditorsGroup.length; i < edAuLength; i++ ) {
+                            this.tempFirstLevelAuditorsGroup.forEach((item)=> {
                                 for(let j = 0, auditorListLength = this.firstAudit.auditorList.length; j < auditorListLength; j++ ) {
-                                    if(this.editForm.firstLevelAuditorsGroup[i].isSelected) {
-                                        if(this.editForm.firstLevelAuditorsGroup[i].jobNumber === this.firstAudit.auditorList[j].jobNumber) {
-                                            this.firstAudit.auditorList[j].isSelected = true;
-                                        }
+                                    if(item.jobNumber === _self.firstAudit.auditorList[j].jobNumber) {
+                                        _self.firstAudit.auditorList[j].isSelected = true;
                                     }
                                 }
-                            }
+                            });
                         }
                     })
 
@@ -429,18 +428,15 @@ JGBVue.module.auditProcess = ()=> {
                             jdata.forEach((item)=> {
                                 _self.secondAudit.auditorList.push(item);
                             })
-                            for(let i = 0, edAuLength = this.editForm.secondLevelAuditorsGroup.length; i < edAuLength; i++ ) {
+                            this.tempSecondLevelAuditorsGroup.forEach((item)=> {
                                 for(let j = 0, auditorListLength = this.secondAudit.auditorList.length; j < auditorListLength; j++ ) {
-                                    if(this.editForm.secondLevelAuditorsGroup[i].isSelected) {
-                                        if(this.editForm.secondLevelAuditorsGroup[i].jobNumber === this.secondAudit.auditorList[j].jobNumber) {
-                                            this.secondAudit.auditorList[j].isSelected = true;
-                                        }
+                                    if(item.jobNumber === _self.secondAudit.auditorList[j].jobNumber) {
+                                        _self.secondAudit.auditorList[j].isSelected = true;
                                     }
                                 }
-                            }
+                            });
                         }
-                    })
-
+                    });
                 },
                 /**
                  * 一级审核人员-切换已选择审核人员

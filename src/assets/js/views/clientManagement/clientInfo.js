@@ -6,7 +6,7 @@ JGBVue.module.clientInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl)=> {
+	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -46,7 +46,8 @@ JGBVue.module.clientInfo = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addVisible: true,
+					addVisible: false,
+					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
 					formRules: {
@@ -69,7 +70,30 @@ JGBVue.module.clientInfo = ()=> {
 						companyAddress: '',
 						sale: '',
 						assistants: '',
-						table: []
+						table: [
+							{
+								index: 1,
+								editFlag: false,
+								linkman: '',
+								job: '',
+								tel: '',
+								phone: '',
+								QQOrWechat: '',
+								linkAddress: '',
+								primaryContact: ''
+							},
+							{
+								index: 2,
+								editFlag: false,
+								linkman: '',
+								job: '',
+								tel: '',
+								phone: '',
+								QQOrWechat: '',
+								linkAddress: '',
+								primaryContact: ''
+							}
+						]
 					},
 					editForm: {
 						number: '',
@@ -100,7 +124,20 @@ JGBVue.module.clientInfo = ()=> {
 					setMemberVisible: false,
 					getCompanyUrl: getCompanyUrl,
 					getDepartmentUrl: getDepartmentUrl,
-					getUserUrl: getUserUrl
+					getUserUrl: getUserUrl,
+					loadingSetRoleMember: false,
+					checkedRoleMember: [],
+					importVisible: false,
+					exportVisible: false,
+					uploadUrl: uploadUrl,
+					getFileInfo: null,
+					uploadInfo: {
+						newNumber: 0,
+						updateNumber: 0,
+						errNumber: 0,
+						errRecord: []
+					},
+					exportForm: []
 				}
 			},
 			mounted() {
@@ -136,6 +173,7 @@ JGBVue.module.clientInfo = ()=> {
 					}else{
 						_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
 					}
+					console.log(this.selectedRows)
 				},
 				selectAll(selection) {
 					let _self = this;
@@ -183,8 +221,15 @@ JGBVue.module.clientInfo = ()=> {
 					this.selectedRows = [];
 					this.isUnfold = false;
 				},
-				handleEdit() {
-					//
+				handleEdit(index, row) {
+					this.$refs['table'].clearSelection();
+					this.selectedRows = [];
+					axios.post(getEditUrl, row).then((res)=> {
+						if(res.data.status) {
+							this.editForm = JSON.parse(res.data.data);
+							this.editVisible = true;
+						}
+					})
 				},
 				handleDelete() {
 					let _self = this;
@@ -292,6 +337,7 @@ JGBVue.module.clientInfo = ()=> {
 							_self.table.push(item);
 						}
 					})
+					this.selectedRows = [];
 				},
 				startUsing() {
 					let _self = this
@@ -427,6 +473,84 @@ JGBVue.module.clientInfo = ()=> {
 						]
 					)
 				},
+				addRowClick(row, event, column) {
+					this.addForm.table.forEach((item)=> {
+						item.editFlag = false;
+					})
+					for(let i = 0; i < this.addForm.table.length; i++ ) {
+						if(row === this.addForm.table[i]) {
+							this.addForm.table[i].editFlag = true;
+						}
+					}
+				},
+				editRowClick(row, event, column) {
+					this.editForm.table.forEach((item)=> {
+						item.editFlag = false;
+					})
+					for(let i = 0; i < this.editForm.table.length; i++ ) {
+						if(row === this.editForm.table[i]) {
+							this.editForm.table[i].editFlag = true;
+						}
+					}
+				},
+				addFormTableAdd() {
+					let index = this.addForm.table[this.addForm.table.length - 1].index + 1;
+					let initFormRow = {
+						index: 0,
+						editFlag: false,
+						linkman: '',
+						job: '',
+						tel: '',
+						phone: '',
+						QQOrWechat: '',
+						linkAddress: '',
+						primaryContact: ''
+					}
+					initFormRow.index = index;
+					this.addForm.table.push(initFormRow)
+				},
+				editFormTableAdd() {
+					let index = this.editForm.table[this.editForm.table.length - 1].index + 1;
+					let initFormRow = {
+						index: 0,
+						editFlag: false,
+						linkman: '',
+						job: '',
+						tel: '',
+						phone: '',
+						QQOrWechat: '',
+						linkAddress: '',
+						primaryContact: ''
+					}
+					initFormRow.index = index;
+					this.editForm.table.push(initFormRow)
+				},
+				addFormTableDelete(row) {
+					for(let i = 0; i < this.addForm.table.length; i++ ) {
+						if(row === this.addForm.table[i]) {
+							this.addForm.table.splice(this.addForm.table[i], 1);
+						}
+					}
+				},
+				editFormTableDelete(row) {
+					for(let i = 0; i < this.editForm.table.length; i++ ) {
+						if(row === this.editForm.table[i]) {
+							this.editForm.table.splice(this.editForm.table[i], 1);
+						}
+					}
+				},
+				saveSetRoleMember() {
+					let arr = []
+					,_self = this;
+					this.checkedRoleMember.forEach(item=> {
+						arr.push(item.uid)
+					});
+					this.addForm.assistants = [];
+					arr.forEach((item)=> {
+						_self.addForm.assistants.push(item);
+					});
+					console.log(arr);
+				},
 				saveAdd(formName) {
 					this.$refs[formName].validate((valid)=> {
 						if(valid) {
@@ -438,6 +562,45 @@ JGBVue.module.clientInfo = ()=> {
 										type: 'success',
 										message: res.data.message
 									})
+									this.addVisible = false;
+								}
+							})
+						}else{
+							return false;
+						}
+					})
+				},
+				saveEdit(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveEditUrl, this.editForm).then((res)=> {
+								if(res.data.status) {
+									this.$refs[formName].resetFields();
+									this.editDialogVisiable = false;
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+									this.editVisible = false;
+								}
+							})
+						}else{
+							return false;
+						}
+					})
+				},
+				saveAdd(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveAddUrl, this.addForm).then((res)=> {
+								if(res.data.status) {
+									this.$refs[formName].resetFields();
+									this.addDialogVisiable = false;
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+									this.addVisible = false;
 								}
 							})
 						}else{
@@ -448,15 +611,43 @@ JGBVue.module.clientInfo = ()=> {
 				closeAdd() {
 					//
 				},
-				closeTag(tag) {
+				closeEdit() {
 					//
+				},
+				addCloseTag(tag) {
+					//
+				},
+				editCloseTag(tag) {
+					//
+				},
+				getFile($event) {
+					this.getFileInfo = $event.target.files[0];
+				},
+				uploadFild() {
+					axios.post(uploadUrl, this.getFileInfo).then((res)=> {
+						if(res.data.status) {
+							this.uploadInfo = JSON.parse(res.data.data);
+						}
+					}).catch((err)=> {
+						console.log(err);
+					})
+				},
+				exportCilck() {
+					if(this.exportForm.length === 0) {
+						axios.get(getExportFormUrl).then((res)=> {
+							if(res.data.status) {
+								this.exportForm = JSON.parse(res.data.data);
+							}
+						})
+					}
+					this.exportVisible = true;
 				}
 			}
 		})
 	}
 
-	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl)=> {
-		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl);
+	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
+		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl);
 	}
 
 	return that;

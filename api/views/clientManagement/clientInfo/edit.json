@@ -1,0 +1,39 @@
+{
+	"number": "11",
+	"name": "22",
+	"category": "11",
+	"level": 1,
+	"identifyNumber": "22",
+	"bankName": "11",
+	"bankAccount": "11",
+	"companyTel": "11",
+	"companyAddress": "11",
+	"sale": 1,
+	"assistants": [
+		{
+			"jobNumber": 10002,
+			"name": "张2",
+			"src": "../../assets/img/index/portrait.png",
+			"isBoss": false,
+			"isSelected": true,
+			"value": 10002,
+			"department": "finance1",
+			"company": "companyOne",
+			"departmentName": "财务部",
+			"companyName": "公司甲"
+		}
+	],
+	"table": [
+		{
+			"index": 1,
+			"editFlag": false,
+			"linkman": "aaa",
+			"job": "bbb",
+			"tel": "123456",
+			"phone": "999888",
+			"QQOrWechat": "unknow",
+			"linkAddress": "aazz",
+			"primaryContact": "asd"
+		}
+	]
+}

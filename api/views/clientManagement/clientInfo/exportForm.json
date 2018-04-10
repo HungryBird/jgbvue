@@ -1,0 +1,12 @@
+[
+	{
+		"name": "序号",
+		"value": "number",
+		"checked": false
+	},
+	{
+		"name": "客户编号",
+		"value": "clientNumber",
+		"checked": true
+	}
+]
