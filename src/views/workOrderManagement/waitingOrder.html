@@ -81,24 +81,25 @@
                 :key="item.prop"
                 :prop="item.prop"
                 :label="item.label">
+								<template v-if="item.prop == 'action' || item.prop == 'image'" slot-scope="scope">
+                  <div v-if="item.prop == 'action'">
+                    <!-- 委派 -->
+                    <div v-if="scope.row.status_value == 0" class="order-button">
+                      <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                      <el-button type="" size="mini" v-on:click="btnReceive(scope.row, scope.$index)">领取</el-button>
+                      <el-button type="" size="mini" v-on:click="btnBack(scope.row, scope.$index)">退回</el-button>
+                      <el-button type="" size="mini" v-on:click="btnWithdraw(scope.row, scope.$index)">撤回</el-button>
+                    </div>
+                    <!-- 待接 -->
+                    <div v-else-if="scope.row.status_value == 1" class="order-button">
+                      <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                      <el-button type="" size="mini" v-on:click="btnReceive(scope.row, scope.$index)">领取</el-button>
+                      <el-button type="" size="mini" v-on:click="btnWithdraw(scope.row, scope.$index)">撤回</el-button>
+                    </div>
+                  </div>
+                  <i v-else class="el-icon-picture table-img-icon" v-on:click="btnImage(scope.row.image)"></i>
+                </template>
               </el-table-column>
-							<el-table-column label="操作" align="center" min-width="150">
-								<template slot-scope="scope">
-                  <!-- 委派 -->
-                  <div v-if="scope.row.status_value == 0" class="order-button">
-                    <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                    <el-button type="" size="mini" v-on:click="btnReceive(scope.row, scope.$index)">领取</el-button>
-                    <el-button type="" size="mini" v-on:click="btnBack(scope.row, scope.$index)">退回</el-button>
-                    <el-button type="" size="mini" v-on:click="btnWithdraw(scope.row, scope.$index)">撤回</el-button>
-                  </div>
-                  <!-- 待接 -->
-                  <div v-else-if="scope.row.status_value == 1" class="order-button">
-                    <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                    <el-button type="" size="mini" v-on:click="btnReceive(scope.row, scope.$index)">领取</el-button>
-                    <el-button type="" size="mini" v-on:click="">撤回</el-button>
-                  </div>
-								</template>
-							</el-table-column>
             </el-table>
             <el-pagination v-if="orderPage.page_total > 1" class="w-table-pagination"
               layout="prev, pager, total, next, jumper"
@@ -107,10 +108,211 @@
               :page-size="orderPage.page_size"
               :total="orderPage.page_total"
               v-on:current-change="handleOrderCurrentChange">
-          </el-pagination>
+            </el-pagination>
           </div>
 				</div>
-			</el-main>
+      </el-main>
+      <!-- 工单详情 -->
+      <transition name="slide-fade">
+        <jgb-slide-details v-show="showOrderDetails" :loading="isLoadingDetails" v-on:close="closeDetails">
+          <div class="order-details">
+            <div class="details-title">工单信息详情</div>
+            <div class="details-container">
+              <el-tabs v-model="detailsTabActive" type="border-card" @tab-click="">
+                <el-tab-pane label="基本信息" name="baseInfo">
+                  <table v-if="detailsData.base_info" class="details-table">
+                    <tbody>
+                      <tr>
+                        <th>工单日期：</th>
+                        <td>{{$timeStampFormat(detailsData.base_info.order_date)}}</td>
+                        <th>工单编号：</th>
+                        <td>{{detailsData.base_info.order_date}}</td>
+                        <th>业务人员：</th>
+                        <td>{{detailsData.base_info.business_name}}</td>
+                      </tr>
+                      <tr>
+                        <th>客户名称：</th>
+                        <td>{{detailsData.base_info.client_name}}</td>
+                        <th>设备名称：</th>
+                        <td>{{detailsData.base_info.equipment_name}}</td>
+                        <th>设备类别：</th>
+                        <td>{{detailsData.base_info.category}}</td>
+                      </tr>
+                      <tr>
+                        <th>设备品牌：</th>
+                        <td>{{detailsData.base_info.brand}}</td>
+                        <th>设备来源：</th>
+                        <td>{{detailsData.base_info.source}}</td>
+                        <th>报修方式：</th>
+                        <td>{{detailsData.base_info.repair_methods}}</td>
+                      </tr>
+                      <tr>
+                        <th>紧急程度：</th>
+                        <td>{{detailsData.base_info.level}}</td>
+                        <th>委派维修：</th>
+                        <td>{{detailsData.base_info.repair_entrust}}</td>
+                        <th>委派人员：</th>
+                        <td>{{detailsData.base_info.repair_peopel}}</td>
+                      </tr>
+                      <tr>
+                        <th>设备图片：</th>
+                        <td><i class="el-icon-picture table-img-icon" v-on:click="btnImage"></i></td>
+                        <th></th>
+                        <td></td>
+                        <th></th>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <th>问题描述：</th>
+                        <td colspan="5" style="text-align:left;">detailsData.base_info.fault_info</td>
+                      </tr>
+                      <tr>
+                        <th>备注：</th>
+                        <td colspan="5" style="text-align:left;">{{detailsData.base_info.remark}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </el-tab-pane>
+                <el-tab-pane label="故障诊断" name="faultResult">
+                  <table v-if="detailsData.diagnosis" class="details-table faultResult">
+                    <tbody>
+                      <tr>
+                        <th>诊断时间：</th>
+                        <td colspan="2" class="text-center">{{$timeStampFormat(detailsData.diagnosis.date)}}</td>
+                        <th>诊断人员：</th>
+                        <td colspan="2" class="text-center">{{detailsData.diagnosis.people}}</td>
+                      </tr>
+                      <tr>
+                        <th>诊断结果：</th>
+                        <td colspan="5">{{detailsData.diagnosis.result}}</td>
+                      </tr>
+                      <tr>
+                        <th>维修措施：</th>
+                        <td colspan="5">{{detailsData.diagnosis.measures}}</td>
+                      </tr>
+                      <tr>
+                        <th rowspan="6" class="text-center">成本预估</th>
+                        <th class="sub-head">人工维修费用：</td>
+                        <td colspan="4">{{detailsData.diagnosis.price1}}</td>
+                      </tr>
+                      <tr>
+                        <th class="sub-head">材料（配件）费用：</td>
+                        <td colspan="4" style="padding:0;">
+                          <div v-for="item in detailsData.diagnosis.price2" class="td-item">
+                            {{item}}
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="sub-head">差旅（配送）费用：</td>
+                        <td colspan="4">{{detailsData.diagnosis.price3}}</td>
+                      </tr>
+                      <tr>
+                        <th class="sub-head">安装费用：</td>
+                        <td colspan="4">{{detailsData.diagnosis.price4}}</td>
+                      </tr>
+                      <tr>
+                        <th class="sub-head">其他费用：</td>
+                        <td colspan="4">{{detailsData.diagnosis.price5}}</td>
+                      </tr>
+                      <tr>
+                        <th class="sub-head">合计：</td>
+                        <td colspan="4">{{detailsData.diagnosis.total_price}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </el-tab-pane>
+                <el-tab-pane label="维修报价" name="repairPrice">
+                  <div class="block-title">维修报价：</div>
+                  <table v-if="detailsData.price"  class="details-table repair-price">
+                    <tbody>
+                      <tr>
+                        <th>公司名称：</th>
+                        <td colspan="3">{{detailsData.price.repair_quotation.company}}</td>
+                      </tr>
+                      <tr>
+                        <th>标题：</th>
+                        <td colspan="3">{{detailsData.price.repair_quotation.title}}</td>
+                      </tr>
+                      <tr>
+                        <th>客户名称：</th>
+                        <td>{{detailsData.price.repair_quotation.client_name}}</td>
+                        <th>报价日期：</th>
+                        <td>{{$timeStampFormat(detailsData.price.repair_quotation.date)}}</td>
+                      </tr>
+                      <tr>
+                        <th>报价人：</th>
+                        <td>{{detailsData.price.repair_quotation.offer_people}}</td>
+                        <th>审核人：</th>
+                        <td>{{detailsData.price.repair_quotation.audit_people}}</td>
+                      </tr>
+                      <tr>
+                        <th>货币单位：</th>
+                        <td>{{detailsData.price.repair_quotation.monetary_unit}}</td>
+                        <th>报价是否含税：</th>
+                        <td>{{detailsData.price.repair_quotation.is_tax ? '是' : '否'}}</td>
+                      </tr>
+                      <tr>
+                        <th>选择报价表单模板：</th>
+                        <td>{{detailsData.price.repair_quotation.template}}</td>
+                        <th>税率：</th>
+                        <td>{{detailsData.price.repair_quotation.tax}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="block-title">设备基本信息：</div>
+                  <table v-if="detailsData.price"  class="details-table equipment-info">
+                    <tbody>
+                      <tr>
+                        <th>设备名称</th>
+                        <th>规格型号</th>
+                        <th>品牌</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                        <th>序列号</th>
+                        <th>故障描述</th>
+                      </tr>
+                      <tr>
+                        <td v-for="key in detailsData.price.equipment_info">{{key}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="block-title">维修费用信息：</div>
+                  <table v-if="detailsData.price"  class="details-table repair-info">
+                    <tbody>
+                      <tr>
+                        <th>费用项</th>
+                        <th>配件名称</th>
+                        <th>规格型号</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                        <th>金额</th>
+                      </tr>
+                      <tr v-for="(item, index) in detailsData.price.repair_info.accessories">
+                        <th>配件费{{index+1}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.model}}</td>
+                        <td>{{item.unit}}</td>
+                        <td>{{item.count}}</td>
+                        <td>{{item.price}}</td>
+                      </tr>
+                      <tr>
+                        <th>维修服务费</th>
+                        <td colspan="5">{{detailsData.price.repair_info.service_price}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="block-title">通讯联络信息：</div>
+                  <table v-if="detailsData.price"  class="details-table"></table>
+                </el-tab-pane>
+                <el-tab-pane label="维修合同" name="repairContract">4</el-tab-pane>
+                <el-tab-pane label="维修管理" name="repairManagement">5</el-tab-pane>
+                <el-tab-pane label="交付与回访" name="deliveryVisit">6</el-tab-pane>
+              </el-tabs>
+            </div>
+          </div>
+        </jgb-slide-details>
+      </transition>
 		</el-container>
 	</div>
 </body>
@@ -127,6 +329,7 @@
     '/orderManagement/order_back', //退回工单
     '/orderManagement/order_withdraw', //撤回工单
     '/orderManagement/order_invalid', //作废工单
+    '/orderManagement/get_order_details' //获取工单详情
 	);
 </script>
 

@@ -90,9 +90,7 @@
                 :key="item.prop"
                 :prop="item.prop"
                 :label="item.label">
-              </el-table-column>
-							<el-table-column label="操作" align="center" min-width="150">
-								<template slot-scope="scope">
+								<template v-if="item.prop == 'action'" slot-scope="scope">
                   <!-- 委派 -->
                   <div v-if="scope.row.status_value == 0" class="order-button">
                     <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
@@ -104,7 +102,7 @@
                   <div v-else-if="scope.row.status_value == 1" class="order-button">
                     <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
                     <el-button type="" size="mini" v-on:click="btnReceive(scope.row, scope.$index)">领取</el-button>
-                    <el-button type="" size="mini" v-on:click="btnWithdraw(scope.row, scope.$index)"">撤回</el-button>
+                    <el-button type="" size="mini" v-on:click="btnWithdraw(scope.row, scope.$index)">撤回</el-button>
                   </div>
                   <!-- 待诊断 -->
                   <div v-else-if="scope.row.status_value == 2" class="order-button">
@@ -179,7 +177,7 @@
                     <el-button type="" size="mini" v-on:click="">修改</el-button>
                   </div>
 								</template>
-							</el-table-column>
+              </el-table-column>
             </el-table>
             <el-pagination v-if="orderPage.page_total > 1" class="w-table-pagination"
               layout="prev, pager, total, next, jumper"

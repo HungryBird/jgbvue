@@ -93,10 +93,18 @@ JGBVue.module.workOrderManagement = () => {
               this.getWorkOrderData()
             }
             else {
-              this.$alert(res.data.message, '提示')
+              this.$message({
+                type: 'error',
+                message: res.data.message, 
+                center: true
+              })
             };
           }).catch(err=> {
-            this.$alert(err, '提示')
+            this.$message({
+              type: 'error',
+              message: err, 
+              center: true
+            })
           })
         },
         //查看 @param （row行数据, index行数）
@@ -116,10 +124,18 @@ JGBVue.module.workOrderManagement = () => {
               this.getWorkOrderData()
             }
             else {
-              this.$alert(res.data.message, '提示')
+              this.$message({
+                type: 'error',
+                message: res.data.message, 
+                center: true
+              })
             };
           }).catch(err=> {
-            this.$alert(err, '提示')
+            this.$message({
+              type: 'error',
+              message: err, 
+              center: true
+            })
           })
         },
         //退回 @param （row行数据, index行数）
@@ -135,10 +151,18 @@ JGBVue.module.workOrderManagement = () => {
               this.getWorkOrderData()
             }
             else {
-              this.$alert(res.data.message, '提示')
+              this.$message({
+                type: 'error',
+                message: res.data.message, 
+                center: true
+              })
             };
           }).catch(err=> {
-            this.$alert(err, '提示')
+            this.$message({
+              type: 'error',
+              message: err, 
+              center: true
+            })
           })
         },
         //撤回 @param （row行数据, index行数）
@@ -154,10 +178,18 @@ JGBVue.module.workOrderManagement = () => {
               this.getWorkOrderData()
             }
             else {
-              this.$alert(res.data.message, '提示')
+              this.$message({
+                type: 'error',
+                message: res.data.message, 
+                center: true
+              })
             };
           }).catch(err=> {
-            this.$alert(err, '提示')
+            this.$message({
+              type: 'error',
+              message: err, 
+              center: true
+            })
           })
         },
         //获取业务人员数据
@@ -184,10 +216,18 @@ JGBVue.module.workOrderManagement = () => {
               }
             }
             else {
-              this.$alert(res.data.message, '提示')
+              this.$message({
+                type: 'error',
+                message: res.data.message, 
+                center: true
+              })
             };
           }).catch(err=> {
-            this.$alert(err, '提示')
+            this.$message({
+              type: 'error',
+              message: err, 
+              center: true
+            })
           })
         },
         /**

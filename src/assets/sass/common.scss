@@ -858,9 +858,105 @@ table{
 				}
 			}
 		}
+		.table-img-icon {
+			font-size:20px;
+			cursor:pointer;
+		}
 	}
 	.w-table-pagination {
 		@include w-flex(row, nowrap, center, center);
 		margin-bottom:20px;
+	}
+}
+
+//工单详情
+.order-details {
+	.details-title {
+		@include common-border-bottom;
+		padding:5px 10px;
+		font-size:$fs-big;
+		color:$fc-import;
+		font-weight:bold;
+		line-height:25px;
+	}
+	.details-container {
+		padding: 10px;
+		.block-title {
+			margin-top:10px;
+			line-height:30px;
+			font-size:$fs-big;
+			color:$fc-import;
+			&:first-child {
+				margin-top:0;
+			}
+		}
+	}
+	.el-tabs__header {
+		margin-bottom:0;
+	}
+	.details-table { //工单详情表格
+		border-collapse:collapse;
+		width:100%;
+		&.faultResult { //故障诊断
+			.sub-head {
+				width:140px;
+			}
+			.text-center {
+				text-align:center; 
+			}
+			td {
+				text-align: left;
+			}
+		}
+		&.repair-price { //维修报价
+			td, th {
+				width: 25%;
+			}
+		}
+		&.equipment-info { //设备信息
+			th, td {
+				width:14.285%;
+				text-align: center;
+			}
+		}
+		&.repair-info { //维修费用信息
+			th, td{
+				width:16.6667%;
+				text-align: center;
+			}
+			td[colspan] {
+				text-align:left;
+			}
+
+		}
+		th {
+			@include common-border;
+			width:100px;
+			padding:10px 0;
+			font-weight:500;
+			text-align:right;
+			color:$fc-normal;
+			font-size:$fs-normal;
+		}
+		td {
+			@include common-border;
+			width:120px;
+			padding:10px 5px;
+			color:$fc-import;
+			font-size:$fs-normal;
+			text-align: center;
+		}
+		.td-item {
+			@include common-border-bottom;
+			padding:10px 5px;
+			&:last-child {
+				border-bottom:0;
+			}
+		}
+	}
+	.table-img-icon {
+		font-size:20px;
+		color:#666;
+		cursor:pointer;
 	}
 }

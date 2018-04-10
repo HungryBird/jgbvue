@@ -1,0 +1,69 @@
+{
+  "base_info": {
+    "order_date": 1523340953,
+    "order_id": "201804100001",
+    "business_id": "",
+    "business_name": "张三",
+    "client_id": "",
+    "client_name": "李四",
+    "equipment_name": "设备名称设备名称设备名称设备名称设备名称",
+    "category": "类型类型类型类型类型",
+    "brand": "品牌品牌品牌品牌品牌品牌",
+    "source": "来源来源来源来源来源",
+    "repair_methods": "报修方式报修方式报修方式报修方式",
+    "level": "紧急程度",
+    "repair_entrust": "委派维修委派维修委派维修委派维修",
+    "repair_peopel": "委派人员委派人员委派人员委派人员",
+    "image": [],
+    "question": "问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述问题描述",
+    "remark": "备注备注备注备注备注备注备注备注备注备注"
+  },
+  "diagnosis": {
+    "date": 1523340953,
+    "people": "王五",
+    "result": "诊断结果诊断结果诊断结果诊断结果诊断结果诊断结果诊断结果诊断结果诊断结果诊断结果诊断结果诊断结果诊断结果",
+    "measures": "维修措施：维修措施：维修措施：维修措施：维修措施：维修措施：维修措施：维修措施：维修措施：维修措施：",
+    "price1": "人工维修费用：人工维修费用：人工维修费用：人工维修费用：人工维修费用：人工维修费用：",
+    "price2": [
+      "材料（配件）费用：配件XXXX，型号XXXX，编号XXXX，数量1个，金额：12236", 
+      "材料（配件）费用：配件XXXX，型号XXXX，编号XXXX，数量1个，金额：12236", 
+      "材料（配件）费用：配件XXXX，型号XXXX，编号XXXX，数量1个，金额：12236"],
+    "price3": "差旅（配送）费用：差旅（配送）费用：差旅（配送）费用：差旅（配送）费用：差旅（配送）费用：差旅（配送）费用：差旅（配送）费用：",
+    "price4": "安装费用：安装费用：安装费用：安装费用：安装费用：安装费用：安装费用：",
+    "price5": "其他费用：其他费用：其他费用：其他费用：其他费用：其他费用：其他费用：其他费用：其他费用：",
+    "total_price": "好多好多钱"
+  },
+  "price": {
+    "repair_quotation": {
+      "company": "南宁市沃宝商贸有限公司",
+      "title": "中医院监护仪设备维修报价单",
+      "client_name": "南宁中医院",
+      "date": 1523340953,
+      "offer_people": "王小帅",
+      "audit_people": "王小帅",
+      "monetary_unit": "（人民币）元",
+      "is_tax": false,
+      "template": "通用报价模板",
+      "tax": "17%"
+    },
+    "equipment_info" : {
+      "name": "1111",
+      "model": "222",
+      "brand": "3333",
+      "unit": "444",
+      "count": "555",
+      "serial_id": "666",
+      "fault_info": "777"
+    },
+    "repair_info" : {
+      "accessories": [
+        { "name": "1111", "model": "2222", "unit": "333", "count": "44", "price": "5" },
+        { "name": "2333", "model": "2222", "unit": "333", "count": "44", "price": "5" }
+      ],
+      "service_price": "2222222",
+      "install_price": "33333333",
+      "distribution_price": "444444444"
+    },
+    "contact_info" : {}
+  }
+}

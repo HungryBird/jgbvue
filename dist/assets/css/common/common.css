@@ -823,6 +823,9 @@ table {
       margin-bottom: 2px; }
       .workOrderManagement .w-main-table .order-button .el-button--mini + .el-button--mini {
         margin-left: 0; }
+  .workOrderManagement .w-main-table .table-img-icon {
+    font-size: 20px;
+    cursor: pointer; }
 
 .workOrderManagement .w-table-pagination {
   display: flex;
@@ -830,3 +833,69 @@ table {
   justify-content: center;
   align-items: center;
   margin-bottom: 20px; }
+
+.order-details .details-title {
+  border-bottom: 1px solid #ddd;
+  padding: 5px 10px;
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  line-height: 25px; }
+
+.order-details .details-container {
+  padding: 10px; }
+  .order-details .details-container .block-title {
+    margin-top: 10px;
+    line-height: 30px;
+    font-size: 16px;
+    color: #333; }
+    .order-details .details-container .block-title:first-child {
+      margin-top: 0; }
+
+.order-details .el-tabs__header {
+  margin-bottom: 0; }
+
+.order-details .details-table {
+  border-collapse: collapse;
+  width: 100%; }
+  .order-details .details-table.faultResult .sub-head {
+    width: 140px; }
+  .order-details .details-table.faultResult .text-center {
+    text-align: center; }
+  .order-details .details-table.faultResult td {
+    text-align: left; }
+  .order-details .details-table.repair-price td, .order-details .details-table.repair-price th {
+    width: 25%; }
+  .order-details .details-table.equipment-info th, .order-details .details-table.equipment-info td {
+    width: 14.285%;
+    text-align: center; }
+  .order-details .details-table.repair-info th, .order-details .details-table.repair-info td {
+    width: 16.6667%;
+    text-align: center; }
+  .order-details .details-table.repair-info td[colspan] {
+    text-align: left; }
+  .order-details .details-table th {
+    border: 1px solid #ddd;
+    width: 100px;
+    padding: 10px 0;
+    font-weight: 500;
+    text-align: right;
+    color: #666;
+    font-size: 14px; }
+  .order-details .details-table td {
+    border: 1px solid #ddd;
+    width: 120px;
+    padding: 10px 5px;
+    color: #333;
+    font-size: 14px;
+    text-align: center; }
+  .order-details .details-table .td-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 5px; }
+    .order-details .details-table .td-item:last-child {
+      border-bottom: 0; }
+
+.order-details .table-img-icon {
+  font-size: 20px;
+  color: #666;
+  cursor: pointer; }

@@ -15,6 +15,16 @@ let deepCopy = function(obj) {
 }
 Vue.prototype.$deepCopy = deepCopy
 
+/**
+ * 时间戳转换
+ * created by lanw 2018-4-10
+ * @param {Number} stamp
+ */
+let timeStampFormat = function(stamp) {
+  let date = new Date(stamp*1000)
+  return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+}
+Vue.prototype.$timeStampFormat = timeStampFormat
 
 /**
  * 组件-表单footer 保存、关闭按钮 带loading阻止重复提交
@@ -297,3 +307,33 @@ let setMember = Vue.extend({
   },
 })
 Vue.component('jgb-set-member', setMember)
+
+/**
+ * 组件 详情页右侧滑动窗
+ * created by lanw 2018-4-10
+ * 1.配合transition name="slide-fade"
+ * 2.详情页内容通过slot插入
+ * @param {Boolean} loading 数据加载状态
+ * @event close 关闭窗体事件
+ */
+let rightSlideDetails = Vue.extend({
+  template: `<div class="details-wrap">
+              <div class="details-inner" v-loading="loading">
+                <slot></slot>
+              </div>
+              <div class="toggle-button-wrap" v-on:click="closeDetails">
+                <span class="jgbvue_arrow_icon" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -9px -85px;position: absolute;top: 50%;right: 0;transform: translateY(-50%);"></span>
+                <span class="jgbvue_arrow_line" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -123px -2px;margin-left: 16px;"></span>
+              </div>
+            </div>`,
+  props: {
+    loading: Boolean,
+    title: String,
+  },
+  methods: {
+    closeDetails: function() {
+      this.$emit('close', true)
+    },
+  }
+})
+Vue.component('jgb-slide-details', rightSlideDetails)
