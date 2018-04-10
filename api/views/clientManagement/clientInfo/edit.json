@@ -1,0 +1,26 @@
+{
+	"number": "11",
+	"name": "22",
+	"category": "11",
+	"level": 1,
+	"identifyNumber": "22",
+	"bankName": "11",
+	"bankAccount": "11",
+	"companyTel": "11",
+	"companyAddress": "11",
+	"sale": "11",
+	"assistants": 1,
+	"table": [
+		{
+			"index": 1,
+			"editFlag": false,
+			"linkman": "aaa",
+			"job": "bbb",
+			"tel": "123456",
+			"phone": "999888",
+			"QQOrWechat": "unknow",
+			"linkAddress": "aazz",
+			"primaryContact": "asd"
+		}
+	]
+}

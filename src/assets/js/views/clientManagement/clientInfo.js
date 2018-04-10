@@ -6,7 +6,7 @@ JGBVue.module.clientInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl)=> {
+	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -46,7 +46,8 @@ JGBVue.module.clientInfo = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addVisible: true,
+					addVisible: false,
+					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
 					formRules: {
@@ -69,7 +70,30 @@ JGBVue.module.clientInfo = ()=> {
 						companyAddress: '',
 						sale: '',
 						assistants: '',
-						table: []
+						table: [
+							{
+								index: 1,
+								editFlag: false,
+								linkman: '',
+								job: '',
+								tel: '',
+								phone: '',
+								QQOrWechat: '',
+								linkAddress: '',
+								primaryContact: ''
+							},
+							{
+								index: 2,
+								editFlag: false,
+								linkman: '',
+								job: '',
+								tel: '',
+								phone: '',
+								QQOrWechat: '',
+								linkAddress: '',
+								primaryContact: ''
+							}
+						]
 					},
 					editForm: {
 						number: '',
@@ -97,7 +121,7 @@ JGBVue.module.clientInfo = ()=> {
 						districts: [],
 						blocks: []
 					},
-					setMemberVisible: false,
+					addSetMemberVisible: false,
 					getCompanyUrl: getCompanyUrl,
 					getDepartmentUrl: getDepartmentUrl,
 					getUserUrl: getUserUrl
@@ -183,8 +207,14 @@ JGBVue.module.clientInfo = ()=> {
 					this.selectedRows = [];
 					this.isUnfold = false;
 				},
-				handleEdit() {
-					//
+				handleEdit(index, row) {
+					this.$refs['table'].clearSelection();
+					this.selectedRows = [];
+					axios.post(getEditUrl, row).then((res)=> {
+						if(res.data.status) {
+							this.editVisible = true;
+						}
+					})
 				},
 				handleDelete() {
 					let _self = this;
@@ -427,6 +457,39 @@ JGBVue.module.clientInfo = ()=> {
 						]
 					)
 				},
+				addRowClick(row, event, column) {
+					this.addForm.table.forEach((item)=> {
+						item.editFlag = false;
+					})
+					for(let i = 0; i < this.addForm.table.length; i++ ) {
+						if(row === this.addForm.table[i]) {
+							this.addForm.table[i].editFlag = true;
+						}
+					}
+				},
+				addFormTableAdd() {
+					let index = this.addForm.table[this.addForm.table.length - 1].index + 1;
+					let initFormRow = {
+						index: 0,
+						editFlag: false,
+						linkman: '',
+						job: '',
+						tel: '',
+						phone: '',
+						QQOrWechat: '',
+						linkAddress: '',
+						primaryContact: ''
+					}
+					initFormRow.index = index;
+					this.addForm.table.push(initFormRow)
+				},
+				addFormTableDelete(row) {
+					for(let i = 0; i < this.addForm.table.length; i++ ) {
+						if(row === this.addForm.table[i]) {
+							this.addForm.table.splice(this.addForm.table[i], 1);
+						}
+					}
+				},
 				saveAdd(formName) {
 					this.$refs[formName].validate((valid)=> {
 						if(valid) {
@@ -438,6 +501,7 @@ JGBVue.module.clientInfo = ()=> {
 										type: 'success',
 										message: res.data.message
 									})
+									this.addVisible = false;
 								}
 							})
 						}else{
@@ -455,8 +519,8 @@ JGBVue.module.clientInfo = ()=> {
 		})
 	}
 
-	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl)=> {
-		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl);
+	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl )=> {
+		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl );
 	}
 
 	return that;

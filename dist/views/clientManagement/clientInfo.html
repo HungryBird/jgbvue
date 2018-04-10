@@ -52,7 +52,7 @@
 								列设置
 							</el-button>
 							<el-button-group class="pull-right">
-								<el-button icon="el-icon-plus">新增</el-button>
+								<el-button icon="el-icon-plus" v-on:click="addVisible = true">新增</el-button>
 								<el-button icon="el-icon-minus" :disabled="selectedRows.length === 0" v-on:click="remove">删除</el-button>
 								<el-button :disabled="selectedRows.length === 0" v-on:click="forbidden">禁用</el-button>
 								<el-button :disabled="selectedRows.length === 0" v-on:click="startUsing">启用</el-button>
@@ -79,7 +79,7 @@
 							<el-table-column label="联系人" prop="linkman"></el-table-column>
 							<el-table-column label="手机" prop="phone"></el-table-column>
 							<el-table-column label="座机" prop="tel"></el-table-column>
-							<el-table-column label="QQ/微信" prop="QQOrWechat"></el-table-column>
+							<el-table-column label="QQ/微信/邮箱" prop="QQOrWechat"></el-table-column>
 							<el-table-column label="应收款余额" prop="balance"></el-table-column>
 							<el-table-column label="地址" prop="address"></el-table-column>
 							<el-table-column label="协助人员" prop="assistant"></el-table-column>
@@ -124,6 +124,7 @@
 				</div>
 			</div>
 		</transition>
+		<!-- 新增客户 -->
 		<el-dialog :visible.sync="addVisible" title="新增客户">
 			<div slot="title" class="title">
 				新增用户
@@ -230,7 +231,7 @@
 				<el-row :gutter="4">
 					<el-col :span="24">
 						<el-form-item label="协助人员" prop="assistants">
-							<el-button icon="el-icon-plus" size="mini" v-on:click="setMemberVisible = true">协助人员</el-button>
+							<el-button icon="el-icon-plus" size="mini" v-on:click="addSetMemberVisible = true">协助人员</el-button>
 							<div style="padding: 4px;border-radius: 4px;border: 1px solid rgba(64,158,255,.2)" v-show="addForm.assistants.length !== 0">
 								<el-tag v-for="tag in addForm.assistants" :key="tag.jobNumber" :type="tag.type" closable v-on:close="closeTag(tag)">{{tag.name}}</el-tag>
 							</div>
@@ -244,30 +245,63 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
-				<el-table :data="addForm.table" border ref="add">
+				<el-table :data="addForm.table" border ref="addTable" class="tb-edit" v-on:row-click="addRowClick">
 					<el-table-column label="操作">
 						<template slot-scope="scope">
 							<el-button-group>
-								<el-button>增加1行</el-button>
-								<el-button>删除</el-button>
+								<el-button icon="el-icon-plus" size="mini" v-on:click="addFormTableAdd"></el-button>
+								<el-button icon="el-icon-delete" type="danger" size="mini" v-on:click="addFormTableDelete(scope.row)"></el-button>
 							</el-button-group>
 						</template>
 					</el-table-column>
-					<el-table-column label="*联系人" :render-header="renderHeader">
+					<el-table-column :render-header="renderHeader">
 						<template slot-scope="scope">
-							<div v-if="!scope.row.editFlag"></div>
-							<el-input v-else></el-input>
+							<div v-if="!scope.row.editFlag">{{ scope.row.linkman }}</div>
+							<el-input v-else v-model="scope.row.linkman"></el-input>
 						</template>
 					</el-table-column>
 					<el-table-column label="职务">
-						
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.job }}</span>
+							<el-input v-else v-model="scope.row.job"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="座机">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.tel }}</span>
+							<el-input v-else v-model="scope.row.tel"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="手机">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.phone }}</span>
+							<el-input v-else v-model="scope.row.phone"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="QQ/微信/邮箱">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.QQOrWechat }}</span>
+							<el-input v-else v-model="scope.row.QQOrWechat"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="联系地址">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.linkAddress }}</span>
+							<el-input v-else v-model="scope.row.linkAddress"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="首要联系人">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.primaryContact }}</span>
+							<el-input v-else v-model="scope.row.primaryContact"></el-input>
+						</template>
 					</el-table-column>
 				</el-table>
 			</el-form>
-			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd" v-on:close="closeAdd"></jgb-form-footer>
+			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd('addForm')" v-on:close="closeAdd"></jgb-form-footer>
 		</el-dialog>
-		<el-dialog :visible.sync="setMemberVisible">
-			<jgb-set-member :company="getCompanyUrl" :departmenturl="getDepartmentUrl" :userurl="getUserUrl"></jgb-set-member>
+		<el-dialog :visible.sync="addSetMemberVisible" title="选择协助人员">
+			<jgb-set-member :company="getCompanyUrl" :department-url="getDepartmentUrl" :user-url="getUserUrl"></jgb-set-member>
 		</el-dialog>
 	</div>
 </body>
@@ -287,6 +321,6 @@
 	 * 街区
 	 * 获取公司
 	 */
-	JGBVue.module.clientInfo().init('/clientInfo/data_init', '/common/switch', '/common/data_delete', '/clientInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/common/getDepartment');
+	JGBVue.module.clientInfo().init('/clientInfo/data_init', '/common/switch', '/common/data_delete', '/clientInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/common/getDepartment', '/common/data_add_save', '/clientInfo/edit_data_get');
 </script>
 </html>
