@@ -60,6 +60,6 @@ router.post('/edit_data_get', (req, res)=> {
 			data: jdata
 		}).end();
 	})
-})
+});
 
 module.exports = router;

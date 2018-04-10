@@ -121,10 +121,12 @@ JGBVue.module.clientInfo = ()=> {
 						districts: [],
 						blocks: []
 					},
-					addSetMemberVisible: false,
+					setMemberVisible: false,
 					getCompanyUrl: getCompanyUrl,
 					getDepartmentUrl: getDepartmentUrl,
-					getUserUrl: getUserUrl
+					getUserUrl: getUserUrl,
+					loadingSetRoleMember: false,
+					checkedRoleMember: []
 				}
 			},
 			mounted() {
@@ -489,6 +491,18 @@ JGBVue.module.clientInfo = ()=> {
 							this.addForm.table.splice(this.addForm.table[i], 1);
 						}
 					}
+				},
+				saveSetRoleMember() {
+					let arr = []
+					,_self = this;
+					this.checkedRoleMember.forEach(item=> {
+						arr.push(item.uid)
+					});
+					this.addForm.assistants = [];
+					arr.forEach((item)=> {
+						_self.addForm.assistants.push(item);
+					});
+					console.log(arr);
 				},
 				saveAdd(formName) {
 					this.$refs[formName].validate((valid)=> {
