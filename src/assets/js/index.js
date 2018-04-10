@@ -162,7 +162,7 @@ new Vue({
             },
             {
               id: 'waitingOrder',
-              name: '待接工单'
+              name: '未接工单'
             },
             {
               id: 'entryOrder',

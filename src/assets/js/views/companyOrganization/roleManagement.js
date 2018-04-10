@@ -36,6 +36,10 @@ JGBVue.module.roleManagement = () => {
           userListGetUrl: departmentMemberGetUrl,//获取部门对应成员地址
 
           keyword: '', //搜索
+          defaultProps: {
+            label: 'label',
+            children: 'children'
+          },
 
           roleList: [],
           selectedRows: [], //选中行
@@ -146,7 +150,7 @@ JGBVue.module.roleManagement = () => {
           this.showAddRoleDialog = false;
         },
         //删除
-        btnRemove: function () {
+        btnRemove: function () { 
           this.$confirm('是否删除选中用户?', '提示').then(() => {
             let list = []
             for (let i = 0; i < this.selectedRows.length; i++) {
@@ -566,6 +570,7 @@ JGBVue.module.roleManagement = () => {
             if (res.data.status) {
               let _data = JSON.parse(res.data.data)
               this.roleList = _data
+              this.selectedRows = []
               // console.log(this.roleList)
             };
           }).catch((err) => {

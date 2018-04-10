@@ -1,6 +1,6 @@
 /**
- * created by lanw 2018-04-03
- * 角色管理
+ * created by lanw 2018-04-09
+ * 工单管理
  */
 JGBVue = {
   module: {}
@@ -11,7 +11,11 @@ JGBVue.module.workOrderManagement = () => {
   _this.init = (
     businessDataGetUrl, //获取业务人员数据
     maintenanceDataGetUrl,//获取维修人员数据
-    workOrderDataGetUrl//获取工单数据
+    workOrderDataGetUrl,//获取工单数据
+    orderReceiveUrl, //领取工单
+    orderBackUrl, //退回工单
+    orderWithdrawUrl, //撤回工单
+    orderInvalidUrl //工单作废
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -56,6 +60,8 @@ JGBVue.module.workOrderManagement = () => {
             page_total: 0,
           }, 
           tableHeader: [], //表头
+
+          selectedRows: [], //表格选中行
         }
       },
       methods: {
@@ -69,6 +75,90 @@ JGBVue.module.workOrderManagement = () => {
             return;
           }
           this.getWorkOrderData()
+        },
+        //作废
+        btnInvalid: function() {
+          let arr = []
+          this.selectedRows.forEach(order=> {
+            arr.push(order.order_id)
+          })
+          axios.post(orderInvalidUrl, {
+            orderId: arr
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              })
+              this.getWorkOrderData()
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+          }).catch(err=> {
+            this.$alert(err, '提示')
+          })
+        },
+        //查看 @param （row行数据, index行数）
+        btnView: function(row, index) {
+          //工单详情
+        },
+        //领取 @param （row行数据, index行数）
+        btnReceive: function(row, index) {
+          axios.post(orderReceiveUrl, {
+            orderId: row.order_id
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              })
+              this.getWorkOrderData()
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+          }).catch(err=> {
+            this.$alert(err, '提示')
+          })
+        },
+        //退回 @param （row行数据, index行数）
+        btnBack: function(row, index) {
+          axios.post(orderBackUrl, {
+            orderId: row.order_id
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              })
+              this.getWorkOrderData()
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+          }).catch(err=> {
+            this.$alert(err, '提示')
+          })
+        },
+        //撤回 @param （row行数据, index行数）
+        btnWithdraw: function(row, index) {
+          axios.post(orderWithdrawUrl, {
+            orderId: row.order_id
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              })
+              this.getWorkOrderData()
+            }
+            else {
+              this.$alert(res.data.message, '提示')
+            };
+          }).catch(err=> {
+            this.$alert(err, '提示')
+          })
         },
         //获取业务人员数据
         getBusinessData: function() {
@@ -86,6 +176,7 @@ JGBVue.module.workOrderManagement = () => {
           }).then(res=> {
             if(res.data.status) {
               let _data = JSON.parse(res.data.data)
+              this.selectedRows = [] //清空选中行
               this.orderList = _data.data
               this.orderPage = this.$deepCopy(_data.page) //真实数据使用
               if(!this.tableHeader.length) {
@@ -117,7 +208,7 @@ JGBVue.module.workOrderManagement = () => {
           this.getWorkOrderData()
         },
         /**
-         * 按工单日期排序
+         * 工单排序
          * @param {Object} obj { column行属性, prop, order排序方式}
          */
         handleOrderSort: function(obj) {
@@ -132,6 +223,10 @@ JGBVue.module.workOrderManagement = () => {
         handleOrderCurrentChange: function(val) {
           this.getWorkOrderData()
         },
+        //工单 选择项发生变化时触发  val 选中的row数据
+        handleOrderSelectionChange: function(val) {
+          this.selectedRows = val.concat()
+        }
       },
       created: function () {
         //工单状态默认全选
@@ -144,12 +239,20 @@ JGBVue.module.workOrderManagement = () => {
   that.init = (
     businessDataGetUrl,
     maintenanceDataGetUrl,
-    workOrderDataGetUrl
+    workOrderDataGetUrl,
+    orderReceiveUrl,
+    orderBackUrl,
+    orderWithdrawUrl,
+    orderInvalidUrl
   ) => {
     _this.init(
       businessDataGetUrl,
       maintenanceDataGetUrl,
-      workOrderDataGetUrl)
+      workOrderDataGetUrl,
+      orderReceiveUrl,
+      orderBackUrl,
+      orderWithdrawUrl,
+      orderInvalidUrl)
   }
   return that
 }

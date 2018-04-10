@@ -1,132 +1,14 @@
 [
   {
-    "uid": 10001,
-    "name": "张1",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "label": "业务部",
+    "value": "yewubu"
   },
   {
-    "uid": 10002,
-    "name": "张2",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "金融部",
-    "departmentId": "jinrongbu",
-    "company": "companyOne",
-    "companyName": "公司乙",
-    "checked": false
+    "label": "采购部",
+    "value": "caigoubu"
   },
   {
-    "uid": 10003,
-    "name": "张3",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": false
-  },
-  {
-    "uid": 10004,
-    "name": "张4",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
-  },
-  {
-    "uid": 10005,
-    "name": "张5",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": false
-  },
-  {
-    "uid": 10006,
-    "name": "张6",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲",
-    "checked": false
-  },
-  {
-    "uid": 10007,
-    "name": "张7",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
-  },
-  {
-    "uid": 10008,
-    "name": "张8",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": false
-  },
-  {
-    "uid": 10009,
-    "name": "张9",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部财务部财务部财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
-  },
-  {
-    "uid": 10019,
-    "name": "张19",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
-  },
-  {
-    "uid": 10029,
-    "name": "张29",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
-  },
-  {
-    "uid": 10039,
-    "name": "张39",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
-  },
-  {
-    "uid": 10049,
-    "name": "张49",
-    "src": "../../assets/img/index/portrait.png",
-    "department": "财务部",
-    "departmentId": "caiwubu",
-    "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "label": "销售部",
+    "value": "xiaoshoubu"
   }
 ]

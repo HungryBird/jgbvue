@@ -11,7 +11,7 @@
     { "label":"故障描述", "prop": "fault_info", "width": 120, "sortable": "custom" },
     { "label":"紧急程度", "prop": "level", "width": 120, "sortable": "custom" },
     { "label":"金额", "prop": "price", "width": 80, "sortable": "custom" },
-    { "label":"备注", "prop": "remark", "width": 120, "sortable": "custom" }
+    { "label":"备注", "prop": "remark", "width": 120, "sortable": false }
   ],
   "data": [
     {
