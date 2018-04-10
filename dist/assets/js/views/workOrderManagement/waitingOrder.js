@@ -1,16 +1,15 @@
 /**
- * created by lanw 2018-04-09
- * 工单管理
+ * created by lanw 2018-04-10
+ * 未接工单
  */
 JGBVue = {
   module: {}
 }
 
-JGBVue.module.workOrderManagement = () => {
+JGBVue.module.waitingOrder = () => {
   let _this = {}, that = {}
   _this.init = (
     businessDataGetUrl, //获取业务人员数据
-    maintenanceDataGetUrl,//获取维修人员数据
     workOrderDataGetUrl,//获取工单数据
     orderReceiveUrl, //领取工单
     orderBackUrl, //退回工单
@@ -24,7 +23,6 @@ JGBVue.module.workOrderManagement = () => {
           selectForm: { //表单
             dateRange: [], //日期范围
             businessCurrent: '',//业务人员
-            maintenanceCurrent: '', //维修人员
             keyword: '', //查询关键词
             checkedStatus: [], //工单状态
             sort: { //默认按工单日期排序
@@ -34,22 +32,9 @@ JGBVue.module.workOrderManagement = () => {
           },
           formTimeRangeDefault: ['00:00:00', '23:59:59'], //表单 默认起止时间
           formBusinessList: [], //表单 业务人员组
-          formMaintenanceList: [], //表单 维修人员组
           formOrderStatus: [ //工单状态 *value会关联html显示按钮组的判断条件,v-if需同步修改
             { label: '委派', value: 0 },
             { label: '待接', value: 1 },
-            { label: '待诊断', value: 2 },
-            { label: '诊断中', value: 3 },
-            { label: '待报价', value: 4 },
-            { label: '报价中', value: 5 },
-            { label: '待维修', value: 6 },
-            { label: '维修中', value: 7 },
-            { label: '完成维修', value: 8 },
-            { label: '待交付', value: 9 },
-            { label: '交付中', value: 10 },
-            { label: '已交付', value: 11 },
-            { label: '作废', value: 12 },
-            { label: '撤回/退回', value: 13 },
           ],
           formStatusCheckAll: true, //绑定工单状态全选
 
@@ -238,7 +223,6 @@ JGBVue.module.workOrderManagement = () => {
   }
   that.init = (
     businessDataGetUrl,
-    maintenanceDataGetUrl,
     workOrderDataGetUrl,
     orderReceiveUrl,
     orderBackUrl,
@@ -247,7 +231,6 @@ JGBVue.module.workOrderManagement = () => {
   ) => {
     _this.init(
       businessDataGetUrl,
-      maintenanceDataGetUrl,
       workOrderDataGetUrl,
       orderReceiveUrl,
       orderBackUrl,
