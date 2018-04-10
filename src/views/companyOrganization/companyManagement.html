@@ -186,7 +186,7 @@
 					</el-col>
 					<el-col :span="6">
 						<el-form-item prop="city" label="城市" class="hide-label">
-							<el-select placeholder="城市" v-model="editForm.city" :disabled="editAddress.provinces.length === 0" v-on:focus="foucsEditCity" v-on:change="changeEditCities">
+							<el-select placeholder="城市" v-model="editForm.city" :disabled="editForm.province === ''" v-on:focus="foucsEditCity" v-on:change="changeEditCities">
 								<el-option v-for="item in editAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>
@@ -247,6 +247,6 @@
 	 * 保存编辑
 	 * 删除
 	 */
-	JGBVue.module.companyManagement().init('/companyManagement/data_get', '/companyManagement/get_provinces', '/companyManagement/get_cities', '/companyManagement/get_district', '/companyManagement/get_block', '/companyManagement/edit_get', '/companyManagement/add_save', '/companyManagement/edit_save', '/companyManagement/delete');
+	JGBVue.module.companyManagement().init('/companyManagement/data_get', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/companyManagement/edit_get', '/companyManagement/add_save', '/companyManagement/edit_save', '/companyManagement/delete');
 </script>
 </html>

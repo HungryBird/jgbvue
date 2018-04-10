@@ -306,31 +306,31 @@ JGBVue.module.companyManagement = ()=> {
 				changeEditProvince(val) {
 					if(this.editAddress.cities.length !== 0) {
 						this.editAddress.cities.splice(0, this.editAddress.cities.length);
-						this.addForm.city = '';
+						this.editForm.city = '';
 					}
 					if(this.editAddress.districts.length !== 0) {
 						this.editAddress.districts.splice(0, this.editAddress.districts.length);
-						this.addForm.district = '';
+						this.editForm.district = '';
 					}
 					if(this.editAddress.blocks.length !== 0) {
 						this.editAddress.blocks.splice(0, this.editAddress.blocks.length);
-						this.addForm.block = '';
+						this.editForm.block = '';
 					}
 				},
 				changeEditCities() {
 					if(this.editAddress.districts.length !== 0) {
 						this.editAddress.districts.splice(0, this.editAddress.districts.length);
-						this.addForm.district = '';
+						this.editForm.district = '';
 					}
 					if(this.editAddress.blocks.length !== 0) {
 						this.editAddress.blocks.splice(0, this.editAddress.blocks.length);
-						this.addForm.block = '';
+						this.editForm.block = '';
 					}
 				},
 				changeEditDistrict() {
 					if(this.editAddress.blocks.length !== 0) {
 						this.editAddress.blocks.splice(0, this.editAddress.blocks.length);
-						this.addForm.block = '';
+						this.editForm.block = '';
 					}
 				},
 				remove() {
