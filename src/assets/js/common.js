@@ -64,6 +64,8 @@ Vue.component('jgb-form-footer', formFooter)
  * @param {String, Object} company 规则-String:获取公司的接口地址 规则-Object {label, uid}:公司名,公司编号
  * @param {String} departmentUrl 获取部门的接口地址
  * @param {String} userUrl 获取用户的接口地址
+ * @param {String} checkedUrl 获取选中人员的接口地址
+ * @param {Object} target 获取成员数据的标识 {label, value}
  * @return {Array} 绑定选中的用户数组
  */
 let setMember = Vue.extend({
@@ -136,6 +138,8 @@ let setMember = Vue.extend({
     company: [String, Object],
     departmentUrl: String,
     userUrl: String,
+    checkedUrl: String,
+    target: Object,
   },
   computed: {
     /**
@@ -193,7 +197,7 @@ let setMember = Vue.extend({
       }
       return arr
     },
-    //获取部门中选中的成员 与userCheckedList去重{uid}
+    //获取部门中选中的成员 //与userCheckedList去重{uid}
     getUserCheckedList: function(_data) {
       let target = []
       let checked = []
@@ -206,10 +210,36 @@ let setMember = Vue.extend({
         }
       })
       return target
+      // if(this.value.length) {
+      //   this.userCheckedList = value.concat()
+      // }
+      // else {
+      //   axios.post(this.checkedUrl, {
+      //     id: this.target.value
+      //   }).then(res=> {
+      //     if(res.data.status) {
+      //       this.userCheckedList = JSON.parse(res.data.data)
+      //     }
+      //     else {
+      //       this.$message({
+      //         type: 'error',
+      //         message: res.data.message,
+      //         center: true
+      //       })
+      //     };
+      //   }).catch(err=> {
+      //     this.$message({
+      //       type: 'error',
+      //       message: err,
+      //       center: true
+      //     })
+      //   })
+      // };
     },
     //根据部门， 关键字 获取数据
     getUserList: function() {
       axios.post(this.userUrl, {
+        company: this.companyId,
         deparment: this.departmentId,
         keyword: this.keyword
       }).then(res => {
@@ -218,10 +248,28 @@ let setMember = Vue.extend({
           this.userCheckedList = this.userCheckedList.concat(this.getUserCheckedList(this.userList))
         }
         else {
-          this.$alert(res.data.message, '提示')
+          this.$message({
+            type: 'error',
+            message: res.data.message,
+            center: true
+          })
         }
       }).catch(err => {
-        this.$alert(err, '提示')
+        this.$message({
+          type: 'error',
+          message: err,
+          center: true
+        })
+      })
+    },
+    //遍历选中人员数据 设置当前展示人员的选中状态
+    setUserCheckedList: function() {
+      let checked = []
+      this.userCheckedList.forEach(user=> {
+        checked.push(user.uid)
+      })
+      this.userList.forEach(user=> {
+        if(user.uid) {}
       })
     },
     //切换成员选中状态并更新选中列表

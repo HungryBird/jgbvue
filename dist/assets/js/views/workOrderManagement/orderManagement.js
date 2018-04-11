@@ -15,7 +15,8 @@ JGBVue.module.workOrderManagement = () => {
     orderReceiveUrl, //领取工单
     orderBackUrl, //退回工单
     orderWithdrawUrl, //撤回工单
-    orderInvalidUrl //工单作废
+    orderInvalidUrl, //工单作废
+    orderDetailsGetUrl //获取工单详情
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -62,6 +63,11 @@ JGBVue.module.workOrderManagement = () => {
           tableHeader: [], //表头
 
           selectedRows: [], //表格选中行
+
+          showOrderDetails: false, //工单详情
+          isLoadingDetails: false, //工单详情加载
+          detailsTabActive: 'baseInfo', //详情页标签 选中项
+          detailsData: {}, //详情页数据
         }
       },
       methods: {
@@ -110,6 +116,8 @@ JGBVue.module.workOrderManagement = () => {
         //查看 @param （row行数据, index行数）
         btnView: function(row, index) {
           //工单详情
+          this.showOrderDetails = true
+          this.getOrderDetails(row.order_id)
         },
         //领取 @param （row行数据, index行数）
         btnReceive: function(row, index) {
@@ -192,6 +200,15 @@ JGBVue.module.workOrderManagement = () => {
             })
           })
         },
+        //查看图片 @param {Array} imgList 图片数组
+        btnImage: function(imgList) {
+          //图片查看组件
+          console.log(imgList)
+        },
+        //关闭详情页
+        closeDetails: function() {
+          this.showOrderDetails = false
+        },
         //获取业务人员数据
         getBusinessData: function() {
           axios.post(businessDataGetUrl).then().catch()
@@ -228,6 +245,32 @@ JGBVue.module.workOrderManagement = () => {
               message: err, 
               center: true
             })
+          })
+        },
+        //获取工单详情 @param {String} id 工单id
+        getOrderDetails: function(id) {
+          this.isLoadingDetails = true
+          axios.post(orderDetailsGetUrl, {
+            order_id: id
+          }).then(res=> {
+            if(res.data.status) {
+              this.detailsData = this.$deepCopy(JSON.parse(res.data.data))
+            }
+            else {
+              this.$message({
+                type: 'error', 
+                message: res.data.message,
+                center: true
+              })
+            };
+            this.isLoadingDetails = false
+          }).catch(err=> {
+            this.$message({
+              type: 'error', 
+              message: err,
+              center: true
+            })
+            this.isLoadingDetails = false
           })
         },
         /**
@@ -283,7 +326,8 @@ JGBVue.module.workOrderManagement = () => {
     orderReceiveUrl,
     orderBackUrl,
     orderWithdrawUrl,
-    orderInvalidUrl
+    orderInvalidUrl,
+    orderDetailsGetUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -292,7 +336,8 @@ JGBVue.module.workOrderManagement = () => {
       orderReceiveUrl,
       orderBackUrl,
       orderWithdrawUrl,
-      orderInvalidUrl)
+      orderInvalidUrl,
+      orderDetailsGetUrl)
   }
   return that
 }

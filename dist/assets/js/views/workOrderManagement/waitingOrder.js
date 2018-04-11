@@ -190,6 +190,10 @@ JGBVue.module.waitingOrder = () => {
           //图片查看组件
           console.log(imgList)
         },
+        //下载文件
+        btnDownLoad: function(src) {
+          window.open(src); 
+        },
         //关闭详情页
         closeDetails: function() {
           this.showOrderDetails = false
