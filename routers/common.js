@@ -249,4 +249,13 @@ router.post('/upload_info', (req, res)=> {
 	})
 });
 
+router.post('/slideshow', (req, res)=> {
+	const slideshow = [
+		'../../../test/img/slideshow/1.jpg',
+		'../../../test/img/slideshow/2.jpg',
+		'../../../test/img/slideshow/3.jpg'
+	]
+
+})
+
 module.exports = router;

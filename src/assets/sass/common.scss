@@ -295,6 +295,13 @@ table{
 		font-size: 0;
 		width: 0;
 	}
+	.slideshow-wrap{
+		position: absolute;
+		top: 50%;
+		height: 50%;
+		transform: translate(-50%, -50%);
+		background: red;
+	}
 	.wrap_main{
 		padding: 10px;
 		.inner_main{
@@ -598,6 +605,27 @@ table{
 			box-sizing: border-box;
 			word-wrap:break-word;
 		}
+	}
+}
+.select-region{
+	.el-input{
+		width: 100% !important;
+	}
+	.el-form-item__content {
+		margin-left: 100px !important;
+	}
+	.el-form-item__content {
+		&:first-child{
+			margin-left: 20px !important;
+		}
+	}
+}
+
+.jgb-table-icon{
+	font-size: 24px;
+	cursor: pointer;
+	&:hover{
+		opacity: .8;
 	}
 }
 
