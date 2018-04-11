@@ -1,0 +1,35 @@
+[
+	{
+		"img": {
+			"value": "p1"
+		},
+		"commodityNumber": "111",
+		"commodityName": "2",
+		"commodityTag": "SA",
+		"auxiliaryAttributes": "",
+		"status": true,
+		"isCommonUse": true
+	},
+	{
+		"img": {
+			"value": "p2"
+		},
+		"commodityNumber": "222",
+		"commodityName": "4",
+		"commodityTag": "SB",
+		"auxiliaryAttributes": "",
+		"status": false,
+		"isCommonUse": false
+	},
+	{
+		"img": {
+			"value": "p2"
+		},
+		"commodityNumber": "333",
+		"commodityName": "3",
+		"commodityTag": "SC",
+		"auxiliaryAttributes": "",
+		"status": true,
+		"isCommonUse": false
+	}
+]

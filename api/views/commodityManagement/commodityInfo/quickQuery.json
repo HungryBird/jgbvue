@@ -1,0 +1,14 @@
+[
+	{
+		"label": "客户类别",
+		"value": "clientCategory"
+	},
+	{
+		"label": "重点客户",
+		"value": "mvp"
+	},
+	{
+		"label": "普通客户",
+		"value": "normal"
+	}
+]
