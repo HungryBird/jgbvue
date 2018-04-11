@@ -130,6 +130,9 @@ JGBVue.module.commodityInfo = ()=> {
 				}
 			},
 			mounted() {
+				this.$message({
+					message: '更新进度...'
+				})
 				this.searchData();
 				this.getQuickQuery();
 			},
