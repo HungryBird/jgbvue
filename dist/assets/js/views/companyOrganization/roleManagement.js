@@ -700,7 +700,7 @@ JGBVue.module.roleManagement = () => {
       },
       created: function () {
         this.getRoleList()
-      }
+      },
     })
   }
   that.init = (

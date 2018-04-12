@@ -103,3 +103,21 @@ clone项目
         ├── views       # iframe引用页面对应的json数据
         └── login.json
 
+
+**公共组件**
+#### 组件 设置成员
+  created by lanw 2018-4-8
+  @param {Array} value 绑定选中的用户数组
+  @param {Array, Object} companyList 规则-Array:公司列表 规则-Object {label, value}:公司名,公司编号
+  @param {Array} departmentList 部门数据
+  @param {Array} userList 用户数据
+  @param {Array} checkedList 选中人员数据
+  @param {Object} companyProps 公司传入对象的key属性 e.g. { label: "label", value: "number"}
+  @param {Object} departmentProps 部门 传入对象的key属性 e.g. { label: "label", value: "value"}
+  @param {Object} userProps 用户、选中人员 同上 {userName: "name", userId: "uid", userPic: "src", departmentName: "department", companyName: "companyName"}
+
+  @return {Array} 绑定选中的用户数组
+
+  @event company-change
+  @event department-change
+  @event search 
