@@ -264,9 +264,15 @@
 			<div slot="title" class="title">设置角色成员-{{selectedRows.length ? selectedRows[0].name : ''}}</div>
 			<jgb-set-member v-if="showSetRoleMember" ref="setRoleMember"
 				v-model="checkedRoleMember"
-				:company="companyListGetUrl"
-				:department-url="departmentListGetUrl"
-				:user-url="userListGetUrl">
+				:company-list="companyList"
+				:department-list="departmentList"
+				:user-list="userList"
+				:user-props="defaultUserProps"
+				:company-props="defaultCompanyProps"
+				:department-props="defaultDepartmentProps"
+				v-on:company-change="setMemberCompanyChange"
+				v-on:department-change="setMemberGetUser"
+				v-on:search="setMemberGetUser">
 			</jgb-set-member>
 			<jgb-form-footer slot="footer"
 				:loading="loadingSetRoleMember"

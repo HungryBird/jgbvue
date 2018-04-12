@@ -7,7 +7,7 @@ JGBVue.module.index = ()=> {
   ,that = {};
 
   _this.init = (isShowGuidanceUrl)=> {
-    that.vm = new Vue({
+    window.JGBVue.module.vParent = new Vue({
       el: '#app',
       data: {
         user: {
