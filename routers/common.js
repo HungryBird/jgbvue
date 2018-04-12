@@ -192,6 +192,25 @@ router.get('/getCompany', (req, res)=> {
 	})
 });
 
+router.post('/getCompany', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/company/company.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
+
 router.post('/getDepartment', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/common/company/department.json', 'utf-8', (err, data)=> {

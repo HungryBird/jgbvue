@@ -62,8 +62,163 @@
       ],
       "service_price": "2222222",
       "install_price": "33333333",
-      "distribution_price": "444444444"
+      "distribution_price": "444444444",
+      "total_price_cn": "玖仟元",
+      "total_price": "9000.00"
     },
-    "contact_info" : {}
+    "contact_info" : {
+      "clientInfo": {
+        "name": "111",
+        "phone": "222",
+        "tel": "333",
+        "address": "444",
+        "code": "555"
+      },
+      "userInfo": {
+        "name": "666",
+        "phone": "7777",
+        "tel": "8888",
+        "address": "9999",
+        "code": "0000"
+      }
+    }
+  },
+  "contract": {
+    "title": "南宁人民医院采购监护仪项目合同书",
+    "id": "201804110001",
+    "jiafang": {
+      "name": "1111", 
+      "address": "2222",
+      "people": "3333", 
+      "tel": "4444",
+      "fax": "5555"
+    },
+    "yifang": {
+      "name": "1111", 
+      "address": "2222",
+      "people": "3333", 
+      "tel": "4444",
+      "fax": "5555"
+    },
+    "contract_url": "www.baidu.com"
+  },
+  "manage": {
+    "report": {
+      "title": "XX设备维修报告",
+      "id": 201804100002,
+      "date": 1523340953
+    },
+    "base_info": {
+      "date": 1523340953,
+      "client_name": "南宁中医院",
+      "repair_company": "南宁市沃宝商贸有限公司",
+      "equipment_name": "设备设备设备",
+      "equipment_category":"类别类别类别",
+      "equipment_brand": "品牌品牌",
+      "equipment_source": "来源来源来源",
+      "repair_methods": "报修方式报修方式报修方式报修方式",
+      "level": "紧急程度",
+      "repair_peopel":"委派人员委派人员委派人员委派人员",
+      "contact": "联系方式方式",
+      "fin": 1523340953
+    },
+    "repair_info": {
+      "fault_info": "故障描述：故障描述：故障描述：故障描述：故障描述：故障描述：",
+      "fault_reason": "故障原因：故障原因：故障原因：故障原因：",
+      "fault_methods": "维修措施：维修措施：维修措施：维修措施：维修措施：",
+      "result": "完成情况：完成情况：完成情况："
+    },
+    "repair_cost": {
+      "price1": "111111",
+      "price2": "111111",
+      "price3": "111111",
+      "price4": "111111",
+      "price5": "111111",
+      "total": "111111",
+      "remark": "备注备注备注备注备注备注备注备注备注备注"
+    },
+    "repair_log": [
+      "2018-3-15 8:00开始维修 维修人员：XXX",
+      "2018-3-15 12:00换人修 维修人员：XXX，换休原因：XXXXX，费用：XXX，备注：xxxx",
+      "2018-3-16 8:00送外修 送修公司：XXXX，送修方式：XXXX，费用预估：XXX，送修原因：xxxxxxx，预计时长：XXXX，联系人：xxx,手机号码：XXXXXX，微信：xxxxx,备注:XXXX",
+      "2018-3-16 18:00 完成维修 测试人员：XXX， 测试环境：xxx，测试工具：xxx,测试步骤：xxxxx，测试结果：xxxx，备注：xxxxx"
+    ]
+  },
+  "delivery_visit": {
+    "delivery": [
+      {
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "file": "www.baidu.com"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "file": "www.baidu.com"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "file": "www.baidu.com"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "file": "www.baidu.com"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "file": "www.baidu.com"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "file": "www.baidu.com"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "file": "www.baidu.com"
+      }
+    ],
+    "courier": [
+      { "id": 123456, "company":"南宁市沃宝商贸有限公司", "status": "签收" },
+      { "id": 123456, "company":"南宁市沃宝商贸有限公司", "status": "签收" },
+      { "id": 123456, "company":"南宁市沃宝商贸有限公司", "status": "签收" },
+      { "id": 123456, "company":"南宁市沃宝商贸有限公司", "status": "签收" },
+      { "id": 123456, "company":"南宁市沃宝商贸有限公司", "status": "签收" },
+      { "id": 123456, "company":"南宁市沃宝商贸有限公司", "status": "签收" },
+      { "id": 123456, "company":"南宁市沃宝商贸有限公司", "status": "签收" }
+    ],
+    "visit": [
+      {
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "result": "良好"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "result": "良好"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "result": "良好"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "result": "良好"
+      },{
+        "date": 1523340953,
+        "content": "内容内容内容内容内容",
+        "people": "张三",
+        "result": "良好"
+      }
+    ]
   }
 }

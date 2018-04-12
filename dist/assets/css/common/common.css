@@ -930,68 +930,123 @@ table {
   align-items: center;
   margin-bottom: 20px; }
 
-.order-details .details-title {
-  border-bottom: 1px solid #ddd;
-  padding: 5px 10px;
-  font-size: 16px;
-  color: #333;
-  font-weight: bold;
-  line-height: 25px; }
-
-.order-details .details-container {
-  padding: 10px; }
-  .order-details .details-container .block-title {
-    margin-top: 10px;
-    line-height: 30px;
-    font-size: 16px;
-    color: #333; }
-    .order-details .details-container .block-title:first-child {
-      margin-top: 0; }
-
-.order-details .el-tabs__header {
-  margin-bottom: 0; }
-
-.order-details .details-table {
-  border-collapse: collapse;
-  width: 100%; }
-  .order-details .details-table.faultResult .sub-head {
-    width: 140px; }
-  .order-details .details-table.faultResult .text-center {
-    text-align: center; }
-  .order-details .details-table.faultResult td {
-    text-align: left; }
-  .order-details .details-table.repair-price td, .order-details .details-table.repair-price th {
-    width: 25%; }
-  .order-details .details-table.equipment-info th, .order-details .details-table.equipment-info td {
-    width: 14.285%;
-    text-align: center; }
-  .order-details .details-table.repair-info th, .order-details .details-table.repair-info td {
-    width: 16.6667%;
-    text-align: center; }
-  .order-details .details-table.repair-info td[colspan] {
-    text-align: left; }
-  .order-details .details-table th {
-    border: 1px solid #ddd;
-    width: 100px;
-    padding: 10px 0;
-    font-weight: 500;
-    text-align: right;
-    color: #666;
-    font-size: 14px; }
-  .order-details .details-table td {
-    border: 1px solid #ddd;
-    width: 120px;
-    padding: 10px 5px;
-    color: #333;
-    font-size: 14px;
-    text-align: center; }
-  .order-details .details-table .td-item {
+.order-details {
+  height: 100%;
+  overflow: hidden; }
+  .order-details .details-title {
     border-bottom: 1px solid #ddd;
-    padding: 10px 5px; }
-    .order-details .details-table .td-item:last-child {
-      border-bottom: 0; }
-
-.order-details .table-img-icon {
-  font-size: 20px;
-  color: #666;
-  cursor: pointer; }
+    padding: 5px 10px;
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+    line-height: 25px; }
+  .order-details .details-container {
+    height: 100%;
+    padding: 10px; }
+    .order-details .details-container .block-title {
+      margin-top: 10px;
+      line-height: 30px;
+      font-size: 16px;
+      color: #333; }
+      .order-details .details-container .block-title:first-child {
+        margin-top: 0; }
+  .order-details .el-tabs--border-card {
+    height: 100%; }
+    .order-details .el-tabs--border-card .el-tabs__header {
+      margin-bottom: 0; }
+    .order-details .el-tabs--border-card .el-tabs__content {
+      height: 90%;
+      overflow: auto;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box; }
+  .order-details .table-wrap {
+    border: 1px solid #ddd;
+    height: 200px;
+    overflow: auto; }
+  .order-details .details-table {
+    border-collapse: collapse;
+    width: 100%; }
+    .order-details .details-table.faultResult .sub-head {
+      width: 140px; }
+    .order-details .details-table.faultResult .text-center {
+      text-align: center; }
+    .order-details .details-table.faultResult td {
+      text-align: left; }
+    .order-details .details-table.repair-column-4 td, .order-details .details-table.repair-column-4 th {
+      width: 25%; }
+    .order-details .details-table.repair-column-4 .preview-pdf {
+      width: 100%;
+      height: 400px;
+      overflow: auto; }
+    .order-details .details-table.repair-column-4 .download-contract {
+      font-size: 20px;
+      color: #333;
+      cursor: pointer; }
+    .order-details .details-table.equipment-info th, .order-details .details-table.equipment-info td {
+      width: 14.285%;
+      text-align: center; }
+    .order-details .details-table.repair-column-6 th, .order-details .details-table.repair-column-6 td {
+      width: 16.6667%;
+      text-align: center; }
+    .order-details .details-table.repair-column-6 td[colspan] {
+      text-align: left; }
+    .order-details .details-table.repair-column-2 th {
+      width: 16.6667%;
+      text-align: right; }
+    .order-details .details-table.repair-column-2 td {
+      text-align: left; }
+    .order-details .details-table.delivery tr:last-child td {
+      border-bottom: none; }
+    .order-details .details-table.delivery th {
+      width: 50%;
+      text-align: center;
+      border-top: none; }
+      .order-details .details-table.delivery th:last-child {
+        border-right: none; }
+      .order-details .details-table.delivery th:first-child {
+        border-left: none; }
+      .order-details .details-table.delivery th.date, .order-details .details-table.delivery th.file {
+        width: 15%; }
+      .order-details .details-table.delivery th.person {
+        width: 20%; }
+      .order-details .details-table.delivery th.content {
+        width: 32.5%; }
+    .order-details .details-table.delivery td:first-child {
+      border-left: none; }
+    .order-details .details-table.delivery td:last-child {
+      border-right: none; }
+    .order-details .details-table th {
+      border: 1px solid #ddd;
+      width: 100px;
+      padding: 10px 0;
+      font-weight: bold;
+      text-align: right;
+      color: #999;
+      font-size: 14px; }
+    .order-details .details-table td {
+      border: 1px solid #ddd;
+      width: 120px;
+      padding: 10px 5px;
+      color: #333;
+      font-size: 14px;
+      text-align: center; }
+    .order-details .details-table .td-item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 5px; }
+      .order-details .details-table .td-item:last-child {
+        border-bottom: 0; }
+  .order-details .table-img-icon {
+    font-size: 20px;
+    color: #666;
+    cursor: pointer; }
+  .order-details .repair-log {
+    border: 1px solid #ddd;
+    width: 100%;
+    height: 120px;
+    overflow: auto;
+    padding: 0 10px; }
+    .order-details .repair-log p {
+      margin: 8px 0;
+      line-height: 21px;
+      font-size: 14px;
+      color: #666; }

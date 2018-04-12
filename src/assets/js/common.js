@@ -27,6 +27,18 @@ let timeStampFormat = function(stamp) {
 Vue.prototype.$timeStampFormat = timeStampFormat
 
 /**
+ * 手动触发打开选项卡
+ * created by lanw 2018-4-12
+ * @param {string} tabId 选项卡ID
+ * @param {string} tabName 选项卡名称
+ * @param {string} parentFolder 父级目录
+ */
+let selectTab = function(tabId, tabName, parentFolder) {
+  window.top.JGBVue.module.vParent.selectTab(tabId, tabName, parentFolder)
+}
+Vue.prototype.$selectTab = selectTab
+
+/**
  * 组件-表单footer 保存、关闭按钮 带loading阻止重复提交
  * created by lanw 2018-4-4
  */
@@ -61,24 +73,33 @@ Vue.component('jgb-form-footer', formFooter)
  * 组件 设置成员
  * created by lanw 2018-4-8
  * @param {Array} value 绑定选中的用户数组
- * @param {String, Object} company 规则-String:获取公司的接口地址 规则-Object {label, uid}:公司名,公司编号
- * @param {String} departmentUrl 获取部门的接口地址
- * @param {String} userUrl 获取用户的接口地址
+ * @param {Array, Object} companyList 规则-Array:公司列表 规则-Object {label, value}:公司名,公司编号
+ * @param {Array} departmentList 部门数据
+ * @param {Array} userList 用户数据
+ * @param {Array} checkedList 选中人员数据
+ * @param {Object} companyProps 公司传入对象的key属性 e.g. { label: "label", value: "number"}
+ * @param {Object} departmentProps 部门 传入对象的key属性 e.g. { label: "label", value: "value"}
+ * @param {Object} userProps 用户、选中人员 同上 {userName: "name", userId: "uid", userPic: "src", departmentName: "department", companyName: "companyName"}
+ * 
  * @return {Array} 绑定选中的用户数组
+ * 
+ * @event company-change
+ * @event department-change
+ * @event search 
  */
 let setMember = Vue.extend({
   template: `<el-container class="set-member-wrap">
               <el-header class="set-member-header">
-                <div v-if="isCompany" class="set-member-company single">
+                <div v-if="!companyList.length" class="set-member-company single">
                   {{companyName}}
                 </div>
                 <el-select v-else class="set-member-company"
                   placeholder="请选择公司" v-model="companyId">
                   <el-option
                     v-for="item in companyList"
-                    :key="item.number"
-                    :label="item.label"
-                    :value="item.number">
+                    :key="item[companyProps.value]"
+                    :label="item[companyProps.label]"
+                    :value="item[companyProps.value]">
                   </el-option>
                 </el-select>
                 <el-input class="set-member-search" placeholder="请输入关键词" v-model="keyword">
@@ -93,13 +114,13 @@ let setMember = Vue.extend({
                   <i :class="showCheckedList? 'el-icon-caret-right': 'el-icon-caret-left'"></i>
                 </el-button>
               </el-header>
-              <el-container v-if="departmentList.length">
+              <el-container v-if="companyId && departmentList.length">
                 <el-aside class="set-member-aside">
                   <ul class="ul-list">
                     <li v-for="(item, index) in departmentList"
-                      :class="departmentId == item.value ? 'active' : ''"
-                      v-on:click="departmentId = item.value">
-                      {{item.label}}
+                      :class="departmentId == item[departmentProps.value] ? 'active' : ''"
+                      v-on:click="departmentId = item[departmentProps.value]">
+                      {{item[departmentProps.label]}}
                     </li>
                   </ul>
                 </el-aside>
@@ -108,20 +129,20 @@ let setMember = Vue.extend({
                     <div v-for="(member, index) in userList" class="member-item"
                       :class="member.checked ? 'checked': ''"
                       v-on:click="toggleMemberChecked(member, index)">
-                      <img class="member-pic" :src="member.pic_url" :alt="member.name"/>
+                      <img class="member-pic" :src="member[userProps.userPic]" :alt="member[userProps.userName]"/>
                       <div class="member-info">
-                        <div class="info-item">工号：{{member.uid}}</div>
-                        <div class="info-item">姓名：{{member.name}}</div>
-                        <div class="info-item">部门：{{member.department}}</div>
+                        <div class="info-item">工号：{{member[userProps.userId]}}</div>
+                        <div class="info-item">姓名：{{member[userProps.userName]}}</div>
+                        <div class="info-item">部门：{{member[userProps.departmentName]}}</div>
                       </div>
                       <i v-if="member.checked" class="el-icon-check checked-tag"></i>
                     </div>
                   </div>
                   <transition name="slide-from-right">
                     <ul v-show="showCheckedList" class="w-checked-list">
-                      <li v-for="(item, index) in userCheckedList" class="checked-item">
-                        <span>{{item.companyName}}</span>
-                        <span>{{item.department}}【{{item.name}}】</span>
+                      <li v-for="(item, index) in checkedList" class="checked-item">
+                        <span>{{item[userProps.companyName]}}</span>
+                        <span>{{item[userProps.departmentName]}}【{{item[userProps.userName]}}】</span>
                         <i class="el-icon-circle-close checked-close"
                           v-on:click="removeChecked(item, index)">
                         </i>
@@ -133,9 +154,13 @@ let setMember = Vue.extend({
             </el-container>`,
   props: {
     value: Array,
-    company: [String, Object],
-    departmentUrl: String,
-    userUrl: String,
+    companyList: [Array, Object],
+    departmentList: Array,
+    userList: Array,
+    // checkedList: Array,
+    companyProps: Object,
+    departmentProps: Object,
+    userProps: Object,
   },
   computed: {
     /**
@@ -147,109 +172,57 @@ let setMember = Vue.extend({
   },
   data: function() {
     return {
-      companyName: '', //公司名称
+      companyName: '', //公司名称 *选中id时 没写获取name
       companyId: '', //公司id
-      companyList: [], //公司列表 *仅在传入公司接口地址使用
-      departmentList: [], //部门列表
       departmentId: '', //部门id
+      departmentName: '', //部门名称 *选中id时 没写获取name
+      checkedList: [], //选中列表
       keyword: '', //搜索关键字
-      userList: [], //部门对应职员
-      userCheckedList: [], //选中成员
 
       showCheckedList: false, //是否显示选中成员
     }
   },
   methods: {
-    //获取公司列表 *最终写入companyList的全部为子公司
-    getCompanyList: function() {
-      if(this.isCompany) return;
-      axios.get(this.company).then(res=> {
-        if(res.data.status) {
-          let _data = JSON.parse(res.data.data)
-          this.companyList = this.getAllChildrenCompany(_data).concat()
-          // console.log(this.companyList)
-        }
-        else {
-          this.$alert(res.data.message, '提示')
-        }
-      }).catch(err=> {
-        this.$alert(err, '提示')
-      })
-    },
-    //获取公司列表中所有子公司
-    getAllChildrenCompany: function(_data) {
-      let arr = []
-      for (let i = 0; i < _data.length; i++) {
-        if (_data[i].children) {
-          arr.push({
-            label: _data[i].label,
-            number: _data[i].number
-          })
-          arr = arr.concat(this.getAllChildrenCompany(_data[i].children))
-        }
-        else {
-          arr.push(_data[i])
-        }
-      }
-      return arr
-    },
-    //获取部门中选中的成员 与userCheckedList去重{uid}
-    getUserCheckedList: function(_data) {
-      let target = []
+    //遍历选中人员数据 设置当前展示人员的选中状态
+    setUserListChecked: function() {
       let checked = []
-      this.userCheckedList.length && this.userCheckedList.forEach(user=> {
-        checked.push(user.uid)
+      //提取选中人员的userId
+      this.checkedList.forEach(user=> {
+        checked.push(user[this.userProps.userId])
       })
-      _data.forEach(member => {
-        if (member.checked && checked.indexOf(member.uid) == -1) {
-          target.push(member)
-        }
-      })
-      return target
-    },
-    //根据部门， 关键字 获取数据
-    getUserList: function() {
-      axios.post(this.userUrl, {
-        deparment: this.departmentId,
-        keyword: this.keyword
-      }).then(res => {
-        if (res.data.status) {
-          this.userList = JSON.parse(res.data.data)
-          this.userCheckedList = this.userCheckedList.concat(this.getUserCheckedList(this.userList))
-        }
-        else {
-          this.$alert(res.data.message, '提示')
-        }
-      }).catch(err => {
-        this.$alert(err, '提示')
+      //遍历当前人员列表 设置选中/未选中状态
+      this.userList.forEach(user=> {
+        let uid = user[this.userProps.userId]
+        user.checked = checked.indexOf(uid) == -1 ? false : true
       })
     },
     //切换成员选中状态并更新选中列表
     toggleMemberChecked: function(member, index) {
       this.userList[index].checked = !member.checked
-      //更新选中列表
       let checked = []
-      this.userCheckedList.length && this.userCheckedList.forEach(user => {
-        checked.push(user.uid)
+      //提取选中人员的userId
+      this.checkedList.length && this.checkedList.forEach(user => {
+        checked.push(user[this.userProps.userId])
       })
-      if(checked.indexOf(member.uid) == -1) {
-        this.userCheckedList.push(member)
+      //更改该人员在列表中的选中状态
+      if(checked.indexOf(member[this.userProps.userId]) == -1) {
+        this.checkedList.push(member)
       }
       else {
-        this.userCheckedList.splice(checked.indexOf(member.uid), 1)
+        this.checkedList.splice(checked.indexOf(member[this.userProps.userId]), 1)
       }
     },
     //从选中人员中删除
     removeChecked: function(item, index) {
-      this.userCheckedList.splice(index, 1);
+      this.checkedList.splice(index, 1);
       //检查展示中的成员列表userList是否存在该成员并更改checked状态
       this.userList.forEach(user=> {
-        if(user.uid == item.uid) {
+        if(user[this.userProps.userId] == item[this.userProps.userId]) {
           user.checked = false
         }
       })
     },
-    //搜索
+    //搜索触发search
     search: function() {
       if(!this.companyId) {
         this.$message({
@@ -265,45 +238,48 @@ let setMember = Vue.extend({
         })
         return;
       }
-      this.getUserList()
+      this.$emit('search', {
+        companyId: this.companyId,
+        companyName: this.companyName,
+        departmentId: this.departmentId,
+        departmentName: this.departmentName,
+        keyword: this.keyword
+      })
     },
   },
   watch: {
-    //公司id改变获取对应部门数据
+    //公司id改变触发company-change
     companyId: function() {
-      axios.post(this.departmentUrl, {
-        company: this.companyId
-      }).then(res=> {
-        if(res.data.status) {
-          this.departmentList = JSON.parse(res.data.data).concat()
-          //默认选中第一个部门
-          this.departmentId = this.departmentList[0].value
-        }
-        else {
-          this.$alert(res.data.message, '提示')
-        }
-      }).catch(err => {
-        this.$alert(err, '提示')
+      this.$emit('company-change', {
+        companyName: this.companyName,
+        companyId: this.companyId
       })
     },
-    //部门id改变获取对应成员数据
+    //部门id改变触发department-change
     departmentId: function () {
-      this.getUserList()
+      this.$emit('department-change', {
+        companyId: this.companyId,
+        companyName: this.companyName,
+        departmentId: this.departmentId,
+        departmentName: this.departmentName,
+      })
     },
     //更新绑定数据
-    userCheckedList: function() {
-      this.$emit('input', this.userCheckedList)
+    checkedList: function() {
+      this.$emit('input', this.checkedList)
+    },
+    //用户列表更改 重写checked状态
+    userList: function() {
+      this.setUserListChecked()
     },
   },
   created: function () {
-    this.companyName = this.isCompany ? this.company.label : ''
-    if (this.isCompany) {
-      this.companyName = this.company.label
-      this.companyId = this.company.uid
-    }
-    else {
-      this.getCompanyList()
+    this.checkedList = this.value.concat()
+    if (!this.companyList.length) {
+      this.companyName = this.companyList[this.companyProps.label]
+      this.companyId = this.companyList[this.companyProps.value]
     };
+    this.setUserListChecked()
   },
 })
 Vue.component('jgb-set-member', setMember)

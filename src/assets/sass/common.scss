@@ -978,6 +978,8 @@ table{
 
 //工单详情
 .order-details {
+	height:100%;
+	overflow:hidden;
 	.details-title {
 		@include common-border-bottom;
 		padding:5px 10px;
@@ -987,6 +989,7 @@ table{
 		line-height:25px;
 	}
 	.details-container {
+		height:100%;
 		padding: 10px;
 		.block-title {
 			margin-top:10px;
@@ -998,8 +1001,21 @@ table{
 			}
 		}
 	}
-	.el-tabs__header {
-		margin-bottom:0;
+	.el-tabs--border-card {
+		height:100%;
+		.el-tabs__header {
+			margin-bottom:0;
+		}
+		.el-tabs__content {
+			height:90%;
+			overflow:auto;
+			box-sizing: border-box;
+		}
+	}
+	.table-wrap {
+		@include common-border;
+		height:200px;
+		overflow:auto;
 	}
 	.details-table { //工单详情表格
 		border-collapse:collapse;
@@ -1015,9 +1031,19 @@ table{
 				text-align: left;
 			}
 		}
-		&.repair-price { //维修报价
+		&.repair-column-4 { //4列布局
 			td, th {
 				width: 25%;
+			}
+			.preview-pdf {
+				width:100%;
+				height:400px;
+				overflow:auto;
+			}
+			.download-contract {
+				font-size:20px;
+				color:#333;
+				cursor:pointer;
 			}
 		}
 		&.equipment-info { //设备信息
@@ -1026,7 +1052,7 @@ table{
 				text-align: center;
 			}
 		}
-		&.repair-info { //维修费用信息
+		&.repair-column-6 { //6列布局
 			th, td{
 				width:16.6667%;
 				text-align: center;
@@ -1034,15 +1060,56 @@ table{
 			td[colspan] {
 				text-align:left;
 			}
-
+		}
+		&.repair-column-2 { //2列布局
+			th {
+				width:16.6667%;
+				text-align:right;
+			}
+			td {
+				text-align:left;
+			}
+		}
+		&.delivery { //交付
+			tr:last-child td {
+				border-bottom:none;
+			}
+			th {
+				width:50%;
+				text-align: center;
+				border-top:none;
+				&:last-child {
+					border-right:none;
+				}
+				&:first-child {
+					border-left:none;
+				}
+				&.date, &.file{
+					width:15%;
+				}
+				&.person {
+					width:20%;
+				}
+				&.content {
+					width: 32.5%;
+				}
+			}
+			td {
+				&:first-child {
+					border-left:none;
+				}
+				&:last-child {
+					border-right:none;
+				}
+			}
 		}
 		th {
 			@include common-border;
 			width:100px;
 			padding:10px 0;
-			font-weight:500;
+			font-weight:bold;
 			text-align:right;
-			color:$fc-normal;
+			color:$fc-light;
 			font-size:$fs-normal;
 		}
 		td {
@@ -1065,5 +1132,18 @@ table{
 		font-size:20px;
 		color:#666;
 		cursor:pointer;
+	}
+	.repair-log {
+		@include common-border;
+		width:100%;
+		height:120px;
+		overflow:auto;
+		padding:0 10px;
+		p {
+			margin:8px 0;
+			line-height:$fs-normal*1.5;
+			font-size:$fs-normal;
+			color:$fc-normal;
+		}
 	}
 }

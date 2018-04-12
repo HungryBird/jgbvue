@@ -6,8 +6,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "companyName": "公司甲"
   },
   {
     "uid": 10002,
@@ -16,8 +15,7 @@
     "department": "金融部",
     "departmentId": "jinrongbu",
     "company": "companyOne",
-    "companyName": "公司乙",
-    "checked": false
+    "companyName": "公司乙"
   },
   {
     "uid": 10003,
@@ -26,8 +24,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": false
+    "companyName": "公司甲"
   },
   {
     "uid": 10004,
@@ -36,8 +33,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "companyName": "公司甲"
   },
   {
     "uid": 10005,
@@ -46,8 +42,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": false
+    "companyName": "公司甲"
   },
   {
     "uid": 10006,
@@ -56,8 +51,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲",
-    "checked": false
+    "companyName": "公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲公司甲"
   },
   {
     "uid": 10007,
@@ -66,8 +60,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "companyName": "公司甲"
   },
   {
     "uid": 10008,
@@ -76,8 +69,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": false
+    "companyName": "公司甲"
   },
   {
     "uid": 10009,
@@ -86,8 +78,7 @@
     "department": "财务部财务部财务部财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "companyName": "公司甲"
   },
   {
     "uid": 10019,
@@ -96,8 +87,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "companyName": "公司甲"
   },
   {
     "uid": 10029,
@@ -106,8 +96,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "companyName": "公司甲"
   },
   {
     "uid": 10039,
@@ -116,8 +105,7 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "companyName": "公司甲"
   },
   {
     "uid": 10049,
@@ -126,7 +114,6 @@
     "department": "财务部",
     "departmentId": "caiwubu",
     "company": "companyOne",
-    "companyName": "公司甲",
-    "checked": true
+    "companyName": "公司甲"
   }
 ]

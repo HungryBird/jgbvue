@@ -31,10 +31,6 @@ JGBVue.module.roleManagement = () => {
       el: '#app',
       data: function () {
         return {
-          companyListGetUrl: treeDataGetUrl, //公司列表地址
-          departmentListGetUrl: departmentGetUrl, //部门列表地址
-          userListGetUrl: departmentMemberGetUrl,//获取部门对应成员地址
-
           keyword: '', //搜索
           defaultProps: {
             label: 'label',
@@ -98,6 +94,18 @@ JGBVue.module.roleManagement = () => {
           showSetRoleMember: false, //设置成员 窗
           checkedRoleMember: [], //选中成员
           loadingSetRoleMember: false, //正在成员更新数据
+          companyList: [], //公司列表
+          departmentList: [], //部门列表
+          userList: [], //用户列表
+          defaultCompanyProps: { label: "label", value: "number" }, //插件内公司配置key名
+          defaultDepartmentProps: { label: "label", value: "value" }, //插件内部门配置key名
+          defaultUserProps: { //插件内部用户 选中人员配置key名
+            userName: "name", 
+            userId: "uid", 
+            userPic: "src", 
+            departmentName: "department", 
+            companyName: "companyName"
+          },
         }
       },
       methods: {
@@ -192,11 +200,12 @@ JGBVue.module.roleManagement = () => {
         },
         //查看成员
         btnGetMember: function() {
-          this.getRoleMemberList()
+          this.getRoleMemberList('isLoadingRoleMember', 'showRoleMember')
         },
         //设置成员
         btnSetMember: function () {
-          this.showSetRoleMember = true
+          this.getCompanyList()
+          this.getRoleMemberList('isLoadingRoleMember', 'showSetRoleMember')
         },
         /**
          * 获取所有checked的数据 返回一个uid的数组
@@ -572,31 +581,122 @@ JGBVue.module.roleManagement = () => {
               this.roleList = _data
               this.selectedRows = []
               // console.log(this.roleList)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
             };
           }).catch((err) => {
-            console.log('err', err);
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
           })
         },
-        //获取角色成员组
-        getRoleMemberList: function() {
-          this.isLoadingRoleMember = true
+        /**
+         * 获取角色成员组
+         * edit by lanw 2018-4-12 增加参数 适用设置角色成员
+         * @param loadingControl 控制加载状态变量名称
+         * @param showControl 控制对话框显示变量名称
+         */
+        getRoleMemberList: function(loadingControl, showControl) { 
+          this[loadingControl] = true
           this.roleMemberList = []
           axios.post(roleMemberListUrl, {
             uid: this.selectedRows[0].uid
           }).then(res=> {
             if(res.data.status) {
               this.roleMemberList = JSON.parse(res.data.data).concat()
-              this.showRoleMember = true
+              this[showControl] = true
+              if(showControl == 'showSetRoleMember') {
+                this.checkedRoleMember = this.roleMemberList.concat()
+              }
             }
             else {
               this.$alert(res.data.message, '提示')
             }
-            this.isLoadingRoleMember = false
+            this[loadingControl] = false
           }).catch(err=> {
             this.$alert(err, '提示')
-            this.isLoadingRoleMember = false
+            this[loadingControl] = false
           })
         },
+        //获取公司列表
+        getCompanyList: function() {
+          axios.post(treeDataGetUrl).then(res=> {
+            if(res.data.status) {
+              this.companyList = JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        //获取部门列表
+        getDepartmentList: function(obj) {
+          axios.post(departmentGetUrl, obj).then(res=> {
+            if(res.data.status) {
+              this.departmentList = JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        //获取用户列表
+        getUserList: function(obj) {
+          axios.post(departmentMemberGetUrl, obj).then(res=> {
+            if(res.data.status) {
+              this.userList = JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        //设置成员 触发事件 department-change, search
+        setMemberGetUser: function(data) {
+          this.getUserList(data)
+        },
+        //设置成员 触发事件 company-change
+        setMemberCompanyChange: function(data) {
+          this.getDepartmentList(data)
+        },
+        
       },
       created: function () {
         this.getRoleList()

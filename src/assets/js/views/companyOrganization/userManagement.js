@@ -103,7 +103,7 @@ JGBVue.module.userManagement = () => {
 
           showTimeAccess: false, //时段访问模态框
           accessDialogActive: 'monday', //时段访问标签页
-          currentAccessTime: [new Date(2017, 7, 7, 0, 0), new Date(2017, 7, 8, 23, 0)], //选择的禁止访问时段
+          currentAccessTime: ['0:0:0', '23:0:0'], //选择的禁止访问时段
           accessTimeList: [], //当前用户的禁止访问时段
           isAddingAccessTime: false, //是否正在添加时段
 
