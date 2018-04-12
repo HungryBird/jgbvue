@@ -10,12 +10,14 @@ JGBVue.module.waitingOrder = () => {
   let _this = {}, that = {}
   _this.init = (
     businessDataGetUrl, //获取业务人员数据
+    clientDataGetUrl, //获取客户数据
     workOrderDataGetUrl,//获取工单数据
     orderReceiveUrl, //领取工单
     orderBackUrl, //退回工单
     orderWithdrawUrl, //撤回工单
     orderInvalidUrl, //工单作废
-    orderDetailsGetUrl //获取工单详情
+    orderDetailsGetUrl, //获取工单详情
+    orderNewIdGetUrl,//新增工单 获取工单编号
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -33,6 +35,7 @@ JGBVue.module.waitingOrder = () => {
           },
           formTimeRangeDefault: ['00:00:00', '23:59:59'], //表单 默认起止时间
           formBusinessList: [], //表单 业务人员组
+          formClientList: [], //表单 客户数据
           formOrderStatus: [ //工单状态 *value会关联html显示按钮组的判断条件,v-if需同步修改
             { label: '委派', value: 0 },
             { label: '待接', value: 1 },
@@ -53,6 +56,22 @@ JGBVue.module.waitingOrder = () => {
           isLoadingDetails: false, //工单详情加载
           detailsTabActive: 'baseInfo', //详情页标签 选中项
           detailsData: {}, //详情页数据
+
+          showAddOrder: false, //新增工单弹窗
+          orderAddForm: { //新增工单数据
+            date: '', //日期 时间戳
+            client: '', //客户
+            business: '', //业务人员
+            orderId: '', //工单编号
+            onlyCode: '', //唯一码
+          },  
+          orderFormRuls: { //工单规则
+            date: { required: true, message: '请选择日期', trigger: 'blur' },
+            client: { required: true, message: '请选择客户', trigger: 'blur' },
+            business: { required: true, message: '请选择业务人员', trigger: 'blur' },
+            orderId: { required: true, message: '工单编号生成失败', trigger: 'blur' },
+            onlyCode: { required: true, message: '请输入唯一码', trigger: 'blur' },
+          },
         }
       },
       methods: {
@@ -190,6 +209,12 @@ JGBVue.module.waitingOrder = () => {
           //图片查看组件
           console.log(imgList)
         },
+        //新增
+        btnAdd: function() {
+          this.showAddOrder = true
+          this.getClientData()
+          this.orderAddForm.orderId = this.getAddOrderId()
+        },
         //下载文件
         btnDownLoad: function(src) {
           window.open(src); 
@@ -202,9 +227,50 @@ JGBVue.module.waitingOrder = () => {
         getBusinessData: function() {
           axios.post(businessDataGetUrl).then().catch()
         },
+        //获取客户人员数据
+        getClientData: function() {
+          axios.get(clientDataGetUrl).then(res=> {
+            if(res.data.status) {
+              this.formClientList = JSON.parse(res.data.data).table.concat()
+            }
+            else {
+              this.$message({
+                type:'error', 
+                message: res.data.message, 
+                center: true
+              })
+            };
+          }).catch(err=> {
+            this.$message({
+              type:'error', 
+              message: err, 
+              center: true
+            })
+          })
+        },
         //获取维修人员数据
         getMaintenanceData: function() {
           axios.post(maintenanceDataGetUrl).then().catch()
+        },
+        getAddOrderId: function() {
+          axios.post(orderNewIdGetUrl).then(res=> {
+            if(res.data.status) {
+              return JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
         },
         //获取工单数据
         getWorkOrderData: function() {
@@ -310,21 +376,25 @@ JGBVue.module.waitingOrder = () => {
   }
   that.init = (
     businessDataGetUrl,
+    clientDataGetUrl,
     workOrderDataGetUrl,
     orderReceiveUrl,
     orderBackUrl,
     orderWithdrawUrl,
     orderInvalidUrl,
-    orderDetailsGetUrl
+    orderDetailsGetUrl,
+    orderNewIdGetUrl
   ) => {
     _this.init(
       businessDataGetUrl,
+      clientDataGetUrl,
       workOrderDataGetUrl,
       orderReceiveUrl,
       orderBackUrl,
       orderWithdrawUrl,
       orderInvalidUrl,
-      orderDetailsGetUrl)
+      orderDetailsGetUrl,
+      orderNewIdGetUrl)
   }
   return that
 }

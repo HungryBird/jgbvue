@@ -105,7 +105,7 @@ clone项目
 
 
 **公共组件**
-#### 组件 设置成员
+#### 组件 设置成员 <jgb-set-member>
  * @param {Array} value 绑定选中的用户数组
  * @param {Array, Object} companyList 规则-Array:公司列表 规则-Object {label, value}:公司名,公司编号
  * @param {Array} departmentList 部门数据
