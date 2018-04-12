@@ -110,4 +110,12 @@ router.post('/get_order_details', (req, res)=> {
 	});
 })
 
+router.post('/order_get_id', (req, res)=> {
+	let jdata = '';
+	res.send({
+		status: true,
+		data: Math.round(new Date().getTime()/1000)
+	}).end();
+})
+
 module.exports = router;

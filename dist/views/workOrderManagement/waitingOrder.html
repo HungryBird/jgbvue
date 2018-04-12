@@ -54,7 +54,7 @@
                 </el-checkbox-group>
                 <el-button-group style="margin:0;">
                   <el-button type="primary" size="mini">列设置</el-button>
-                  <el-button type="primary" size="mini">新增</el-button>
+                  <el-button type="primary" size="mini" v-on:click="btnAdd">新增</el-button>
                   <el-button type="primary" size="mini">导出</el-button>
                   <el-button type="primary" size="mini">打印</el-button>
                   <el-button type="primary" size="mini"
@@ -569,6 +569,73 @@
           </div>
         </jgb-slide-details>
       </transition>
+      <!-- 新增工单 -->
+      <el-dialog :visible.sync="showAddOrder" width="1000px" class="w-order-add">
+        <div slot="title" class="title">新增工单</div>
+        <div class="order-add-main">
+          <div class="btns">
+            <div class="btns-save">
+              <el-button type="primary" size="mini">保存并新增</el-button>
+              <el-button type="primary" size="mini">保存</el-button>
+            </div>
+            <div class="btns-other">
+              <el-button type="primary" size="mini">导出</el-button>
+              <el-button type="primary" size="mini">打印</el-button>
+            </div>
+          </div>
+          <el-form label-width="100px" label-position="right" size="mini"
+            :model="orderAddForm" :rules="orderFormRuls">
+            <el-row :gutter="20">
+              <el-col :span="8">
+                <el-form-item label="工单日期：" prop="date">
+                  <el-date-picker
+                    v-model="orderAddForm.date"
+                    type="date" placeholder="选择日期" value-format="timestamp">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+              <el-form-item label="客户名称：" prop="client">
+                <el-select v-model="orderAddForm.client" filterable placeholder="请选择客户">
+                  <el-option v-for="item in formClientList"
+                    :key="item.clientNumber"
+                    :label="item.clientName"
+                    :value="item.clientNumber">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+              <el-col :span="8">
+                <el-form-item label="业务人员：" prop="business">
+                  <el-select v-model="orderAddForm.business" filterable placeholder="请选择客户">
+                    <el-option v-for="item in formBusinessList"
+                      :key="item.number"
+                      :label="item.label"
+                      :value="item.number">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="8">
+                <el-form-item label="工单编号：" prop="orderId">
+                  <el-input v-model="orderAddForm.orderId" readonly placehonder="系统自动生成"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="唯一码：" prop="onlyCode">
+                  <el-input v-model="orderAddForm.onlyCode" readonly placehonder="系统自动生成"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="设备名称：" prop="business">
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </div>
+      </el-dialog>
 		</el-container>
 	</div>
 </body>
@@ -580,12 +647,14 @@
 <script type="text/javascript">
 	JGBVue.module.waitingOrder().init(
     '/orderManagement/get_business_data', //获取业务人员数据
+    '/clientInfo/data_init', //获取客户数据
     '/orderManagement/get_waiting_order_data', //获取工单数据
     '/orderManagement/order_receive', //领取工单
     '/orderManagement/order_back', //退回工单
     '/orderManagement/order_withdraw', //撤回工单
     '/orderManagement/order_invalid', //作废工单
-    '/orderManagement/get_order_details' //获取工单详情
+    '/orderManagement/get_order_details', //获取工单详情
+    '/orderManagement/order_get_id', //新增工单 获取工单编号
 	);
 </script>
 

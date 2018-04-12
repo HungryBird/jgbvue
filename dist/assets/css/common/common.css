@@ -1050,3 +1050,17 @@ table {
       line-height: 21px;
       font-size: 14px;
       color: #666; }
+
+.w-order-add .title {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center; }
+
+.w-order-add .btns {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center; }
+  .w-order-add .btns .btns-save {
+    padding-right: 10px; }

@@ -1147,3 +1147,16 @@ table{
 		}
 	}
 }
+
+//新增工单
+.w-order-add {
+ .title {
+	 @include w-flex(row, nowrap, space-between, center);
+  }
+	.btns {
+		@include w-flex(row, nowrap, flex-end, center);
+		.btns-save {
+			padding-right:10px;
+		}
+	}
+}
