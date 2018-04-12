@@ -1,0 +1,40 @@
+[
+	{
+		"name": "商品编号",
+		"value": "11111"
+	},
+	{
+		"name": "商品名称",
+		"value": "11111"
+	},
+	{
+		"name": "商品条码",
+		"value": "11111"
+	},
+	{
+		"name": "商品图片",
+		"isImages": true,
+		"value": [
+			{
+				"width": 500,
+				"height": 400,
+				"src": "../../img/slideshow/1.jpg"
+			},
+			{
+				"width": 640,
+				"height": 480,
+				"src": "../../img/slideshow/2.jpg"
+			},
+			{
+				"width": 500,
+				"height": 375,
+				"src": "../../img/slideshow/3.jpg"
+			}
+		]
+	},
+	{
+		"name": "备注信息",
+		"value": "11111",
+		"oneRow": true
+	}
+]

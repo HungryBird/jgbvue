@@ -24,10 +24,7 @@ JGBVue.module.commodityInfo = ()=> {
 					level: [],
 					sale: [],
 					companyList: [],
-					clientInfo: {
-						info: [],
-						update: []
-					},
+					commodityInfo: [],
 					selectedRows: [],
 					pageSize: 20,
 					currentPage: 1,
@@ -126,7 +123,11 @@ JGBVue.module.commodityInfo = ()=> {
 					},
 					exportForm: [],
 					showSlideshow: false,
-					slideshowArr: []
+					slideshowArr: [],
+					currentImgWidth: 0,
+					currentImgHeight: 0,
+					currentImgIndex: 0,
+					currentImgSrc: ''
 				}
 			},
 			mounted() {
@@ -209,7 +210,7 @@ JGBVue.module.commodityInfo = ()=> {
 					axios.post(examineUrl, row).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							this.clientInfo = jdata;
+							this.commodityInfo = jdata;
 							this.isUnfold = true;
 							this.loadingDetailInfo = false;
 						}
@@ -539,7 +540,6 @@ JGBVue.module.commodityInfo = ()=> {
 					arr.forEach((item)=> {
 						_self.addForm.assistants.push(item);
 					});
-					console.log(arr);
 				},
 				saveAdd(formName) {
 					this.$refs[formName].validate((valid)=> {
@@ -650,19 +650,49 @@ JGBVue.module.commodityInfo = ()=> {
 					})
 				},
 				viewImage(item, row) {
-					let _self = this;
 					this.selectedRows = [];
 					this.$refs['table'].clearSelection();
+					this.openSlideshow(item);
+				},
+				openSlideshow(item) {
+					let _self = this;
 					axios.post(getImageUrl, item).then((res)=> {
-						if(res.data.startUsing) {
+						if(res.data.status) {
 							this.slideshowArr = [];
-							let jdata = JSON.parse(res.data.data);
-							jdata.forEach((item)=> {
+							this.currentImgIndex = 0;
+							res.data.data.forEach((item)=> {
 								_self.slideshowArr.push(item);
-							})
+							});
+							this.currentImgSrc = this.slideshowArr[0].src;
+							this.currentImgWidth = this.slideshowArr[0].width;
+							this.currentImgHeight = this.slideshowArr[0].height;
+							this.showSlideshow = true;
 						}
-					})
+					});
+				},
+				nextImg() {
+					if(this.currentImgIndex === this.slideshowArr.length - 1) {
+						this.currentImgIndex = 0;
+					}else{
+						this.currentImgIndex++;
+					}
+					this.currentImgSrc = this.slideshowArr[this.currentImgIndex].src;
+					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
+					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
+				},
+				prevImg() {
+					if(this.currentImgIndex === 0) {
+						this.currentImgIndex = this.slideshowArr.length - 1;
+					}else{
+						this.currentImgIndex--;
+					}
+					this.currentImgSrc = this.slideshowArr[this.currentImgIndex].src;
+					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
+					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
 				}
+			},
+			watch: {
+				//
 			}
 		})
 	}
