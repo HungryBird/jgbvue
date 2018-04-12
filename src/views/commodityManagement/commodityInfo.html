@@ -66,8 +66,8 @@
 								<i class="el-icon-picture jgb-table-icon" v-on:click="viewImage(scope.row.img, scope.row)"></i>
 							</template>
 						</el-table-column>
-						<el-table-column label="商品编号" prop="commodityNumber"></el-table-column>
-						<el-table-column label="商品名称" prop="commodityName"></el-table-column>
+						<el-table-column label="商品编号" prop="commodityNumber" sortable></el-table-column>
+						<el-table-column label="商品名称" prop="commodityName" sortable></el-table-column>
 						<el-table-column label="商品标签" prop="commodityTag"></el-table-column>
 						<el-table-column label="辅助属性" prop="auxiliaryAttributes"></el-table-column>
 						<el-table-column label="商品类别" prop="commodityCategory"></el-table-column>
@@ -92,7 +92,7 @@
 								</el-button-group>
 							</template>
 						</el-table-column>
-						<el-table-column label="是否常用" prop="isCommonUse" align="center">
+						<el-table-column label="是否常用" prop="isCommonUse" align="center" sortable>
 							<template slot-scope="scope">
 								<i :class="{'el-icon-star-on': scope.row.isCommonUse, 'el-icon-star-off': !scope.row.isCommonUse}" class="jgb-table-icon" style="color: #FFD700;" v-on:click="toggleCommonUse(scope.row)"></i>
 							</template>
@@ -102,13 +102,43 @@
 			</el-main>
 		</el-container>
 	</el-container>
-	<div class="slideshow-wrap" v-show="showSlideshow">
-		<el-carousel>
-			<el-carousel-item v-for="item in 4" :key="item">
-				<div>{{ item }}</div>
-			</el-carousel-item>
-		</el-carousel>
-	</div>
+	<transition name="slide-fade">
+		<div class="details-wrap" v-show="isUnfold">
+			<div class="details-inner" v-loading="loadingDetailInfo">
+				<el-row class="row-border">
+					<div class="title text-center">
+						<h3>商品信息详情页</h3>
+					</div>
+					<el-col v-for="item in commodityInfo" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.name">
+						<div>{{ item.name }}</div>
+						<div v-if="item.isImages" v-on:click="viewImage(item)"><i class="el-icon-picture"></i></div>
+						<div v-else>{{ item.value }}</div>
+					</el-col>
+				</el-row>
+				<div class="toggle-button-wrap" v-on:click="toggleInfo">
+					<span class="jgbvue_arrow_icon" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -9px -85px;position: absolute;top: 50%;right: 0;transform: translateY(-50%);"></span>
+					<span class="jgbvue_arrow_line" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -123px -2px;margin-left: 16px;"></span>
+				</div>
+			</div>
+		</div>
+	</transition>
+	<transition name="fade">
+		<div class="slideshow-wrap" v-if="showSlideshow">
+			<div class="slideshow-mask" v-on:click="showSlideshow = false"></div>
+			<div class="slideshow-inner">
+				<div class="slideshow-inner-nav">
+					<a class="index-text">{{ currentImgIndex+1 + '/' +  slideshowArr.length}}</a>
+					<i class="el-icon-close" v-on:click="showSlideshow = false"></i>
+				</div>
+				<div class="slideshow-inner-wrap" :style="{width: currentImgWidth + 'px', height: currentImgHeight + 'px'}">
+					<!-- <img v-for="(item, index) in slideshowArr" :src="item.src" :style="{width:item.width+'px',height:item.height+'px', display: currentImgIndex === index ? 'block' : 'none'}"></img> -->
+					<img :src="currentImgSrc" :style="{width:currentImgWidth+'px',height:currentImgHeight+'px'}"/>
+					<i class="el-icon-arrow-right arrow-right arrow"  v-on:click="nextImg"></i>
+					<i class="el-icon-arrow-left arrow-left arrow" v-on:click="prevImg"></i>
+				</div>
+			</div>
+		</div>
+	</transition>
 </div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -122,6 +152,6 @@
 	 * 获取快速查询选项接口
 	 * 
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/common/switch', '/common/data_delete', '/clientInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow');
+	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow');
 </script>
 </html>

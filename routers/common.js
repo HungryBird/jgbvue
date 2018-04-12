@@ -269,11 +269,28 @@ router.post('/upload_info', (req, res)=> {
 });
 
 router.post('/slideshow', (req, res)=> {
-	const slideshow = [
-		'../../../test/img/slideshow/1.jpg',
-		'../../../test/img/slideshow/2.jpg',
-		'../../../test/img/slideshow/3.jpg'
-	]
+	let slideshow = [
+		{
+			width: 500,
+			height: 400,
+			src: '../../img/slideshow/1.jpg'
+		},
+		{
+			width: 640,
+			height: 480,
+			src: '../../img/slideshow/2.jpg'
+		},
+		{
+			width: 500,
+			height: 375,
+			src: '../../img/slideshow/3.jpg'
+		}
+	];
+
+	res.send({
+		status: true,
+		data: slideshow
+	})
 
 })
 

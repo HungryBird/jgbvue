@@ -296,11 +296,84 @@ table{
 		width: 0;
 	}
 	.slideshow-wrap{
-		position: absolute;
-		top: 50%;
-		height: 50%;
-		transform: translate(-50%, -50%);
-		background: red;
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 99999999;
+		.slideshow-mask{
+			height: 100%;
+			background: rgba(0,0,0,.5);
+		}
+		.slideshow-inner{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			.slideshow-inner-nav{
+				color: #fff;
+				.el-icon-close{
+					float: right;
+					font-size: 32px;
+					cursor: pointer;
+				}
+				.index-text{
+					float: left;
+				}
+				&:after{
+					clear: both;
+					width: 0;
+					content: '.';
+					font-size: 0;
+					display: block;
+					visibility: hidden;
+				};
+			}
+			.slideshow-inner-wrap{
+				position: relative;
+				overflow: hidden;
+				padding: 5px;
+				border-radius: 5px;
+				background: #fff;
+				transition: all .2s;
+				&:hover{
+					.arrow{
+						display: block;
+					}
+				};
+				>img{
+					position: absolute;
+					top: 5px;
+					left: 5px;
+				}
+				.arrow{
+					z-index: 10000;
+					width: 40px;
+					height: 40px;
+					border-radius: 50%;
+					border: 1px solid #ddd;
+					background: #fff;
+					text-align: center;
+					line-height: 40px;
+					display: none;
+				}
+				.arrow-right{
+					position: absolute;
+					top: 50%;
+					right: 5px;
+					transform: translateY(-50%);
+					cursor: pointer;
+				}
+				.arrow-left{
+					position: absolute;
+					top: 50%;
+					left: 5px;
+					transform: translateY(-50%);
+					cursor: pointer;
+				}
+			}
+		}
 	}
 	.wrap_main{
 		padding: 10px;
@@ -406,7 +479,7 @@ table{
 	}
 	.details-wrap{
 		position: fixed;
-		z-index: 10000000000;
+		z-index: 1000;
 		top: 0;
 		right: 0;
 		bottom: 0;
@@ -585,6 +658,12 @@ table{
 /* .slide-fade-leave-active for below version 2.1.8 */ {
 	transform: translateX(100%);
 	opacity: 0;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 .row-border{
 	line-height: 1.5;
