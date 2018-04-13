@@ -30,7 +30,7 @@ JGBVue.module.commodityInfo = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addVisible: false,
+					addVisible: true,
 					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
@@ -45,53 +45,61 @@ JGBVue.module.commodityInfo = ()=> {
 					addForm: {
 						number: '',
 						name: '',
-						category: '',
-						level: null,
-						identifyNumber: '',
-						bankName: '',
-						bankAccount: '',
-						companyTel: '',
-						companyAddress: '',
-						sale: '',
-						assistants: '',
-						table: [
-							{
-								index: 1,
-								editFlag: false,
-								linkman: '',
-								job: '',
-								tel: '',
-								phone: '',
-								QQOrWechat: '',
-								linkAddress: '',
-								primaryContact: ''
-							},
-							{
-								index: 2,
-								editFlag: false,
-								linkman: '',
-								job: '',
-								tel: '',
-								phone: '',
-								QQOrWechat: '',
-								linkAddress: '',
-								primaryContact: ''
-							}
-						]
+						commodityCategory: '',
+						barCode: '',
+						specifications: '',
+						primaryRepo: '',
+						commodityBrand: '',
+						unitOfMeasurement: '',
+						multiple: '',
+						retailPrice: '',
+						tradePrice: '',
+						lowestPrince: '',
+						highestPrince: '',
+						discountRate1: '',
+						discountRate2: '',
+						discountRate3: '',
+						expectPurchasePrice: '',
+						remark: '',
+						upload: [],
+						inventoryWarning: false,
+						branchWarehouseWarning: false,
+						repo: [],
+						setCommodityAuxiliaryAttributes: false,
+						batchExpirationDateManagement: false,
+						serialNumberManagement: false,
+						initSet: false
+					},
+					addFormBasicData: {
+						commodityCategory: [],
+						primaryRepo: [],
+						unitOfMeasurement: []
 					},
 					editForm: {
 						number: '',
 						name: '',
-						category: '',
-						level: null,
-						identifyNumber: '',
-						bankName: '',
-						bankAccount: '',
-						companyTel: '',
-						companyAddress: '',
-						sale: '',
-						assistants: [],
-						table: []
+						commodityCategory: '',
+						barCode: '',
+						specifications: '',
+						primaryRepo: '',
+						commodityBrand: '',
+						unitOfMeasurement: '',
+						multiple: '',
+						retailPrice: '',
+						tradePrice: '',
+						minPrince: '',
+						maxPrince: '',
+						discountRate1: '',
+						discountRate2: '',
+						discountRate3: '',
+						expectPurchasePrice: '',
+						remark: '',
+						upload: [],
+						inventoryWarning: false,
+						setCommodityAuxiliaryAttributes: false,
+						batchExpirationDateManagement: false,
+						serialNumberManagement: false,
+						initSet: false
 					},
 					addAddress: {
 						provinces: [],
@@ -127,7 +135,11 @@ JGBVue.module.commodityInfo = ()=> {
 					currentImgWidth: 0,
 					currentImgHeight: 0,
 					currentImgIndex: 0,
-					currentImgSrc: ''
+					currentImgSrc: '',
+					uploadDialogVisible: false,
+					testVisible: false,
+					lowestInventoryPopoverDisplay: false,
+					highestInventoryPopoverDisplay: false
 				}
 			},
 			mounted() {
@@ -453,17 +465,6 @@ JGBVue.module.commodityInfo = ()=> {
 						this.addForm.block = '';
 					}
 				},
-				renderHeader(createElement, { _self }) {
-					return createElement(
-						'div',
-						{'class': 'renderTableHead'},[
-								createElement('div', {
-									attrs: { type: 'text' },
-									class: 'required'
-								}, ['联系人'])
-						]
-					)
-				},
 				addRowClick(row, event, column) {
 					this.addForm.table.forEach((item)=> {
 						item.editFlag = false;
@@ -689,6 +690,51 @@ JGBVue.module.commodityInfo = ()=> {
 					this.currentImgSrc = this.slideshowArr[this.currentImgIndex].src;
 					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
 					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
+				},
+				handleRemove(file, fileList) {
+					console.log('handleRemove file: ', file);
+					console.log('handleRemove file:', fileList);
+				},
+				lowestInventoryHeader(createElement, { column }) {
+					return createElement(
+						'div',
+						{class: 'jgb-popover-wrap'},
+						[
+							createElement('span', [column.label]),
+							createElement('el-button', {
+									attrs: { 
+										type: 'default',
+										size: 'small'
+									},
+									on: { click: this.showLowestInventoryPopover }
+								}, ['批量']
+							)
+						]
+					);
+				},
+				highestInventoryHeader(createElement, { column }) {
+					return createElement(
+						'div',
+						{class: 'jgb-popover-wrap'},
+						[
+							createElement('span', [column.label]),
+							createElement('el-button', {
+									attrs: { 
+										type: 'default',
+										size: 'small'
+									},
+									on: { click: this.showHighestInventoryPopover }
+								}, ['批量']
+							),
+							createElement('span', [column.label])
+						]
+					);
+				},
+				showLowestInventoryPopover(e) {
+					this.lowestInventoryPopoverDisplay = true;
+				},
+				showHighestInventoryPopover(e) {
+					this.highestInventoryPopoverDisplay = true;
 				}
 			},
 			watch: {

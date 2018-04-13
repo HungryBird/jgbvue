@@ -334,9 +334,9 @@ JGBVue.module.menuManagement = ()=> {
 				search() {
 					//
 				},
-				edit() {
+				edit(row) {
 					let _self = this;
-					axios.post(editDataUrl, this.selectedRows).then((res)=> {
+					axios.post(editDataUrl, row).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
 							this.editForm = jdata;
@@ -413,11 +413,11 @@ JGBVue.module.menuManagement = ()=> {
                         _self.selectedRows.push(selection[i]);
                     }
 				},
-				handleEdit() {
+				handleEdit(index,row) {
 					let _self = this;
                     this.selectedRows.splice(0, _self.selectedRows.length);
                     this.$refs.mmTable.clearSelection();
-                    this.edit();
+                    this.edit(row);
 				},
 				handleDelete() {
 					let _self = this;

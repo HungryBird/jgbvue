@@ -462,16 +462,12 @@ JGBVue.module.clientInfo = ()=> {
 						this.addForm.block = '';
 					}
 				},
-				renderHeader(createElement, { _self }) {
+				renderHeader(createElement, { column }) {
 					return createElement(
-						'div',
-						{'class': 'renderTableHead'},[
-								createElement('div', {
-									attrs: { type: 'text' },
-									class: 'required'
-								}, ['联系人'])
-						]
-					)
+						'span'
+						,{'class': 'required'}
+						,[column.label]
+					);
 				},
 				addRowClick(row, event, column) {
 					this.addForm.table.forEach((item)=> {

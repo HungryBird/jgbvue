@@ -18,7 +18,21 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
   text-decoration: none;
-  color: inherit; }
+  color: inherit;
+  cursor: pointer; }
+
+.icon-link {
+  color: #1292EC; }
+
+.jgb-popover-wrap {
+  position: relative; }
+  .jgb-popover-wrap .jgb-popover {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    background: #fff;
+    border: 1px solid #ddd;
+    z-index: 1555555; }
 
 ul {
   padding: 0;

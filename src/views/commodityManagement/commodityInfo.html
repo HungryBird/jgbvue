@@ -3,6 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<title>商品管理</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<link rel="stylesheet" type="text/css" href="../../font-awesome-4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
 </head>
@@ -102,6 +104,236 @@
 			</el-main>
 		</el-container>
 	</el-container>
+	<el-dialog :visible.sync="addVisible" title="新增商品">
+		<el-form ref="addForm" label-position="right" label-width="100px" :model="addForm" :rules="formRules">
+			<el-row>
+				<el-col :span="24">
+					<h3>
+						基础资料
+						<a class="fa fa-video-camera icon-link"></a>
+					</h3>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="number" label="商品编号">
+						<el-input v-model="addForm.number"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="name" label="商品名称">
+						<el-input v-model="addForm.name"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="barCode" label="商品条码">
+						<el-input v-model="addForm.barCode"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="specifications" label="规格型号">
+						<el-input v-model="addForm.specifications"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="commodityCategory" label="商品类别">
+						<el-select v-model="addForm.commodityCategory">
+							<el-option v-for="item in addFormBasicData.commodityCategory" :value="item.value" :key="item.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="primaryRepo" label="首选仓库">
+						<el-select v-model="addForm.primaryRepo">
+							<el-option v-for="item in addFormBasicData.primaryRepo" :value="item.value" :key="item.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="commodityBrand" label="商品品牌">
+						<el-input v-model="addForm.commodityBrand"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="unitOfMeasurement" label="计量单位">
+						<el-select v-model="addForm.unitOfMeasurement">
+							<el-option v-for="item in addFormBasicData.unitOfMeasurement" :value="item.value" :key="item.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="multiple" label="多单位">
+						<el-checkbox border v-model="addForm.multiple"></el-checkbox>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<h3 title="各销售价格分别对应客户信息中的客户等级，如：零售价-零售客户，批发价-批发客户...开单时选择客户后再选择该商品，可自动填写相应的价格或折扣">
+						价格策略
+						<a class="fa fa-video-camera icon-link"></a>
+					</h3>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="retailPrice" label="零售价">
+						<el-input v-model="addForm.retailPrice"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="tradePrice" label="批发价">
+						<el-input v-model="addForm.tradePrice"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="lowestPrince" label="最低价">
+						<el-input v-model="addForm.lowestPrince"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="heighestPrince" label="最高价">
+						<el-input v-model="addForm.heighestPrince"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="discountRate1" label="折扣率一(%)">
+						<el-input v-model="addForm.discountRate1"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="discountRate3" label="折扣率二(%)">
+						<el-input v-model="addForm.discountRate1"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="discountRate3" label="折扣率三(%)">
+						<el-input v-model="addForm.discountRate3"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="expectPurchasePrice" label="预计采购价">
+						<el-input v-model="addForm.expectPurchasePrice"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-form-item prop="remark" label="备注">
+						<el-input v-model="addForm.remark" type="textarea"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<h3>添加商品图册</h3>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-upload action="/common/upload_img" :file-list="addForm.upload" list-type="picture-card" :limit="20" :on-remove="handleRemove" :auto-upload="false">
+						<div slot="tip" class="el-upload__tip">最多20张</div>
+						<i class="el-icon-plus"></i>
+					</el-upload>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="addForm.inventoryWarning">
+						<h3>库存预警</h3>
+					</el-checkbox>
+					<a class="fa fa-video-camera icon-link"></a>
+				</el-col>
+				<el-col :span="24" v-if="addForm.inventoryWarning" style="padding: 10px;">
+					<el-checkbox v-model="addForm.branchWarehouseWarning">启用分仓预警</el-checkbox>
+				</el-col>
+				<el-col :span="24" v-if="addForm.inventoryWarning&&!addForm.branchWarehouseWarning" style="padding: 10px;padding-top: 0;">
+					<el-row :gutter="4">
+						<el-form :model="addForm" label-position="top">
+							<el-col :span="12">
+								<el-form-item label="最低库存">
+									<el-input v-model="addForm.lowestInventory"></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="最高库存">
+									<el-input v-model="addForm.highestInventory"></el-input>
+								</el-form-item>
+							</el-col>
+						</el-form>
+					</el-row>
+				</el-col>
+				<div v-if="addForm.inventoryWarning&&addForm.branchWarehouseWarning">
+					<el-table :data="addForm.repo" border ref="inventoryWarningTable">
+						<el-table-column type="index" width="50px" label="序号"></el-table-column>
+						<el-table-column label="仓库"></el-table-column>
+						<el-table-column :render-header="lowestInventoryHeader" label="最低库存">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.lowestInventory }}</div>
+								<el-input v-else v-model="scope.row.lowestInventory"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column :render-header="highestInventoryHeader" label="最高库存">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.heighestInventory }}</div>
+								<el-input v-else v-model="scope.row.heighestInventory"></el-input>
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="addForm.setCommodityAuxiliaryAttributes">
+						<h3>设置商品辅助属性</h3>
+					</el-checkbox>
+					<a class="fa fa-video-camera icon-link"></a>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="addForm.batchExpirationDateManagement">
+						<h3>启用批次保质期管理</h3>
+					</el-checkbox>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="addForm.serialNumberManagement">
+						<h3>启用序列号管理</h3>
+					</el-checkbox>
+					<a class="fa fa-video-camera icon-link"></a>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="addForm.initSet">
+						<h3>期初设置</h3>
+					</el-checkbox>
+				</el-col>
+			</el-row>
+		</el-form>
+		<div id="aa1" class="jgb-popover" :style="{display: lowestInventoryPopoverDisplay ? 'block' : 'none' }">
+			1111
+		</div>
+		<div class="jgb-popover" :style="{display: highestInventoryPopoverDisplay ? 'block' : 'none' }">
+			2222
+		</div>
+	</el-dialog>
 	<transition name="slide-fade">
 		<div class="details-wrap" v-show="isUnfold">
 			<div class="details-inner" v-loading="loadingDetailInfo">

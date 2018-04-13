@@ -254,7 +254,7 @@
 							</el-button-group>
 						</template>
 					</el-table-column>
-					<el-table-column :render-header="renderHeader">
+					<el-table-column :render-header="renderHeader" label="联系人">
 						<template slot-scope="scope">
 							<div v-if="!scope.row.editFlag">{{ scope.row.linkman }}</div>
 							<el-input v-else v-model="scope.row.linkman"></el-input>

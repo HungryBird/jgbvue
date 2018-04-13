@@ -268,6 +268,13 @@ router.post('/upload_info', (req, res)=> {
 	})
 });
 
+router.post('/upload_img', (req, res)=> {
+	res.send({
+		status: true,
+		message: 'upload success'
+	}).end();
+})
+
 router.post('/slideshow', (req, res)=> {
 	let slideshow = [
 		{
