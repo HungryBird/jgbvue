@@ -194,7 +194,7 @@ JGBVue.module.index = ()=> {
                   name: '未接工单'
                 },
                 {
-                  id: 'entryOrder',
+                  id: 'addOrder',
                   name: '工单录入'
                 },
                 {

@@ -313,3 +313,45 @@ let rightSlideDetails = Vue.extend({
   }
 })
 Vue.component('jgb-slide-details', rightSlideDetails)
+
+/**
+ * 组件 图片缩略图
+ * 图片自适应在正方形的预览窗内
+ * created by lanw 2018-4-13
+ * @param {String} src 图片地址
+ * @param {String} alt 图片说明
+ * 
+ * @event img-click 点击图片时触发事件 返回当前图片地址
+ */
+let thumbnail = Vue.extend({
+  template: `<div class="w-thumbnail-wrap" v-on:click="handle">
+              <img :src="src" :alt="alt" :class="imgClass"/>
+             </div>`,
+  props: {
+    src: String, 
+    alt: String, 
+  },
+  data: function() {
+    return {
+      imgClass: 'cross',
+    }
+  },
+  methods: {
+    //点击组件触发事件
+    handle: function() {
+      this.$emit('img-click', this.src)
+    },
+    //获取图片宽高 适应容器
+    setImageWidthHeight: function() {
+      let img = new Image()
+      img.src = this.src
+      img.onload = ()=> {
+        this.imgClass = img.width >= img.height ? 'cross' : 'vertical'
+      }
+    },
+  },
+  created:function() {
+    this.setImageWidthHeight()
+  },
+})
+Vue.component('jgb-thumbnail', thumbnail)
