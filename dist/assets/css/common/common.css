@@ -1078,3 +1078,54 @@ table {
   align-items: center; }
   .w-order-add .btns .btns-save {
     padding-right: 10px; }
+
+.w-order-add .el-form .el-form-item .el-input, .w-order-add .el-form .el-form-item .el-select {
+  width: 100%; }
+
+.w-order-add .picture-box {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%; }
+
+.w-space-between-option {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; }
+  .w-space-between-option .code {
+    font-size: 14px;
+    color: #333;
+    margin-right: 10px; }
+  .w-space-between-option .name {
+    font-size: 12px;
+    color: #999; }
+
+.w-thumbnail-wrap {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border: 1px dashed #ddd;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: #999;
+  line-height: 20px;
+  cursor: pointer; }
+  .w-thumbnail-wrap img {
+    width: 100%;
+    height: 100%; }
+  .w-thumbnail-wrap .cross {
+    width: 100%;
+    height: auto; }
+  .w-thumbnail-wrap .vertical {
+    height: 100%;
+    width: auto; }
+
+.w-thumbnail-wrap + .w-thumbnail-wrap {
+  margin-left: 10px; }
