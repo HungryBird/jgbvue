@@ -136,10 +136,7 @@ JGBVue.module.commodityInfo = ()=> {
 					currentImgHeight: 0,
 					currentImgIndex: 0,
 					currentImgSrc: '',
-					uploadDialogVisible: false,
-					testVisible: false,
-					lowestInventoryPopoverDisplay: false,
-					highestInventoryPopoverDisplay: false
+					uploadDialogVisible: false
 				}
 			},
 			mounted() {
@@ -725,8 +722,7 @@ JGBVue.module.commodityInfo = ()=> {
 									},
 									on: { click: this.showHighestInventoryPopover }
 								}, ['批量']
-							),
-							createElement('span', [column.label])
+							)
 						]
 					);
 				},
@@ -734,8 +730,23 @@ JGBVue.module.commodityInfo = ()=> {
 					this.lowestInventoryPopoverDisplay = true;
 				},
 				showHighestInventoryPopover(e) {
-					this.highestInventoryPopoverDisplay = true;
-				}
+					this.$prompt('请输入邮箱', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						/*inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+						inputErrorMessage: '邮箱格式不正确'*/
+			        }).then(({ value }) => {
+						this.$message({
+							type: 'success',
+							message: '你的邮箱是: ' + value
+						});
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+			      }
 			},
 			watch: {
 				//
