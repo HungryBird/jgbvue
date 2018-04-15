@@ -34,8 +34,9 @@ Vue.prototype.$timeStampFormat = timeStampFormat
  * @param {string} parentFolder 父级目录
  */
 let selectTab = function(tabId, tabName, parentFolder) {
+  /*edit by 何俊洁 2018-04-15*/
   //window.top.JGBVue.module.vParent.selectTab(tabId, tabName, parentFolder)
-  indexFn.vm.selectTab(tabId, tabName, parentFolder);
+  window.parent.indexFn.vm.selectTab(tabId, tabName, parentFolder);
 }
 Vue.prototype.$selectTab = selectTab
 
