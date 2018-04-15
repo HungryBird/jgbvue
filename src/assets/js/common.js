@@ -7,11 +7,23 @@ let deepCopy = function(obj) {
   if(typeof obj != 'object'){
     return obj;
   }
-  let _obj = {}
-  for(key in obj) {
-    _obj[key] = deepCopy(obj[key])
+  //edit by lanw 2018-4-15 修复深拷贝数组会转换成对象的bug start---
+  if(obj.length) { //数组
+    let _obj = []
+    for(let i = 0; i < obj.length; i++) {
+      _obj.push(deepCopy(obj[i]))
+    }
+    return _obj
   }
-  return _obj
+  else { //对象
+    let _obj = {}
+    for(key in obj) { 
+      // console.log(`obj: ${obj}, obj type: ${typeof obj}, length: ${obj.length}`)
+      _obj[key] = deepCopy(obj[key])
+    }
+    return _obj
+  };
+  //edit by lanw 2018-4-15 修复深拷贝数组会转换成对象的bug end---
 }
 Vue.prototype.$deepCopy = deepCopy
 
@@ -36,13 +48,21 @@ Vue.prototype.$timeStampFormat = timeStampFormat
 let selectTab = function(tabId, tabName, parentFolder) {
   /*edit by 何俊洁 2018-04-15*/
   //window.top.JGBVue.module.vParent.selectTab(tabId, tabName, parentFolder)
-  window.parent.indexFn.vm.selectTab(tabId, tabName, parentFolder);
+  //edit by 何俊洁  2018-4-14
+  // indexFn.vm.selectTab(tabId, tabName, parentFolder);
+  //edit by lanw 2018-4-15
+  arguments[3] 
+    ? window.top.indexFn.vm.selectTab(tabId, tabName, parentFolder, arguments[3])
+    : window.top.indexFn.vm.selectTab(tabId, tabName, parentFolder)
 }
 Vue.prototype.$selectTab = selectTab
 
 /**
  * 组件-表单footer 保存、关闭按钮 带loading阻止重复提交
  * created by lanw 2018-4-4
+ * @param {Boolean} loading 按钮加载、 启用状态
+ * @param {String} saveText 保存按钮文本
+ * @param {String} closeText 关闭按钮文本
  */
 let formFooter = Vue.extend({
   template: `<div>
@@ -50,14 +70,22 @@ let formFooter = Vue.extend({
                 :loading="loading"
                 :disable="loading"
                 v-on:click="btnSave">
-                保存
+                {{saveText}}
               </el-button>
-              <el-button v-on:click="btnClose">关闭</el-button>
+              <el-button v-on:click="btnClose">{{closeText}}</el-button>
              </div>`,
   props: {
     loading: {//按钮加载状态 不可用状态
       type: Boolean,
       default: false
+    },
+    saveText: {
+      type: String,
+      default: '保存'
+    },
+    closeText: {
+      type: String,
+      default: '关闭'
     },
   },
   methods: {

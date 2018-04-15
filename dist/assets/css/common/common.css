@@ -468,7 +468,7 @@ table {
       float: right; }
   #app .details-wrap {
     position: fixed;
-    z-index: 1000;
+    z-index: 10000;
     top: 0;
     right: 0;
     bottom: 0;
@@ -1141,3 +1141,7 @@ table {
     width: 500px;
     height: 500px;
     border: none; }
+
+.w-export .el-checkbox {
+  margin-right: 15px !important;
+  margin-bottom: 15px !important; }

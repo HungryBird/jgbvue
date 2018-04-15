@@ -11,16 +11,20 @@
 	"sale": 1,
 	"assistants": [
 		{
-			"jobNumber": 10002,
+			"uid": 10001,
+			"name": "张1",
+			"src": "../../assets/img/index/portrait.png",
+			"department": "财务部",
+			"company": "companyOne",
+			"companyName": "公司甲"
+		},
+		{
+			"uid": 10002,
 			"name": "张2",
 			"src": "../../assets/img/index/portrait.png",
-			"isBoss": false,
-			"isSelected": true,
-			"value": 10002,
-			"department": "finance1",
+			"department": "金融部",
 			"company": "companyOne",
-			"departmentName": "财务部",
-			"companyName": "公司甲"
+			"companyName": "公司乙"
 		}
 	],
 	"table": [

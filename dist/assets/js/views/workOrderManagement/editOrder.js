@@ -6,7 +6,7 @@ JGBVue = {
   module: {}
 }
 
-JGBVue.module.waitingOrder = () => {
+JGBVue.module.editOrder = () => {
   let _this = {}, that = {}
   _this.init = (
     businessDataGetUrl, //获取业务人员数据
@@ -64,6 +64,7 @@ JGBVue.module.waitingOrder = () => {
       computed: {
         c_orderId: function() {
           let search = window.location.search;
+          // console.log(search.split('=')[1])
           return search.split('=')[1]
         },
       },
@@ -336,6 +337,13 @@ JGBVue.module.waitingOrder = () => {
         c_orderId: function() {
           this.getOrderEditInit()
         },
+        //客户变动 设备数据清空
+        'orderEditForm.client': function() {
+          this.orderEditForm.equipmentName = ''   //设备名称
+          this.orderEditForm.equipmentBrand = '' //设备品牌
+          this.orderEditForm.equipmentSource = '' //设备来源
+          this.orderEditForm.equipmentPic = [] //设备图片
+        },
       },
       created: function () {
         //获取工单初始化数据
@@ -343,7 +351,6 @@ JGBVue.module.waitingOrder = () => {
         this.getClientData()
         this.getRepairPersonList()
         this.getBusinessData()
-
       },
     })
   }
