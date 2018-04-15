@@ -1226,3 +1226,17 @@ table{
 .w-thumbnail-wrap+.w-thumbnail-wrap {
 	margin-left: 10px;
 }
+
+//图片走马灯
+.w-pictures {
+	$width: 500px;
+	height: $width;
+	.el-carousel__item {
+		@include w-flex(row, nowrap, center, center);
+	}
+	.w-thumbnail-wrap {
+		width:$width;
+		height:$width;
+		border:none;
+	}
+}

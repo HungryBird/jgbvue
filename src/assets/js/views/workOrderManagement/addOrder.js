@@ -15,7 +15,7 @@ JGBVue.module.waitingOrder = () => {
     equipmentCodeGetUrl,//设备唯一码 远程搜索接口
     equimentInfoGetUrl, //通过唯一码查询设备信息接口
     repairPersonListGetUrl, //获取委派维修人员接口
-    orderSaveUrl, //保存新增工单
+    orderSaveUrl //保存新增工单
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -55,10 +55,14 @@ JGBVue.module.waitingOrder = () => {
           },
           orderAddInitData: {}, //新增工单初始化数据
           loadingOrderAdd: false, //初始化工单数据状态
+          showOtherButton: false, //打印 导出 按钮
+
+          showPictures: false, //查看图片 窗
+          pictureList: [], //图片列表
         }
       },
       methods: {
-        //保存并新增
+        //保存
         btnAdd: function() {
           this.$refs.orderAddForm.validate((valid) => {
             if (valid) {
@@ -69,7 +73,7 @@ JGBVue.module.waitingOrder = () => {
                     message: res.data.message,
                     center: true
                   })
-                  this.$refs.orderAddForm.resetFields();
+                  this.showOtherButton = true
                 }
                 else {
                   this.$message({
@@ -85,12 +89,27 @@ JGBVue.module.waitingOrder = () => {
                   center: true
                 })
               })
-            } else {
+            }
+            else {
               console.log('error submit!!');
               return false;
             }
           });
         },
+        //重置
+        btnReset: function() {
+          this.$refs.orderAddForm.resetFields();
+          this.getOrderAddInit()
+        },
+        //新增 *只改变order_id, 保留用户选择的数据
+        btnNew: function() {
+          this.getOrderAddInit()
+          this.showOtherButton = false
+        },
+        //导出
+        btnExport: function() {},
+        //打印
+        btnPrint: function() {},
         //获取业务人员数据
         getBusinessData: function(query) {
           axios.post(businessDataGetUrl, {
@@ -237,6 +256,19 @@ JGBVue.module.waitingOrder = () => {
           })
         },
         /**
+         * 打开图片查看窗 切换到指定图片序号
+         * @param {Array} list 图片数据
+         * @param {Number} index 图片位于list中的序号
+         */
+        openPictureDialog: function(list, index) {
+          this.pictureList = list.concat()
+          this.showPictures = true
+          let timer = setInterval(()=> {
+            this.$refs.equipmentPic.setActiveItem(index);
+            clearInterval(timer)
+          })
+        },
+        /**
          * 选择客户 输入时搜索
          * @param {String} query 输入值
          */
@@ -284,7 +316,7 @@ JGBVue.module.waitingOrder = () => {
         this.getClientData()
         this.getRepairPersonList()
         this.getBusinessData()
-      }
+      },
     })
   }
   that.init = (
@@ -294,7 +326,7 @@ JGBVue.module.waitingOrder = () => {
     equipmentCodeGetUrl,//设备唯一码 远程搜索接口
     equimentInfoGetUrl, //通过唯一码查询设备信息接口
     repairPersonListGetUrl, //获取委派维修人员接口
-    orderSaveUrl, //保存新增工单
+    orderSaveUrl //保存新增工单
   ) => {
     _this.init(
       businessDataGetUrl, //获取业务人员数据
@@ -303,7 +335,7 @@ JGBVue.module.waitingOrder = () => {
       equipmentCodeGetUrl,//设备唯一码 远程搜索接口
       equimentInfoGetUrl, //通过唯一码查询设备信息接口
       repairPersonListGetUrl, //获取委派维修人员接口
-      orderSaveUrl, //保存新增工单
+      orderSaveUrl //保存新增工单
     )
   }
   return that

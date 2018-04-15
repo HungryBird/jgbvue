@@ -58,6 +58,7 @@
                   <el-button type="primary" size="mini" v-on:click="btnAdd">新增</el-button>
                   <el-button type="primary" size="mini">导出</el-button>
                   <el-button type="primary" size="mini">打印</el-button>
+                  <el-button type="primary" size="mini" v-on:click="btnEdit(Math.round(new Date().getTime()/1000))">修改</el-button>
                   <el-button type="primary" size="mini"
                     :disabled="selectedRows.length == 0"
                     v-on:click="btnInvalid">
@@ -570,175 +571,6 @@
           </div>
         </jgb-slide-details>
       </transition>
-      <!-- 新增工单 -->
-      <el-dialog :visible.sync="showAddOrder" width="1000px" class="w-order-add">
-        <div slot="title" class="title">新增工单</div>
-        <div class="order-add-main" v-loading="loadingOrderAdd">
-          <div class="btns">
-            <div class="btns-save">
-              <el-button type="primary" size="mini">保存并新增</el-button>
-              <el-button type="primary" size="mini">保存</el-button>
-            </div>
-            <div class="btns-other">
-              <el-button type="primary" size="mini">导出</el-button>
-              <el-button type="primary" size="mini">打印</el-button>
-            </div>
-          </div>
-          <el-form ref="orderAddForm" label-width="100px" label-position="right"
-            :model="orderAddForm" :rules="orderFormRuls">
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <el-form-item label="工单日期：" prop="date">
-                  <el-date-picker
-                    v-model="orderAddForm.date"
-                    type="date" placeholder="选择日期" value-format="timestamp">
-                  </el-date-picker>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="客户名称：" prop="client">
-                  <el-select v-model="orderAddForm.client" filterable remote placeholder="请选择"
-                    :remote-method="remoteClient">
-                    <el-option v-for="item in formClientList"
-                      :key="item.clientNumber"
-                      :label="item.clientName"
-                      :value="item">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="业务人员：" prop="business">
-                  <el-select v-model="orderAddForm.business" filterable remote placeholder="请选择"
-                    :remote-method="remoteBusiness">
-                    <el-option v-for="item in formBusinessList"
-                      :key="item.number"
-                      :label="item.label"
-                      :value="item">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <el-form-item label="工单编号：" prop="orderId">
-                  <el-input v-model="orderAddForm.orderId" readonly placeholder="系统自动生成"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="唯一码：" prop="onlyCode">
-                  <el-select v-model="orderAddForm.onlyCode" remote filterable placeholder="请输入"
-                    :remote-method="remoteEquitementCode">
-                    <el-option v-for="item in formEquitmentCodeList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item">
-                      <div class="w-space-between-option">
-                        <span class="code">{{item.value}}</span>
-                        <span class="name">{{item.label}}</span>
-                      </div>
-                    </el-option>
-                  </el-select> 
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="设备名称：" prop="equipmentName">
-                  <el-input v-model="orderAddForm.equipmentName" readonly placeholder="自动获取"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <el-form-item label="设备品牌：" prop="equipmentBrand">
-                  <el-input v-model="orderAddForm.equipmentBrand" readonly placeholder="自动获取"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="设备来源：" prop="equipmentSource">
-                  <el-input v-model="orderAddForm.equipmentSource" readonly placeholder="自动获取"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="报修方式：" prop="repaired">
-                  <el-select v-model="orderAddForm.repaired" filterable placeholder="请选择">
-                    <el-option v-for="item in orderAddInitData.repaired"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item">
-                    </el-option>
-                  </el-select>                
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="8">
-                <el-form-item label="紧急程度：" prop="level">
-                  <el-select v-model="orderAddForm.level" filterable placeholder="请选择">
-                    <el-option v-for="item in orderAddInitData.level"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item">
-                    </el-option>
-                  </el-select> 
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="委派维修：" prop="assigned">
-                  <el-select v-model="orderAddForm.assigned" filterable placeholder="请选择">
-                    <el-option v-for="item in orderAddInitData.assigned"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item">
-                    </el-option>
-                  </el-select> 
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="委派人员：" prop="person">
-                  <el-select v-model="orderAddForm.person" remote filterable placeholder="请选择"
-                    :remote-method="remoteRepairPerson">
-                    <el-option v-for="item in formRepairPersonList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item">
-                    </el-option>
-                  </el-select>                
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="24">
-                <el-form-item label="问题描述：" prop="describe">
-                  <el-input type="textarea" v-model="orderAddForm.describe"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="24">
-                <el-form-item label="设备图片：" prop="equipmentPic">
-                  <div v-if="orderAddForm.equipmentPic.length" class="picture-box">
-                    <jgb-thumbnail v-for="(pic, index) in orderAddForm.equipmentPic" 
-                      :key="index" :src="pic" alt="设备图片"
-                      v-on:img-click="" />
-                  </div>
-                  <div v-else class="w-thumbnail-wrap">
-                    <span>自动获取</span>
-                    <span>（最多20张）</span>
-                  </div>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="24">
-                <el-form-item label="备注：" prop="remark">
-                  <el-input type="textarea" v-model="orderAddForm.remark"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-        </div>
-      </el-dialog>
 		</el-container>
 	</div>
 </body>
@@ -750,17 +582,12 @@
 <script type="text/javascript">
 	JGBVue.module.waitingOrder().init(
     '/orderManagement/get_business_data', //获取业务人员数据
-    '/clientInfo/data_init', //获取客户数据
     '/orderManagement/get_waiting_order_data', //获取工单数据
     '/orderManagement/order_receive', //领取工单
     '/orderManagement/order_back', //退回工单
     '/orderManagement/order_withdraw', //撤回工单
     '/orderManagement/order_invalid', //作废工单
-    '/orderManagement/get_order_details', //获取工单详情
-    '/orderManagement/order_add_init', //新增工单初始化数据 获取工单编号 报修方式 紧急程度 委派维修
-    '/orderManagement/equipment_code_get', //设备唯一码 远程搜索接口
-    '/orderManagement/equipment_info_get', //通过唯一码查询设备信息接口
-    '/orderManagement/reqair_person_get', //获取委派维修人员接口
+    '/orderManagement/get_order_details' //获取工单详情
 	);
 </script>
 

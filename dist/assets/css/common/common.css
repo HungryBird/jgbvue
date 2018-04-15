@@ -1129,3 +1129,15 @@ table {
 
 .w-thumbnail-wrap + .w-thumbnail-wrap {
   margin-left: 10px; }
+
+.w-pictures {
+  height: 500px; }
+  .w-pictures .el-carousel__item {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center; }
+  .w-pictures .w-thumbnail-wrap {
+    width: 500px;
+    height: 500px;
+    border: none; }

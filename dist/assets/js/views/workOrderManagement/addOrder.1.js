@@ -59,6 +59,7 @@ JGBVue.module.waitingOrder = () => {
 
           showPictures: false, //查看图片 窗
           pictureList: [], //图片列表
+          currentPicture:　0, //图片激活序号
         }
       },
       methods: {

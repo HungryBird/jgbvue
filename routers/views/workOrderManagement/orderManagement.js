@@ -125,8 +125,8 @@ router.post('/order_add_init', (req, res)=> {
 			{ label: '你慢慢修', value: '3' },
 		],
 		assigned: [ //委派维修
-			{ label: '是',  value: true },
-			{ label: '否',  value: false },
+			{ label: '是',  value: 1 },
+			{ label: '否',  value: 2 },
 		],
 		repaired: [ //报修方式
 			{ label: '送修', value: 'songxiu' },
@@ -136,6 +136,21 @@ router.post('/order_add_init', (req, res)=> {
 		status: true,
 		data: JSON.stringify(jdata)
 	}).end();
+})
+
+router.post('/order_edit_init', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/workOrderManagement/get_order_edit.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end();
+	});
 })
 
 router.post('/equipment_code_get', (req, res)=> {
@@ -151,12 +166,12 @@ router.post('/equipment_code_get', (req, res)=> {
 })
 
 router.post('/equipment_info_get', (req, res)=> {
-	let src = '../../assets/img/index/portrait.png'
+	let src = ['http://img5.duitang.com/uploads/item/201509/30/20150930171714_K4iWc.jpeg', 'http://imgsrc.baidu.com/image/c0%3Dpixel_huitu%2C0%2C0%2C294%2C40/sign=c4ffe93b576034a83defb0c1a26b2c38/a686c9177f3e670994e725c530c79f3df8dc5520.jpg', 'http://img5.duitang.com/uploads/item/201411/30/20141130235256_VaPJM.jpeg', 'http://p3.wmpic.me/article/2016/01/02/1451705414_FCsmpfEP.jpg' ]
 	let jdata = {
 		equipmentName: '设备1', 
 		equipmentBrand: '品牌1',
 		equipmentSource: '偷渡来的',
-		equipmentPic: [src, src, src, src]
+		equipmentPic: src
 	}
 	res.send({
 		status: true,
