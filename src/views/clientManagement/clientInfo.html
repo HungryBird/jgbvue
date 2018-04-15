@@ -478,11 +478,7 @@
 		</el-dialog>
 		<el-dialog :visible.sync="setMemberVisible" title="选择协助人员">
 			<jgb-set-member :company="getCompanyUrl" :department-url="getDepartmentUrl" :user-url="getUserUrl" v-model="checkedRoleMember" ref="setRoleMember"></jgb-set-member>
-			<jgb-form-footer slot="footer"
-				:loading="loadingSetRoleMember"
-				v-on:save="saveSetRoleMember"
-				v-on:close="setMemberVisible = false">
-			</jgb-form-footer>
+			<jgb-form-footer slot="footer" :loading="loadingSetRoleMember" v-on:save="saveSetRoleMember"v-on:close="setMemberVisible = false"></jgb-form-footer>
 		</el-dialog>
 		<el-dialog :visible.sync="importVisible" title="导入">
 			<p>
