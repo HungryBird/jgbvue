@@ -1,0 +1,24 @@
+[
+	
+	{
+		"uid": "112iu3",
+		"label": "一号仓库",
+		"lowestInventory": 0,
+		"highestInventory": 0,
+		"editFlag": false
+	},
+	{
+		"uid": "112123123",
+		"label": "二号仓库",
+		"lowestInventory": 0,
+		"highestInventory": 0,
+		"editFlag": false
+	},
+	{
+		"uid": "112adasdiu3",
+		"label": "默认仓库",
+		"lowestInventory": 0,
+		"highestInventory": 0,
+		"editFlag": false
+	}
+]

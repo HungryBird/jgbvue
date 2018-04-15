@@ -280,7 +280,25 @@ router.post('/slideshow', (req, res)=> {
 		status: true,
 		data: slideshow
 	})
+})
 
+router.get('/getRepo', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/repo/repo.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
 })
 
 module.exports = router;

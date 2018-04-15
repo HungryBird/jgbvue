@@ -6,7 +6,7 @@ JGBVue.module.commodityInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, quickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
+	_this.init = (searchUrl, quickQueryUrl, repoUrl, auxiliaryAttributesClassifyUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -66,6 +66,7 @@ JGBVue.module.commodityInfo = ()=> {
 						branchWarehouseWarning: false,
 						repo: [],
 						setCommodityAuxiliaryAttributes: false,
+						auxiliaryAttributesClassify: [],
 						batchExpirationDateManagement: false,
 						serialNumberManagement: false,
 						initSet: false
@@ -136,12 +137,16 @@ JGBVue.module.commodityInfo = ()=> {
 					currentImgHeight: 0,
 					currentImgIndex: 0,
 					currentImgSrc: '',
-					uploadDialogVisible: false
+					uploadDialogVisible: false,
+					repo: [],
+					auxiliaryAttributesClassify: []
 				}
 			},
 			mounted() {
 				this.searchData();
 				this.getQuickQuery();
+				this.getRepo();
+				this.getAuxiliaryAttributesClassify();
 			},
 			methods: {
 				searchData(val) {
@@ -149,10 +154,6 @@ JGBVue.module.commodityInfo = ()=> {
 					axios.get(searchUrl, val).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							/*this.category = jdata.category;
-							this.level = jdata.level;
-							this.sale = jdata.sale;
-							this.companyList = jdata.companyList;*/
 							this.tempTable = jdata;
 							this.tempTable.forEach((item)=> {
 								if(!_self.isShowForbiddenCommodity) {
@@ -172,6 +173,24 @@ JGBVue.module.commodityInfo = ()=> {
 					axios.get(quickQueryUrl).then((res)=> {
 						if(res.data.status) {
 							this.queryType = JSON.parse(res.data.data);
+						}
+					})
+				},
+				getRepo() {
+					axios.get(repoUrl).then((res)=> {
+						if(res.data.status) {
+							this.repo = JSON.parse(res.data.data);
+							this.addForm.repo = this.repo.concat();
+							this.editForm.repo = this.repo.concat();
+						}
+					})
+				},
+				getAuxiliaryAttributesClassify() {
+					axios.get(auxiliaryAttributesClassifyUrl).then((res)=> {
+						if(res.data.status) {
+							this.repo = JSON.parse(res.data.data);
+							this.addForm.repo = this.repo.concat();
+							this.editForm.repo = this.repo.concat();
 						}
 					})
 				},
@@ -727,7 +746,22 @@ JGBVue.module.commodityInfo = ()=> {
 					);
 				},
 				showLowestInventoryPopover(e) {
-					this.lowestInventoryPopoverDisplay = true;
+					let _self = this;
+					this.$prompt(' ', '请输入最低库存量', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						/*inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+						inputErrorMessage: '邮箱格式不正确'*/
+			        }).then(({ value }) => {
+						this.addForm.repo.forEach((item)=> {
+							item.lowestInventory = value;
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
 				},
 				showHighestInventoryPopover(e) {
 					this.$prompt('请输入邮箱', '提示', {
@@ -736,17 +770,26 @@ JGBVue.module.commodityInfo = ()=> {
 						/*inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
 						inputErrorMessage: '邮箱格式不正确'*/
 			        }).then(({ value }) => {
-						this.$message({
-							type: 'success',
-							message: '你的邮箱是: ' + value
-						});
+						this.addForm.repo.forEach((item)=> {
+							item.highestInventory = value;
+						})
 			        }).catch(() => {
 						this.$message({
 							type: 'info',
 							message: '取消输入'
 						});       
 			        });
-			      }
+			    },
+			    addRowClick(row) {
+			    	this.addForm.repo.forEach((item)=> {
+						item.editFlag = false;
+					})
+					for(let i = 0; i < this.addForm.repo.length; i++ ) {
+						if(row === this.addForm.repo[i]) {
+							this.addForm.repo[i].editFlag = true;
+						}
+					}
+			    }
 			},
 			watch: {
 				//
@@ -754,8 +797,8 @@ JGBVue.module.commodityInfo = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, quickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
-		_this.init(searchUrl, quickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl);
+	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
+		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl);
 	}
 
 	return that;

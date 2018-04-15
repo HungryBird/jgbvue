@@ -104,6 +104,7 @@
 			</el-main>
 		</el-container>
 	</el-container>
+	<!-- 新增商品 -->
 	<el-dialog :visible.sync="addVisible" title="新增商品">
 		<el-form ref="addForm" label-position="right" label-width="100px" :model="addForm" :rules="formRules">
 			<el-row>
@@ -278,19 +279,19 @@
 					</el-row>
 				</el-col>
 				<div v-if="addForm.inventoryWarning&&addForm.branchWarehouseWarning">
-					<el-table :data="addForm.repo" border ref="inventoryWarningTable">
+					<el-table :data="addForm.repo" border ref="inventoryWarningTable" v-on:row-click="addRowClick">
 						<el-table-column type="index" width="50px" label="序号"></el-table-column>
-						<el-table-column label="仓库"></el-table-column>
+						<el-table-column label="仓库" prop="label"></el-table-column>
 						<el-table-column :render-header="lowestInventoryHeader" label="最低库存">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.lowestInventory }}</div>
-								<el-input v-else v-model="scope.row.lowestInventory"></el-input>
+								<el-input v-else v-model="scope.row.lowestInventory" v-focus="aa"></el-input>
 							</template>
 						</el-table-column>
 						<el-table-column :render-header="highestInventoryHeader" label="最高库存">
 							<template slot-scope="scope">
-								<div v-if="!scope.row.editFlag">{{ scope.row.heighestInventory }}</div>
-								<el-input v-else v-model="scope.row.heighestInventory"></el-input>
+								<div v-if="!scope.row.editFlag">{{ scope.row.highestInventory }}</div>
+								<el-input v-else v-model="scope.row.highestInventory"></el-input>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -302,6 +303,12 @@
 						<h3>设置商品辅助属性</h3>
 					</el-checkbox>
 					<a class="fa fa-video-camera icon-link"></a>
+				</el-col>
+				<el-col :span="24" v-if="addForm.setCommodityAuxiliaryAttributes" style="padding: 10px;padding-top: 0;">
+					<h4>辅助商品分类</h4>
+						<el-checkbox-group v-model="addForm.auxiliaryAttributesClassify">
+							<el-checkbox v-for="item in auxiliaryAttributesClassify" :key="item.label">{{ item.label }}</el-checkbox>
+						</el-checkbox-group>
 				</el-col>
 			</el-row>
 			<el-row>
@@ -378,6 +385,6 @@
 	 * 获取快速查询选项接口
 	 * 
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow');
+	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow');
 </script>
 </html>
