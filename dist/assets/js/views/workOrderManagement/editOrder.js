@@ -15,7 +15,8 @@ JGBVue.module.editOrder = () => {
     equipmentCodeGetUrl,//设备唯一码 远程搜索接口
     equimentInfoGetUrl, //通过唯一码查询设备信息接口
     repairPersonListGetUrl, //获取委派维修人员接口
-    orderSaveUrl //保存修改工单
+    orderSaveUrl, //保存修改工单
+    orderExportRequestUrl //请求导出数据接口
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -104,9 +105,20 @@ JGBVue.module.editOrder = () => {
           });
         },
         //导出
-        btnExport: function() {},
+        btnExport: function() {
+          axios.post(orderExportRequestUrl, {
+            order_id: this.orderEditForm.orderId
+          }).then().catch()
+        },
         //打印
-        btnPrint: function() {},
+        btnPrint: function() {
+          //调用父级框架打开工单录入标签页
+          this.$selectTab(
+            'printOrder', 
+            '打印工单', 
+            'workOrderManagement', 
+            `?order_id=${this.orderEditForm.orderId}`)
+        },
         //获取业务人员数据
         getBusinessData: function(query) {
           axios.post(businessDataGetUrl, {
@@ -361,7 +373,8 @@ JGBVue.module.editOrder = () => {
     equipmentCodeGetUrl,//设备唯一码 远程搜索接口
     equimentInfoGetUrl, //通过唯一码查询设备信息接口
     repairPersonListGetUrl, //获取委派维修人员接口
-    orderSaveUrl //保存工单
+    orderSaveUrl, //保存工单
+    orderExportRequestUrl //请求导出数据接口
   ) => {
     _this.init(
       businessDataGetUrl, //获取业务人员数据
@@ -370,7 +383,8 @@ JGBVue.module.editOrder = () => {
       equipmentCodeGetUrl,//设备唯一码 远程搜索接口
       equimentInfoGetUrl, //通过唯一码查询设备信息接口
       repairPersonListGetUrl, //获取委派维修人员接口
-      orderSaveUrl //保存工单
+      orderSaveUrl, //保存工单
+      orderExportRequestUrl //请求导出数据接口
     )
   }
   return that

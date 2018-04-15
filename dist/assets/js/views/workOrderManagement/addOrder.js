@@ -15,7 +15,8 @@ JGBVue.module.addOrder = () => {
     equipmentCodeGetUrl,//设备唯一码 远程搜索接口
     equimentInfoGetUrl, //通过唯一码查询设备信息接口
     repairPersonListGetUrl, //获取委派维修人员接口
-    orderSaveUrl //保存新增工单
+    orderSaveUrl, //保存新增工单
+    orderExportRequestUrl //请求导出数据接口
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -100,6 +101,7 @@ JGBVue.module.addOrder = () => {
         btnReset: function() {
           this.$refs.orderAddForm.resetFields();
           this.getOrderAddInit()
+          this.showOtherButton = false
         },
         //新增 *只改变order_id, 保留用户选择的数据
         btnNew: function() {
@@ -107,9 +109,18 @@ JGBVue.module.addOrder = () => {
           this.showOtherButton = false
         },
         //导出
-        btnExport: function() {},
+        btnExport: function() {
+          axios.post(orderExportRequestUrl, {
+            order_id: this.orderAddForm.orderId
+          }).then().catch()
+        },
         //打印
-        btnPrint: function() {},
+        btnPrint: function() {
+          this.$selectTab(
+            'printOrder', 
+            '打印工单', 
+            'workOrderManagement', 
+            `?order_id=${this.orderAddForm.orderId}`)},
         //获取业务人员数据
         getBusinessData: function(query) {
           axios.post(businessDataGetUrl, {
@@ -297,8 +308,10 @@ JGBVue.module.addOrder = () => {
         },
       },
       watch: {
+        //填入唯一码 自动获取设备信息
         'orderAddForm.onlyCode': function(n, o) {
-          this.getEquitmentInfo(n)
+          //n为空 为重置表单触发 不需要获取设备信息
+          n && this.getEquitmentInfo(n)
         },
         //根据紧急程度修改默认的时效
         'orderAddForm.level': function(n, o) {
@@ -333,7 +346,8 @@ JGBVue.module.addOrder = () => {
     equipmentCodeGetUrl,//设备唯一码 远程搜索接口
     equimentInfoGetUrl, //通过唯一码查询设备信息接口
     repairPersonListGetUrl, //获取委派维修人员接口
-    orderSaveUrl //保存新增工单
+    orderSaveUrl, //保存新增工单
+    orderExportRequestUrl //请求导出数据接口
   ) => {
     _this.init(
       businessDataGetUrl, //获取业务人员数据
@@ -342,7 +356,8 @@ JGBVue.module.addOrder = () => {
       equipmentCodeGetUrl,//设备唯一码 远程搜索接口
       equimentInfoGetUrl, //通过唯一码查询设备信息接口
       repairPersonListGetUrl, //获取委派维修人员接口
-      orderSaveUrl //保存新增工单
+      orderSaveUrl, //保存新增工单
+      orderExportRequestUrl //请求导出数据接口
     )
   }
   return that
