@@ -6,7 +6,7 @@ JGBVue = {
   module: {}
 }
 
-JGBVue.module.waitingOrder = () => {
+JGBVue.module.addOrder = () => {
   let _this = {}, that = {}
   _this.init = (
     businessDataGetUrl, //获取业务人员数据
@@ -308,6 +308,13 @@ JGBVue.module.waitingOrder = () => {
           else {
             this.orderAddForm.aging = '23:59:59'
           }
+        },
+        //客户变动 设备数据清空
+        'orderAddForm.client': function() {
+          this.orderAddForm.equipmentName = ''   //设备名称
+          this.orderAddForm.equipmentBrand = '' //设备品牌
+          this.orderAddForm.equipmentSource = '' //设备来源
+          this.orderAddForm.equipmentPic = [] //设备图片
         },
       },
       created: function () {

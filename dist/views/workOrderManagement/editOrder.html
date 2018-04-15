@@ -199,6 +199,7 @@
           </div>
 				</div>
       </el-main>
+      <!-- 查看设备图片 -->
       <el-dialog :visible.sync="showPictures">
         <div slot="title" class="title">查看图片</div>
         <el-carousel class="w-pictures" ref="equipmentPic"
@@ -219,7 +220,7 @@
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/workOrderManagement/editOrder.js"></script>
 <script type="text/javascript">
-	JGBVue.module.waitingOrder().init(
+	JGBVue.module.editOrder().init(
     '/orderManagement/get_business_data', //获取业务人员数据
     '/clientInfo/data_init', //获取客户数据
     '/orderManagement/order_edit_init', //新增工单初始化数据 获取工单详情 报修方式 紧急程度 委派维修

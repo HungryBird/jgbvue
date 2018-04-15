@@ -1141,3 +1141,7 @@ table {
     width: 500px;
     height: 500px;
     border: none; }
+
+.w-export .el-checkbox {
+  margin-right: 15px !important;
+  margin-bottom: 15px !important; }

@@ -15,7 +15,8 @@ JGBVue.module.waitingOrder = () => {
     orderBackUrl, //退回工单
     orderWithdrawUrl, //撤回工单
     orderInvalidUrl, //工单作废
-    orderDetailsGetUrl //获取工单详情
+    orderDetailsGetUrl, //获取工单详情
+    dataExportRequestUrl //导出申请地址
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -54,6 +55,12 @@ JGBVue.module.waitingOrder = () => {
           detailsTabActive: 'baseInfo', //详情页标签 选中项
           detailsData: {}, //详情页数据
 
+          showPictures: false, //查看图片 窗
+          pictureList: [], //图片列表
+
+          showExport: false, //导出 窗
+          exportChecked: [], //导出选中项 *所有可选项与tableHeader关联
+          isLoadingExportRequest: false, //是否正在请求导出数据状态
         }
       },
       methods: {
@@ -186,27 +193,45 @@ JGBVue.module.waitingOrder = () => {
             })
           })
         },
-        //查看图片 @param {Array} imgList 图片数组
-        btnImage: function(imgList) {
-          //图片查看组件
-          console.log(imgList)
-        },
         //新增
         btnAdd: function() {
           //调用父级框架打开工单录入标签页
-          window.parent.JGBVue.module.vParent.selectTab('addOrder', '工单录入', 'workOrderManagement')
+          this.$selectTab('addOrder', '工单录入', 'workOrderManagement')
         },
-        btnEdit:function(query) {
-          console.log(`?order_id=${query}`)
-          //调用父级框架打开工单录入标签页
-          window.parent.JGBVue.module.vParent.selectTab(
-            'editOrder', 
-            '修改工单', 
-            'workOrderManagement', 
-            `?order_id=${query}`)
-          // console.log(window.parent)
-          // window.parent.frames('修改工单').location.reload();
-
+        //导出
+        btnExport: function() {
+          this.showExport = true
+        },
+        //导出 - 导出
+        btnExportSave: function() {
+          this.isLoadingExportRequest = true
+          axios.post(dataExportRequestUrl, {
+            export_checked: this.exportChecked
+          }).then(res=> {
+            if(res.data.status) {
+              //调用下载
+              this.showExport = false
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+            this.isLoadingExportRequest = false
+          }).catch(err=> {
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+            this.isLoadingExportRequest = false
+          })
+        },
+        //导出 - 关闭
+        btnExportClose: function() {
+          this.showExport = false
         },
         //下载文件
         btnDownLoad: function(src) {
@@ -333,6 +358,15 @@ JGBVue.module.waitingOrder = () => {
           this.selectedRows = val.concat()
         },
         /**
+         * 打开图片查看窗 切换到指定图片序号
+         * @param {Array} list 图片数据
+         * @param {Number} index 图片位于list中的序号
+         */
+        openPictureDialog: function(list) {
+          this.pictureList = list.concat()
+          this.showPictures = true
+        },
+        /**
          * 选择业务人员 输入时搜索
          * @param {String} query 输入值
          */
@@ -356,7 +390,8 @@ JGBVue.module.waitingOrder = () => {
     orderBackUrl,
     orderWithdrawUrl,
     orderInvalidUrl,
-    orderDetailsGetUrl
+    orderDetailsGetUrl,
+    dataExportRequestUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -365,7 +400,8 @@ JGBVue.module.waitingOrder = () => {
       orderBackUrl,
       orderWithdrawUrl,
       orderInvalidUrl,
-      orderDetailsGetUrl)
+      orderDetailsGetUrl,
+      dataExportRequestUrl)
   }
   return that
 }
