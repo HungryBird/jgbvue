@@ -1145,3 +1145,47 @@ table {
 .w-export .el-checkbox {
   margin-right: 15px !important;
   margin-bottom: 15px !important; }
+
+.w-print-page {
+  padding: 15px; }
+  .w-print-page .print-title {
+    font-size: 30px;
+    color: #333;
+    text-align: center;
+    line-height: 45px; }
+  .w-print-page .order-info {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    color: #333; }
+    .w-print-page .order-info .left {
+      flex-grow: 0;
+      flex-shrink: 0;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center; }
+    .w-print-page .order-info .right {
+      flex-grow: 0;
+      flex-shrink: 0; }
+  .w-print-page .footer-btn {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 0; }
+  .w-print-page .w-print-column-6 {
+    width: 100%;
+    border-collapse: collapse; }
+    .w-print-page .w-print-column-6 td, .w-print-page .w-print-column-6 th {
+      border: 1px solid #ddd;
+      width: 16.6667%;
+      padding: 10px;
+      color: #333;
+      text-align: center;
+      font-weight: 500; }
+      .w-print-page .w-print-column-6 td[colspan], .w-print-page .w-print-column-6 th[colspan] {
+        text-align: left; }
