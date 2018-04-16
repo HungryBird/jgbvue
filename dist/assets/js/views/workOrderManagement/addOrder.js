@@ -298,14 +298,6 @@ JGBVue.module.addOrder = () => {
         remoteRepairPerson: function(query) {
           this.getRepairPersonList(query)
         },
-        //填写唯一码时 校验是否选中客户
-        varifyClientExist: function(e) {
-          if(this.orderAddForm.client.clientNumber == undefined) {
-            // this.$refs.onlyCode.handleBlur()
-            console.log(this.$refs.onlyCode)
-            e.preventDefault()
-          }
-        },
       },
       watch: {
         //填入唯一码 自动获取设备信息

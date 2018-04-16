@@ -253,8 +253,16 @@
 					<div class="member-info">
 						<div class="info-item">工号：{{member.uid}}</div>
 						<div class="info-item">姓名：{{member.name}}</div>
-						<div class="info-item">公司：{{member.companyName}}</div>
-						<div class="info-item">部门：{{member.department}}</div>
+						<el-tooltip class="item" effect="light" placement="bottom"
+							:disabled="member.companyName.length < 6"
+							:content=`公司：${member.companyName}` >	
+							<div class="info-item">公司：{{member.companyName}}</div>
+						</el-tooltip>
+						<el-tooltip class="item" effect="light" placement="bottom"
+							:disabled="member.department.length < 6"
+							:content=`部门：${member.department}` >	
+							<div class="info-item">部门：{{member.department}}</div>
+						</el-tooltip>
 					</div>
 				</div>
 			</div>
