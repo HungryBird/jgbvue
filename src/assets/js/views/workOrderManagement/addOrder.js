@@ -55,10 +55,12 @@ JGBVue.module.waitingOrder = () => {
           },
           orderAddInitData: {}, //新增工单初始化数据
           loadingOrderAdd: false, //初始化工单数据状态
+
+          showOtherButton: false, //只有在保存成功后才显示的导出、打印按钮
         }
       },
       methods: {
-        //保存并新增
+        //保存
         btnAdd: function() {
           this.$refs.orderAddForm.validate((valid) => {
             if (valid) {
@@ -69,7 +71,7 @@ JGBVue.module.waitingOrder = () => {
                     message: res.data.message,
                     center: true
                   })
-                  this.$refs.orderAddForm.resetFields();
+                  // this.$refs.orderAddForm.resetFields();
                 }
                 else {
                   this.$message({
@@ -254,14 +256,6 @@ JGBVue.module.waitingOrder = () => {
         //维修人员 输入时搜索
         remoteRepairPerson: function(query) {
           this.getRepairPersonList(query)
-        },
-        //填写唯一码时 校验是否选中客户
-        varifyClientExist: function(e) {
-          if(this.orderAddForm.client.clientNumber == undefined) {
-            // this.$refs.onlyCode.handleBlur()
-            console.log(this.$refs.onlyCode)
-            e.preventDefault()
-          }
         },
       },
       watch: {
