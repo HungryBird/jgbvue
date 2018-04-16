@@ -697,6 +697,14 @@
           v-on:save="btnExportSave" v-on:close="btnExportClose">
         </jgb-form-footer>
       </el-dialog>
+      <el-dialog :visible.syne="showColumnSetting">
+        <div class="title" slot="title">列设置</div>
+        <jgb-column-setting v-if="tableHeader.length" v-model="tableHeader"></jgb-column-setting>
+        <div slot="footer">
+            <el-button v-on:click="">恢复默认设置</el-button>
+          <el-button type="primary" v-on:click="">完成</el-button>
+        </div>
+      </el-dialog>
 		</el-container>
 	</div>
 </body>

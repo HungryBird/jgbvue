@@ -78,6 +78,8 @@ JGBVue.module.workOrderManagement = () => {
           exportChecked: [], //导出选中项 *所有可选项与tableHeader关联
           isLoadingExportRequest: false, //是否正在请求导出数据状态
 
+          showColumnSetting: true, //列设置 窗
+
         }
       },
       methods: {

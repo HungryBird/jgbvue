@@ -1327,3 +1327,18 @@ table{
 		}
 	}
 }
+
+.w-column-setting {
+	@include w-flex(row, nowrap, space-between, stretch);
+	.column-table {
+		width:540px;
+	}
+	.action {
+		@include w-flex(column, nowrap, center, center);
+		margin-left:10px;
+		.el-button+.el-button {
+			margin-left: 0;
+			margin-top:15px;
+		}
+	}
+}

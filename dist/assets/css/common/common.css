@@ -1222,3 +1222,20 @@ table {
       padding: 10px 0;
       font-size: 14px;
       line-height: 16.8px; }
+
+.w-column-setting {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: stretch; }
+  .w-column-setting .column-table {
+    width: 540px; }
+  .w-column-setting .action {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px; }
+    .w-column-setting .action .el-button + .el-button {
+      margin-left: 0;
+      margin-top: 15px; }

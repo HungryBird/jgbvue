@@ -400,3 +400,54 @@ let thumbnail = Vue.extend({
   },
 })
 Vue.component('jgb-thumbnail', thumbnail)
+
+/**
+ * 组件 列设置
+ * 在组件内设置表头的展示
+ * created by lanw 2018-4-16
+ * @param {Array} value 绑定v-model
+ * 
+ * @event input 触发v-model双向绑定
+ */
+let columnSetting = Vue.extend({
+  template: `<div class="w-column-setting">
+              <el-table class="column-table"
+                border highlight-current-row
+                max-height="300"
+                :data="columnList">
+                <el-table-column align="center"
+                  prop="label"
+                  label="列名称">
+                </el-table-column>
+                <el-table-column align="center"
+                  prop="label"
+                  label="别名">
+                </el-table-column>
+                <el-table-column align="center"
+                  prop="label"
+                  label="是否显示">
+                  <template slot-scope="scope">
+                    <el-switch
+                      v-model="scope.row.enable">
+                    </el-switch>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div class="action">
+                <el-button size="mini">前移</el-button>
+                <el-button size="mini">后移</el-button>
+              </div>
+            </div>`,
+  props: {
+    value: Array,
+  },
+  computed: {
+    columnList: function() {
+      return this.value
+    },
+  },
+  created: function() {
+    console.log(this.columnList)
+  },
+})
+Vue.component('jgb-column-setting', columnSetting)
