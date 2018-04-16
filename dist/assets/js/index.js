@@ -189,7 +189,7 @@ JGBVue.module.index = ()=> {
                 id: 'equipmentBrand',
                 name: '设备品牌'
               }, {
-                id: 'auxiliaryAttributes',
+                id: 'equipmentManagementAuxiliaryAttributes',
                 name: '辅助属性'
               }]
             },

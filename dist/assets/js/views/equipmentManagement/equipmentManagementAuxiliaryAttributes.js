@@ -2,7 +2,7 @@ JGBVue = {
 	module: {}
 };
 
-JGBVue.module.commodityManagementAuxiliaryAttributes = ()=> {
+JGBVue.module.equipmentManagementAuxiliaryAttributes = ()=> {
 	const _this = {}
 	,that = {};
 

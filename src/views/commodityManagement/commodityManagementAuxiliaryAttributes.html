@@ -8,29 +8,41 @@
 </head>
 <body>
 	<div id="app" v-cloak>
-		<el-container>
+		<el-container style="width: 910px;">
 			<el-header>
-				<h4>属性分类</h4>
+				<nav>
+					<h4 class="pull-left" style="line-height: 40px;">属性分类</h4>
+					<el-form :inline="true" class="pull-right">
+						<el-form-item>
+							<el-input placeholder="输入查询条件" v-model="searchValue">
+								<template slot="append">
+									<el-button v-on:click="search(searchValue)">搜索</el-button>
+								</template>
+							</el-input>
+						</el-form-item>
+					</el-form>
+				</nav>
+				
 			</el-header>
-			<el-main>
+			<el-main style="padding: 0;">
 				<div class="jgb-auxiliary-attributes-wrap">
 					<ul id="assisting-list">
 						<li class="custom" v-for="d in data">
-							<a href="#" class="item">
+							<a href="javascript:;" class="item" v-on:click="clickItem(d)">
 								<i class="big-icon" style="background-position: -388px 0;"></i>
-								<strong>d.label</strong>
+								<strong>{{ d.label }}</strong>
 							</a>
 							<span class="operation">
-								<a href="#" title="编辑">
+								<a href="javascript:;" title="编辑" v-on:click="edit(d)">
 									<i class="el-icon-edit"></i>
 								</a>
-								<a href="#" title="删除">
+								<a href="javascript:;" title="删除" v-on:click="remove(d)">
 									<i class="el-icon-delete"></i>
 								</a>
 							</span>
 						</li>
 						<li class="custom" v-on:click="addClassify">
-							<a href="#" class="item add-item">
+							<a href="javascript:;" class="item add-item">
 								<strong>+ 新增分类</strong>
 							</a>
 						</li>
@@ -38,6 +50,24 @@
 				</div>
 			</el-main>
 		</el-container>
+		<el-dialog :visible.sync="classifyVisible" :title="title + '分类'">
+			<nav>
+				<el-button icon="el-icon-plus" v-on:click="addClassifyAttribute">新增</el-button>
+			</nav>
+			<el-table :data="tableData" border ref="classifyAttributeTable">
+				<el-table-column width="50px" type="index" label="序号"></el-table-column>
+				<el-table-column label="操作">
+					<template slot-scope="scope">
+						<el-button-group>
+							<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+							<el-button size="mini" type="danger" v-on:click="handleDelete(scope.$index, scope.row)">删除</el-button>
+						</el-button-group>
+					</template>
+				</el-table-column>
+				<el-table-column v-for="item in tableHeader" :key="item.value" prop="value" :label="item.label"></el-table-column>
+			</el-table>
+			<jgb-form-footer :loading="loading" v-on:save="saveEdit" v-on:close="classifyVisible = false" slot="footer"></jgb-form-footer>
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -46,6 +76,20 @@
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/commodityManagement/commodityManagementAuxiliaryAttributes.js"></script>
 <script type="text/javascript">
-	JGBVue.module.commodityManagementAuxiliaryAttributes().init('/commodityManagementAuxiliaryAttributes/data_init', '/commodityManagementAuxiliaryAttributes/addClassify');
+	/**
+	 * 搜索
+	 * 添加分类
+	 * 获取点击信息
+	 * 保存编辑
+	 * 删除
+	 * 保存新增
+	 */
+	JGBVue.module.commodityManagementAuxiliaryAttributes().init(
+		'/commodityManagementAuxiliaryAttributes/search', 
+		'/commodityManagementAuxiliaryAttributes/addClassify', 
+		'/commodityManagementAuxiliaryAttributes/getInfo', 
+		'/common/data_edit_save', 
+		'/common/data_delete', 
+		'/common/data_add_save');
 </script>
 </html>
