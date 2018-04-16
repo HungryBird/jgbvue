@@ -57,7 +57,12 @@
                   <el-button type="primary" size="mini">列设置</el-button>
                   <el-button type="primary" size="mini" v-on:click="btnAdd">新增</el-button>
                   <el-button type="primary" size="mini" v-on:click="btnExport">导出</el-button>
-                  <el-button type="primary" size="mini">打印</el-button>
+                  <el-button type="primary" size="mini"
+                    :disabled="selectedRows.length != 1"
+                    v-on:click="btnPrint()">
+                    打印
+                  </el-button>
+                  <el-button type="primary" size="mini" v-on:click="btnPrintList()">打印工单列表</el-button>
                   <el-button type="primary" size="mini"
                     :disabled="selectedRows.length == 0"
                     v-on:click="btnInvalid">
@@ -74,7 +79,7 @@
               v-on:sort-change="handleOrderSort"
               v-on:selection-change="handleOrderSelectionChange">
 							<el-table-column type="selection" align="center" width="40"></el-table-column>
-							<el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+							<!-- <el-table-column type="index" label="序号" width="50" align="center"></el-table-column> -->
               <el-table-column v-for="item in tableHeader"
                 align="center"
                 :sortable="item.sortable"
@@ -83,6 +88,7 @@
                 :prop="item.prop"
                 :label="item.label">
 								<template slot-scope="scope">
+                  <!-- 操作 -->
                   <div v-if="item.prop == 'action'">
                     <!-- 委派 -->
                     <div v-if="scope.row.status_value == 0" class="order-button">
@@ -97,6 +103,9 @@
                       <el-button type="" size="mini" v-on:click="btnReceive(scope.row, scope.$index)">领取</el-button>
                       <el-button type="" size="mini" v-on:click="btnWithdraw(scope.row, scope.$index)">撤回</el-button>
                     </div>
+                  </div>
+                  <div v-else-if="item.type == 'index'">
+                    {{scope.$index+1}}
                   </div>
                   <!-- 图片 -->
                   <i v-else-if="item.prop == 'image'" class="el-icon-picture table-img-icon" v-on:click="openPictureDialog(scope.row.image)"></i>
@@ -397,7 +406,11 @@
                         <td>{{detailsData.contract.yifang.fax}}</td>
                       </tr>
                       <tr>
-                        <td colspan="4" class="preview-pdf">合同预览预留</td>
+                        <td colspan="4" class="preview-pdf">
+                          <img v-for="(img, index) in detailsData.contract.contract_pic"
+                            :src="img" :alt="'合同图片'+index"
+                            v-on:click="openPictureDialog(detailsData.contract.contract_pic, index)" />
+                        </td>
                       </tr>
                       <tr>
                         <td>盖章合同文件：</td>
@@ -618,7 +631,8 @@
     '/orderManagement/order_withdraw', //撤回工单
     '/orderManagement/order_invalid', //作废工单
     '/orderManagement/get_order_details', //获取工单详情
-    '/common/data_add_save' //导出申请地址
+    '/common/data_add_save', //导出申请地址
+    '/orderManagement/get_waiting_order_data' //打印列表接口
 	);
 </script>
 

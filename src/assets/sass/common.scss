@@ -813,9 +813,9 @@ table{
 			.info-item {
 				@include line-clamp;
 				cursor:text;
-				&:hover {
+				/*&:hover {  //delete by lanw 2018-4-16 使用el-tooltip代替hover显示全部信息
 					overflow:visible;
-				}
+				}*/
 			}
 		}
 		&.checked {
@@ -1050,10 +1050,15 @@ table{
 			td, th {
 				width: 25%;
 			}
-			.preview-pdf {
+			.preview-pdf { //合同预览
 				width:100%;
 				height:400px;
 				overflow:auto;
+				img {
+					width:100%;
+					height:auto;
+					margin-bottom:5px;
+				}
 			}
 			.download-contract {
 				font-size:20px;
@@ -1291,4 +1296,34 @@ table{
 			}
 		}
 	} 
+}
+
+//工单列表打印页
+.w-print-list {
+	$header-height: 50px;
+	background:#fff;
+	padding: $header-height 10px 20px;
+	position:relative;
+	.header {
+		@include w-flex(row, nowrap, flex-end, center);
+		height:$header-height;
+		padding:0 30px;
+		background:rgba(0,0,0,.5);
+		position:fixed;
+		top:0;
+		left:0;
+		right:0;
+		z-index:500;
+	}
+	.w-order-list {
+		width: 100%;
+		border-collapse:collapse;
+		td, th {
+			@include common-border;
+			text-align: center;
+			padding: 10px 0;
+			font-size:$fs-normal;
+			line-height:$fs-normal*1.2
+		}
+	}
 }

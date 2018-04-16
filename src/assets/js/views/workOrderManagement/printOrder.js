@@ -1,3 +1,7 @@
+/**
+ * created by lanw 2018-4-15
+ * 打印工单
+ */
 JGBVue = {
 	module: {}
 };
@@ -28,13 +32,12 @@ JGBVue.module.printOrder = ()=> {
         },
         //获取工单信息
         getOrderInfo: function() {
-          console.log(orderInfoGetUrl)
           this.loadingOrderInfo = true
           axios.post(orderInfoGetUrl, {
             order_id: this.c_orderId
           }).then(res=> {
             if(res.data.status) {
-              console.log(res.data.data)
+              // console.log(res.data.data)
               this.orderInfo = JSON.parse(res.data.data).order_data
             }
             else {

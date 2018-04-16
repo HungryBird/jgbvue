@@ -412,28 +412,32 @@ JGBVue.module.index = ()=> {
         }
       },
       watch: {
-        tabs(arr) {
-          if(arr.length === 1) {
-            this.activeTab = 'home';
-            return;
-          }
-          if(sessionStorage.tabs) {
-            let arrObj2 = JSON.parse(sessionStorage.tabs);
-            arrObj2.splice(0, arrObj2.length);
-            arr.forEach((item)=> {
-              arrObj2.push(item);
-            })
-            sessionStorage.tabs = JSON.stringify(arrObj2);
-            sessionStorage.activeTab = this.activeTab;
-          }else{
-            let arrObj = [];
-            arr.forEach((item)=> {
-              arrObj.push(item);
-            })
-            sessionStorage.tabs = JSON.stringify(arrObj);
-            sessionStorage.activeTab = this.activeTab;
-          }
-        }
+        tabs: {
+          //edit by lanw 2018-4-16 修改为深度监听模式 
+          handler: function(arr) { 
+            if(arr.length === 1) {
+              this.activeTab = 'home';
+              return;
+            }
+            if(sessionStorage.tabs) {
+              let arrObj2 = JSON.parse(sessionStorage.tabs);
+              arrObj2.splice(0, arrObj2.length);
+              arr.forEach((item)=> {
+                arrObj2.push(item);
+              })
+              sessionStorage.tabs = JSON.stringify(arrObj2);
+              sessionStorage.activeTab = this.activeTab;
+            }else{
+              let arrObj = [];
+              arr.forEach((item)=> {
+                arrObj.push(item);
+              })
+              sessionStorage.tabs = JSON.stringify(arrObj);
+              sessionStorage.activeTab = this.activeTab;
+            }
+          },
+          deep: true
+        },
       }
     })
   }

@@ -1,28 +1,35 @@
 /**
- * created by lanw 2018-4-15
- * 打印工单
+ * created by lanw 2018-4-16
+ * 打印工单列表
+ * 在window.location.search中包含2个参数 参数分隔符：&&
+ * @param {String} filter 经过encodeURI()转码的 JSON字符串 工单列表的筛选条件
+ * @param {String} url 获取工单列表的接口
  */
 JGBVue = {
 	module: {}
 };
 
-JGBVue.module.printOrder = ()=> {
+JGBVue.module.printOrderList = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (
-    orderInfoGetUrl //获取工单信息
-  )=> {
+	_this.init = ()=> {
 		new Vue({
 			el: '#app',
 			data: {
         loadingOrderInfo: false, //加载工单信息状态
+        orderHeader: {}, //表头
         orderInfo: {}, //工单信息
       },
       computed: {
-        c_orderId: function() {
-          let search = window.location.search
-          return search.split('=')[1]
+        //工单筛选条件
+        c_orderFilter: function() {
+          let filter = decodeURI(window.location.search.split('&&')[0].split('=')[1])
+          return JSON.parse(filter)
+        },
+        //工单接口
+        c_orderInfoGetUrl: function() {
+          return window.location.search.split('&&')[1].split('=')[1]
         },
       },
 			methods: {
@@ -33,12 +40,14 @@ JGBVue.module.printOrder = ()=> {
         //获取工单信息
         getOrderInfo: function() {
           this.loadingOrderInfo = true
-          axios.post(orderInfoGetUrl, {
-            order_id: this.c_orderId
+          axios.post(this.c_orderInfoGetUrl, {
+            filter: this.c_orderFilter
           }).then(res=> {
             if(res.data.status) {
               // console.log(res.data.data)
-              this.orderInfo = JSON.parse(res.data.data).order_data
+              let _data = JSON.parse(res.data.data)
+              this.orderHeader = _data.header
+              this.orderInfo = _data.data
             }
             else {
               this.$message({
@@ -60,22 +69,22 @@ JGBVue.module.printOrder = ()=> {
         },
       },
       watch: {
-        c_orderId: function() {
+        c_orderFilter: function() {
+          this.getOrderInfo()
+        },
+        c_orderInfoGetUrl: function() {
           this.getOrderInfo()
         },
       },
       created: function() {
         this.getOrderInfo()
+        // console.log(window.location.search)
       },
 		})
 	}
 
-	that.init = (
-    orderInfoGetUrl
-  )=> {
-		_this.init(
-      orderInfoGetUrl
-    );
+	that.init = ()=> {
+		_this.init();
 	}
 
 	return that;

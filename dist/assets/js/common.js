@@ -116,6 +116,9 @@ Vue.component('jgb-form-footer', formFooter)
  * @event company-change
  * @event department-change
  * @event search 
+ * 
+ * edit by lanw 2018-4-16
+ * 修改内容：dom .member-item 中加入el-tooltip 通过判断工号、部门、姓名的长度决定是否启用鼠标悬停提示完整信息
  */
 let setMember = Vue.extend({
   template: `<el-container class="set-member-wrap">
@@ -161,9 +164,21 @@ let setMember = Vue.extend({
                       v-on:click="toggleMemberChecked(member, index)">
                       <img class="member-pic" :src="member[userProps.userPic]" :alt="member[userProps.userName]"/>
                       <div class="member-info">
+                      <el-tooltip class="item" effect="light" placement="bottom"
+                        :disabled="String(member[userProps.userId]).length < 7"
+                        :content="'工号：'+member[userProps.userId]" >	
                         <div class="info-item">工号：{{member[userProps.userId]}}</div>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="light" placement="bottom"
+                        :disabled="member[userProps.userName].length < 4"
+                        :content="'姓名：'+member[userProps.userName]" >	
                         <div class="info-item">姓名：{{member[userProps.userName]}}</div>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="light" placement="bottom"
+                        :disabled="member[userProps.departmentName].length < 4"
+                        :content="'部门：'+member[userProps.departmentName]" >	
                         <div class="info-item">部门：{{member[userProps.departmentName]}}</div>
+                      </el-tooltip>
                       </div>
                       <i v-if="member.checked" class="el-icon-check checked-tag"></i>
                     </div>
@@ -323,7 +338,7 @@ Vue.component('jgb-set-member', setMember)
  * @event close 关闭窗体事件
  */
 let rightSlideDetails = Vue.extend({
-  template: `<div class="details-wrap">
+  template: `<div class="details-wrap" style="z-index:900;">
               <div class="details-inner" v-loading="loading">
                 <slot></slot>
               </div>

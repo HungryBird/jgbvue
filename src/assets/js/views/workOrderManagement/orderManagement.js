@@ -17,7 +17,8 @@ JGBVue.module.workOrderManagement = () => {
     orderWithdrawUrl, //撤回工单
     orderInvalidUrl, //工单作废
     orderDetailsGetUrl, //获取工单详情
-    dataExportRequestUrl //导出申请地址
+    dataExportRequestUrl, //导出申请地址
+    printListUrl //打印列表接口
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -249,6 +250,7 @@ JGBVue.module.workOrderManagement = () => {
             })
           })
         },
+        //修改工单
         btnEditOrder: function(row, index) {
           //调用父级框架打开工单录入标签页
           this.$selectTab(
@@ -256,6 +258,27 @@ JGBVue.module.workOrderManagement = () => {
             '修改工单', 
             'workOrderManagement', 
             `?order_id=${row.order_id}`)
+        },
+        //打印列表
+        btnPrintList: function() {
+          let filter = this.$deepCopy(this.selectForm)
+          // console.log(`query=`)
+          // console.log(`?filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
+          //调用父级框架打开标签页
+          this.$selectTab(
+            'printOrderList', 
+            '打印工单列表', 
+            'workOrderManagement', 
+            `?filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
+        },
+        //打印工单
+        btnPrint: function() {
+          //调用父级框架打开标签页
+          this.$selectTab(
+            'printOrder', 
+            '打印工单', 
+            'workOrderManagement', 
+            `?order_id=${this.selectedRows[0].order_id}`)
         },
         //关闭详情页
         closeDetails: function() {
@@ -371,10 +394,14 @@ JGBVue.module.workOrderManagement = () => {
          * @param {Array} list 图片数据
          * @param {Number} index 图片位于list中的序号
          */
-        openPictureDialog: function(list) {
-          console.log(list)
+        openPictureDialog: function(list, index) {
+          index = index || 0
           this.pictureList = list.concat()
           this.showPictures = true
+          let timer = setInterval(()=> {
+            this.$refs.equipmentPic.setActiveItem(index);
+            clearInterval(timer)
+          })
         },
       },
       created: function () {
@@ -394,7 +421,8 @@ JGBVue.module.workOrderManagement = () => {
     orderWithdrawUrl,
     orderInvalidUrl,
     orderDetailsGetUrl,
-    dataExportRequestUrl
+    dataExportRequestUrl,
+    printListUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -405,7 +433,8 @@ JGBVue.module.workOrderManagement = () => {
       orderWithdrawUrl,
       orderInvalidUrl,
       orderDetailsGetUrl,
-      dataExportRequestUrl)
+      dataExportRequestUrl,
+      printListUrl)
   }
   return that
 }
