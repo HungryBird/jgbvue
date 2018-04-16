@@ -6,7 +6,7 @@ JGBVue = {
   module: {}
 }
 
-JGBVue.module.waitingOrder = () => {
+JGBVue.module.addOrder = () => {
   let _this = {}, that = {}
   _this.init = (
     businessDataGetUrl, //获取业务人员数据
@@ -16,6 +16,7 @@ JGBVue.module.waitingOrder = () => {
     equimentInfoGetUrl, //通过唯一码查询设备信息接口
     repairPersonListGetUrl, //获取委派维修人员接口
     orderSaveUrl, //保存新增工单
+    orderExportRequestUrl //请求导出数据接口
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -55,10 +56,14 @@ JGBVue.module.waitingOrder = () => {
           },
           orderAddInitData: {}, //新增工单初始化数据
           loadingOrderAdd: false, //初始化工单数据状态
+          showOtherButton: false, //打印 导出 按钮
+
+          showPictures: false, //查看图片 窗
+          pictureList: [], //图片列表
         }
       },
       methods: {
-        //保存并新增
+        //保存
         btnAdd: function() {
           this.$refs.orderAddForm.validate((valid) => {
             if (valid) {
@@ -69,7 +74,7 @@ JGBVue.module.waitingOrder = () => {
                     message: res.data.message,
                     center: true
                   })
-                  this.$refs.orderAddForm.resetFields();
+                  this.showOtherButton = true
                 }
                 else {
                   this.$message({
@@ -85,12 +90,37 @@ JGBVue.module.waitingOrder = () => {
                   center: true
                 })
               })
-            } else {
+            }
+            else {
               console.log('error submit!!');
               return false;
             }
           });
         },
+        //重置
+        btnReset: function() {
+          this.$refs.orderAddForm.resetFields();
+          this.getOrderAddInit()
+          this.showOtherButton = false
+        },
+        //新增 *只改变order_id, 保留用户选择的数据
+        btnNew: function() {
+          this.getOrderAddInit()
+          this.showOtherButton = false
+        },
+        //导出
+        btnExport: function() {
+          axios.post(orderExportRequestUrl, {
+            order_id: this.orderAddForm.orderId
+          }).then().catch()
+        },
+        //打印
+        btnPrint: function() {
+          this.$selectTab(
+            'printOrder', 
+            '打印工单', 
+            'workOrderManagement', 
+            `?order_id=${this.orderAddForm.orderId}`)},
         //获取业务人员数据
         getBusinessData: function(query) {
           axios.post(businessDataGetUrl, {
@@ -237,6 +267,19 @@ JGBVue.module.waitingOrder = () => {
           })
         },
         /**
+         * 打开图片查看窗 切换到指定图片序号
+         * @param {Array} list 图片数据
+         * @param {Number} index 图片位于list中的序号
+         */
+        openPictureDialog: function(list, index) {
+          this.pictureList = list.concat()
+          this.showPictures = true
+          let timer = setInterval(()=> {
+            this.$refs.equipmentPic.setActiveItem(index);
+            clearInterval(timer)
+          })
+        },
+        /**
          * 选择客户 输入时搜索
          * @param {String} query 输入值
          */
@@ -265,8 +308,10 @@ JGBVue.module.waitingOrder = () => {
         },
       },
       watch: {
+        //填入唯一码 自动获取设备信息
         'orderAddForm.onlyCode': function(n, o) {
-          this.getEquitmentInfo(n)
+          //n为空 为重置表单触发 不需要获取设备信息
+          n && this.getEquitmentInfo(n)
         },
         //根据紧急程度修改默认的时效
         'orderAddForm.level': function(n, o) {
@@ -277,6 +322,13 @@ JGBVue.module.waitingOrder = () => {
             this.orderAddForm.aging = '23:59:59'
           }
         },
+        //客户变动 设备数据清空
+        'orderAddForm.client': function() {
+          this.orderAddForm.equipmentName = ''   //设备名称
+          this.orderAddForm.equipmentBrand = '' //设备品牌
+          this.orderAddForm.equipmentSource = '' //设备来源
+          this.orderAddForm.equipmentPic = [] //设备图片
+        },
       },
       created: function () {
         //获取新增工单初始化数据
@@ -284,7 +336,7 @@ JGBVue.module.waitingOrder = () => {
         this.getClientData()
         this.getRepairPersonList()
         this.getBusinessData()
-      }
+      },
     })
   }
   that.init = (
@@ -295,6 +347,7 @@ JGBVue.module.waitingOrder = () => {
     equimentInfoGetUrl, //通过唯一码查询设备信息接口
     repairPersonListGetUrl, //获取委派维修人员接口
     orderSaveUrl, //保存新增工单
+    orderExportRequestUrl //请求导出数据接口
   ) => {
     _this.init(
       businessDataGetUrl, //获取业务人员数据
@@ -304,6 +357,7 @@ JGBVue.module.waitingOrder = () => {
       equimentInfoGetUrl, //通过唯一码查询设备信息接口
       repairPersonListGetUrl, //获取委派维修人员接口
       orderSaveUrl, //保存新增工单
+      orderExportRequestUrl //请求导出数据接口
     )
   }
   return that

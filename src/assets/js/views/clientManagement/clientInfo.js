@@ -6,7 +6,7 @@ JGBVue.module.clientInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
+	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -69,7 +69,7 @@ JGBVue.module.clientInfo = ()=> {
 						companyTel: '',
 						companyAddress: '',
 						sale: '',
-						assistants: '',
+						assistants: [],
 						table: [
 							{
 								index: 1,
@@ -109,6 +109,17 @@ JGBVue.module.clientInfo = ()=> {
 						assistants: [],
 						table: []
 					},
+					addCheckedAssistantsMember: [],
+					editCheckedAssistantsMember: [],
+					defaultCompanyProps: { label: "label", value: "number" },
+					defaultDepartmentProps: { label: "label", value: "value" },
+					defaultUserProps: {
+						userName: "name", 
+						userId: "uid", 
+						userPic: "src", 
+						departmentName: "department", 
+						companyName: "companyName"
+					},
 					addAddress: {
 						provinces: [],
 						cities: [],
@@ -121,10 +132,8 @@ JGBVue.module.clientInfo = ()=> {
 						districts: [],
 						blocks: []
 					},
-					setMemberVisible: false,
-					getCompanyUrl: getCompanyUrl,
-					getDepartmentUrl: getDepartmentUrl,
-					getUserUrl: getUserUrl,
+					addSetMemberVisible: false,
+					editSetMemberVisible: false,
 					loadingSetRoleMember: false,
 					checkedRoleMember: [],
 					importVisible: false,
@@ -137,7 +146,26 @@ JGBVue.module.clientInfo = ()=> {
 						errNumber: 0,
 						errRecord: []
 					},
-					exportForm: []
+					exportForm: [],
+					tempAssistantsGroup: [],
+					assistants: {
+	                    company: '',
+	                    companyName: '',
+	                    departmentName: '',
+	                    searchValue: '',
+	                    companyList: [],
+	                    departmentList: [],
+	                    curCompanyVal: '',
+	                    auditorList: [],
+	                    activeIndex: -1,
+	                    activeDepartment: '',
+	                    selectedAuditors: []
+	                },
+	                showSelectedAuditors: true,
+	                companyList: [],
+	                departmentList: [],
+	                userList: [],
+	                btnLoading: false
 				}
 			},
 			mounted() {
@@ -148,7 +176,7 @@ JGBVue.module.clientInfo = ()=> {
 						this.category = jdata.category;
 						this.level = jdata.level;
 						this.sale = jdata.sale;
-						this.companyList = jdata.companyList;
+						//this.companyList = jdata.companyList;
 						this.tempTable = jdata.table;
 						this.tempTable.forEach((item)=> {
 							if(!_self.isShowForbiddenClients) {
@@ -163,8 +191,14 @@ JGBVue.module.clientInfo = ()=> {
 				}).catch((err)=> {
 					console.log('axios err: ', err);
 				})
+				this.getCompanyList();
 			},
 			methods: {
+				getCompanyList() {
+					axios.get(getCompanyUrl).then((res)=> {
+						this.companyList = JSON.parse(res.data.data);
+					})
+				},
 				rowClick(row, event, column) {
 					let _self = this;
 					this.$refs['table'].toggleRowSelection(row);
@@ -173,7 +207,6 @@ JGBVue.module.clientInfo = ()=> {
 					}else{
 						_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
 					}
-					console.log(this.selectedRows)
 				},
 				selectAll(selection) {
 					let _self = this;
@@ -462,16 +495,12 @@ JGBVue.module.clientInfo = ()=> {
 						this.addForm.block = '';
 					}
 				},
-				renderHeader(createElement, { _self }) {
+				renderHeader(createElement, { column }) {
 					return createElement(
-						'div',
-						{'class': 'renderTableHead'},[
-								createElement('div', {
-									attrs: { type: 'text' },
-									class: 'required'
-								}, ['联系人'])
-						]
-					)
+						'span'
+						,{'class': 'required'}
+						,[column.label]
+					);
 				},
 				addRowClick(row, event, column) {
 					this.addForm.table.forEach((item)=> {
@@ -562,6 +591,7 @@ JGBVue.module.clientInfo = ()=> {
 										type: 'success',
 										message: res.data.message
 									})
+									this.addCheckedAssistantsMember = [];
 									this.addVisible = false;
 								}
 							})
@@ -581,6 +611,7 @@ JGBVue.module.clientInfo = ()=> {
 										type: 'success',
 										message: res.data.message
 									})
+									this.editCheckedAssistantsMember = [];
 									this.editVisible = false;
 								}
 							})
@@ -615,10 +646,12 @@ JGBVue.module.clientInfo = ()=> {
 					//
 				},
 				addCloseTag(tag) {
-					//
+					let _self = this;
+					this.addForm.assistants.splice(_self.addForm.assistants.indexOf(tag), 1);
 				},
 				editCloseTag(tag) {
-					//
+					let _self = this;
+					this.editForm.assistants.splice(_self.editForm.assistants.indexOf(tag), 1);
 				},
 				getFile($event) {
 					this.getFileInfo = $event.target.files[0];
@@ -641,13 +674,83 @@ JGBVue.module.clientInfo = ()=> {
 						})
 					}
 					this.exportVisible = true;
+				},
+                getUserList: function(obj) {
+					axios.post(departmentMemberGetUrl, obj).then(res=> {
+						if(res.data.status) {
+							this.userList = JSON.parse(res.data.data)
+						}
+						else {
+							this.$message({
+								type: 'error',
+								message: res.data.message,
+								center: true
+							})
+						};
+					}).catch(err=> {
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+                setMemberGetUser: function(data) {
+					this.getUserList(data)
+				},
+				setMemberCompanyChange: function(data) {
+					this.getDepartmentList(data)
+				},
+				getDepartmentList: function(obj) {
+					axios.post(getDepartmentUrl, obj).then((res)=> {
+						if(res.data.status) {
+							this.departmentList = JSON.parse(res.data.data)
+						}
+						else {
+							this.$message({
+								type: 'error',
+								message: res.data.message,
+								center: true
+							})
+						};
+					}).catch(err=> {
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				editSetMember() {
+					let _self = this;
+					this.editCheckedAssistantsMember = [];
+					this.editForm.assistants.forEach((item)=> {
+						_self.editCheckedAssistantsMember.push(item);
+					})
+					this.editSetMemberVisible = true;
+				},
+				saveEditSetMember() {
+					let _self = this;
+					this.editForm.assistants = [];
+					this.editCheckedAssistantsMember.forEach((item)=> {
+						_self.editForm.assistants.push(item);
+					})
+					this.editSetMemberVisible = false;
+				},
+				saveAddSetMember() {
+					let _self = this;
+					this.addForm.assistants = [];
+					this.addCheckedAssistantsMember.forEach((item)=> {
+						_self.addForm.assistants.push(item);
+					})
+					this.addSetMemberVisible = false;
 				}
 			}
 		})
 	}
 
-	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
-		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl);
+	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
+		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl);
 	}
 
 	return that;

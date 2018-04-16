@@ -1,0 +1,44 @@
+{
+  
+  "level": [
+    { "label": "灰常紧急", "value": 1 },
+    { "label": "不急不急", "value": 2 },
+    { "label": "你慢慢修", "value": 3 }
+  ],
+  "assigned": [
+    { "label":"是",  "value": 1 },
+    { "label":"否",  "value": 2 }
+  ],
+  "repaired": [
+    { "label": "送修", "value": "songxiu" }
+  ],
+  "order_data": {
+    "orderId": "201804100001",
+    "date": 1523340953,
+    "business": 1,
+    "business_name": "张三",
+    "client": "001",
+    "client_name": "华盛顿武警医院",
+    "level": 1,
+    "level_name": "灰常紧急",
+    "assigned": 1,
+    "assigned_name": "是",
+    "aging": "15:0:45",
+    "onlyCode": "100002",
+    "equipmentName": "设备2",
+		"equipmentBrand": "品牌1",
+    "equipmentSource": "偷渡来的",
+    "equipmentPic": [
+      "http://img5.duitang.com/uploads/item/201509/30/20150930171714_K4iWc.jpeg", 
+      "http://imgsrc.baidu.com/image/c0%3Dpixel_huitu%2C0%2C0%2C294%2C40/sign=c4ffe93b576034a83defb0c1a26b2c38/a686c9177f3e670994e725c530c79f3df8dc5520.jpg", 
+      "http://img5.duitang.com/uploads/item/201411/30/20141130235256_VaPJM.jpeg", 
+      "http://p3.wmpic.me/article/2016/01/02/1451705414_FCsmpfEP.jpg"
+    ],
+    "person": 1,
+    "person_name": "张三",
+    "repaired": "songxiu",
+    "repaired_name": "送修",
+    "describe": "问题描述描述描述",
+    "remark": "备注备注备注备注备注备注备注备注备注备注"
+  }
+}

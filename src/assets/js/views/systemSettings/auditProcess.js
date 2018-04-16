@@ -200,10 +200,6 @@ JGBVue.module.auditProcess = ()=> {
                                         if(req.data.status) {
                                             let jdata = JSON.parse(req.data.data);
                                             this.data = jdata;
-                                            /*jdata.companyList.forEach((item)=> {
-                                                _self.firstAudit.companyList.push(item);
-                                                _self.secondAudit.companyList.push(item);
-                                            });*/
                                             this.data.date = new Date(jdata.date*1000);
                                             this.dialogEditFormVisible = false;
                                         }
@@ -333,7 +329,7 @@ JGBVue.module.auditProcess = ()=> {
                     let _self = this;
                     this.firstAudit.activeDepartment = '';
                     this.firstAudit.searchValue = '';
-                    this.firstAudit.activeIndex = '';
+                    this.firstAudit.activeIndex = -1;
                     this.firstAudit.departmentList.splice(0, _self.firstAudit.departmentList.length);
                     this.firstAudit.auditorList.splice(0, _self.firstAudit.auditorList.length);
 
@@ -351,7 +347,7 @@ JGBVue.module.auditProcess = ()=> {
                     let _self = this;
                     this.secondAudit.activeDepartment = '';
                     this.secondAudit.searchValue = '';
-                    this.secondAudit.activeIndex = '';
+                    this.secondAudit.activeIndex = -1;
                     this.secondAudit.departmentList.splice(0, _self.secondAudit.departmentList.length);
                     this.secondAudit.auditorList.splice(0, _self.secondAudit.auditorList.length);
 

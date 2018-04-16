@@ -6,7 +6,7 @@ JGBVue.module.commodityInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, quickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
+	_this.init = (searchUrl, quickQueryUrl, repoUrl, auxiliaryAttributesClassifyUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -30,7 +30,7 @@ JGBVue.module.commodityInfo = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addVisible: false,
+					addVisible: true,
 					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
@@ -45,53 +45,62 @@ JGBVue.module.commodityInfo = ()=> {
 					addForm: {
 						number: '',
 						name: '',
-						category: '',
-						level: null,
-						identifyNumber: '',
-						bankName: '',
-						bankAccount: '',
-						companyTel: '',
-						companyAddress: '',
-						sale: '',
-						assistants: '',
-						table: [
-							{
-								index: 1,
-								editFlag: false,
-								linkman: '',
-								job: '',
-								tel: '',
-								phone: '',
-								QQOrWechat: '',
-								linkAddress: '',
-								primaryContact: ''
-							},
-							{
-								index: 2,
-								editFlag: false,
-								linkman: '',
-								job: '',
-								tel: '',
-								phone: '',
-								QQOrWechat: '',
-								linkAddress: '',
-								primaryContact: ''
-							}
-						]
+						commodityCategory: '',
+						barCode: '',
+						specifications: '',
+						primaryRepo: '',
+						commodityBrand: '',
+						unitOfMeasurement: '',
+						multiple: '',
+						retailPrice: '',
+						tradePrice: '',
+						lowestPrince: '',
+						highestPrince: '',
+						discountRate1: '',
+						discountRate2: '',
+						discountRate3: '',
+						expectPurchasePrice: '',
+						remark: '',
+						upload: [],
+						inventoryWarning: false,
+						branchWarehouseWarning: false,
+						repo: [],
+						setCommodityAuxiliaryAttributes: false,
+						auxiliaryAttributesClassify: [],
+						batchExpirationDateManagement: false,
+						serialNumberManagement: false,
+						initSet: false
+					},
+					addFormBasicData: {
+						commodityCategory: [],
+						primaryRepo: [],
+						unitOfMeasurement: []
 					},
 					editForm: {
 						number: '',
 						name: '',
-						category: '',
-						level: null,
-						identifyNumber: '',
-						bankName: '',
-						bankAccount: '',
-						companyTel: '',
-						companyAddress: '',
-						sale: '',
-						assistants: [],
-						table: []
+						commodityCategory: '',
+						barCode: '',
+						specifications: '',
+						primaryRepo: '',
+						commodityBrand: '',
+						unitOfMeasurement: '',
+						multiple: '',
+						retailPrice: '',
+						tradePrice: '',
+						minPrince: '',
+						maxPrince: '',
+						discountRate1: '',
+						discountRate2: '',
+						discountRate3: '',
+						expectPurchasePrice: '',
+						remark: '',
+						upload: [],
+						inventoryWarning: false,
+						setCommodityAuxiliaryAttributes: false,
+						batchExpirationDateManagement: false,
+						serialNumberManagement: false,
+						initSet: false
 					},
 					addAddress: {
 						provinces: [],
@@ -127,12 +136,17 @@ JGBVue.module.commodityInfo = ()=> {
 					currentImgWidth: 0,
 					currentImgHeight: 0,
 					currentImgIndex: 0,
-					currentImgSrc: ''
+					currentImgSrc: '',
+					uploadDialogVisible: false,
+					repo: [],
+					auxiliaryAttributesClassify: []
 				}
 			},
 			mounted() {
 				this.searchData();
 				this.getQuickQuery();
+				this.getRepo();
+				this.getAuxiliaryAttributesClassify();
 			},
 			methods: {
 				searchData(val) {
@@ -140,10 +154,6 @@ JGBVue.module.commodityInfo = ()=> {
 					axios.get(searchUrl, val).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							/*this.category = jdata.category;
-							this.level = jdata.level;
-							this.sale = jdata.sale;
-							this.companyList = jdata.companyList;*/
 							this.tempTable = jdata;
 							this.tempTable.forEach((item)=> {
 								if(!_self.isShowForbiddenCommodity) {
@@ -163,6 +173,24 @@ JGBVue.module.commodityInfo = ()=> {
 					axios.get(quickQueryUrl).then((res)=> {
 						if(res.data.status) {
 							this.queryType = JSON.parse(res.data.data);
+						}
+					})
+				},
+				getRepo() {
+					axios.get(repoUrl).then((res)=> {
+						if(res.data.status) {
+							this.repo = JSON.parse(res.data.data);
+							this.addForm.repo = this.repo.concat();
+							this.editForm.repo = this.repo.concat();
+						}
+					})
+				},
+				getAuxiliaryAttributesClassify() {
+					axios.get(auxiliaryAttributesClassifyUrl).then((res)=> {
+						if(res.data.status) {
+							this.repo = JSON.parse(res.data.data);
+							this.addForm.repo = this.repo.concat();
+							this.editForm.repo = this.repo.concat();
 						}
 					})
 				},
@@ -453,17 +481,6 @@ JGBVue.module.commodityInfo = ()=> {
 						this.addForm.block = '';
 					}
 				},
-				renderHeader(createElement, { _self }) {
-					return createElement(
-						'div',
-						{'class': 'renderTableHead'},[
-								createElement('div', {
-									attrs: { type: 'text' },
-									class: 'required'
-								}, ['联系人'])
-						]
-					)
-				},
 				addRowClick(row, event, column) {
 					this.addForm.table.forEach((item)=> {
 						item.editFlag = false;
@@ -689,7 +706,90 @@ JGBVue.module.commodityInfo = ()=> {
 					this.currentImgSrc = this.slideshowArr[this.currentImgIndex].src;
 					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
 					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
-				}
+				},
+				handleRemove(file, fileList) {
+					console.log('handleRemove file: ', file);
+					console.log('handleRemove file:', fileList);
+				},
+				lowestInventoryHeader(createElement, { column }) {
+					return createElement(
+						'div',
+						{class: 'jgb-popover-wrap'},
+						[
+							createElement('span', [column.label]),
+							createElement('el-button', {
+									attrs: { 
+										type: 'default',
+										size: 'small'
+									},
+									on: { click: this.showLowestInventoryPopover }
+								}, ['批量']
+							)
+						]
+					);
+				},
+				highestInventoryHeader(createElement, { column }) {
+					return createElement(
+						'div',
+						{class: 'jgb-popover-wrap'},
+						[
+							createElement('span', [column.label]),
+							createElement('el-button', {
+									attrs: { 
+										type: 'default',
+										size: 'small'
+									},
+									on: { click: this.showHighestInventoryPopover }
+								}, ['批量']
+							)
+						]
+					);
+				},
+				showLowestInventoryPopover(e) {
+					let _self = this;
+					this.$prompt(' ', '请输入最低库存量', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						/*inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+						inputErrorMessage: '邮箱格式不正确'*/
+			        }).then(({ value }) => {
+						this.addForm.repo.forEach((item)=> {
+							item.lowestInventory = value;
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+				},
+				showHighestInventoryPopover(e) {
+					this.$prompt('请输入邮箱', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						/*inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+						inputErrorMessage: '邮箱格式不正确'*/
+			        }).then(({ value }) => {
+						this.addForm.repo.forEach((item)=> {
+							item.highestInventory = value;
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+			    },
+			    addRowClick(row) {
+			    	this.addForm.repo.forEach((item)=> {
+						item.editFlag = false;
+					})
+					for(let i = 0; i < this.addForm.repo.length; i++ ) {
+						if(row === this.addForm.repo[i]) {
+							this.addForm.repo[i].editFlag = true;
+						}
+					}
+			    }
 			},
 			watch: {
 				//
@@ -697,8 +797,8 @@ JGBVue.module.commodityInfo = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, quickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
-		_this.init(searchUrl, quickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl);
+	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
+		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl);
 	}
 
 	return that;

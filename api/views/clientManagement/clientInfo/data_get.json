@@ -34,6 +34,7 @@
 	],
 	"table": [
 		{
+			"uid": "5a4sd4546sd",
 			"clientLevel": "零售",
 			"clientNumber": "001",
 			"clientName": "华盛顿武警医院",
@@ -48,6 +49,7 @@
 			"status": true
 		},
 		{
+			"uid": "5a412213546sd",
 			"clientLevel": "批发",
 			"clientNumber": "002",
 			"clientName": "纽约市人民医院",
@@ -62,6 +64,7 @@
 			"status": true
 		},
 		{
+			"uid": "5a4asdasdd",
 			"clientLevel": "批发",
 			"clientNumber": "003",
 			"clientName": "加州老西医",
@@ -76,6 +79,7 @@
 			"status": false
 		},
 		{
+			"uid": "1114546sd",
 			"clientLevel": "零售",
 			"clientNumber": "004",
 			"clientName": "华盛顿街道办事处",

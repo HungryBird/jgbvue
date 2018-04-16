@@ -18,7 +18,21 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
   text-decoration: none;
-  color: inherit; }
+  color: inherit;
+  cursor: pointer; }
+
+.icon-link {
+  color: #1292EC; }
+
+.jgb-popover-wrap {
+  position: relative; }
+  .jgb-popover-wrap .jgb-popover {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    background: #fff;
+    border: 1px solid #ddd;
+    z-index: 1555555; }
 
 ul {
   padding: 0;
@@ -454,7 +468,7 @@ table {
       float: right; }
   #app .details-wrap {
     position: fixed;
-    z-index: 1000;
+    z-index: 10000;
     top: 0;
     right: 0;
     bottom: 0;
@@ -1115,3 +1129,63 @@ table {
 
 .w-thumbnail-wrap + .w-thumbnail-wrap {
   margin-left: 10px; }
+
+.w-pictures {
+  height: 500px; }
+  .w-pictures .el-carousel__item {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center; }
+  .w-pictures .w-thumbnail-wrap {
+    width: 500px;
+    height: 500px;
+    border: none; }
+
+.w-export .el-checkbox {
+  margin-right: 15px !important;
+  margin-bottom: 15px !important; }
+
+.w-print-page {
+  padding: 15px; }
+  .w-print-page .print-title {
+    font-size: 30px;
+    color: #333;
+    text-align: center;
+    line-height: 45px; }
+  .w-print-page .order-info {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    color: #333; }
+    .w-print-page .order-info .left {
+      flex-grow: 0;
+      flex-shrink: 0;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center; }
+    .w-print-page .order-info .right {
+      flex-grow: 0;
+      flex-shrink: 0; }
+  .w-print-page .footer-btn {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 0; }
+  .w-print-page .w-print-column-6 {
+    width: 100%;
+    border-collapse: collapse; }
+    .w-print-page .w-print-column-6 td, .w-print-page .w-print-column-6 th {
+      border: 1px solid #ddd;
+      width: 16.6667%;
+      padding: 10px;
+      color: #333;
+      text-align: center;
+      font-weight: 500; }
+      .w-print-page .w-print-column-6 td[colspan], .w-print-page .w-print-column-6 th[colspan] {
+        text-align: left; }

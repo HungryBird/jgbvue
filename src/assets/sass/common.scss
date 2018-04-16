@@ -20,6 +20,21 @@ h1,h2,h3,h4,h5,h6{
 a{
 	text-decoration:none;
 	color: inherit;
+	cursor: pointer;
+}
+.icon-link{
+	color: #1292EC;
+}
+.jgb-popover-wrap{
+	position: relative;
+	.jgb-popover{
+		position: absolute;
+		top: 50px;
+		left: 50px;
+		background: #fff;
+		border: 1px solid #ddd;
+		z-index: 1555555;
+	}
 }
 ul{
 	padding: 0;
@@ -479,7 +494,7 @@ table{
 	}
 	.details-wrap{
 		position: fixed;
-		z-index: 1000;
+		z-index: 10000;
 		top: 0;
 		right: 0;
 		bottom: 0;
@@ -1210,4 +1225,70 @@ table{
 }
 .w-thumbnail-wrap+.w-thumbnail-wrap {
 	margin-left: 10px;
+}
+
+//图片走马灯
+.w-pictures {
+	$width: 500px;
+	height: $width;
+	.el-carousel__item {
+		@include w-flex(row, nowrap, center, center);
+	}
+	.w-thumbnail-wrap {
+		width:$width;
+		height:$width;
+		border:none;
+	}
+}
+
+//导出窗口
+.w-export {
+	.el-checkbox {
+    margin-right: 15px !important;
+    margin-bottom: 15px !important;
+	}
+}
+
+//工单信息打印页
+.w-print-page {
+	$print-color:#333;
+	padding:15px;
+	.print-title {
+		font-size:30px;
+		color:$print-color;
+		text-align:center;
+		line-height:45px;
+	}
+	.order-info {
+		@include w-flex(row, wrap, space-between, center);
+		width:100%;
+		height:30px;
+		color:$print-color;
+		.left {
+			@include w-flex-grow(0, 0);
+			@include w-flex(row, nowrap, flex-start, center);
+		}
+		.right {
+			@include w-flex-grow(0, 0);
+		}
+	}
+	.footer-btn {
+		@include w-flex(row, wrap, flex-end, center);
+		margin: 20px 0;
+	}
+	.w-print-column-6 {
+		width:100%;
+		border-collapse:collapse;
+		td, th {
+			@include common-border;
+			width:16.6667%;
+			padding:10px;
+			color:$print-color;
+			text-align: center;
+			font-weight:500;
+			&[colspan] {
+				text-align: left;
+			}
+		}
+	} 
 }

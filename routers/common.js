@@ -173,26 +173,8 @@ router.post('/get_block', (req, res)=> {
 	})
 });
 
-router.get('/getCompany', (req, res)=> {
-	let jdata = '';
-	fs.readFile('api/common/company/company.json', 'utf-8', (err, data)=> {
-		if(err) {
-			res.send({
-				status: false,
-				message: err
-			});
-			console.log('err', err);
-			return;
-		}
-		jdata += data;
-		res.send({
-			status: true,
-			data: jdata
-		});
-	})
-});
 
-router.post('/getCompany', (req, res)=> {
+router.use('/getCompany', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/common/company/company.json', 'utf-8', (err, data)=> {
 		if(err) {
@@ -268,6 +250,13 @@ router.post('/upload_info', (req, res)=> {
 	})
 });
 
+router.post('/upload_img', (req, res)=> {
+	res.send({
+		status: true,
+		message: 'upload success'
+	}).end();
+})
+
 router.post('/slideshow', (req, res)=> {
 	let slideshow = [
 		{
@@ -291,7 +280,25 @@ router.post('/slideshow', (req, res)=> {
 		status: true,
 		data: slideshow
 	})
+})
 
+router.get('/getRepo', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/repo/repo.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
 })
 
 module.exports = router;

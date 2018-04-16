@@ -7,7 +7,8 @@ JGBVue.module.index = ()=> {
   ,that = {};
 
   _this.init = (isShowGuidanceUrl)=> {
-    window.JGBVue.module.vParent = new Vue({
+    //window.JGBVue.module.vParent = new Vue({
+    that.vm = new Vue({
       el: '#app',
       data: {
         user: {
@@ -365,13 +366,22 @@ JGBVue.module.index = ()=> {
               _self.activeTab = 'tab' + tabId;
               sessionStorage.activeTab = _self.activeTab;
               this.dropdownIsActive = false;
+              // edit by lanw 2018-4-15 修改标签规则加入可传入参数query  start----
+              if(arguments[3]) {
+                _self.tabs[i].link = `./views/${parentFolder}/${tabId}.html${arguments[3]}`
+              };
+              // edit by lanw 2018-4-15 修改标签规则加入可传入参数query  end----
               return;
             }
           }
           let obj = {};
           obj.name = 'tab' + tabId;
           obj.label = tabName;
-          obj.link = './views/' + parentFolder + '/' + tabId + '.html';
+          // obj.link = './views/' + parentFolder + '/' + tabId + '.html';
+          // edit by lanw 2018-4-15 修改标签规则加入可传入参数query  start----
+          obj.query = arguments[3] || ''
+          obj.link = `./views/${parentFolder}/${tabId}.html${obj.query}`
+          // edit by lanw 2018-4-15 修改标签规则加入可传入参数query  end----
           this.tabs.push(obj);
           this.activeTab = obj.name;
           sessionStorage.activeTab = obj.name;

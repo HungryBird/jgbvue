@@ -16,13 +16,15 @@
 				<div class="jgb-wrap" v-loading="loadingOrderAdd">
           <div class="w-main-header w-order-add">
             <div class="btns" style="margin-top:10px;">
-              <div class="btns-save">
+              <div class="btns-save" v-if="!showOtherButton">
                 <el-button type="primary" v-on:click="btnAdd">保存</el-button>
-                <el-button type="primary" v-on:click="btnReset">重置</el-button>
               </div>
+              <el-button type="primary" style="margin-right:10px;"
+                v-on:click="btnReset">重置</el-button>
               <div v-if="showOtherButton" class="btns-other">
-                <el-button type="primary">导出</el-button>
-                <el-button type="primary">打印</el-button>
+                <el-button type="primary" v-on:click="btnNew">新增</el-button>
+                <el-button type="primary" v-on:click="btnExport">导出</el-button>
+                <el-button type="primary" v-on:click="btnPrint">打印</el-button>
               </div>
             </div>
           </div>
@@ -179,7 +181,7 @@
                       <div v-if="orderAddForm.equipmentPic.length" class="picture-box">
                         <jgb-thumbnail v-for="(pic, index) in orderAddForm.equipmentPic" 
                           :key="index" :src="pic" alt="设备图片"
-                          v-on:img-click="" />
+                          v-on:img-click="openPictureDialog(orderAddForm.equipmentPic, index)" />
                       </div>
                       <div v-else class="w-thumbnail-wrap">
                         <span>自动获取</span>
@@ -200,6 +202,18 @@
           </div>
 				</div>
       </el-main>
+      <!-- 查看设备图片 -->
+      <el-dialog :visible.sync="showPictures">
+        <div slot="title" class="title">查看图片</div>
+        <el-carousel class="w-pictures" ref="equipmentPic"
+          trigger="click" height="500px" arrow="always"
+          :autoplay="false" >
+          <el-carousel-item v-for="(item, index) in pictureList" :key="index">
+              <jgb-thumbnail
+                :src="item" alt="设备图片" v-on:img-click="" />
+          </el-carousel-item>
+        </el-carousel>
+      </el-dialog>
 		</el-container>
 	</div>
 </body>
@@ -209,7 +223,7 @@
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/workOrderManagement/addOrder.js"></script>
 <script type="text/javascript">
-	JGBVue.module.waitingOrder().init(
+	JGBVue.module.addOrder().init(
     '/orderManagement/get_business_data', //获取业务人员数据
     '/clientInfo/data_init', //获取客户数据
     '/orderManagement/order_add_init', //新增工单初始化数据 获取工单编号 报修方式 紧急程度 委派维修
@@ -217,7 +231,9 @@
     '/orderManagement/equipment_info_get', //通过唯一码查询设备信息接口
     '/orderManagement/reqair_person_get', //获取委派维修人员接口
     '/common/data_add_save', //保存新增工单
-	);
+    '/common/data_add_save' //请求导出数据接口
+  ); 
+	// );
 </script>
 
 </html>
