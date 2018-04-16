@@ -68,6 +68,7 @@ const userManagementRouter = require('./routers/views/companyOrganization/userMa
 const clientInfoRouter = require('./routers/views/clientManagement/clientInfo');
 const roleManagementRouter = require('./routers/views/companyOrganization/roleManagement');
 const commodityInfoRouter = require('./routers/views/commodityManagement/commodityInfo');
+const commodityManagementAuxiliaryAttributesRouter = require('./routers/views/commodityManagement/commodityManagementAuxiliaryAttributes');
 
 app.use('/menuManagement', menuManagementRouter);
 app.use('/departmentManagement', departmentManagementRouter);
@@ -76,6 +77,7 @@ app.use('/userManagement', userManagementRouter);
 app.use('/clientInfo', clientInfoRouter);
 app.use('/roleManagement', roleManagementRouter);
 app.use('/commodityInfo', commodityInfoRouter);
+app.use('/commodityManagementAuxiliaryAttributes', commodityManagementAuxiliaryAttributesRouter);
 
 /**
  * 售后

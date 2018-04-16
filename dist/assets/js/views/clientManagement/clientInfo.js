@@ -345,6 +345,7 @@ JGBVue.module.clientInfo = ()=> {
 								message: res.data.message
 							})
 							this.loading = false;
+							this.forbidden();
 						}
 					}).catch((err)=> {
 						console.log('err: ', err);

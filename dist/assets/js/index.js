@@ -152,6 +152,16 @@ JGBVue.module.index = ()=> {
                     name: '辅助属性'
                   }
                 ]
+              },
+              {
+                title: '供应商管理',
+                parentFolder: 'supplierManagement',
+                items: [
+                  {
+                    id: 'supplierInfo',
+                    name: '供应商信息'
+                  }
+                ]
               }
             ]
           }, {

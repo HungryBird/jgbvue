@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>辅助属性</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+<body>
+	<div id="app" v-cloak>
+		<el-container>
+			<el-header>
+				<h4>属性分类</h4>
+			</el-header>
+			<el-main>
+				<div class="jgb-auxiliary-attributes-wrap">
+					<ul id="assisting-list">
+						<li class="custom" v-for="d in data">
+							<a href="#" class="item">
+								<i class="big-icon" style="background-position: -388px 0;"></i>
+								<strong>d.label</strong>
+							</a>
+							<span class="operation">
+								<a href="#" title="编辑">
+									<i class="el-icon-edit"></i>
+								</a>
+								<a href="#" title="删除">
+									<i class="el-icon-delete"></i>
+								</a>
+							</span>
+						</li>
+						<li class="custom" v-on:click="addClassify">
+							<a href="#" class="item add-item">
+								<strong>+ 新增分类</strong>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</el-main>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/commodityManagement/commodityManagementAuxiliaryAttributes.js"></script>
+<script type="text/javascript">
+	JGBVue.module.commodityManagementAuxiliaryAttributes().init('/commodityManagementAuxiliaryAttributes/data_init', '/commodityManagementAuxiliaryAttributes/addClassify');
+</script>
+</html>
