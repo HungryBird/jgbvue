@@ -84,8 +84,10 @@ app.use('/commodityManagementAuxiliaryAttributes', commodityManagementAuxiliaryA
  */
 
 const orderManagementRouter = require('./routers/views/workOrderManagement/orderManagement');
+const equipmentManagementRouter = require('./routers/views/equipmentManagement/equipmentManagement');
 
 app.use('/orderManagement', orderManagementRouter);
+app.use('/equipmentManagement', equipmentManagementRouter);
 
 /**
  * server running at port 3333
