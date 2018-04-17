@@ -62,7 +62,7 @@
                   <el-checkbox v-for="item in formOrderStatus" :label="item" :key="item.value">{{item.label}}</el-checkbox>
                 </el-checkbox-group>
                 <el-button-group>
-                  <el-button type="primary" size="mini">列设置</el-button>
+                  <el-button type="primary" size="mini" v-on:click="btnColumnSetting">列设置</el-button>
                   <el-button type="primary" size="mini" v-on:click="btnAdd">新增</el-button>
                   <el-button type="primary" size="mini" v-on:click="btnExport">导出</el-button>
                   <el-button type="primary" size="mini"
@@ -81,14 +81,15 @@
             </el-form>
           </div>
           <div class="w-main-table">
-            <el-table border highlight-current-row style="width: 100%"
+            <el-table ref="orderManagementTable"
+              border highlight-current-row style="width: 100%"
               :default-sort = "selectForm.sort"
               :data="orderList"
               v-on:sort-change="handleOrderSort"
               v-on:selection-change="handleOrderSelectionChange">
-							<el-table-column type="selection" align="center" width="40"></el-table-column>
+							<el-table-column type="selection" align="center" width="40" key="selection"></el-table-column>
 							<!-- <el-table-column type="index" label="序号" width="50" align="center"></el-table-column> -->
-              <el-table-column v-for="item in tableHeader"
+              <el-table-column v-for="item in tableHeader" v-if="item.enable"
                 align="center"
                 :type="item.type"
                 :sortable="item.sortable"
@@ -697,12 +698,12 @@
           v-on:save="btnExportSave" v-on:close="btnExportClose">
         </jgb-form-footer>
       </el-dialog>
-      <el-dialog :visible.syne="showColumnSetting">
+      <el-dialog :visible.sync="showColumnSetting">
         <div class="title" slot="title">列设置</div>
         <jgb-column-setting v-if="tableHeader.length" v-model="tableHeader"></jgb-column-setting>
         <div slot="footer">
-            <el-button v-on:click="">恢复默认设置</el-button>
-          <el-button type="primary" v-on:click="">完成</el-button>
+            <el-button v-on:click="btnColumnSettingReset">恢复默认设置</el-button>
+          <el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
         </div>
       </el-dialog>
 		</el-container>
@@ -724,7 +725,9 @@
     '/orderManagement/order_invalid', //作废工单
     '/orderManagement/get_order_details', //获取工单详情
     '/common/data_add_save', //导出申请地址
-    '/orderManagement/get_work_order_data' //打印列表接口
+    '/orderManagement/get_work_order_data', //打印列表接口
+    'defaultColumnSettingUrl' //获取列设置默认数据
+
 	);
 </script>
 

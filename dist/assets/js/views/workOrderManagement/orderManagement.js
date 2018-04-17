@@ -18,7 +18,8 @@ JGBVue.module.workOrderManagement = () => {
     orderInvalidUrl, //工单作废
     orderDetailsGetUrl, //获取工单详情
     dataExportRequestUrl, //导出申请地址
-    printListUrl //打印列表接口
+    printListUrl, //打印列表接口
+    defaultColumnSettingUrl //获取列设置默认数据
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -78,8 +79,7 @@ JGBVue.module.workOrderManagement = () => {
           exportChecked: [], //导出选中项 *所有可选项与tableHeader关联
           isLoadingExportRequest: false, //是否正在请求导出数据状态
 
-          showColumnSetting: true, //列设置 窗
-
+          showColumnSetting: false, //列设置 窗
         }
       },
       methods: {
@@ -282,6 +282,35 @@ JGBVue.module.workOrderManagement = () => {
             'workOrderManagement', 
             `?order_id=${this.selectedRows[0].order_id}`)
         },
+        //列设置
+        btnColumnSetting: function() {
+          this.showColumnSetting = true
+        },
+        //列设置-恢复默认设置
+        btnColumnSettingReset: function() {
+          axios.post(defaultColumnSettingUrl).then(res=> {
+            if(res.data.status) {
+              let header = JSON.parse(res.data.data)
+              this.tableHeader= [];
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.status,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            console.log(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        //列设置-完成
+        btnColumnSettingComplete: function() {},
         //关闭详情页
         closeDetails: function() {
           this.showOrderDetails = false
@@ -295,7 +324,8 @@ JGBVue.module.workOrderManagement = () => {
           axios.post(maintenanceDataGetUrl).then().catch()
         },
         //获取工单数据
-        getWorkOrderData: function() {
+        //@param {Boolean} ifWriteHeader 是否更新表头
+        getWorkOrderData: function(ifWriteHeader) {
           axios.post(workOrderDataGetUrl, {
             filter: this.selectForm,
             page_current: this.orderPage.page_current+1
@@ -305,7 +335,7 @@ JGBVue.module.workOrderManagement = () => {
               this.selectedRows = [] //清空选中行
               this.orderList = _data.data
               this.orderPage = this.$deepCopy(_data.page) //真实数据使用
-              if(!this.tableHeader.length) {
+              if(ifWriteHeader) {
                 this.tableHeader = _data.header.concat()
               }
             }
@@ -410,7 +440,7 @@ JGBVue.module.workOrderManagement = () => {
         //工单状态默认全选
         this.selectForm.checkedStatus = this.formOrderStatus.concat()
         //获取工单数据
-        this.getWorkOrderData();
+        this.getWorkOrderData(true);
       }
     })
   }
@@ -424,7 +454,8 @@ JGBVue.module.workOrderManagement = () => {
     orderInvalidUrl,
     orderDetailsGetUrl,
     dataExportRequestUrl,
-    printListUrl
+    printListUrl,
+    defaultColumnSettingUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -436,7 +467,8 @@ JGBVue.module.workOrderManagement = () => {
       orderInvalidUrl,
       orderDetailsGetUrl,
       dataExportRequestUrl,
-      printListUrl)
+      printListUrl,
+      defaultColumnSettingUrl)
   }
   return that
 }

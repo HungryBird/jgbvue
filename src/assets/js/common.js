@@ -411,10 +411,12 @@ Vue.component('jgb-thumbnail', thumbnail)
  */
 let columnSetting = Vue.extend({
   template: `<div class="w-column-setting">
-              <el-table class="column-table"
+              <el-table class="column-table" ref="columnTable"
                 border highlight-current-row
                 max-height="300"
-                :data="columnList">
+                :data="columnList"
+                row-key="prop"
+                v-on:current-change="handleCurrentChange">
                 <el-table-column align="center"
                   prop="label"
                   label="列名称">
@@ -434,8 +436,8 @@ let columnSetting = Vue.extend({
                 </el-table-column>
               </el-table>
               <div class="action">
-                <el-button size="mini">前移</el-button>
-                <el-button size="mini">后移</el-button>
+                <el-button size="mini" v-on:click="prev">前移</el-button>
+                <el-button size="mini" v-on:click="next">后移</el-button>
               </div>
             </div>`,
   props: {
@@ -446,8 +448,57 @@ let columnSetting = Vue.extend({
       return this.value
     },
   },
-  created: function() {
-    console.log(this.columnList)
+  data: function() {
+    return {
+      selectedRow: '', //当前选中行
+    }
   },
+  methods: {
+    //前移
+    prev: function() {
+      if(!this.selectedRow) return;
+      let data = this.columnList.splice(this.selectedRow, 1)[0]
+      this.columnList.splice(this.selectedRow-1, 0, data)
+      this.selectedRow--
+      //v-model改变没有触发视图刷新 暂时没想到好的方法
+      this.columnList[this.selectedRow].enable = !this.columnList[this.selectedRow].enable
+      this.$nextTick(function() {
+        this.$refs.columnTable.setCurrentRow(data) //setCurrentRow生效的需要el-table设置row-key
+        //v-model改变没有触发视图刷新 暂时没想到好的方法
+        this.columnList[this.selectedRow].enable = !this.columnList[this.selectedRow].enable
+      })
+    },
+    //后移
+    next: function() {
+      if(this.selectedRow == this.columnList.length-1) return;
+      let data = this.columnList.splice(this.selectedRow, 1)[0]
+      this.columnList.splice(this.selectedRow+1, 0, data)
+      this.selectedRow++
+      //v-model改变没有触发视图刷新 暂时没想到好的方法
+      this.columnList[this.selectedRow].enable = !this.columnList[this.selectedRow].enable
+      this.$nextTick(function() {
+        this.$refs.columnTable.setCurrentRow(data) //setCurrentRow生效的需要el-table设置row-key
+        //v-model改变没有触发视图刷新 暂时没想到好的方法
+        this.columnList[this.selectedRow].enable = !this.columnList[this.selectedRow].enable
+      })
+    },
+    /**
+     * 点击行
+     * @param {Object} currentRow 当前行数据
+     * @param {Object} oldCurrentRow 旧行数据
+     */
+    handleCurrentChange: function(currentRow, oldCurrentRow) {
+      // console.log(currentRow, oldCurrentRow)
+      this.selectedRow = this.columnList.indexOf(currentRow)
+    },
+  },
+  watch: {
+    columnList: {
+      handler: function() {
+        this.$emit('input', this.columnList)
+      },
+      deep: true
+    },
+  }, 
 })
 Vue.component('jgb-column-setting', columnSetting)
