@@ -285,7 +285,7 @@
 						<el-table-column :render-header="lowestInventoryHeader" label="最低库存">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.lowestInventory }}</div>
-								<el-input v-else v-model="scope.row.lowestInventory" v-focus="aa"></el-input>
+								<el-input v-else v-model="scope.row.lowestInventory"></el-input>
 							</template>
 						</el-table-column>
 						<el-table-column :render-header="highestInventoryHeader" label="最高库存">
@@ -306,14 +306,14 @@
 				</el-col>
 				<el-col :span="24" v-if="addForm.setCommodityAuxiliaryAttributes" style="padding: 10px;padding-top: 0;">
 					<h4>辅助属性分类</h4>
-					<el-checkbox-group v-model="addForm.auxiliaryAttributesClassify" v-on:change="addChangeAuxiliaryAttributesClassify" class="pull-left" style="padding-right: 5px;">
+					<el-checkbox-group v-model="auxiliaryAttributesClassify" v-on:change="addChangeAuxiliaryAttributesClassify" class="pull-left" style="padding-right: 5px;">
 						<el-checkbox v-for="item in auxiliaryAttributesClassify" :key="item.label" :label="item.value">{{ item.label }}</el-checkbox>
 					</el-checkbox-group>
-					<el-button icon="el-icon-plus" size="mini" class="pull-left">新增属性分类</el-button>
+					<el-button icon="el-icon-plus" size="mini" class="pull-left" v-on:click="addAuxiliaryAttributesClassify">新增属性分类</el-button>
 					<div style="clear: both;"></div>
 					<div style="padding: 5px;border-top: 1px solid #ddd;margin-top: 5px;" v-for="item in addSelectedAxiliaryAttributesClassify" :key="item.label">
 						<h5 class="pull-left" style="padding-right: 10px;">{{ item.parentName }}</h5>
-						<el-checkbox-group class="pull-left" v-model="addForm.auxiliaryAttributesClassifyChildren">
+						<el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren">
 							<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value">{{ c.label }}</el-checkbox>
 						</el-checkbox-group>
 						<div style="clear: both;"></div>
@@ -324,13 +324,74 @@
 						</label>
 						<span>(自动建立组合只能选择三个属性分类)</span>
 						<el-button size="mini" v-on:click="addQuickGenerate">快速生成</el-button>
-						<el-table :data="addForm.quickGenerateTable" ref="addQuickGenerateTable" border>
-							<el-table-column v-for="(tb, index) in addForm.quickGenerateTable" :key="tb.label" :prop="tb.prop" :label="tb.label">
-								<template slot-scope="scope" v-if="tb.type === 'btn'">
+						<el-table :data="quickGenerateTable.data" ref="addQuickGenerateTable" border v-on:row-click="addQuickGenerateRowClick">
+							<el-table-column label="序号" width="50px" type="index"></el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="scope">
 									<el-button-group>
-										<el-button v-on:click="addQuickGenerateTable_add_btn" icon="el-icon-plus"></el-button>
-										<el-button v-on:click="addQuickGenerateTable_delete_btn" icon="el-icon-delete"></el-button>
+										<el-button v-on:click="addQuickGenerateTable_add_btn" icon="el-icon-plus" size="small"></el-button>
+										<el-button v-on:click="addQuickGenerateTable_delete_btn" icon="el-icon-delete" size="small" type="danger"></el-button>
 									</el-button-group>
+								</template>
+							</el-table-column>
+							<el-table-column label="图片" prop="img">
+								<template slot-scope="scope">
+									<i class="el-icon-picture jgb-table-icon" v-on:click="addQuickGenerateUploadPicIcon(scope.row.img, scope.row)"></i>
+									<input type="file" v-on:change="addQuickGenerateUploadPic(scope.row.img, scope.row)" style="display: none;"></input>
+								</template>
+							</el-table-column>
+							<el-table-column v-for="(tb, index) in quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="addQuickGenerateHeader">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row[tb.prop] }}</div>
+									<el-input v-else v-model="scope.row[tb.prop]"></el-input>
+								</template>
+							</el-table-column>
+							<!-- <el-table-column label="属性编号" prop="attributesNumber">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.attributesNumber }}</div>
+									<el-input v-else v-model="scope.row.attributesNumber"></el-input>
+								</template>
+							</el-table-column> -->
+							<el-table-column label="属性条码" prop="attributesBarCode">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.attributesBarCode }}</div>
+									<el-input v-else v-model="scope.row.attributesBarCode"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="零售价" prop="retailPrice">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.linkman }}</div>
+									<el-input v-else v-model="scope.row.linkman"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="批发价" prop="tradePrice">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.linkman }}</div>
+									<el-input v-else v-model="scope.row.linkman"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="VIP价" prop="VIPPrice">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.VIPPrice }}</div>
+									<el-input v-else v-model="scope.row.VIPPrice"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="折扣率一" prop="discountRate1">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.discountRate1 }}</div>
+									<el-input v-else v-model="scope.row.discountRate1"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="折扣率二" prop="discountRate2">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.discountRate2 }}</div>
+									<el-input v-else v-model="scope.row.discountRate2"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="预计采购价" prop="expectPurchasePrice">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.expectPurchasePrice }}</div>
+									<el-input v-else v-model="scope.row.expectPurchasePrice"></el-input>
 								</template>
 							</el-table-column>
 						</el-table>

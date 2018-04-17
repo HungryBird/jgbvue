@@ -87,6 +87,7 @@ router.get('/getAuxiliaryAttributesClassify', (req, res)=> {
 });
 
 router.post('/quickGenerate', (req, res)=> {
+	console.log('auxiliaryAttributesClassifyChildren: ', res.body);
 	let jdata = '';
 	fs.readFile('api/views/commodityManagement/commodityInfo/quickGenerate.json', 'utf-8', (err, data)=> {
 		if(err) {
