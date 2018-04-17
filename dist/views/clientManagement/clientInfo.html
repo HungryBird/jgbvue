@@ -222,9 +222,9 @@
 				<el-row :gutter="4">
 					<el-col :span="24">
 						<el-form-item label="销售人员" prop="sale">
-							<el-button icon="el-icon-plus" size="mini" v-on:click="addSetSaleVisible = true">销售人员</el-button>
-							<div style="padding: 4px;border-radius: 4px;border: 1px solid rgba(64,158,255,.2)" v-show="addForm.assistants.length !== 0">
-								<el-tag v-for="tag in addForm.sales" :key="tag.jobNumber" :type="tag.type" closable v-on:close="addCloseTag(tag)">{{tag.name}}</el-tag>
+							<el-button icon="el-icon-plus" size="mini" v-on:click="addSetSalesVisible = true">销售人员</el-button>
+							<div style="padding: 4px;border-radius: 4px;border: 1px solid rgba(64,158,255,.2)" v-show="addForm.sales.length !== 0">
+								<el-tag v-for="tag in addForm.sales" :key="tag.jobNumber" :type="tag.type" closable v-on:close="addCloseSalesTag(tag)">{{tag.name}}</el-tag>
 							</div>
 						</el-form-item>
 					</el-col>
@@ -494,6 +494,26 @@
 			</jgb-set-member>
 			<div slot="footer">
 				<el-button type="primary" :loading="btnLoading" :disable="btnLoading" v-on:click="saveAddSetMember">保存</el-button>
+				<el-button v-on:click="addSetMemberVisible = false">关闭</el-button>
+             </div>
+		</el-dialog>
+		<!-- 添加-选择销售人员 -->
+		<el-dialog :visible.sync="addSetSalesVisible" title="选择协助人员">
+			<jgb-set-member ref="setRoleMember_sale"
+				v-if="addSetSalesVisible"
+				v-model="addCheckedSalesMember"
+				:company-list="companyList"
+				:department-list="departmentList"
+				:user-list="userList"
+				:user-props="defaultUserProps"
+				:company-props="defaultCompanyProps"
+				:department-props="defaultDepartmentProps"
+				v-on:company-change="setMemberCompanyChange"
+				v-on:department-change="setMemberGetUser"
+				v-on:search="setMemberGetUser">
+			</jgb-set-member>
+			<div slot="footer">
+				<el-button type="primary" :loading="btnLoading" :disable="btnLoading" v-on:click="saveAddSetSales">保存</el-button>
 				<el-button v-on:click="addSetMemberVisible = false">关闭</el-button>
              </div>
 		</el-dialog>
