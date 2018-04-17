@@ -649,10 +649,18 @@ JGBVue.module.clientInfo = ()=> {
 				addCloseTag(tag) {
 					let _self = this;
 					this.addForm.assistants.splice(_self.addForm.assistants.indexOf(tag), 1);
+					this.addForm.addCheckedAssistantsMember = [];
+					this.addForm.assistants.forEach((item)=> {
+						_self.addCheckedAssistantsMember.push(item)
+					})
 				},
 				editCloseTag(tag) {
 					let _self = this;
 					this.editForm.assistants.splice(_self.editForm.assistants.indexOf(tag), 1);
+					this.editCheckedAssistantsMember = [];
+					this.editForm.assistants.forEach((item)=> {
+						_self.editCheckedAssistantsMember.push(item)
+					})
 				},
 				getFile($event) {
 					this.getFileInfo = $event.target.files[0];
