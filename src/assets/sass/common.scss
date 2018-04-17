@@ -991,6 +991,64 @@ table{
 	}
 }
 
+/* 辅助属性 */
+
+.jgb-auxiliary-attributes-wrap{
+	width: 910px;
+	#assisting-list{
+		display: flex;
+		flex-wrap: wrap;
+		border: 1px solid #ccc;
+		.custom{
+			position: relative;
+			width: 25%;
+			a.item{
+				display: block;
+				height: 164px;
+				overflow: hidden;
+				background: #fff;
+				color: #3b87b1;
+			    border-bottom: 1px dashed #ccc;
+				border-right: 1px dashed #ccc;
+				text-align: center;
+			}
+			a.add-item{
+				display: block;
+				line-height: 164px;
+			}
+			.big-icon{
+				display: block;
+				width: 64px;
+				height: 64px;
+				margin: 40px auto 0;
+				background: url(../../img/common/page_spr_icons.png) no-repeat;
+			}
+			.operation{
+			    display: none;
+			    position: absolute;
+			    right: 5px;
+			    top: 5px;
+			    a{
+			    	margin-right: 5px;
+			    	&:hover{
+			    		.el-icon-delete{
+			    			color: #ff0000;
+			    		}
+			    		.el-icon-edit{
+			    			color: #20AADE;
+			    		}
+			    	}
+			    }
+			}
+			&:hover{
+				.operation{
+					display: block;
+				}
+			}
+		}
+	}
+}
+
 //工单详情
 .order-details {
 	height:100%;

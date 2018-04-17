@@ -1,0 +1,19 @@
+{
+	"tableHeader": [
+		{
+			"label": "颜色",
+			"value": "color"
+		}
+	],
+	"tableData": [
+		{
+			"value": "红"
+		},
+		{
+			"value": "黄"
+		},
+		{
+			"value": "蓝"
+		}
+	]
+}

@@ -1,0 +1,74 @@
+"table": [
+	{
+		"uid": "5a4sd4546sd",
+		"clientLevel": "零售",
+		"clientNumber": "001",
+		"img": {
+			"value": "p1"
+		},
+		"clientName": "华盛顿武警医院",
+		"saleman": "小明",
+		"linkman": "李雷",
+		"phone": 11111111,
+		"tel": "0771444455",
+		"QQOrWechat": "11122222",
+		"balance": 111.00,
+		"address": "某某地区XX胡同",
+		"assistant": "小红",
+		"status": true
+	},
+	{
+		"uid": "5a412213546sd",
+		"clientLevel": "批发",
+		"clientNumber": "002",
+		"img": {
+			"value": "p3"
+		},
+		"clientName": "纽约市人民医院",
+		"saleman": "小明",
+		"linkman": "李雷",
+		"phone": 11111111,
+		"tel": "0771444455",
+		"QQOrWechat": "11122222",
+		"balance": 111.00,
+		"address": "某某地区XX胡同",
+		"assistant": "小红",
+		"status": true
+	},
+	{
+		"uid": "5a4asdasdd",
+		"clientLevel": "批发",
+		"clientNumber": "003",
+		"img": {
+			"value": "p4"
+		},
+		"clientName": "加州老西医",
+		"saleman": "小明",
+		"linkman": "李雷",
+		"phone": 11111111,
+		"tel": "0771444455",
+		"QQOrWechat": "11122222",
+		"balance": 111.00,
+		"address": "某某地区XX胡同",
+		"assistant": "小红",
+		"status": false
+	},
+	{
+		"uid": "1114546sd",
+		"clientLevel": "零售",
+		"clientNumber": "004",
+		"img": {
+			"value": "p5"
+		},
+		"clientName": "华盛顿街道办事处",
+		"saleman": "小明",
+		"linkman": "李雷",
+		"phone": 11111111,
+		"tel": "0771444455",
+		"QQOrWechat": "11122222",
+		"balance": 111.00,
+		"address": "某某地区XX胡同",
+		"assistant": "小红",
+		"status": true
+	}
+]

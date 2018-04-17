@@ -1,0 +1,30 @@
+[
+	{
+		"uid": "color1",
+		"label": "颜色1"
+	},
+	{
+		"uid": "color2",
+		"label": "颜色2"
+	},
+	{
+		"uid": "color3",
+		"label": "颜色3"
+	},
+	{
+		"uid": "color4",
+		"label": "颜色4"
+	},
+	{
+		"uid": "color5",
+		"label": "颜色5"
+	},
+	{
+		"uid": "color6",
+		"label": "颜色6"
+	},
+	{
+		"uid": "color7",
+		"label": "颜色7"
+	}
+]

@@ -6,7 +6,7 @@ JGBVue.module.commodityInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, quickQueryUrl, repoUrl, auxiliaryAttributesClassifyUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
+	_this.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -67,10 +67,13 @@ JGBVue.module.commodityInfo = ()=> {
 						repo: [],
 						setCommodityAuxiliaryAttributes: false,
 						auxiliaryAttributesClassify: [],
+						auxiliaryAttributesClassifyChildren: [],
+						quickGenerateTable: [],
 						batchExpirationDateManagement: false,
 						serialNumberManagement: false,
-						initSet: false
+						initSet: false,
 					},
+					addSelectedAxiliaryAttributesClassify: [],
 					addFormBasicData: {
 						commodityCategory: [],
 						primaryRepo: [],
@@ -139,7 +142,12 @@ JGBVue.module.commodityInfo = ()=> {
 					currentImgSrc: '',
 					uploadDialogVisible: false,
 					repo: [],
-					auxiliaryAttributesClassify: []
+					auxiliaryAttributesClassify: [],
+					quickGenerateTableHeader: [
+						{
+							
+						}
+					]
 				}
 			},
 			mounted() {
@@ -179,7 +187,7 @@ JGBVue.module.commodityInfo = ()=> {
 				getRepo() {
 					axios.get(repoUrl).then((res)=> {
 						if(res.data.status) {
-							this.repo = JSON.parse(res.data.data);
+							this.repo = JSON.parse(res.data.data).concat();
 							this.addForm.repo = this.repo.concat();
 							this.editForm.repo = this.repo.concat();
 						}
@@ -188,9 +196,7 @@ JGBVue.module.commodityInfo = ()=> {
 				getAuxiliaryAttributesClassify() {
 					axios.get(auxiliaryAttributesClassifyUrl).then((res)=> {
 						if(res.data.status) {
-							this.repo = JSON.parse(res.data.data);
-							this.addForm.repo = this.repo.concat();
-							this.editForm.repo = this.repo.concat();
+							this.auxiliaryAttributesClassify = JSON.parse(res.data.data).concat();
 						}
 					})
 				},
@@ -789,6 +795,33 @@ JGBVue.module.commodityInfo = ()=> {
 							this.addForm.repo[i].editFlag = true;
 						}
 					}
+			    },
+			    addChangeAuxiliaryAttributesClassify(arr) {
+			    	let _self = this;
+			    	this.addSelectedAxiliaryAttributesClassify = [];
+			    	arr.forEach((item)=> {
+			    		for(let i = 0; i < _self.auxiliaryAttributesClassify.length; i++ ) {
+			    			if(item === _self.auxiliaryAttributesClassify[i].value) {
+			    				let obj = {};
+			    				obj.parentName = _self.auxiliaryAttributesClassify[i].label;
+			    				obj.children = _self.auxiliaryAttributesClassify[i].chilren.concat();
+			    				_self.addSelectedAxiliaryAttributesClassify.push(obj);
+			    			}
+			    		}
+			    	})
+			    },
+			    addQuickGenerate() {
+			    	if(this.addForm.auxiliaryAttributesClassifyChildren.length !== 0) {
+			    		axios.post(quickGenerateUrl, this.addForm.auxiliaryAttributesClassifyChildren).then((res)=> {
+
+			    		})
+			    	}
+			    },
+			    addQuickGenerateTable_add_btn() {
+			    	//
+			    },
+			    addQuickGenerateTable_delete_btn() {
+			    	//
 			    }
 			},
 			watch: {
@@ -797,8 +830,8 @@ JGBVue.module.commodityInfo = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl)=> {
-		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl);
+	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl)=> {
+		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl);
 	}
 
 	return that;

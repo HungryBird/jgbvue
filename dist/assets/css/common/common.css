@@ -946,6 +946,51 @@ table {
   align-items: center;
   margin-bottom: 20px; }
 
+/* 辅助属性 */
+.jgb-auxiliary-attributes-wrap {
+  width: 910px; }
+  .jgb-auxiliary-attributes-wrap #assisting-list {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    border: 1px solid #ccc; }
+    .jgb-auxiliary-attributes-wrap #assisting-list .custom {
+      position: relative;
+      width: 25%; }
+      .jgb-auxiliary-attributes-wrap #assisting-list .custom a.item {
+        display: block;
+        height: 164px;
+        overflow: hidden;
+        background: #fff;
+        color: #3b87b1;
+        border-bottom: 1px dashed #ccc;
+        border-right: 1px dashed #ccc;
+        text-align: center; }
+      .jgb-auxiliary-attributes-wrap #assisting-list .custom a.add-item {
+        display: block;
+        line-height: 164px; }
+      .jgb-auxiliary-attributes-wrap #assisting-list .custom .big-icon {
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 40px auto 0;
+        background: url(../../img/common/page_spr_icons.png) no-repeat; }
+      .jgb-auxiliary-attributes-wrap #assisting-list .custom .operation {
+        display: none;
+        position: absolute;
+        right: 5px;
+        top: 5px; }
+        .jgb-auxiliary-attributes-wrap #assisting-list .custom .operation a {
+          margin-right: 5px; }
+          .jgb-auxiliary-attributes-wrap #assisting-list .custom .operation a:hover .el-icon-delete {
+            color: #ff0000; }
+          .jgb-auxiliary-attributes-wrap #assisting-list .custom .operation a:hover .el-icon-edit {
+            color: #20AADE; }
+      .jgb-auxiliary-attributes-wrap #assisting-list .custom:hover .operation {
+        display: block; }
+
 .order-details {
   height: 100%;
   overflow: hidden; }

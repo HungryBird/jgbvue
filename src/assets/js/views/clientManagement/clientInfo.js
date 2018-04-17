@@ -68,7 +68,7 @@ JGBVue.module.clientInfo = ()=> {
 						bankAccount: '',
 						companyTel: '',
 						companyAddress: '',
-						sale: '',
+						sales: [],
 						assistants: [],
 						table: [
 							{
@@ -105,12 +105,14 @@ JGBVue.module.clientInfo = ()=> {
 						bankAccount: '',
 						companyTel: '',
 						companyAddress: '',
-						sale: '',
+						sales: [],
 						assistants: [],
 						table: []
 					},
 					addCheckedAssistantsMember: [],
 					editCheckedAssistantsMember: [],
+					addCheckedSalesMember: [],
+					editCheckedSalesMember: [],
 					defaultCompanyProps: { label: "label", value: "number" },
 					defaultDepartmentProps: { label: "label", value: "value" },
 					defaultUserProps: {
@@ -133,7 +135,9 @@ JGBVue.module.clientInfo = ()=> {
 						blocks: []
 					},
 					addSetMemberVisible: false,
+					addSetSalesVisible: false,
 					editSetMemberVisible: false,
+					editSetSalesVisible: false,
 					loadingSetRoleMember: false,
 					checkedRoleMember: [],
 					importVisible: false,
@@ -345,6 +349,7 @@ JGBVue.module.clientInfo = ()=> {
 								message: res.data.message
 							})
 							this.loading = false;
+							this.forbidden();
 						}
 					}).catch((err)=> {
 						console.log('err: ', err);
@@ -648,10 +653,26 @@ JGBVue.module.clientInfo = ()=> {
 				addCloseTag(tag) {
 					let _self = this;
 					this.addForm.assistants.splice(_self.addForm.assistants.indexOf(tag), 1);
+					this.addCheckedAssistantsMember = [];
+					this.addForm.assistants.forEach((item)=> {
+						_self.addCheckedAssistantsMember.push(item)
+					})
+				},
+				addCloseSalesTag(tag) {
+					let _self = this;
+					this.addForm.sales.splice(_self.addForm.sales.indexOf(tag), 1);
+					this.addCheckedSalesMember = [];
+					this.addForm.sales.forEach((item)=> {
+						_self.addCheckedSalesMember.push(item)
+					})
 				},
 				editCloseTag(tag) {
 					let _self = this;
 					this.editForm.assistants.splice(_self.editForm.assistants.indexOf(tag), 1);
+					this.editCheckedAssistantsMember = [];
+					this.editForm.assistants.forEach((item)=> {
+						_self.editCheckedAssistantsMember.push(item)
+					})
 				},
 				getFile($event) {
 					this.getFileInfo = $event.target.files[0];
@@ -744,6 +765,22 @@ JGBVue.module.clientInfo = ()=> {
 						_self.addForm.assistants.push(item);
 					})
 					this.addSetMemberVisible = false;
+				},
+				saveAddSetSales() {
+					let _self = this;
+					this.addForm.sales = [];
+					this.addCheckedSalesMember.forEach((item)=> {
+						_self.addForm.sales.push(item);
+					})
+					this.addSetSalesVisible = false;
+				}
+			},
+			watch: {
+				addCheckedSalesMember(newVal) {
+					if(newVal.length > 1) {
+						return this.addCheckedSalesMember.splice(0, 1);
+					}
+					this.$refs['setRoleMember_sale'].setUserListChecked()
 				}
 			}
 		})

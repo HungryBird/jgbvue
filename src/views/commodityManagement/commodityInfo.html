@@ -305,10 +305,36 @@
 					<a class="fa fa-video-camera icon-link"></a>
 				</el-col>
 				<el-col :span="24" v-if="addForm.setCommodityAuxiliaryAttributes" style="padding: 10px;padding-top: 0;">
-					<h4>辅助商品分类</h4>
-						<el-checkbox-group v-model="addForm.auxiliaryAttributesClassify">
-							<el-checkbox v-for="item in auxiliaryAttributesClassify" :key="item.label">{{ item.label }}</el-checkbox>
+					<h4>辅助属性分类</h4>
+					<el-checkbox-group v-model="addForm.auxiliaryAttributesClassify" v-on:change="addChangeAuxiliaryAttributesClassify" class="pull-left" style="padding-right: 5px;">
+						<el-checkbox v-for="item in auxiliaryAttributesClassify" :key="item.label" :label="item.value">{{ item.label }}</el-checkbox>
+					</el-checkbox-group>
+					<el-button icon="el-icon-plus" size="mini" class="pull-left">新增属性分类</el-button>
+					<div style="clear: both;"></div>
+					<div style="padding: 5px;border-top: 1px solid #ddd;margin-top: 5px;" v-for="item in addSelectedAxiliaryAttributesClassify" :key="item.label">
+						<h5 class="pull-left" style="padding-right: 10px;">{{ item.parentName }}</h5>
+						<el-checkbox-group class="pull-left" v-model="addForm.auxiliaryAttributesClassifyChildren">
+							<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value">{{ c.label }}</el-checkbox>
 						</el-checkbox-group>
+						<div style="clear: both;"></div>
+					</div>
+					<div style="padding: 5px 0;">
+						<label>
+							<strong>自动建立属性组合</strong>
+						</label>
+						<span>(自动建立组合只能选择三个属性分类)</span>
+						<el-button size="mini" v-on:click="addQuickGenerate">快速生成</el-button>
+						<el-table :data="addForm.quickGenerateTable" ref="addQuickGenerateTable" border>
+							<el-table-column v-for="(tb, index) in addForm.quickGenerateTable" :key="tb.label" :prop="tb.prop" :label="tb.label">
+								<template slot-scope="scope" v-if="tb.type === 'btn'">
+									<el-button-group>
+										<el-button v-on:click="addQuickGenerateTable_add_btn" icon="el-icon-plus"></el-button>
+										<el-button v-on:click="addQuickGenerateTable_delete_btn" icon="el-icon-delete"></el-button>
+									</el-button-group>
+								</template>
+							</el-table-column>
+						</el-table>
+					</div>
 				</el-col>
 			</el-row>
 			<el-row>
@@ -385,6 +411,6 @@
 	 * 获取快速查询选项接口
 	 * 
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow');
+	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate');
 </script>
 </html>
