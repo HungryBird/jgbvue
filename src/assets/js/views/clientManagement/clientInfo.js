@@ -780,7 +780,7 @@ JGBVue.module.clientInfo = ()=> {
 					if(newVal.length > 1) {
 						return this.addCheckedSalesMember.splice(0, 1);
 					}
-					this.$refs['setRoleMember_sale'].setUserListChecked()
+					this.$refs['setRoleMember_sale'].setUserListChecked();
 				}
 			}
 		})

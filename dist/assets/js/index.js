@@ -182,7 +182,12 @@ JGBVue.module.index = ()=> {
             {
               title: '设备管理',
               parentFolder: 'equipmentManagement',
-              items: [{
+              items: [
+              {
+                id: 'equipmentManagement',
+                name: '设备管理'
+              },
+              {
                 id: 'equipmentCategory',
                 name: '设备类别'
               }, {

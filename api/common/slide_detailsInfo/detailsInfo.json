@@ -1,0 +1,40 @@
+[
+	{
+		"name": "name1",
+		"value": "11111"
+	},
+	{
+		"name": "name2",
+		"value": "11111"
+	},
+	{
+		"name": "name3",
+		"value": "11111"
+	},
+	{
+		"name": "pic1",
+		"isImages": true,
+		"value": [
+			{
+				"width": 500,
+				"height": 400,
+				"src": "../../img/slideshow/1.jpg"
+			},
+			{
+				"width": 640,
+				"height": 480,
+				"src": "../../img/slideshow/2.jpg"
+			},
+			{
+				"width": 500,
+				"height": 375,
+				"src": "../../img/slideshow/3.jpg"
+			}
+		]
+	},
+	{
+		"name": "long_info",
+		"value": "11111",
+		"oneRow": true
+	}
+]
