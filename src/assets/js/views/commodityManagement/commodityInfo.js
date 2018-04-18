@@ -42,8 +42,8 @@ JGBVue.module.commodityInfo = ()=> {
 							{required: true, message: '请输入客户名称'}
 						]
 					},
-					auxiliaryAttributesClassify: [],
-					auxiliaryAttributesClassifyChildren: [],
+					auxiliaryAttributesClassify: [], //添加-点击属性分类-父属性
+					auxiliaryAttributesClassifyChildren: [], //添加-点击属性分类-子属性
 					initQuickGenerateTable: [],
 					addForm: {
 						number: '',
@@ -70,7 +70,25 @@ JGBVue.module.commodityInfo = ()=> {
 						repo: [],
 						setCommodityAuxiliaryAttributes: false,
 						auxiliaryAttributesClassify: [],
-						quickGenerateTable: [],
+						quickGenerateTable: {
+							header: [
+								/*{
+									prop: 'attributesNumber',
+									label: '属性编号'
+								}*/
+							],
+							data: [
+								/*{
+									editFlag: false,
+									type: 'input',
+									attributesNumber: '',
+								}*/
+								{
+									indexNum: 1,
+									editFlag: false,
+								}
+							]
+						},
 						batchExpirationDateManagement: false,
 						serialNumberManagement: false,
 						initSet: false,
@@ -127,25 +145,7 @@ JGBVue.module.commodityInfo = ()=> {
 					uploadDialogVisible: false,
 					repo: [],
 					auxiliaryAttributesClassify: [],
-					quickGenerateTable: {
-						header: [
-							/*{
-								prop: 'attributesNumber',
-								label: '属性编号'
-							}*/
-						],
-						data: [
-							/*{
-								editFlag: false,
-								type: 'input',
-								attributesNumber: '',
-							}*/
-							{
-								indexNum: 1,
-								editFlag: false,
-							}
-						]
-					}
+					quickGenerateOption: [],
 				}
 			},
 			mounted() {
@@ -407,12 +407,12 @@ JGBVue.module.commodityInfo = ()=> {
 					}
 				},
 				addQuickGenerateRowClick(row) {
-					this.quickGenerateTable.data.forEach((item)=> {
+					this.addForm.quickGenerateTable.data.forEach((item)=> {
 						item.editFlag = false;
 					})
-					for(let i = 0; i < this.quickGenerateTable.data.length; i++ ) {
-						if(row === this.quickGenerateTable.data[i]) {
-							this.quickGenerateTable.data[i].editFlag = true;
+					for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
+						if(row === this.addForm.quickGenerateTable.data[i]) {
+							this.addForm.quickGenerateTable.data[i].editFlag = true;
 						}
 					}
 				},
@@ -711,11 +711,14 @@ JGBVue.module.commodityInfo = ()=> {
 						}
 					}
 			    },
+			    /**
+			     * 点击属性分类
+			     * @param {[type]} arr [description]
+			     */
 			    addChangeAuxiliaryAttributesClassify(arr) {
-			    	console.log('arr: ', arr);
 			    	let _self = this;
 			    	this.addSelectedAxiliaryAttributesClassify = [];
-			    	this.quickGenerateTable.header = [];
+			    	this.addForm.quickGenerateTable.header = [];
 			    	arr.forEach((item)=> {
 			    		for(let i = 0; i < _self.auxiliaryAttributesClassify.length; i++ ) {
 			    			if(item === _self.auxiliaryAttributesClassify[i].value) {
@@ -726,12 +729,25 @@ JGBVue.module.commodityInfo = ()=> {
 			    				_self.addSelectedAxiliaryAttributesClassify.push(obj);
 			    				hObj.label = _self.auxiliaryAttributesClassify[i].label;
 			    				hObj.prop = _self.auxiliaryAttributesClassify[i].value;
-			    				_self.quickGenerateTable.header.splice(0, 0, hObj);
+			    				_self.addForm.quickGenerateTable.header.splice(0, 0, hObj);
 			    			}
 			    		}
 			    	})
-			    	console.log('_self.quickGenerateTable.header: ', _self.quickGenerateTable.header);
 			    },
+			    /**
+			     * 点击属性分类子属性
+			     * @param {[type]} arr [description]
+			     */
+			    addChangeAuxiliaryAttributesClassifyChildren(arr) {
+			    	let _self = this;
+			    	arr.forEach((item)=> {
+
+			    	})
+			    	console.log('quickGenerateTable.data: ', this.addForm.quickGenerateTable)
+			    },
+			    /**
+			     * 点击新增属性分类按钮
+			     */
 			    addAuxiliaryAttributesClassify() {
 			    	let _self = this;
 					this.$prompt('名称', '新增分类', {
@@ -763,26 +779,26 @@ JGBVue.module.commodityInfo = ()=> {
 			    	}
 			    },
 			    addQuickGenerateTable_add_btn() {
-			    	let index = this.quickGenerateTable.data[this.quickGenerateTable.data.length - 1].index + 1;
+			    	let index = this.addForm.quickGenerateTable.data[this.addForm.quickGenerateTable.data.length - 1].index + 1;
 					let initFormRow = {
 						index: 0,
 						editFlag: false
 					}
 					initFormRow.index = index;
-					this.quickGenerateTable.data.push(initFormRow);
+					this.addForm.quickGenerateTable.data.push(initFormRow);
 			    },
 			    addQuickGenerateTable_delete_btn(row) {
-			    	for(let i = 0; i < this.quickGenerateTable.data.length; i++ ) {
-						if(row === this.quickGenerateTable.data[i]) {
-							this.quickGenerateTable.data.splice(i, 1);
+			    	for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
+						if(row === this.addForm.quickGenerateTable.data[i]) {
+							this.addForm.quickGenerateTable.data.splice(i, 1);
 						}
 					}
 			    },
 			    addQuickGenerateUploadPicIcon() {
 			    	this.addQuickGenerateUploadPic();
 			    },
-			    addQuickGenerateUploadPic($event) {
-			    	console.log($event)
+			    addQuickGenerateUploadPic() {
+
 			    },
 			    addQuickGenerateHeader(createElement, { column }) {
 			    	return createElement(
@@ -831,6 +847,39 @@ JGBVue.module.commodityInfo = ()=> {
 						});       
 			        });
 			        console.log(row, label)
+		    	},
+		    	selectQuickGenerateOption(prop) {
+		    		/**
+		    		 * prop传入的是父属性的value
+		    		 * auxiliaryAttributesClassify包含父属性和子属性
+		    		 * auxiliaryAttributesClassifyChildren被选中的子属性
+		    		 * 
+		    		 * @type {[type]}
+		    		 */
+		    		let _self = this;
+		    		this.quickGenerateOption = [];
+		    		/**
+		    		 * 查询prop是否等于auxiliaryAttributesClassify.value
+		    		 * 查询child是否存在查询prop是否等于auxiliaryAttributesClassify.children内
+		    		 * 如果存在传入obj
+		    		 * @param  {[type]} let i             [description]
+		    		 * @return {[type]}     [description]
+		    		 */
+	    			for(let i = 0; i < _self.auxiliaryAttributesClassify.length; i++ ) {
+	    				if(prop === _self.auxiliaryAttributesClassify[i].value) {
+	    					this.auxiliaryAttributesClassifyChildren.forEach((child)=> {
+	    						for(let j = 0; j < _self.auxiliaryAttributesClassify[i].chilren.length; j++ ) {
+	    							if(child === _self.auxiliaryAttributesClassify[i].chilren[j].value) {
+	    								let obj = {};
+	    								obj.label = _self.auxiliaryAttributesClassify[i].chilren[j].label;
+	    								obj.value = _self.auxiliaryAttributesClassify[i].chilren[j].value;
+	    								_self.quickGenerateOption.push(obj);
+	    							}
+	    						}
+	    					})
+	    				}
+	    			}
+	    			console.log('quickGenerateTable: ', this.addForm.quickGenerateTable);
 		    	}
 			},
 			watch: {
