@@ -395,6 +395,7 @@ JGBVue.module.clientInfo = ()=> {
 				toggleForbiddenClients() {
 					let _self = this;
 					this.table.splice(0, _self.table.length);
+					this.selectedRows = [];
 					this.tempTable.forEach((item)=> {
 						if(this.isShowForbiddenClients) {
 							_self.table.push(item);

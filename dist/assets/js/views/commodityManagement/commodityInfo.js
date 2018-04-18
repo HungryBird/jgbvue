@@ -42,6 +42,9 @@ JGBVue.module.commodityInfo = ()=> {
 							{required: true, message: '请输入客户名称'}
 						]
 					},
+					auxiliaryAttributesClassify: [],
+					auxiliaryAttributesClassifyChildren: [],
+					initQuickGenerateTable: [],
 					addForm: {
 						number: '',
 						name: '',
@@ -66,8 +69,6 @@ JGBVue.module.commodityInfo = ()=> {
 						branchWarehouseWarning: false,
 						repo: [],
 						setCommodityAuxiliaryAttributes: false,
-						auxiliaryAttributesClassify: [],
-						auxiliaryAttributesClassifyChildren: [],
 						quickGenerateTable: [],
 						batchExpirationDateManagement: false,
 						serialNumberManagement: false,
@@ -143,17 +144,27 @@ JGBVue.module.commodityInfo = ()=> {
 					uploadDialogVisible: false,
 					repo: [],
 					auxiliaryAttributesClassify: [],
-					quickGenerateTableHeader: [
-						{
-							
-						}
-					]
+					quickGenerateTable: {
+						header: [
+							{
+								label: "属性编号",
+								prop: 'attributesNumber'
+							}
+						],
+						data: [
+							{
+								editFlag: false,
+								attributesNumber: 111
+							}
+						]
+					}
 				}
 			},
 			mounted() {
 				this.searchData();
 				this.getQuickQuery();
 				this.getRepo();
+				this.addQuickGenerate();
 				this.getAuxiliaryAttributesClassify();
 			},
 			methods: {
@@ -497,6 +508,16 @@ JGBVue.module.commodityInfo = ()=> {
 						}
 					}
 				},
+				addQuickGenerateRowClick(row) {
+					this.quickGenerateTable.data.forEach((item)=> {
+						item.editFlag = false;
+					})
+					for(let i = 0; i < this.quickGenerateTable.data.length; i++ ) {
+						if(row === this.quickGenerateTable.data[i]) {
+							this.quickGenerateTable.data[i].editFlag = true;
+						}
+					}
+				},
 				editRowClick(row, event, column) {
 					this.editForm.table.forEach((item)=> {
 						item.editFlag = false;
@@ -756,8 +777,6 @@ JGBVue.module.commodityInfo = ()=> {
 					this.$prompt(' ', '请输入最低库存量', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
-						/*inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-						inputErrorMessage: '邮箱格式不正确'*/
 			        }).then(({ value }) => {
 						this.addForm.repo.forEach((item)=> {
 							item.lowestInventory = value;
@@ -773,8 +792,6 @@ JGBVue.module.commodityInfo = ()=> {
 					this.$prompt('请输入邮箱', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
-						/*inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-						inputErrorMessage: '邮箱格式不正确'*/
 			        }).then(({ value }) => {
 						this.addForm.repo.forEach((item)=> {
 							item.highestInventory = value;
@@ -809,11 +826,19 @@ JGBVue.module.commodityInfo = ()=> {
 			    			}
 			    		}
 			    	})
+			    	console.log(_self.auxiliaryAttributesClassify)
+			    	//auxiliaryAttributesClassify
+			    },
+			    addAuxiliaryAttributesClassify() {
+			    	//
 			    },
 			    addQuickGenerate() {
-			    	if(this.addForm.auxiliaryAttributesClassifyChildren.length !== 0) {
-			    		axios.post(quickGenerateUrl, this.addForm.auxiliaryAttributesClassifyChildren).then((res)=> {
+			    	if(this.auxiliaryAttributesClassifyChildren.length !== 0) {
+			    		console.log(111)
+			    		axios.post(quickGenerateUrl, this.auxiliaryAttributesClassifyChildren).then((res)=> {
+			    			if(res.data.status) {
 
+			    			}
 			    		})
 			    	}
 			    },
@@ -822,6 +847,19 @@ JGBVue.module.commodityInfo = ()=> {
 			    },
 			    addQuickGenerateTable_delete_btn() {
 			    	//
+			    },
+			    addQuickGenerateUploadPicIcon() {
+			    	this.addQuickGenerateUploadPic();
+			    },
+			    addQuickGenerateUploadPic($event) {
+			    	console.log($event)
+			    },
+			    addQuickGenerateHeader(createElement, { column }) {
+			    	return createElement(
+						'span',
+						{'class': 'required'},
+						[column.label]
+					);
 			    }
 			},
 			watch: {

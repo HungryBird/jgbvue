@@ -6,7 +6,7 @@ JGBVue.module.equipmentManagement = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl)=> {
+	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -51,34 +51,7 @@ JGBVue.module.equipmentManagement = ()=> {
 						identifyNumber: '',
 						bankName: '',
 						bankAccount: '',
-						companyTel: '',
-						companyAddress: '',
-						sales: [],
-						assistants: [],
-						table: [
-							{
-								index: 1,
-								editFlag: false,
-								linkman: '',
-								job: '',
-								tel: '',
-								phone: '',
-								QQOrWechat: '',
-								linkAddress: '',
-								primaryContact: ''
-							},
-							{
-								index: 2,
-								editFlag: false,
-								linkman: '',
-								job: '',
-								tel: '',
-								phone: '',
-								QQOrWechat: '',
-								linkAddress: '',
-								primaryContact: ''
-							}
-						]
+						companyTel: ''
 					},
 					editForm: {
 						number: '',
@@ -88,36 +61,7 @@ JGBVue.module.equipmentManagement = ()=> {
 						identifyNumber: '',
 						bankName: '',
 						bankAccount: '',
-						companyTel: '',
-						companyAddress: '',
-						sales: [],
-						assistants: [],
-						table: []
-					},
-					addCheckedAssistantsMember: [],
-					editCheckedAssistantsMember: [],
-					addCheckedSalesMember: [],
-					editCheckedSalesMember: [],
-					defaultCompanyProps: { label: "label", value: "number" },
-					defaultDepartmentProps: { label: "label", value: "value" },
-					defaultUserProps: {
-						userName: "name", 
-						userId: "uid", 
-						userPic: "src", 
-						departmentName: "department", 
-						companyName: "companyName"
-					},
-					addAddress: {
-						provinces: [],
-						cities: [],
-						districts: [],
-						blocks: []
-					},
-					editAddress: {
-						provinces: [],
-						cities: [],
-						districts: [],
-						blocks: []
+						companyTel: ''
 					},
 					addSetMemberVisible: false,
 					addSetSalesVisible: false,
@@ -161,6 +105,7 @@ JGBVue.module.equipmentManagement = ()=> {
 					currentImgHeight: 0,
 					currentImgIndex: 0,
 					currentImgSrc: '',
+					showColumnSetting: false,
 				}
 			},
 			mounted() {
@@ -318,7 +263,7 @@ JGBVue.module.equipmentManagement = ()=> {
 					axios.get(searchUrl, item.value).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							this.table.splice(0, _self.table.length);
+							this.table.data.splice(0, _self.table.length);
 							this.tempTable.splice(0, _self.tempTable.length);
 							jdata.table.forEach((item)=> {
 								_self.tempTable.push(item);
@@ -365,7 +310,7 @@ JGBVue.module.equipmentManagement = ()=> {
 					,arr = [];
 					this.selectedRows.forEach((item, index)=> {
 						for(let i = 0; i < _self.tempTable.length; i++ ) {
-							if(item.clientNumber === _self.tempTable[i].clientNumber) {
+							if(item.uid === _self.tempTable[i].uid) {
 								_self.tempTable[i].status = false;
 							}
 						}
@@ -389,7 +334,7 @@ JGBVue.module.equipmentManagement = ()=> {
 						if(res.data.status) {
 							this.selectedRows.forEach((item, index)=> {
 								for(let i = 0; i < _self.tempTable.length; i++ ) {
-									if(item.clientNumber === _self.tempTable[i].clientNumber) {
+									if(item.uid === _self.tempTable[i].uid) {
 										_self.tempTable[i].status = true;
 									}
 								}
@@ -401,6 +346,7 @@ JGBVue.module.equipmentManagement = ()=> {
 				toggleForbiddenEquipment() {
 					let _self = this;
 					this.table.data = [];
+					this.selectedRows = [];
 					this.tempTable.forEach((item)=> {
 						if(this.isShowForbiddenEquipment) {
 							_self.table.data.push(item);
@@ -506,91 +452,6 @@ JGBVue.module.equipmentManagement = ()=> {
 						this.addForm.block = '';
 					}
 				},
-				renderHeader(createElement, { column }) {
-					return createElement(
-						'span'
-						,{'class': 'required'}
-						,[column.label]
-					);
-				},
-				addRowClick(row, event, column) {
-					this.addForm.table.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.table.length; i++ ) {
-						if(row === this.addForm.table[i]) {
-							this.addForm.table[i].editFlag = true;
-						}
-					}
-				},
-				editRowClick(row, event, column) {
-					this.editForm.table.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.editForm.table.length; i++ ) {
-						if(row === this.editForm.table[i]) {
-							this.editForm.table[i].editFlag = true;
-						}
-					}
-				},
-				addFormTableAdd() {
-					let index = this.addForm.table[this.addForm.table.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false,
-						linkman: '',
-						job: '',
-						tel: '',
-						phone: '',
-						QQOrWechat: '',
-						linkAddress: '',
-						primaryContact: ''
-					}
-					initFormRow.index = index;
-					this.addForm.table.push(initFormRow)
-				},
-				editFormTableAdd() {
-					let index = this.editForm.table[this.editForm.table.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false,
-						linkman: '',
-						job: '',
-						tel: '',
-						phone: '',
-						QQOrWechat: '',
-						linkAddress: '',
-						primaryContact: ''
-					}
-					initFormRow.index = index;
-					this.editForm.table.push(initFormRow)
-				},
-				addFormTableDelete(row) {
-					for(let i = 0; i < this.addForm.table.length; i++ ) {
-						if(row === this.addForm.table[i]) {
-							this.addForm.table.splice(this.addForm.table[i], 1);
-						}
-					}
-				},
-				editFormTableDelete(row) {
-					for(let i = 0; i < this.editForm.table.length; i++ ) {
-						if(row === this.editForm.table[i]) {
-							this.editForm.table.splice(this.editForm.table[i], 1);
-						}
-					}
-				},
-				saveSetRoleMember() {
-					let arr = []
-					,_self = this;
-					this.checkedRoleMember.forEach(item=> {
-						arr.push(item.uid)
-					});
-					this.addForm.assistants = [];
-					arr.forEach((item)=> {
-						_self.addForm.assistants.push(item);
-					});
-					console.log(arr);
-				},
 				saveAdd(formName) {
 					this.$refs[formName].validate((valid)=> {
 						if(valid) {
@@ -662,22 +523,6 @@ JGBVue.module.equipmentManagement = ()=> {
 					this.addCheckedAssistantsMember = [];
 					this.addForm.assistants.forEach((item)=> {
 						_self.addCheckedAssistantsMember.push(item)
-					})
-				},
-				addCloseSalesTag(tag) {
-					let _self = this;
-					this.addForm.sales.splice(_self.addForm.sales.indexOf(tag), 1);
-					this.addCheckedSalesMember = [];
-					this.addForm.sales.forEach((item)=> {
-						_self.addCheckedSalesMember.push(item)
-					})
-				},
-				editCloseTag(tag) {
-					let _self = this;
-					this.editForm.assistants.splice(_self.editForm.assistants.indexOf(tag), 1);
-					this.editCheckedAssistantsMember = [];
-					this.editForm.assistants.forEach((item)=> {
-						_self.editCheckedAssistantsMember.push(item)
 					})
 				},
 				getFile($event) {
@@ -821,6 +666,59 @@ JGBVue.module.equipmentManagement = ()=> {
 					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
 					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
 				},
+				btnColumnSettingReset() {
+					axios.post(defaultColumnSettingUrl).then(res=> {
+						if(res.data.status) {
+							this.table.header= [];
+							this.table.header = JSON.parse(res.data.data)
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				btnColumnSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.table.header).then(res=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							});
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				handleRemove(file, fileList) {
+					//
+				}
 			},
 			watch: {
 				addCheckedSalesMember(newVal) {
@@ -833,8 +731,8 @@ JGBVue.module.equipmentManagement = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl)=> {
-		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl);
+	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl);
 	}
 
 	return that;

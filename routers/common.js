@@ -337,6 +337,6 @@ router.post('/examine', (req, res)=> {
 			data: jdata
 		});
 	})
-})
+});
 
 module.exports = router;
