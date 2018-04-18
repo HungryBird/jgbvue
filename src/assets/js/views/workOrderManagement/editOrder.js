@@ -110,12 +110,12 @@ JGBVue.module.editOrder = () => {
         },
         //打印
         btnPrint: function() {
-          //调用父级框架打开工单录入标签页
+          //调用父级框架打开标签页
           this.$selectTab(
             'printOrder', 
             '打印工单', 
-            'workOrderManagement', 
-            `?order_id=${this.orderEditForm.orderId}`)
+            './views/workOrderManagement/printOrder.html', 
+            `order_id=${this.orderEditForm.orderId}`)
         },
         //获取业务人员数据
         getBusinessData: function(query) {

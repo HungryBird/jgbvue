@@ -97,7 +97,7 @@ JGBVue.module.workOrderManagement = () => {
         //新增
         btnAdd: function() {
           //调用父级框架打开工单录入标签页
-          this.$selectTab('addOrder', '工单录入', 'workOrderManagement')
+          this.$selectTab('addOrder', '工单录入', './views/workOrderManagement/addOrder.html')
         },
         //导出
         btnExport: function() {
@@ -258,8 +258,8 @@ JGBVue.module.workOrderManagement = () => {
           this.$selectTab(
             'editOrder', 
             '修改工单', 
-            'workOrderManagement', 
-            `?order_id=${row.order_id}`)
+            './views/workOrderManagement/editOrder.html', 
+            `order_id=${row.order_id}`)
         },
         //打印列表
         btnPrintList: function() {
@@ -270,8 +270,8 @@ JGBVue.module.workOrderManagement = () => {
           this.$selectTab(
             'printOrderList', 
             '打印工单列表', 
-            'workOrderManagement', 
-            `?filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
+            './views/workOrderManagement/printOrderList.html', 
+            `filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
         },
         //打印工单
         btnPrint: function() {
@@ -279,8 +279,8 @@ JGBVue.module.workOrderManagement = () => {
           this.$selectTab(
             'printOrder', 
             '打印工单', 
-            'workOrderManagement', 
-            `?order_id=${this.selectedRows[0].order_id}`)
+            './views/workOrderManagement/printOrder.html', 
+            `order_id=${this.selectedRows[0].order_id}`)
         },
         //列设置
         btnColumnSetting: function() {
