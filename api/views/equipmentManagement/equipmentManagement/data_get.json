@@ -14,11 +14,11 @@
 	    { "label":"颜色", "prop": "color", "width": 120, "sortable": false, "enable": true },
 	    { "label":"尺码", "prop": "size", "width": 120, "sortable": "custom", "enable": true },
 	    { "label":"附件", "prop": "attachment", "width": 120, "sortable": "custom", "enable": true },
-	    { "label":"计量成本", "prop": "cost_measurement", "width": 120, "sortable": false, "enable": true },
+	    { "label":"计量单位", "prop": "unit_measurement", "width": 120, "sortable": false, "enable": true },
 	    { "label":"设备成本", "prop": "cost_equipment", "width": 120, "sortable": false, "enable": true },
 	    { "label":"设备来源", "prop": "source_equipment", "width": 120, "sortable": false, "enable": true },
 	    { "label":"质保期", "prop": "warranty", "width": 120, "sortable": false, "enable": true },
-	    { "label":"质保预警", "prop": "warning_warranty", "width": 120, "sortable": false, "enable": true },
+	    { "label":"质保预警时间", "prop": "warning_warranty_time", "width": 120, "sortable": false, "enable": true },
 	    { "label":"联系人", "prop": "linkman", "width": 120, "sortable": false, "enable": true },
 	    { "label":"手机号码", "prop": "phone", "width": 120, "sortable": false, "enable": true },
 	    { "label":"微信/QQ/Email", "prop": "other_contact", "width": 120, "sortable": false, "enable": true },
@@ -28,6 +28,7 @@
 	],
 	"data": [
 		{
+			"uid": "sdfa98s64as6d5",
 			"client_nick": "张三",
 			"department": "加州招待所",
 			"image": [
@@ -50,6 +51,7 @@
 			"status": true
 		},
 		{
+			"uid": "sdfa98s64a111s6d5",
 			"client_nick": "李四",
 			"department": "芝加哥卫生所",
 			"image": [
@@ -72,6 +74,7 @@
 			"status": false
 		},
 		{
+			"uid": "sdfa98s64a222s6d5",
 			"client_nick": "钱五",
 			"department": "弗吉尼亚敬老院",
 			"image": [

@@ -826,6 +826,8 @@ JGBVue.module.commodityInfo = ()=> {
 			    			}
 			    		}
 			    	})
+			    	console.log(_self.auxiliaryAttributesClassify)
+			    	//auxiliaryAttributesClassify
 			    },
 			    addAuxiliaryAttributesClassify() {
 			    	//
