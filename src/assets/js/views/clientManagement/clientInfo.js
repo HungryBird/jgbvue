@@ -563,7 +563,7 @@ JGBVue.module.clientInfo = ()=> {
 				addFormTableDelete(row) {
 					for(let i = 0; i < this.addForm.table.length; i++ ) {
 						if(row === this.addForm.table[i]) {
-							this.addForm.table.splice(this.addForm.table[i], 1);
+							this.addForm.table.splice(i, 1);
 						}
 					}
 				},
