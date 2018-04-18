@@ -1,144 +1,143 @@
 [
 	{
-		"id": "nav_001",
-		"cls": "fa fa-home"
-	},
-	{
-		"id": "nav_002",
-		"cls": "fa fa-list-ul",
+		"code": "systemSettings",
 		"name": "系统设置",
-		"menuItems": [
-			{
-				"parentFolder": "systemSettings",
-				"items": [
-					{
-						"id": "systemParameter",
-						"name": "系统参数"
-					},
-					{
-						"id": "phoneInfo",
-						"name": "手机信息"
-					},
-					{
-						"id": "auditProcess",
-						"name": "审核流程"
-					},
-					{
-						"id": "systemLog",
-						"name": "系统日志"
-					},
-					{
-						"id": "printTemplate",
-						"name": "套打模板"
-					},
-					{
-						"id": "recountCost",
-						"name": "重算成本"
-					},
-					{
-						"id": "addedServer",
-						"name": "增值服务"
-					}
-				]
-			},
-			{
-				"parentFolder": "systemSettings",
-				"items": [
-					{
-						"id": "messageInSite",
-						"name": "站内信息"
-					},
-					{
-						"id": "emailInfo",
-						"name": "邮件信息"
-					},
-					{
-						"id": "administrativeRegion",
-						"name": "行政区域"
-					},
-					{
-						"id": "FBackup",
-						"name": "备份与恢复"
-					},
-					{
-						"id": "settlementNAntiSettlement",
-						"name": "结账/反结账"
-					},
-					{
-						"id": "reinitialize",
-						"name": "重新初始化"
-					}
-				]
-			}
+		"url": "",
+		"isMenu": false,
+		"fItems": [
+			{ "code": "systemParameter", "name": "系统参数", "isMenu": true, 
+				"url": "./views/systemSettings/systemParameter.html" },
+			{ "code": "phoneInfo", "name": "手机信息", "isMenu": true, 
+				"url": "./views/systemSettings/phoneInfo.html" },
+			{ "code": "auditProcess", "name": "审核流程", "isMenu": true, 
+				"url": "./views/systemSettings/auditProcess.html" },
+			{ "code": "systemLog", "name": "系统日志", "isMenu": true, 
+				"url": "./views/systemSettings/systemLog.html" },
+			{ "code": "printTemplate", "name": "套打模板", "isMenu": true, 
+				"url": "./views/systemSettings/printTemplate.html" },
+			{ "code": "recountCost", "name": "重算成本", "isMenu": true, 
+				"url": "./views/systemSettings/recountCost.html" },
+			{ "code": "addedServer", "name": "增值服务", "isMenu": true, 
+				"url": "./views/systemSettings/addedServer.html" },
+			{ "code": "messageInSite", "name": "站内信息", "isMenu": true, 
+				"url": "./views/systemSettings/messageInSite.html" },
+			{ "code": "emailInfo", "name": "邮件信息", "isMenu": true, 
+				"url": "./views/systemSettings/emailInfo.html" },
+			{ "code": "administrativeRegion", "name": "行政区域", "isMenu": true, 
+				"url": "./views/systemSettings/administrativeRegion.html" },
+			{ "code": "FBackup", "name": "备份与恢复", "isMenu": true, 
+				"url": "./views/systemSettings/FBackup.html" },
+			{ "code": "settlementNAntiSettlement", "name": "结账/反结账", "isMenu": true, 
+				"url": "./views/systemSettings/settlementNAntiSettlement.html" },
+			{ "code": "reinitialize", "name": "重新初始化", "isMenu": true, 
+				"url": "./views/systemSettings/reinitialize.html" }
 		]
 	},
 	{
-		"id": "nav_003",
-		"cls": "fa fa-group",
+		"code": "baseData",
 		"name": "基础资料",
-		"menuItems": [
-			{
-				"parentFolder": "baseData",
+		"url": "",
+		"isMenu": false,
+		"fItems": [
+			{ "code": "menuManagement", "name": "功能菜单管理", "isMenu": true, 
+				"url": "./views/baseData/menuManagement.html" },
+			{ "code": "dataDictionary", "name": "数据字典", "isMenu": true, 
+				"url": "./views/baseData/dataDictionary.html" }
+		],
+		"items": [
+			{ "code": "companyOrganization", "name": "公司组织", "isMenu": false, "url": "",
 				"items": [
-					{
-						"id": "menuManagement",
-						"name": "功能菜单管理"
-					},
-					{
-						"id": "dataDictionary",
-						"name": "数据字典"
-					}
+					{ "code": "companyManagement", "name": "公司管理", "isMenu": true, 
+						"url": "./views/companyOrganization/companyManagement.html" },
+					{ "code": "departmentManagement", "name": "部门管理", "isMenu": true, 
+						"url": "./views/companyOrganization/departmentManagement.html" },
+					{ "code": "xsdj003", "name": "职位管理", "isMenu": true, 
+						"url": "./views/companyOrganization/xsdj003.html" },
+					{ "code": "roleManagement", "name": "角色管理", "isMenu": true, 
+						"url": "./views/companyOrganization/roleManagement.html" },
+					{ "code": "userManagement", "name": "用户管理", "isMenu": true, 
+						"url": "./views/companyOrganization/userManagement.html" }
 				]
 			},
-	{
-		"title": "公司组织",
-		"parentFolder": "companyOrganization",
-		"items": [
-			{
-				"id": "companyManagement",
-				"name": "公司管理"
+			{ "code": "clientManagement", "name": "客户管理", "isMenu": false, "url": "",
+				"items": [
+					{ "code": "clientInfo", "name": "客户信息", "isMenu": true, 
+						"url": "./views/clientManagement/clientInfo.html" },
+					{ "code": "xsbb002", "name": "销售明细表", "isMenu": true, 
+						"url": "./views/clientManagement/xsbb002.html" },
+					{ "code": "xsbb003", "name": "销售汇总表(按商品)", "isMenu": true, 
+						"url": "./views/clientManagement/xsbb003.html" },
+					{ "code": "xsbb004", "name": "销售汇总表(按客户)", "isMenu": true, 
+						"url": "./views/clientManagement/xsbb004.html" },
+					{ "code": "xsbb005", "name": "销售汇总表(按销售人员)", "isMenu": true, 
+						"url": "./views/clientManagement/xsbb005.html" }
+				] 
 			},
-			{
-				"id": "departmentManagement",
-				"name": "部门管理"
+			{ "code": "commodityManagement", "name": "商品管理", "isMenu": false, "url": "",
+				"items": [
+					{ "code": "commodityInfo", "name": "商品信息", "isMenu": true, 
+						"url": "./views/commodityManagement/commodityInfo.html" },
+					{ "code": "commodityCategory", "name": "商品类别", "isMenu": true, 
+						"url": "./views/commodityManagement/commodityCategory.html" },
+					{ "code": "commodityBrand", "name": "商品品牌", "isMenu": true, 
+						"url": "./views/commodityManagement/commodityBrand.html" },
+					{ "code": "commodityManagementAuxiliaryAttributes", "name": "辅助属性", "isMenu": true, 
+						"url": "./views/commodityManagement/commodityManagementAuxiliaryAttributes.html" }
+				] 
 			},
-			{
-				"id": "xsdj003",
-				"name": "职位管理"
-			},
-			{
-				"id": "xsdj004",
-				"name": "角色管理"
-			},
-			{
-				"id": "xsdj006",
-				"name": "用户管理"
+			{ "code": "supplierManagement", "name": "供应商管理", "isMenu": false, "url": "",
+				"items": [
+					{ "code": "supplierInfo", "name": "供应商信息", "isMenu": true, 
+						"url": "./views/supplierManagement/supplierInfo.html" }
+				] 
 			}
 		]
 	},
 	{
-		"title": "客户管理",
-		"parentFolder": "clientManagement",
+		"code": "afterSale",
+		"name": "售后",
+		"url": "",
+		"isMenu": false,
 		"items": [
-			{
-				"id": "clientInfo",
-				"name": "客户信息"
+			{ "code": "equipmentManagement", "name": "设备管理", "isMenu": true, 
+				"url": "./views/equipmentManagement/equipmentManagement.html",
+				"items": [
+					{ "code": "equipmentCategory", "name": "设备类别", "isMenu": true, 
+						"url": "./views/equipmentManagement/equipmentCategory.html" },
+					{ "code": "equipmentBrand", "name": "设备品牌", "isMenu": true, 
+						"url": "./views/equipmentManagement/equipmentBrand.html" },
+					{ "code": "equipmentManagementAuxiliaryAttributes", "name": "辅助属性", "isMenu": true, 
+						"url": "./views/equipmentManagement/equipmentManagementAuxiliaryAttributes.html" }
+				]
 			},
-			{
-				"id": "xsbb002",
-				"name": "销售明细表"
+			{ "code": "workOrderManagement", "name": "工单管理", "isMenu": true, 
+				"url": "./views/workOrderManagement/orderManagement.html",
+				"items": [
+					{ "code": "waitingOrder", "name": "未接工单", "isMenu": true, 
+						"url": "./views/workOrderManagement/waitingOrder.html" },
+					{ "code": "addOrder", "name": "工单录入", "isMenu": true, 
+						"url": "./views/workOrderManagement/addOrder.html" },
+					{ "code": "faultDiagnosis", "name": "故障诊断", "isMenu": true, 
+						"url": "./views/workOrderManagement/faultDiagnosis.html" },
+					{ "code": "offerAndContract", "name": "报价与合同", "isMenu": true, 
+						"url": "./views/workOrderManagement/offerAndContract.html" }
+				] 
 			},
-			{
-				"id": "xsbb003",
-				"name": "销售汇总表(按商品)"
+			{ "code": "201804090948", "name": "维修管理", "isMenu": false, "url": "",
+				"items": [
+					{ "code": "201804090949", "name": "维修", "isMenu": true, 
+						"url": "./views/201804090948/201804090949.html" },
+					{ "code": "201804090950", "name": "维修报告与成本", "isMenu": true, 
+						"url": "./views/201804090948/201804090950.html" }
+				] 
 			},
-			{
-				"id": "xsbb004",
-				"name": "销售汇总表(按客户)"
-			},
-			{
-				"id": "xsbb005",
-				"name": "销售汇总表(按销售人员)"
+			{ "code": "201804090954", "name": "交付与回访", "isMenu": false, "url": "",
+				"items": [
+					{ "code": "201804090955", "name": "交付单", "isMenu": true, 
+						"url": "./views/201804090954/201804090955.html" },
+					{ "code": "201804090956", "name": "快递单", "isMenu": true, 
+						"url": "./views/201804090954/201804090956.html" }
+				] 
 			}
 		]
 	}

@@ -39,21 +39,41 @@ let timeStampFormat = function(stamp) {
 Vue.prototype.$timeStampFormat = timeStampFormat
 
 /**
+ * 获取location.search
+ * created by lanw 2018-4-17
+ * search format ?key1=val1&&key2=val2
+ * val将经过decodeURI解码
+ * @param {String} search
+ * @return {Object} {key, value}
+ */
+let getQueryFromLocation = function(search) {
+  let str = search.split('?')[1] || ''
+  let arr = str ? str.split('&&') : []
+  let query = {}
+  arr.forEach(item=> {
+    query[item.split('=')[0]] = decodeURI(item.split('=')[1])
+  })
+  return query
+}
+Vue.prototype.$getQuery = getQueryFromLocation
+
+/**
  * 手动触发打开选项卡
  * created by lanw 2018-4-12
+ * edit by lanw 2018-4-18 重构功能菜单 第三个参数改为页面url
  * @param {string} tabId 选项卡ID
  * @param {string} tabName 选项卡名称
- * @param {string} parentFolder 父级目录
+ * @param {string} tabUrl 选项卡url
  */
-let selectTab = function(tabId, tabName, parentFolder) {
+let selectTab = function(tabId, tabName, tabUrl) {
   /*edit by 何俊洁 2018-04-15*/
   //window.top.JGBVue.module.vParent.selectTab(tabId, tabName, parentFolder)
   //edit by 何俊洁  2018-4-14
   // indexFn.vm.selectTab(tabId, tabName, parentFolder);
   //edit by lanw 2018-4-15
   arguments[3] 
-    ? window.top.indexFn.vm.selectTab(tabId, tabName, parentFolder, arguments[3])
-    : window.top.indexFn.vm.selectTab(tabId, tabName, parentFolder)
+    ? window.top.indexFn.vm.selectTab(tabId, tabName, tabUrl, arguments[3])
+    : window.top.indexFn.vm.selectTab(tabId, tabName, tabUrl)
 }
 Vue.prototype.$selectTab = selectTab
 

@@ -64,9 +64,7 @@ JGBVue.module.editOrder = () => {
       },
       computed: {
         c_orderId: function() {
-          let search = window.location.search;
-          // console.log(search.split('=')[1])
-          return search.split('=')[1]
+          return this.$getQuery(window.location.search).order_id
         },
       },
       methods: {

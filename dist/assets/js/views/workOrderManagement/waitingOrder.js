@@ -17,7 +17,9 @@ JGBVue.module.waitingOrder = () => {
     orderInvalidUrl, //工单作废
     orderDetailsGetUrl, //获取工单详情
     dataExportRequestUrl, //导出申请地址
-    printListUrl //打印列表接口
+    printListUrl, //打印列表接口
+    columnSettingUrl, //获取表头 列设置
+    defaultColumnSettingUrl //获取表头 列设置默认数据
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -62,7 +64,14 @@ JGBVue.module.waitingOrder = () => {
           showExport: false, //导出 窗
           exportChecked: [], //导出选中项 *所有可选项与tableHeader关联
           isLoadingExportRequest: false, //是否正在请求导出数据状态
+
+          showColumnSetting: false, //列设置 窗
         }
+      },
+      computed: {
+        c_menuId: function() {
+          return this.$getQuery(window.location.search).menu_id
+        },
       },
       methods: {
         //查询
@@ -259,6 +268,35 @@ JGBVue.module.waitingOrder = () => {
             'workOrderManagement', 
             `?order_id=${this.selectedRows[0].order_id}`)
         },
+        //列设置
+        btnColumnSetting: function() {
+          this.showColumnSetting = true
+        },
+        //列设置-恢复默认设置
+        btnColumnSettingReset: function() {
+          axios.post(defaultColumnSettingUrl).then(res=> {
+            if(res.data.status) {
+              let header = JSON.parse(res.data.data)
+              this.tableHeader= [];
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.status,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            console.log(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        //列设置-完成
+        btnColumnSettingComplete: function() {},
         //关闭详情页
         closeDetails: function() {
           this.showOrderDetails = false
@@ -286,6 +324,29 @@ JGBVue.module.waitingOrder = () => {
             })
           })
         },
+        //获取表头数据
+        getTableHeader: function() {
+          axios.post(columnSettingUrl, {
+            menu_id: this.c_menuId
+          }).then(res=> {
+            if(res.data.status) {
+              this.tableHeader = JSON.parse(res.data.data).waiting
+            }
+            else {
+              this.$message({
+                type: 'error', 
+                message: res.data.message,
+                center: true
+              })
+            }
+          }).catch(err=> {
+            this.$message({
+              type: 'error', 
+              message: err,
+              center: true
+            })
+          })
+        },
         //获取工单数据
         getWorkOrderData: function() {
           axios.post(workOrderDataGetUrl, {
@@ -297,9 +358,6 @@ JGBVue.module.waitingOrder = () => {
               this.selectedRows = [] //清空选中行
               this.orderList = _data.data
               this.orderPage = this.$deepCopy(_data.page) //真实数据使用
-              if(!this.tableHeader.length) {
-                this.tableHeader = _data.header.concat()
-              }
             }
             else {
               this.$message({
@@ -405,6 +463,7 @@ JGBVue.module.waitingOrder = () => {
         //工单状态默认全选
         this.selectForm.checkedStatus = this.formOrderStatus.concat()
         //获取工单数据
+        this.getTableHeader()
         this.getWorkOrderData()
         this.getBusinessData()
       }
@@ -419,7 +478,9 @@ JGBVue.module.waitingOrder = () => {
     orderInvalidUrl,
     orderDetailsGetUrl,
     dataExportRequestUrl,
-    printListUrl
+    printListUrl,
+    columnSettingUrl,
+    defaultColumnSettingUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -430,7 +491,9 @@ JGBVue.module.waitingOrder = () => {
       orderInvalidUrl,
       orderDetailsGetUrl,
       dataExportRequestUrl,
-      printListUrl)
+      printListUrl,
+      columnSettingUrl,
+      defaultColumnSettingUrl)
   }
   return that
 }

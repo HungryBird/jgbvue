@@ -511,3 +511,60 @@ dd {
 .el-main .el-tabs .el-tabs__content iframe{
   height: 100%;
 }
+
+
+
+/* add by lanw 2018-4-17 for 重构功能菜单*/
+.base-nav-dropdown-apps.w-nav {
+  display:flex;
+  flex-flow:row nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+   /* 调试用*/
+  /* visibility: visible;
+  opacity: 1;
+  z-index: 999; */
+}
+.base-nav-dropdown-apps.w-nav .w-nav-fitems {
+  display:flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+}
+.base-nav-dropdown-apps.w-nav .w-nav-fitems .menu-item-wrap {
+  border-left:1px dashed #ddd;
+}
+.base-nav-dropdown-apps.w-nav .w-nav-fitems .fitems-item {
+  width:180px;
+  line-height:36px;
+  padding:0 16px;
+  box-sizing: border-box;
+  border-left:1px dashed #ddd;
+  margin-left: -1px;
+}
+.base-nav-dropdown-apps.w-nav .w-nav-fitems .fitems-item:hover {
+  background: #ddd;
+  cursor:pointer;
+}
+.base-nav-dropdown-apps.w-nav .w-nav-items {
+  border-left:1px dashed #ddd;
+}
+.base-nav-dropdown-apps.w-nav .w-nav-items:first-child {
+  border-left:none;
+}
+.base-nav-dropdown-apps.w-nav .w-nav-items .items-item {
+  width:210px;
+  line-height:36px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+.base-nav-dropdown-apps.w-nav .w-nav-items .items-item:hover {
+  background:#ddd;
+  cursor:pointer;
+}
+.base-nav-dropdown-apps.w-nav .w-nav-items .items-item.isNotMenu:hover {
+  cursor:default;
+  background:#fff;
+}
+/* add by lanw 2018-4-17 for 重构功能菜单   end*/

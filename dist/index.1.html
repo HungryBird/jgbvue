@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>首页</title>
+	<link rel="stylesheet" type="text/css" href="./font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="./assets/css/index.css">
+	<!-- 监控js代码报错 -->
+	<script src="https://js.fundebug.cn/fundebug.0.3.5.min.js" apikey="a50e5a683f5c86030eb0c939602183bb7d16e8cb909ce31c854f03ad9e284a45"></script>
+	<style type="text/css">
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<el-container>
+		    <el-header>
+		    	<ul class="nav-head-wrap">
+					<li id="logo-box-wrap">
+						<a class="logo-box">
+							<span>
+								<i class="logo logo-white"></i>
+								<i class="logo logo-black"></i>
+							</span>
+							<i class="logo-arrow fa fa-chevron-down fa-sm" style="font-size:12px;"></i>
+						</a>
+						<div class="quick-menu-dropdown dd-left" style="width: 170px;">
+							<ul class="actionMenu">
+								<li>
+									<a>
+										客户端下载
+									</a>
+								</li>
+								<li>
+									<a>
+										微信号
+									</a>
+								</li>
+								<li>
+									<a>
+										邀请同事
+									</a>
+								</li>
+								<li>
+									<a>
+										创建团队或加入
+									</a>
+								</li>
+							</ul>
+							<div class="divider"></div>
+							<ul class="actionMenu">
+								<li>
+									<a>
+										通讯录
+									</a>
+								</li>
+							</ul>
+							<div class="divider"></div>
+							<ul class="actionMenu">
+								<li>
+									<a>
+										个人设置
+									</a>
+								</li>
+								<li>
+									<a>
+										系统设置
+									</a>
+								</li>
+							</ul>
+							<div class="divider"></div>
+							<ul class="actionMenu">
+								<li>
+									<a>
+										推荐拿福利
+									</a>
+								</li>
+							</ul>
+							<div class="divider"></div>
+							<ul class="actionMenu">
+								<li>
+									<a>
+										退出系统
+									</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="base-nav">
+						<ul class="base-nav-group">
+							<li v-for="navItem in user.navItems" :key="navItem.id" :id="navItem.id" class="base-nav-dropdown" v-on:mouseenter="dropdownIsActive = true">
+								<a class="base-nav-item-link">
+									<i :class="navItem.cls"></i>
+									<span v-if="navItem.name != undefined">{{ navItem.name }}</span>
+								</a>
+								<ul class="base-nav-dropdown-apps" v-if="dropdownIsActive">
+									<li v-for="(menuItem,index) in navItem.menuItems" :style="{width: navItem.menuItems.length*210 + 'px'}">
+										<div class="menu-item-wrap" :style="{'borderLeft': index !== 0 ? '1px dashed #ddd' : 'none'}">
+											<strong v-if="menuItem.title != undefined"><span>{{menuItem.title}}</span></strong>
+											<ul class="menu-item-group">
+												<li v-for="item in menuItem.items" :id="item.id" v-on:click="selectTab(item.id, item.name, menuItem.parentFolder)">
+													<a>
+														<span>{{item.name}}</span>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li class="quick-menu fr">
+						<ul>
+							<li>
+								<div class="search-wrap">
+									<a>
+										<i class="el-icon-search"></i>
+									</a>
+									<input type="text" name="" class="search-input" placeholder="全文检索">
+								</div>
+							</li>
+							<li @click="lockScreen">
+								<a>
+									<i class="fa fa-lock"></i>
+								</a>
+							</li>
+							<li>
+								<a>
+									<i class="fa fa-plus-circle"></i>
+								</a>
+								<div class="quick-menu-dropdown dd-mid" style="width: 180px;">
+									<ul class="actionMenu">
+										<li v-for="act in action1" :key="act.id">
+											<a>
+												<div class="icon-position-wrap">
+													<div class="icon-abs">
+														<i class="icon-wrap icon-default icon-display" :style="{backgroundPosition:act.backgroundPosition}"></i>
+														<i class="icon-wrap icon-active icon-display" :style="{backgroundPosition:act.activeBakgroundPosition}"></i>
+													</div>
+												</div>
+												<span style="margin-left:4px;">{{ act.label }}</span>
+											</a>
+										</li>
+									</ul>
+									<div class="divider"></div>
+									<ul class="actionMenu">
+										<li v-for="(act,index) in action2" :key="act.id">
+											<a>
+												<div class="icon-position-wrap">
+													<div class="icon-abs">
+														<i class="icon-wrap icon-default icon-display" :style="{backgroundPosition:act.backgroundPosition}"></i>
+														<i class="icon-wrap icon-active icon-display" :style="{backgroundPosition:act.activeBakgroundPosition}"></i>
+													</div>
+												</div>
+												<span>{{ act.label }}</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+							<li>
+								<a>
+									<i class="fa fa-question-circle"></i>
+								</a>
+								<div class="quick-menu-dropdown dd-mid">
+									<div class="" v-for="help in helps" :key="help.id">
+										<div class="help-wrap" style="padding-bottom: 10px;">
+											<a>
+												<i class="icon-wrap" :style="{backgroundPosition:help.backgroundPosition}"></i>
+												<p>{{ help.name }}</p>
+											</a>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li class="user-menu-wrap">
+								<div class="user-menu">
+									<a href="#" data-url="#">
+										<span class="user-name">{{ user.name }}</span>
+										<i class="el-icon-arrow-down"></i>
+									</a>
+								</div>
+								<div class="portrait-wrap">
+									<img :src="user.portrait" class="portrait">
+								</div>
+								<ul class="dropdown-user-wrap">
+									<li class="user-tip">
+										在此您可以切换团队，还可以创建或加入团队
+									</li>
+									<li class="user-team-wrap">
+										<a class="user-team">
+											<i class="el-icon-check"></i>
+											<span style="padding-left: 10px;">{{ user.teamName }}</span>
+										</a>
+									</li>
+									<li class="user-create-join-team">
+										<i class="el-icon-plus"></i>
+										<span>创建或加入团队</span>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+		    </el-header>
+		    <el-container>
+				<el-aside width="220px"></el-aside>
+				<el-main>
+					<el-tabs type="card" v-model="activeTab" v-on:tab-remove="removeTab" v-on:tab-click="clickTab">
+						<el-tab-pane v-for="(tab,index) in tabs" :label="tab.label" :key="tab.name" :name="tab.name" :closable="index != 0">
+							<iframe :src="tab.link" v-if="index != 0"></iframe>
+							<div v-else>这是主页</div>
+						</el-tab-pane>
+					</el-tabs>
+				</el-main>
+		    </el-container>
+		</el-container>
+		<div class="circle" :style="{display: locking.isHidden ? 'none' : 'block', opacity: locking.isHidden ? 0 : 1,width: locking.diameter + 'px', height: locking.diameter + 'px', borderWidth: locking.borderWidth + 'px', transition: locking.isHidden ? '' : 'all 1s', zIndex: locking.isHidden ? -1 : 10000, border: locking.isHidden ? '' : locking.borderWidth + 'px solid #2dc3e8'}"></div>
+	</div>
+</body>
+<script type="text/javascript" src="./vue/vue.js"></script>
+<script type="text/javascript" src="./element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../axios/axios.min.js"></script>
+<script type="text/javascript" src="./assets/js/index.js"></script>
+<script type="text/javascript">
+	/**
+	 * 是否显示新手导航
+	 */
+	var indexFn = JGBVue.module.index();
+	indexFn.init(
+		'/index/is_show_guidance',
+		'/index/get_menu',
+	);
+</script>
+</html>
