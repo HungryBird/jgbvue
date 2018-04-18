@@ -17,7 +17,10 @@ JGBVue.module.workOrderManagement = () => {
     dataExportRequestUrl, //导出申请地址
     printListUrl, //打印列表接口
     columnSettingUrl, //获取表头 列设置
-    defaultColumnSettingUrl //获取表头 列设置默认数据
+    defaultColumnSettingUrl, //获取表头 列设置默认数据
+    diagnosisDataGetUrl, //获取诊断人员数据
+    userDataGetUrl, //获取当前用户信息
+    orderDiagnosisGetUrl //获取工单故障诊断数据
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -37,6 +40,7 @@ JGBVue.module.workOrderManagement = () => {
           formTimeRangeDefault: ['00:00:00', '23:59:59'], //表单 默认起止时间
           formBusinessList: [], //表单 业务人员组
           formMaintenanceList: [], //表单 维修人员组
+          formDiagnosisList: [], //诊断人员组
           formOrderStatus: [ //工单状态 *value会关联html显示按钮组的判断条件,v-if需同步修改
             { label: '待诊断', value: 2 },
             { label: '诊断中', value: 3 },
@@ -68,6 +72,10 @@ JGBVue.module.workOrderManagement = () => {
           showColumnSetting: false, //列设置 窗
           loadingColumnSettingComplete: false, //正在写入新的列设置
           loadingColumnSettingReset: false, //正在恢复默认的列设置
+
+          showDiagnosis:false, //故障诊断 窗
+          diagnosisData: {}, //故障诊断数据
+          userData: {}, //用户信息 用于填入诊断人员默认项
         }
       },
       methods: {
@@ -159,96 +167,6 @@ JGBVue.module.workOrderManagement = () => {
           this.showOrderDetails = true
           this.getOrderDetails(row.order_id)
         },
-        //领取 @param （row行数据, index行数）
-        btnReceive: function(row, index) {
-          axios.post(orderReceiveUrl, {
-            orderId: row.order_id
-          }).then(res=> {
-            if(res.data.status) {
-              this.$message({
-                type: 'success',
-                message: res.data.message
-              })
-              this.getWorkOrderData()
-            }
-            else {
-              this.$message({
-                type: 'error',
-                message: res.data.message, 
-                center: true
-              })
-            };
-          }).catch(err=> {
-            this.$message({
-              type: 'error',
-              message: err, 
-              center: true
-            })
-          })
-        },
-        //退回 @param （row行数据, index行数）
-        btnBack: function(row, index) {
-          axios.post(orderBackUrl, {
-            orderId: row.order_id
-          }).then(res=> {
-            if(res.data.status) {
-              this.$message({
-                type: 'success',
-                message: res.data.message
-              })
-              this.getWorkOrderData()
-            }
-            else {
-              this.$message({
-                type: 'error',
-                message: res.data.message, 
-                center: true
-              })
-            };
-          }).catch(err=> {
-            this.$message({
-              type: 'error',
-              message: err, 
-              center: true
-            })
-          })
-        },
-        //撤回 @param （row行数据, index行数）
-        btnWithdraw: function(row, index) {
-          axios.post(orderWithdrawUrl, {
-            orderId: row.order_id
-          }).then(res=> {
-            if(res.data.status) {
-              this.$message({
-                type: 'success',
-                message: res.data.message
-              })
-              this.getWorkOrderData()
-            }
-            else {
-              this.$message({
-                type: 'error',
-                message: res.data.message, 
-                center: true
-              })
-            };
-          }).catch(err=> {
-            this.$message({
-              type: 'error',
-              message: err, 
-              center: true
-            })
-          })
-        },
-        //修改工单
-        btnEditOrder: function(row, index) {
-          //调用父级框架打开工单录入标签页
-          this.$selectTab(
-            'editOrder', 
-            '修改工单', 
-            './views/workOrderManagement/editOrder.html', 
-            `order_id=${row.order_id}`)
-        },
         //打印列表
         btnPrintList: function() {
           let filter = this.$deepCopy(this.selectForm)
@@ -337,7 +255,11 @@ JGBVue.module.workOrderManagement = () => {
             this.loadingColumnSettingComplete = false
           })
         },
-        //
+        //故障诊断 @param {row 行数, index 行数}
+        btnDiagnosis: function(row, index) {
+          this.showDiagnosis = true
+          this.getDiagnosisData(row.order_id)
+        },
         /**
          * 调用查看图片控件
          * @param {Object, Array} data Object{图片数组, 序号} Array图片数组
@@ -381,6 +303,62 @@ JGBVue.module.workOrderManagement = () => {
             })
           })
         },
+        //获取诊断人员数据
+        getDiagnosisList:function(query) {
+          axios.post(diagnosisDataGetUrl, {
+            query: query || ''
+          }).then(res=> {
+            if(res.data.status) {
+              this.formDiagnosisList = JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            console.log(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        //获取工单诊断数据
+        getDiagnosisData: function(id) {
+          this.loadingDiagnosis = true
+          axios.post(orderDiagnosisGetUrl, {
+            order_id: id
+          }).then(res=> {
+            if(res.data.status) {
+              this.diagnosisData = this.$deepCopy(JSON.parse(res.data.data))
+              //诊断时间为提交结果时间，当前只显示打开页面的时间
+              this.diagnosisData.date = this.$timeStampFormat(
+                Math.round(new Date().getTime()/1000),
+                'yyyy-mm-dd hh:mm'
+              )
+            }
+            else {
+              this.$message({
+                type: 'error', 
+                message: res.data.message,
+                center: true
+              })
+            };
+            this.loadingDiagnosis = false
+          }).catch(err=> {
+            console.log(err)
+            this.$message({
+              type: 'error', 
+              message: err,
+              center: true
+            })
+            this.loadingDiagnosis = false
+          })
+        },
         //获取维修人员数据
         getMaintenanceData: function(query) {
           axios.post(maintenanceDataGetUrl, {
@@ -420,6 +398,28 @@ JGBVue.module.workOrderManagement = () => {
               })
             }
           }).catch(err=> {
+            this.$message({
+              type: 'error', 
+              message: err,
+              center: true
+            })
+          })
+        },
+        //获取用户数据
+        getUserData: function() {
+          axios.post(userDataGetUrl).then(res=> {
+            if(res.data.status) {
+              this.userData = JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error', 
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            console.log(err)
             this.$message({
               type: 'error', 
               message: err,
@@ -568,7 +568,10 @@ JGBVue.module.workOrderManagement = () => {
     dataExportRequestUrl,
     printListUrl,
     columnSettingUrl, 
-    defaultColumnSettingUrl 
+    defaultColumnSettingUrl,
+    diagnosisDataGetUrl,
+    userDataGetUrl,
+    orderDiagnosisGetUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -579,7 +582,11 @@ JGBVue.module.workOrderManagement = () => {
       dataExportRequestUrl,
       printListUrl,
       columnSettingUrl,
-      defaultColumnSettingUrl )
+      defaultColumnSettingUrl,
+      diagnosisDataGetUrl,
+      userDataGetUrl,
+      orderDiagnosisGetUrl
+    )
   }
   return that
 }

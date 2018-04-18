@@ -1386,6 +1386,7 @@ table{
 	}
 }
 
+//列设置
 .w-column-setting {
 	@include w-flex(row, nowrap, space-between, stretch);
 	.column-table {
@@ -1399,4 +1400,27 @@ table{
 			margin-top:15px;
 		}
 	}
+}
+
+//故障诊断
+.diagnosis-form {
+	height: 450px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-right: 5px;
+	.el-form-item{
+		&.cost {
+			line-height: 25px;
+			padding:0;
+		}
+		.el-input, .el-select {
+			width:100%;
+		}
+	} 
+}
+.diagnosis-form-footer {
+	@include w-flex(row, nowrap, space-between, center);
+	width:100%;
+	border-top:1px solid #ddd;
+	padding-top:5px;
 }

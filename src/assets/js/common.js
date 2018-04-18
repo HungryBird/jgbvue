@@ -32,9 +32,23 @@ Vue.prototype.$deepCopy = deepCopy
  * created by lanw 2018-4-10
  * @param {Number} stamp
  */
-let timeStampFormat = function(stamp) {
+let timeStampFormat = function(stamp, format) {
+  format = format || 'yyyy-mm-dd'
   let date = new Date(stamp*1000)
-  return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+  let str = ''
+  switch(format) {
+    case 'yyyy-mm-dd hh:mm:ss':
+      str = `${date.getFullYear()}-${date.getMonth() > 8 ? date.getMonth()+1: '0'+(date.getMonth()+1)}-${date.getDate() > 9 ? date.getDate(): '0'+date.getDate()} ${date.getHours()> 9 ? date.getHours(): '0'+date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}:${date.getSeconds() > 9 ? date.getSeconds() : '0'+date.getSeconds()}`
+      break
+    case 'yyyy-mm-dd hh:mm':
+      str = `${date.getFullYear()}-${date.getMonth() > 8 ? date.getMonth()+1: '0'+(date.getMonth()+1)}-${date.getDate() > 9 ? date.getDate(): '0'+date.getDate()} ${date.getHours()> 9 ? date.getHours(): '0'+date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0'+date.getMinutes()}`
+      break
+    case 'yyyy-mm-dd':
+    default: 
+      str = `${date.getFullYear()}-${date.getMonth() > 8 ? date.getMonth()+1: '0'+(date.getMonth()+1)}-${date.getDate() > 9 ? date.getDate(): '0'+date.getDate()}`
+      break
+  }
+  return str
 }
 Vue.prototype.$timeStampFormat = timeStampFormat
 

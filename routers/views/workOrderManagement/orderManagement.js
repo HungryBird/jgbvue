@@ -58,7 +58,6 @@ router.post('/get_work_order_data', (req, res)=> {
 	});
 })
 
-
 router.post('/get_fault_order_data', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/views/afterSale/workOrderManagement/get_fault_order_data.json', 'utf-8', (err, data)=> {
@@ -120,6 +119,21 @@ router.post('/get_waiting_order_data', (req, res)=> {
 router.post('/get_order_details', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/views/afterSale/workOrderManagement/get_order_details.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end();
+	});
+})
+
+router.post('/get_order_fault_details', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/workOrderManagement/get_fault_order_details.json', 'utf-8', (err, data)=> {
 		if(err) {
 			console.log('err: ', err);
 			return;

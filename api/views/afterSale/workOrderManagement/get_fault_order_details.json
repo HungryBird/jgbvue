@@ -1,0 +1,16 @@
+{
+  "order_id": "123456",
+  "date": "",
+  "diagnosis": {
+    "label": "老王", 
+    "value": "10005"
+  },
+  "result": "这里是故障原因",
+  "measures": "这里是维修措施",
+  "rengong": "人工费",
+  "peijian": [],
+  "peisong": "",
+  "anzhuang": "",
+  "qita": "",
+  "heji": ""
+}

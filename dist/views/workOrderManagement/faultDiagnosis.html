@@ -108,13 +108,13 @@
                     <div v-if="scope.row.status_value == 2" class="order-button">
                       <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
                       <el-button type="" size="mini" v-on:click="">设备定位</el-button>
-                      <el-button type="" size="mini" v-on:click="">故障诊断</el-button>
+                      <el-button type="" size="mini" v-on:click="btnDiagnosis(scope.row, scope.$index)">故障诊断</el-button>
                     </div>
                     <!-- 诊断中 -->
                     <div v-else-if="scope.row.status_value == 3" class="order-button">
                       <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
                       <el-button type="" size="mini" v-on:click="">设备定位</el-button>
-                      <el-button type="" size="mini" v-on:click="">故障诊断</el-button>
+                      <el-button type="" size="mini" v-on:click="btnDiagnosis(scope.row, scope.$index)">故障诊断</el-button>
                     </div>
                   </div>
                   <!-- 时效 -->
@@ -198,6 +198,65 @@
             </el-button>
         </div>
       </el-dialog>
+      <!-- 故障诊断 -->
+      <el-dialog :visible.sync="showDiagnosis">
+        <div class="title" slot="title">工单{{diagnosisData.order_id || ''}}故障诊断</div>
+        <el-form class="diagnosis-form" label-width="120px" :model="diagnosisData">
+          <el-row>
+            <el-col :span="10">
+              <el-form-item label="诊断时间：" prop="date">
+                <el-input v-model="diagnosisData.date" readonly></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="14">
+              <el-form-item label="诊断人员：">
+                <el-input></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="故障原因：">
+                <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="维修措施：">
+                <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-form-item label="成本估算：" class="cost"></el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="人工维修费用：">
+              <el-input></el-input>
+            </el-form-item>
+            <el-form-item label="配送费：">
+              <el-input></el-input>
+            </el-form-item>
+            <el-form-item label="安装费：">
+              <el-input></el-input>
+            </el-form-item>
+            <el-form-item label="其他费用：">
+              <el-input></el-input>
+            </el-form-item>
+            <el-form-item label="合计：">
+              <el-input></el-input>
+            </el-form-item>
+          </el-row>
+        </el-form>
+        <div class="diagnosis-form-footer">
+          <el-button type="primary" v-on:click="">暂存</el-button>
+          <div>
+            <el-button type="primary" v-on:click="">提交诊断结果</el-button>
+            <el-button v-on:click="">取消</el-button>
+          </div>
+        </div>
+      </el-dialog>
 		</el-container>
 	</div>
 </body>
@@ -216,7 +275,10 @@
     '/common/data_add_save', //导出申请地址
     '/orderManagement/get_work_order_data', //打印列表接口
     '/orderManagement/get_header', //获取表头 列设置
-    '/orderManagement/get_header' //获取表头 列设置默认数据
+    '/orderManagement/get_header', //获取表头 列设置默认数据
+    '/orderManagement/get_business_data', //获取诊断人员数据
+    '/orderManagement/get_user', //获取当前用户信息
+    '/orderManagement/get_order_fault_details' //获取工单故障诊断数据
 
 	);
 </script>
