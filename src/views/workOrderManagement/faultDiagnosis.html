@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>未接工单</title>
+	<title>故障诊断</title>
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
 </head>
@@ -35,9 +35,20 @@
                     v-for="item in formBusinessList"
                     :key="item.value"
                     :label="item.label"
-                    :value="item">
+                    :value="item.value">
                   </el-option>
                 </el-select>
+              </el-form-item>
+              <el-form-item label="维修人员:">
+                <el-select v-model="selectForm.maintenanceCurrent" 
+                  clearable remote filterable placeholder="请选择"
+                  :remote-method="remoteMaintenance">
+                  <el-option
+                    v-for="item in formMaintenanceList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
               </el-form-item>
               <el-form-item>
                 <el-input v-model="selectForm.keyword" placeholder="工单编号、客户名称、设备名称、维修日志" style="width:300px;">
@@ -54,7 +65,7 @@
                 <el-checkbox-group v-model="selectForm.checkedStatus" @change="handleFormCheckStatusChange">
                   <el-checkbox v-for="item in formOrderStatus" :label="item" :key="item.value">{{item.label}}</el-checkbox>
                 </el-checkbox-group>
-                <el-button-group style="margin:0;">
+                <el-button-group>
                   <el-button type="primary" size="mini" v-on:click="btnColumnSetting">列设置</el-button>
                   <el-button type="primary" size="mini" v-on:click="btnAdd">新增</el-button>
                   <el-button type="primary" size="mini" v-on:click="btnExport">导出</el-button>
@@ -74,15 +85,17 @@
             </el-form>
           </div>
           <div class="w-main-table">
-            <el-table border highlight-current-row style="width: 100%"
+            <el-table ref="orderManagementTable"
+              border highlight-current-row style="width: 100%"
               :default-sort = "selectForm.sort"
               :data="orderList"
               v-on:sort-change="handleOrderSort"
               v-on:selection-change="handleOrderSelectionChange">
-							<el-table-column type="selection" align="center" width="40"></el-table-column>
+							<el-table-column type="selection" align="center" width="40" key="selection"></el-table-column>
 							<!-- <el-table-column type="index" label="序号" width="50" align="center"></el-table-column> -->
               <el-table-column v-for="item in tableHeader" v-if="item.enable"
                 align="center"
+                :type="item.type"
                 :sortable="item.sortable"
                 :width="item.width"
                 :key="item.prop"
@@ -90,29 +103,31 @@
                 :label="item.label">
 								<template slot-scope="scope">
                   <!-- 操作 -->
-                  <div v-if="item.prop == 'action'">
-                    <!-- 委派 -->
-                    <div v-if="scope.row.status_value == 0" class="order-button">
+                  <div v-if="item.prop == 'action'" >
+                    <!-- 待诊断 -->
+                    <div v-if="scope.row.status_value == 2" class="order-button">
                       <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                      <el-button type="" size="mini" v-on:click="btnReceive(scope.row, scope.$index)">领取</el-button>
-                      <el-button type="" size="mini" v-on:click="btnBack(scope.row, scope.$index)">退回</el-button>
-                      <el-button type="" size="mini" v-on:click="btnWithdraw(scope.row, scope.$index)">撤回</el-button>
+                      <el-button type="" size="mini" v-on:click="">设备定位</el-button>
+                      <el-button type="" size="mini" v-on:click="">故障诊断</el-button>
                     </div>
-                    <!-- 待接 -->
-                    <div v-else-if="scope.row.status_value == 1" class="order-button">
+                    <!-- 诊断中 -->
+                    <div v-else-if="scope.row.status_value == 3" class="order-button">
                       <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                      <el-button type="" size="mini" v-on:click="btnReceive(scope.row, scope.$index)">领取</el-button>
-                      <el-button type="" size="mini" v-on:click="btnWithdraw(scope.row, scope.$index)">撤回</el-button>
+                      <el-button type="" size="mini" v-on:click="">设备定位</el-button>
+                      <el-button type="" size="mini" v-on:click="">故障诊断</el-button>
                     </div>
+                  </div>
+                  <!-- 时效 -->
+                  <div v-else-if="item.prop == 'aging'" 
+                    :style="{color:scope.row[item.prop] == '超时' ? '#F56C6C' : '#67C23A'}">
+                    {{scope.row[item.prop]}}
                   </div>
                   <!-- 序号 -->
-                  <div v-else-if="item.type == 'index'">
-                    {{scope.$index+1}}
-                  </div>
+                  <div v-else-if="item.type == 'index'">{{scope.$index+1}}</div>
                   <!-- 图片 -->
                   <i v-else-if="item.prop == 'image'" class="el-icon-picture table-img-icon" v-on:click="openPictureDialog(scope.row.image)"></i>
                   <div v-else>{{scope.row[item.prop]}}</div>
-                </template>
+								</template>
               </el-table-column>
             </el-table>
             <el-pagination v-if="orderPage.page_total > 1" class="w-table-pagination"
@@ -122,10 +137,10 @@
               :page-size="orderPage.page_size"
               :total="orderPage.page_total"
               v-on:current-change="handleOrderCurrentChange">
-            </el-pagination>
+          </el-pagination>
           </div>
 				</div>
-      </el-main>
+			</el-main>
       <!-- 工单详情 -->
       <transition name="slide-fade">
         <jgb-slide-details v-show="showOrderDetails" :loading="isLoadingDetails" v-on:close="closeDetails">
@@ -169,18 +184,18 @@
         <div class="title" slot="title">列设置</div>
         <jgb-column-setting v-if="tableHeader.length" v-model="tableHeader"></jgb-column-setting>
         <div slot="footer">
-          <el-button 
-            :loading="loadingColumnSettingReset" 
-            :disabled="loadingColumnSettingReset"
-            v-on:click="btnColumnSettingReset">
-            恢复默认设置
-          </el-button>
-          <el-button type="primary"
-            :loading="loadingColumnSettingComplete" 
-            :disabled="loadingColumnSettingComplete"
-            v-on:click="btnColumnSettingComplete">
-            完成
-          </el-button>
+            <el-button 
+              :loading="loadingColumnSettingReset" 
+              :disabled="loadingColumnSettingReset"
+              v-on:click="btnColumnSettingReset">
+              恢复默认设置
+            </el-button>
+            <el-button type="primary"
+              :loading="loadingColumnSettingComplete" 
+              :disabled="loadingColumnSettingComplete"
+              v-on:click="btnColumnSettingComplete">
+              完成
+            </el-button>
         </div>
       </el-dialog>
 		</el-container>
@@ -190,20 +205,19 @@
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/common.js"></script>
-<script type="text/javascript" src="../../assets/js/views/workOrderManagement/waitingOrder.js"></script>
+<script type="text/javascript" src="../../assets/js/views/workOrderManagement/faultDiagnosis.js"></script>
 <script type="text/javascript">
-	JGBVue.module.waitingOrder().init(
+	JGBVue.module.workOrderManagement().init(
     '/orderManagement/get_business_data', //获取业务人员数据
-    '/orderManagement/get_waiting_order_data', //获取工单数据
-    '/orderManagement/order_receive', //领取工单
-    '/orderManagement/order_back', //退回工单
-    '/orderManagement/order_withdraw', //撤回工单
+    '/orderManagement/get_maintenance_data', //获取维修人员数据
+    '/orderManagement/get_fault_order_data', //获取工单数据
     '/orderManagement/order_invalid', //作废工单
     '/orderManagement/get_order_details', //获取工单详情
     '/common/data_add_save', //导出申请地址
-    '/orderManagement/get_waiting_order_data', //打印列表接口
+    '/orderManagement/get_work_order_data', //打印列表接口
     '/orderManagement/get_header', //获取表头 列设置
     '/orderManagement/get_header' //获取表头 列设置默认数据
+
 	);
 </script>
 

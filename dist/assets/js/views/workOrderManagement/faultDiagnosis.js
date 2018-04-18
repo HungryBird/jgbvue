@@ -12,9 +12,6 @@ JGBVue.module.workOrderManagement = () => {
     businessDataGetUrl, //获取业务人员数据
     maintenanceDataGetUrl,//获取维修人员数据
     workOrderDataGetUrl,//获取工单数据
-    orderReceiveUrl, //领取工单
-    orderBackUrl, //退回工单
-    orderWithdrawUrl, //撤回工单
     orderInvalidUrl, //工单作废
     orderDetailsGetUrl, //获取工单详情
     dataExportRequestUrl, //导出申请地址
@@ -41,20 +38,8 @@ JGBVue.module.workOrderManagement = () => {
           formBusinessList: [], //表单 业务人员组
           formMaintenanceList: [], //表单 维修人员组
           formOrderStatus: [ //工单状态 *value会关联html显示按钮组的判断条件,v-if需同步修改
-            { label: '委派', value: 0 },
-            { label: '待接', value: 1 },
             { label: '待诊断', value: 2 },
             { label: '诊断中', value: 3 },
-            { label: '待报价', value: 4 },
-            { label: '报价中', value: 5 },
-            { label: '待维修', value: 6 },
-            { label: '维修中', value: 7 },
-            { label: '完成维修', value: 8 },
-            { label: '待交付', value: 9 },
-            { label: '交付中', value: 10 },
-            { label: '已交付', value: 11 },
-            { label: '作废', value: 12 },
-            { label: '撤回/退回', value: 13 },
           ],
           formStatusCheckAll: true, //绑定工单状态全选
 
@@ -578,9 +563,6 @@ JGBVue.module.workOrderManagement = () => {
     businessDataGetUrl,
     maintenanceDataGetUrl,
     workOrderDataGetUrl,
-    orderReceiveUrl,
-    orderBackUrl,
-    orderWithdrawUrl,
     orderInvalidUrl,
     orderDetailsGetUrl,
     dataExportRequestUrl,
@@ -592,9 +574,6 @@ JGBVue.module.workOrderManagement = () => {
       businessDataGetUrl,
       maintenanceDataGetUrl,
       workOrderDataGetUrl,
-      orderReceiveUrl,
-      orderBackUrl,
-      orderWithdrawUrl,
       orderInvalidUrl,
       orderDetailsGetUrl,
       dataExportRequestUrl,

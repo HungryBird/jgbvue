@@ -17,7 +17,12 @@
           <div class="w-main-header w-order-add">
             <div class="btns" style="margin-top:10px;">
               <div class="btns-save" v-if="!showOtherButton">
-                <el-button type="primary" v-on:click="btnAdd">保存</el-button>
+                <el-button type="primary"
+                  :loading="loadingSave"
+                  :disabled="loadingSave"
+                  v-on:click="btnAdd">
+                  保存
+                </el-button>
               </div>
               <el-button type="primary" style="margin-right:10px;"
                 v-on:click="btnReset">重置</el-button>

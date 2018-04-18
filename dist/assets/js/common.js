@@ -522,3 +522,483 @@ let columnSetting = Vue.extend({
   }, 
 })
 Vue.component('jgb-column-setting', columnSetting)
+
+/**
+ * 组件 工单详情
+ * created by lanw 2018-4-48
+ * @param {Object} detailsData 工单详情
+ * 
+ * @event call-pictures 需要调用图片查看控件 data {Object| Array}: {图片数组, 序号| 图片数组}
+ * @event call-download 调用下载 data {String} 下载地址
+ */
+let orderDetails = Vue.extend({
+  template: `<div class="order-details">
+              <div class="details-title">工单信息详情</div>
+              <div class="details-container">
+                <el-tabs v-model="detailsTabActive" type="border-card" v-on:tab-click="">
+                  <el-tab-pane label="基本信息" name="baseInfo">
+                    <table v-if="detailsData.base_info" class="details-table">
+                      <tbody>
+                        <tr>
+                          <th>工单日期：</th>
+                          <td>{{$timeStampFormat(detailsData.base_info.order_date)}}</td>
+                          <th>工单编号：</th>
+                          <td>{{detailsData.base_info.order_date}}</td>
+                          <th>业务人员：</th>
+                          <td>{{detailsData.base_info.business_name}}</td>
+                        </tr>
+                        <tr>
+                          <th>客户名称：</th>
+                          <td>{{detailsData.base_info.client_name}}</td>
+                          <th>设备名称：</th>
+                          <td>{{detailsData.base_info.equipment_name}}</td>
+                          <th>设备类别：</th>
+                          <td>{{detailsData.base_info.category}}</td>
+                        </tr>
+                        <tr>
+                          <th>设备品牌：</th>
+                          <td>{{detailsData.base_info.brand}}</td>
+                          <th>设备来源：</th>
+                          <td>{{detailsData.base_info.source}}</td>
+                          <th>报修方式：</th>
+                          <td>{{detailsData.base_info.repair_methods}}</td>
+                        </tr>
+                        <tr>
+                          <th>紧急程度：</th>
+                          <td>{{detailsData.base_info.level}}</td>
+                          <th>委派维修：</th>
+                          <td>{{detailsData.base_info.repair_entrust}}</td>
+                          <th>委派人员：</th>
+                          <td>{{detailsData.base_info.repair_peopel}}</td>
+                        </tr>
+                        <tr>
+                          <th>设备图片：</th>
+                          <td><i class="el-icon-picture table-img-icon" v-on:click="$emit('call-pictures', detailsData.base_info.image)"></i></td>
+                          <th></th>
+                          <td></td>
+                          <th></th>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <th>问题描述：</th>
+                          <td colspan="5" style="text-align:left;">{{detailsData.base_info.fault_info}}</td>
+                        </tr>
+                        <tr>
+                          <th>备注：</th>
+                          <td colspan="5" style="text-align:left;">{{detailsData.base_info.remark}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </el-tab-pane>
+                  <el-tab-pane label="故障诊断" name="faultResult">
+                    <table v-if="detailsData.diagnosis" class="details-table faultResult">
+                      <tbody>
+                        <tr>
+                          <th>诊断时间：</th>
+                          <td colspan="2" class="text-center">{{$timeStampFormat(detailsData.diagnosis.date)}}</td>
+                          <th>诊断人员：</th>
+                          <td colspan="2" class="text-center">{{detailsData.diagnosis.people}}</td>
+                        </tr>
+                        <tr>
+                          <th>诊断结果：</th>
+                          <td colspan="5">{{detailsData.diagnosis.result}}</td>
+                        </tr>
+                        <tr>
+                          <th>维修措施：</th>
+                          <td colspan="5">{{detailsData.diagnosis.measures}}</td>
+                        </tr>
+                        <tr>
+                          <th rowspan="6" class="text-center">成本预估</th>
+                          <th class="sub-head">人工维修费用：</th>
+                          <td colspan="4">{{detailsData.diagnosis.price1}}</td>
+                        </tr>
+                        <tr>
+                          <th class="sub-head">材料（配件）费用：</th>
+                          <td colspan="4" style="padding:0;">
+                            <div v-for="item in detailsData.diagnosis.price2" class="td-item">
+                              {{item}}
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th class="sub-head">差旅（配送）费用：</th>
+                          <td colspan="4">{{detailsData.diagnosis.price3}}</td>
+                        </tr>
+                        <tr>
+                          <th class="sub-head">安装费用：</th>
+                          <td colspan="4">{{detailsData.diagnosis.price4}}</td>
+                        </tr>
+                        <tr>
+                          <th class="sub-head">其他费用：</th>
+                          <td colspan="4">{{detailsData.diagnosis.price5}}</td>
+                        </tr>
+                        <tr>
+                          <th class="sub-head">合计：</th>
+                          <td colspan="4">{{detailsData.diagnosis.total_price}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </el-tab-pane>
+                  <el-tab-pane label="维修报价" name="repairPrice">
+                    <div class="block-title">维修报价：</div>
+                    <table v-if="detailsData.price"  class="details-table repair-column-4">
+                      <tbody>
+                        <tr>
+                          <th>公司名称：</th>
+                          <td colspan="3">{{detailsData.price.repair_quotation.company}}</td>
+                        </tr>
+                        <tr>
+                          <th>标题：</th>
+                          <td colspan="3">{{detailsData.price.repair_quotation.title}}</td>
+                        </tr>
+                        <tr>
+                          <th>客户名称：</th>
+                          <td>{{detailsData.price.repair_quotation.client_name}}</td>
+                          <th>报价日期：</th>
+                          <td>{{$timeStampFormat(detailsData.price.repair_quotation.date)}}</td>
+                        </tr>
+                        <tr>
+                          <th>报价人：</th>
+                          <td>{{detailsData.price.repair_quotation.offer_people}}</td>
+                          <th>审核人：</th>
+                          <td>{{detailsData.price.repair_quotation.audit_people}}</td>
+                        </tr>
+                        <tr>
+                          <th>货币单位：</th>
+                          <td>{{detailsData.price.repair_quotation.monetary_unit}}</td>
+                          <th>报价是否含税：</th>
+                          <td>{{detailsData.price.repair_quotation.is_tax ? '是' : '否'}}</td>
+                        </tr>
+                        <tr>
+                          <th>选择报价表单模板：</th>
+                          <td>{{detailsData.price.repair_quotation.template}}</td>
+                          <th>税率：</th>
+                          <td>{{detailsData.price.repair_quotation.tax}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="block-title">设备基本信息：</div>
+                    <table v-if="detailsData.price"  class="details-table equipment-info">
+                      <tbody>
+                        <tr>
+                          <th>设备名称</th>
+                          <th>规格型号</th>
+                          <th>品牌</th>
+                          <th>单位</th>
+                          <th>数量</th>
+                          <th>序列号</th>
+                          <th>故障描述</th>
+                        </tr>
+                        <tr>
+                          <td v-for="key in detailsData.price.equipment_info">{{key}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="block-title">维修费用信息：</div>
+                    <table v-if="detailsData.price"  class="details-table repair-column-6">
+                      <tbody>
+                        <tr>
+                          <th>费用项</th>
+                          <th>配件名称</th>
+                          <th>规格型号</th>
+                          <th>单位</th>
+                          <th>数量</th>
+                          <th>金额</th>
+                        </tr>
+                        <tr v-for="(item, index) in detailsData.price.repair_info.accessories">
+                          <th>配件费{{Number(index)+1}}</th>
+                          <td>{{item.name}}</td>
+                          <td>{{item.model}}</td>
+                          <td>{{item.unit}}</td>
+                          <td>{{item.count}}</td>
+                          <td>{{item.price}}</td>
+                        </tr>
+                        <tr>
+                          <th>维修服务费</th>
+                          <td colspan="4"></td>
+                          <td>{{detailsData.price.repair_info.service_price}}</td>
+                        </tr>
+                        <tr>
+                          <th>安装费</th>
+                          <td colspan="4"></td>
+                          <td>{{detailsData.price.repair_info.install_price}}</td>
+                        </tr>
+                        <tr>
+                          <th>配送费</th>
+                          <td colspan="4"></td>
+                          <td>{{detailsData.price.repair_info.distribution_price}}</td>
+                        </tr>
+                        <tr>
+                          <th>合计费用</th>
+                          <td style="text-align: right;">大写：</td>
+                          <td colspan="2">{{detailsData.price.repair_info.total_price_cn}}</td>
+                          <td style="text-align: right;">小写：</td>
+                          <td>{{detailsData.price.repair_info.total_price}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="block-title">通讯联络信息：</div>
+                    <table v-if="detailsData.price"  class="details-table repair-column-4">
+                      <tbody>
+                        <tr>
+                          <th>客户方联系人：</th>
+                          <td>{{detailsData.price.contact_info.clientInfo.name}}</td>
+                          <th>我方联系人：</th>
+                          <td>{{detailsData.price.contact_info.userInfo.name}}</td>
+                        </tr>
+                        <tr>
+                          <th>手机号码：</th>
+                          <td>{{detailsData.price.contact_info.clientInfo.phone}}</td>
+                          <th>手机号码：</th>
+                          <td>{{detailsData.price.contact_info.userInfo.phone}}</td>
+                        </tr>
+                        <tr>
+                          <th>座机号码：</th>
+                          <td>{{detailsData.price.contact_info.clientInfo.tel}}</td>
+                          <th>座机号码：</th>
+                          <td>{{detailsData.price.contact_info.userInfo.tel}}</td>
+                        </tr>
+                        <tr>
+                          <th>联系地址：</th>
+                          <td>{{detailsData.price.contact_info.clientInfo.address}}</td>
+                          <th>联系地址：</th>
+                          <td>{{detailsData.price.contact_info.userInfo.address}}</td>
+                        </tr>
+                        <tr>
+                          <th>邮编：</th>
+                          <td>{{detailsData.price.contact_info.clientInfo.code}}</td>
+                          <th>邮编：</th>
+                          <td>{{detailsData.price.contact_info.userInfo.code}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </el-tab-pane>
+                  <el-tab-pane label="维修合同" name="repairContract">
+                    <table v-if="detailsData.contract"  class="details-table repair-column-4">
+                      <tbody>
+                        <tr>
+                          <th>合同标题：</th>
+                          <td colspan="3">{{detailsData.contract.title}}</td>
+                        </tr>
+                        <tr>
+                          <th>甲方名称：</th>
+                          <td>{{detailsData.contract.jiafang.name}}</td>
+                          <th>乙方名称：</th>
+                          <td>{{detailsData.contract.yifang.name}}</td>
+                        </tr>
+                        <tr>
+                          <th>联系地址：</th>
+                          <td>{{detailsData.contract.jiafang.address}}</td>
+                          <th>联系地址：</th>
+                          <td>{{detailsData.contract.yifang.address}}</td>
+                        </tr>
+                        <tr>
+                          <th>联系人：</th>
+                          <td>{{detailsData.contract.jiafang.people}}</td>
+                          <th>联系人：</th>
+                          <td>{{detailsData.contract.yifang.people}}</td>
+                        </tr>
+                        <tr>
+                          <th>联系电话：</th>
+                          <td>{{detailsData.contract.jiafang.tel}}</td>
+                          <th>联系电话：</th>
+                          <td>{{detailsData.contract.yifang.tel}}</td>
+                        </tr>
+                        <tr>
+                          <th>传真：</th>
+                          <td>{{detailsData.contract.jiafang.fax}}</td>
+                          <th>传真：</th>
+                          <td>{{detailsData.contract.yifang.fax}}</td>
+                        </tr>
+                        <tr>
+                          <td colspan="4" class="preview-pdf">
+                            <img v-for="(img, index) in detailsData.contract.contract_pic"
+                              :src="img" :alt="'合同图片'+index"
+                              v-on:click="$emit('call-pictures', { pics: detailsData.contract.contract_pic, index: index})" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>盖章合同文件：</td>
+                          <td colspan="3" style="text-align:left;">
+                            <i class="el-icon-document download-contract" v-on:click="$emit('call-download', detailsData.contract.contract_url)"></i>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </el-tab-pane>
+                  <el-tab-pane label="维修管理" name="repairManagement">
+                    <div class="block-title">维修报告:</div>
+                    <table v-if="detailsData.manage"  class="details-table repair-column-4">
+                      <tr>
+                        <th>标题：</th>
+                        <td colspan="3">{{detailsData.manage.report.title}}</td>
+                      </tr>
+                      <tr>
+                        <th>工单编号：</th>
+                        <td>{{detailsData.manage.report.id}}</td>
+                        <th>编写日期：</th>
+                        <td>{{$timeStampFormat(detailsData.manage.report.date)}}</td>
+                      </tr>
+                    </table>
+                    <div class="block-title">基本信息:</div>
+                    <table v-if="detailsData.manage"  class="details-table repair-column-6">
+                      <tbody>
+                        <tr>
+                          <th>工单日期:</th>
+                          <td>{{$timeStampFormat(detailsData.manage.base_info.date)}}</td>
+                          <th>客户名称：</th>
+                          <td>{{detailsData.manage.base_info.client_name}}</td>
+                          <th>维修公司：</th>
+                          <td>{{detailsData.manage.base_info.repair_company}}</td>
+                        </tr>
+                        <tr>
+                          <th>设备名称:</th>
+                          <td>{{detailsData.manage.base_info.equipment_name}}</td>
+                          <th>设备类别：</th>
+                          <td>{{detailsData.manage.base_info.equipment_category}}</td>
+                          <th>设备品牌：</th>
+                          <td>{{detailsData.manage.base_info.equipment_brand}}</td>
+                        </tr>
+                        <tr>
+                          <th>设备来源:</th>
+                          <td>{{detailsData.manage.base_info.equipment_source}}</td>
+                          <th>报修方式：</th>
+                          <td>{{detailsData.manage.base_info.repair_methods}}</td>
+                          <th>紧急程度：</th>
+                          <td>{{detailsData.manage.base_info.level}}</td>
+                        </tr>
+                        <tr>
+                          <th>维修人员:</th>
+                          <td>{{detailsData.manage.base_info.repair_peopel}}</td>
+                          <th>联系方式：</th>
+                          <td>{{detailsData.manage.base_info.contact}}</td>
+                          <th>完成时间：</th>
+                          <td>{{$timeStampFormat(detailsData.manage.base_info.fin)}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="block-title">维修信息:</div>
+                    <table v-if="detailsData.manage"  class="details-table repair-column-2">
+                      <tbody>
+                        <tr>
+                          <th>故障描述：</th>
+                          <td>{{detailsData.manage.repair_info.fault_info}}</td>
+                        </tr>
+                        <tr>
+                          <th>故障原因：</th>
+                          <td>{{detailsData.manage.repair_info.fault_reason}}</td>
+                        </tr>
+                        <tr>
+                          <th>维修措施：</th>
+                          <td>{{detailsData.manage.repair_info.fault_methods}}</td>
+                        </tr>
+                        <tr>
+                          <th>完成情况：</th>
+                          <td>{{detailsData.manage.repair_info.result}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="block-title">维修成本:</div>
+                    <table v-if="detailsData.manage"  class="details-table repair-column-6">
+                      <tbody>
+                        <tr>
+                          <th>人工维修费用</th>
+                          <th>配件费用</th>
+                          <th>配送费用</th>
+                          <th>安装费用</th>
+                          <th>其他费用</th>
+                          <th>合计（元）</th>
+                        </tr>
+                        <tr>
+                          <td>{{detailsData.manage.repair_cost.price1}}</td>
+                          <td>{{detailsData.manage.repair_cost.price2}}</td>
+                          <td>{{detailsData.manage.repair_cost.price3}}</td>
+                          <td>{{detailsData.manage.repair_cost.price4}}</td>
+                          <td>{{detailsData.manage.repair_cost.price5}}</td>
+                          <td>{{detailsData.manage.repair_cost.total}}</td>
+                        </tr>
+                        <tr>
+                          <th>备注：</th>
+                          <td colspan="5">{{detailsData.manage.repair_cost.remark}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="block-title">维修日志：</div>
+                    <div v-if="detailsData.manage" class="repair-log">
+                      <p v-for="log in detailsData.manage.repair_log">{{log}}</p>
+                    </div>
+                  </el-tab-pane>
+                  <el-tab-pane label="交付与回访" name="deliveryVisit">
+                    <div class="block-title">交付:</div>
+                    <div class="table-wrap">
+                      <table v-if="detailsData.delivery_visit"  class="details-table delivery">
+                        <tbody>
+                          <tr>
+                            <th class="date">交付时间</th>
+                            <th>交付内容</th>
+                            <th class="person">接收方</th>
+                            <th class="file">签字文件</th>
+                          </tr>
+                          <tr v-for="item in detailsData.delivery_visit.delivery">
+                            <td>{{$timeStampFormat(item.date)}}</td>
+                            <td>{{item.content}}</td>
+                            <td>{{item.people}}</td>
+                            <td>
+                              <i class="el-icon-picture table-img-icon" 
+                                v-on:click="$emit('call-pictures', [item.file])">
+                              </i>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="block-title">快递单:</div>
+                    <div class="table-wrap">
+                      <table v-if="detailsData.delivery_visit"  class="details-table delivery">
+                        <tbody>
+                          <tr>
+                            <th class="content">快递单号</th>
+                            <th class="content">快递公司</th>
+                            <th class="file">状态</th>
+                          </tr>
+                          <tr v-for="item in detailsData.delivery_visit.courier">
+                            <td>{{item.id}}</td>
+                            <td>{{item.company}}</td>
+                            <td>{{item.status}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="block-title">回访记录:</div>
+                    <div class="table-wrap">
+                      <table v-if="detailsData.delivery_visit"  class="details-table delivery">
+                        <tbody>
+                          <tr>
+                            <th class="date">回访时间</th>
+                            <th class="person">回访员</th>
+                            <th class="content">回访事由</th>
+                            <th class="content">回访结果</th>
+                          </tr>
+                          <tr v-for="item in detailsData.delivery_visit.visit">
+                            <td>{{$timeStampFormat(item.date)}}</td>
+                            <td>{{item.people}}</td>
+                            <td>{{item.content}}</td>
+                            <td>{{item.result}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            </div>`,
+  props: {
+    detailsData: Object,
+  },
+  data: function() {
+    return {
+      detailsTabActive: 'baseInfo',  //标签页选中
+    }
+  },
+})
+Vue.component('jgb-order-details', orderDetails)

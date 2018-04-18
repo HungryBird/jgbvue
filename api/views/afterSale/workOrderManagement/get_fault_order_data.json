@@ -1,8 +1,8 @@
 {
   "data": [
     {
-      "status_label": "委派",
-      "status_value": 0,
+      "status_label": "待诊断",
+      "status_value": 2,
       "date": "",
       "order_id": "123456",
       "business_name": "",
@@ -27,8 +27,8 @@
       "action": ""
     },
     {
-      "status_label": "待接",
-      "status_value": 1,
+      "status_label": "诊断中",
+      "status_value": 3,
       "date": "",
       "order_id": "987654",
       "business_name": "",
