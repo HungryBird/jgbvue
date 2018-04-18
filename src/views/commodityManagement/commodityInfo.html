@@ -336,8 +336,8 @@
 							</el-table-column>
 							<el-table-column label="图片" prop="img">
 								<template slot-scope="scope">
-									<i class="el-icon-picture jgb-table-icon" v-on:click="addQuickGenerateUploadPicIcon(scope.row.img, scope.row)"></i>
-									<!-- <input type="file" v-on:click="addQuickGenerateUploadPic" ></input> -->
+									<i class="el-icon-picture jgb-table-icon"></i>
+									<input type="file" v-on:change="addQuickGenerateUploadPic($event)" style="width: 100%;height: 100%;z-index: 9;position: absolute;left: 0;top: 0;opacity: 0;"></input>
 								</template>
 							</el-table-column>
 							<el-table-column v-for="(tb, index) in addForm.quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="addQuickGenerateHeader">

@@ -794,11 +794,8 @@ JGBVue.module.commodityInfo = ()=> {
 						}
 					}
 			    },
-			    addQuickGenerateUploadPicIcon() {
-			    	this.addQuickGenerateUploadPic();
-			    },
-			    addQuickGenerateUploadPic() {
-
+			    addQuickGenerateUploadPic(e) {
+			    	console.log('e: ', e);
 			    },
 			    addQuickGenerateHeader(createElement, { column }) {
 			    	return createElement(
