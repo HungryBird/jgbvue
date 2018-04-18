@@ -200,8 +200,8 @@
 		</el-dialog>
 		<!-- 添加-步骤2-新增按钮-模态窗 -->
 		<el-dialog :visible.sync="addStep2AddDialogVisiable" title="新增按钮">
-			<el-row :gutter="4">
-				<el-form :model="addStep2AddForm" ref="addStep2AddFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
+			<el-form :model="addStep2AddForm" ref="addStep2AddFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
+				<el-row :gutter="4">
 					<el-col :span="24">
 						<el-form-item prop="parentLevel" label="上级">
 							<el-select v-model="addStep2AddForm.parentLevel">
@@ -209,6 +209,8 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="addStep2AddForm.number"></el-input>
@@ -219,6 +221,8 @@
 							<el-input v-model="addStep2AddForm.name"></el-input>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item prop="sort" label="排序">
 							<el-input v-model="addStep2AddForm.sort"></el-input>
@@ -229,7 +233,15 @@
 							<el-input v-model="addStep2AddForm.address"></el-input>
 						</el-form-item>
 					</el-col>
-				</el-form>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item prop="enabled" label="是否可用">
+							<el-switch v-model="addStep2AddForm.enabled"></el-switch>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
 			</el-row>
 			<div slot="footer">
 				<el-button v-on:click="addSaveAddStep2('addForm')" type="primary">保存</el-button>
@@ -238,8 +250,8 @@
 		</el-dialog>
 		<!-- 添加-步骤2-编辑按钮-模态窗 -->
 		<el-dialog :visible.sync="addStep2EditDialogVisiable" title="编辑按钮">
-			<el-row :gutter="4">
-				<el-form :model="addStep2EditForm" ref="addStep2EditFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
+			<el-form :model="addStep2EditForm" ref="addStep2EditFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
+				<el-row :gutter="4">
 					<el-col :span="24">
 						<el-form-item prop="parentLevel" label="上级">
 							<el-select v-model="addStep2EditForm.parentLevel">
@@ -247,6 +259,8 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="addStep2EditForm.number"></el-input>
@@ -257,6 +271,8 @@
 							<el-input v-model="addStep2EditForm.name"></el-input>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item prop="sort" label="排序">
 							<el-input v-model="addStep2EditForm.sort"></el-input>
@@ -267,7 +283,8 @@
 							<el-input v-model="addStep2EditForm.address"></el-input>
 						</el-form-item>
 					</el-col>
-				</el-form>
+				</el-row>
+			</el-form>
 			</el-row>
 			<div slot="footer">
 				<el-button v-on:click="addStep2EditDialogVisiable = false" type="primary">保存</el-button>
@@ -276,8 +293,8 @@
 		</el-dialog>
 		<!-- 添加-步骤3-新增视图-模态窗 -->
 		<el-dialog :visible.sync="addStep3AddDialogVisiable" title="新增视图">
-			<el-row :gutter="4">
-				<el-form :model="addStep3AddForm" ref="addStep3AddFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
+			<el-form :model="addStep3AddForm" ref="addStep3AddFormRef" :rules="formRules" label-position="top" class="el-form-dialog">
+				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item prop="number" label="编号">
 							<el-input v-model="addStep3AddForm.number"></el-input>
@@ -288,6 +305,8 @@
 							<el-input v-model="addStep3AddForm.name"></el-input>
 						</el-form-item>
 					</el-col>
+				</el-row>
+				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item prop="sort" label="排序">
 							<el-input v-model="addStep3AddForm.sort"></el-input>
@@ -298,8 +317,29 @@
 							<el-input v-model="addStep3AddForm.describe"></el-input>
 						</el-form-item>
 					</el-col>
-				</el-form>
-			</el-row>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item prop="dataSort" label="数据排序排序">
+							<el-select v-model="addStep3AddForm.dataSort">
+								<el-option v-for="item in 4" :key="item" :label="item" :value="item"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item prop="width" label="宽度">
+							<el-input v-model="addStep3AddForm.width"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item prop="enabled" label="是否可用">
+							<el-switch v-model="addStep3AddForm.enabled"></el-switch>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
 			<div slot="footer">
 				<el-button v-on:click="addSaveAddStep3('addForm')" type="primary">保存</el-button>
 				<el-button v-on:click="addStep3AddDialogVisiable = false" type="primary">关闭</el-button>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>设备管理</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+<body>
+	<div id="app" v-cloak>
+		<el-container>
+			<el-header style="padding: 0;">
+				<el-form :inline="true">
+					<el-form-item>
+						<el-select v-model="searchData.select" filterable placeholder="输入查询条件">
+							<el-option
+							v-for="item in queryType"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-input v-model="searchData.iput">
+							<template slot="append">
+								<el-button v-on:click="search(searchData)">搜索</el-button>
+							</template>
+						</el-input>
+					</el-form-item>
+					<el-form-item>
+						<el-checkbox label="显示禁用设备" v-model="isShowForbiddenEquipment" v-on:change="toggleForbiddenEquipment"></el-checkbox>
+					</el-form-item>
+				</el-form>
+			</el-header>
+			<el-container>
+				<el-aside width="200px" class="jgb-wrap">
+					<div class="jgb-title">
+						<h5 class="text-center">快速查询</h5>
+					</div>
+					<ul class="ul-list">
+						<li v-for="(item, index) in queryType" :key="item.value" :value="item.value" v-on:click="changeQueryType(item, index)" :class="{active: index === activeIndex}">
+							{{ item.label }}
+						</li>
+					</ul>
+				</el-aside>
+				<el-main>
+					<div class="jgb-wrap">
+						<nav class="jgb-nav">
+							<el-button class="pull-left">
+								列设置
+							</el-button>
+							<el-button-group class="pull-right">
+								<el-button icon="el-icon-plus" v-on:click="addVisible = true">新增</el-button>
+								<el-button icon="el-icon-minus" :disabled="selectedRows.length === 0" v-on:click="remove">删除</el-button>
+								<el-button :disabled="selectedRows.length === 0" v-on:click="forbidden">禁用</el-button>
+								<el-button :disabled="selectedRows.length === 0" v-on:click="startUsing">启用</el-button>
+								<el-button v-on:click="importVisible = true">导入</el-button>
+								<el-button v-on:click="exportCilck">导出</el-button>
+							</el-button-group>
+						</nav>
+						<el-table :data="table.data" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" :row-class-name="rowStatusClassName" v-loading="loadingDetailInfo">
+							<el-table-column type="selection"></el-table-column>
+							<el-table-column  v-for="item in table.header" v-if="item.enable" align="center" :type="item.type" :sortable="item.sortable" :width="item.width" :key="item.prop" :prop="item.prop" :label="item.label">
+								<template slot-scope="scope">
+									<div v-if="item.prop == 'action'" >
+										<el-button-group>
+											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)" type="primary">查看</el-button>
+											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+										</el-button-group>
+									</div>
+									<div v-else-if="item.type == 'index'">{{scope.$index+1}}</div>
+									<div v-else-if="item.prop == 'status'">
+										<el-switch v-model="scope.row.status" v-on:change="handleStatus(scope.$index, scope.row)"></el-switch>
+									</div>
+									<div v-else-if="item.prop == 'image'">
+										<i class="el-icon-picture jgb-table-icon" v-on:click="viewImage(scope.row.img, scope.row)"></i>
+									</div>
+	                  				<div v-else>{{scope.row[item.prop]}}</div>
+								</template>
+							</el-table-column>
+						</el-table>
+					</div>
+				</el-main>
+			</el-container>
+		</el-container>
+		<div class="wrap_footer">
+			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
+		</div>
+		<transition name="slide-fade">
+			<div class="details-wrap" v-show="isUnfold">
+				<div class="details-inner" v-loading="loadingDetailInfo">
+					<el-row class="row-border">
+						<div class="title text-center">
+							<h3>客户详细信息</h3>
+						</div>
+						<el-col v-for="item in detailInfo" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.name">
+							<div>{{ item.name }}</div>
+							<div v-if="item.isImages" v-on:click="viewImage(item)"><i class="el-icon-picture"></i></div>
+							<div v-else>{{ item.value }}</div>
+						</el-col>
+					</el-row>
+					<div class="toggle-button-wrap" v-on:click="toggleInfo">
+						<span class="jgbvue_arrow_icon" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -9px -85px;position: absolute;top: 50%;right: 0;transform: translateY(-50%);"></span>
+						<span class="jgbvue_arrow_line" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -123px -2px;margin-left: 16px;"></span>
+					</div>
+				</div>
+			</div>
+		</transition>
+		<!-- 新增客户 -->
+		<el-dialog :visible.sync="addVisible" title="新增客户">
+			<div slot="title" class="title">
+				新增用户
+			</div>
+			<el-form ref="addForm" label-position="right" label-width="100px" :model="addForm" :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="客户编号" prop="number">
+							<el-input v-model="addForm.number"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="客户名称" prop="name">
+							<el-input v-model="addForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="纳税人识别号" prop="identifyNumber">
+							<el-input v-model="addForm.identifyNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="开户银行" prop="bankName">
+							<el-input v-model="addForm.bankName"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="银行账号" prop="bankAccount">
+							<el-input v-model="addForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="公司电话" prop="companyTel">
+							<el-input v-model="addForm.companyTel"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row class="select-region" :gutter="0">
+					<el-col :span="6">
+						<el-form-item label="公司地址" prop="province">
+							<el-select placeholder="省份" v-model="addForm.province" v-on:focus="foucsAddProvince" v-on:change="changeAddProvince">
+								<el-option v-for="item in addAddress.provinces" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="city" class="hide-label">
+							<el-select placeholder="城市" v-model="addForm.city" :disabled="addAddress.provinces.length === 0" v-on:focus="foucsAddCity" v-on:change="changeAddCities">
+								<el-option v-for="item in addAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="district" class="hide-label">
+							<el-select  placeholder="地区" v-model="addForm.district" :disabled="addAddress.cities.length === 0" v-on:focus="foucsAddDistrict" v-on:change="changeAddDistrict">
+								<el-option v-for="item in addAddress.districts" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="block" class="hide-label">
+							<el-select  placeholder="街道" v-model="addForm.block" :disabled="addAddress.districts.length === 0" v-on:focus="foucsAddBlock">
+								<el-option v-for="item in addAddress.blocks" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<el-form-item prop="moreInfo" class="hide-label hide-label-hight">
+							<el-input v-model="addForm.moreInfo" placeholder="详细地址" style="width: 100%"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item label="协助人员" prop="assistants">
+							<el-button icon="el-icon-plus" size="mini" v-on:click="addSetMemberVisible = true">协助人员</el-button>
+							<div style="padding: 4px;border-radius: 4px;border: 1px solid rgba(64,158,255,.2)" v-show="addForm.assistants.length !== 0">
+								<el-tag v-for="tag in addForm.assistants" :key="tag.jobNumber" :type="tag.type" closable v-on:close="addCloseTag(tag)">{{tag.name}}</el-tag>
+							</div>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="addForm.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-table :data="addForm.table" border ref="addTable" class="tb-edit" v-on:row-click="addRowClick">
+					<el-table-column label="操作">
+						<template slot-scope="scope">
+							<el-button-group>
+								<el-button icon="el-icon-plus" size="mini" v-on:click="addFormTableAdd"></el-button>
+								<el-button icon="el-icon-delete" type="danger" size="mini" v-on:click="addFormTableDelete(scope.row)"></el-button>
+							</el-button-group>
+						</template>
+					</el-table-column>
+					<el-table-column :render-header="renderHeader" label="联系人">
+						<template slot-scope="scope">
+							<div v-if="!scope.row.editFlag">{{ scope.row.linkman }}</div>
+							<el-input v-else v-model="scope.row.linkman"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="职务">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.job }}</span>
+							<el-input v-else v-model="scope.row.job"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="座机">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.tel }}</span>
+							<el-input v-else v-model="scope.row.tel"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="手机">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.phone }}</span>
+							<el-input v-else v-model="scope.row.phone"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="QQ/微信/邮箱">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.QQOrWechat }}</span>
+							<el-input v-else v-model="scope.row.QQOrWechat"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="联系地址">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.linkAddress }}</span>
+							<el-input v-else v-model="scope.row.linkAddress"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="首要联系人">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.primaryContact }}</span>
+							<el-input v-else v-model="scope.row.primaryContact"></el-input>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-form>
+			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd('addForm')" v-on:close="closeAdd"></jgb-form-footer>
+		</el-dialog>
+		<!-- 编辑客户 -->
+		<el-dialog :visible.sync="editVisible" title="新增客户">
+			<div slot="title" class="title">
+				编辑客户
+			</div>
+			<el-form ref="editForm" label-position="right" label-width="100px" :model="editForm" :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="客户编号" prop="number">
+							<el-input v-model="editForm.number"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="客户名称" prop="name">
+							<el-input v-model="editForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="纳税人识别号" prop="identifyNumber">
+							<el-input v-model="editForm.identifyNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="开户银行" prop="bankName">
+							<el-input v-model="editForm.bankName"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="银行账号" prop="bankAccount">
+							<el-input v-model="editForm.email"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="公司电话" prop="companyTel">
+							<el-input v-model="editForm.companyTel"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row class="select-region" :gutter="0">
+					<el-col :span="6">
+						<el-form-item label="公司地址" prop="province">
+							<el-select placeholder="省份" v-model="editForm.province" v-on:focus="foucsAddProvince" v-on:change="changeAddProvince">
+								<el-option v-for="item in addAddress.provinces" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="city" class="hide-label">
+							<el-select placeholder="城市" v-model="editForm.city" :disabled="addAddress.provinces.length === 0" v-on:focus="foucsAddCity" v-on:change="changeAddCities">
+								<el-option v-for="item in addAddress.cities" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="district" class="hide-label">
+							<el-select  placeholder="地区" v-model="editForm.district" :disabled="addAddress.cities.length === 0" v-on:focus="foucsAddDistrict" v-on:change="changeAddDistrict">
+								<el-option v-for="item in addAddress.districts" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item prop="block" class="hide-label">
+							<el-select  placeholder="街道" v-model="editForm.block" :disabled="addAddress.districts.length === 0" v-on:focus="foucsAddBlock">
+								<el-option v-for="item in addAddress.blocks" :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<el-form-item prop="moreInfo" class="hide-label hide-label-hight">
+							<el-input v-model="editForm.moreInfo" placeholder="详细地址" style="width: 100%"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item label="协助人员" prop="assistants">
+							<el-button icon="el-icon-plus" size="mini" v-on:click="editSetMember">协助人员</el-button>
+							<div style="padding: 4px;border-radius: 4px;border: 1px solid rgba(64,158,255,.2)" v-show="editForm.assistants.length !== 0">
+								<el-tag v-for="tag in editForm.assistants" :key="tag.jobNumber" :type="tag.type" closable v-on:close="editCloseTag(tag)">{{tag.name}}</el-tag>
+							</div>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item prop="remark" label="备注">
+							<el-input type="textarea" v-model="editForm.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-table :data="editForm.table" border ref="addTable" class="tb-edit" v-on:row-click="editRowClick">
+					<el-table-column label="操作">
+						<template slot-scope="scope">
+							<el-button-group>
+								<el-button icon="el-icon-plus" size="mini" v-on:click="editFormTableAdd"></el-button>
+								<el-button icon="el-icon-delete" type="danger" size="mini" v-on:click="editFormTableDelete(scope.row)"></el-button>
+							</el-button-group>
+						</template>
+					</el-table-column>
+					<el-table-column :render-header="renderHeader">
+						<template slot-scope="scope">
+							<div v-if="!scope.row.editFlag">{{ scope.row.linkman }}</div>
+							<el-input v-else v-model="scope.row.linkman"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="职务">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.job }}</span>
+							<el-input v-else v-model="scope.row.job"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="座机">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.tel }}</span>
+							<el-input v-else v-model="scope.row.tel"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="手机">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.phone }}</span>
+							<el-input v-else v-model="scope.row.phone"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="QQ/微信/邮箱">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.QQOrWechat }}</span>
+							<el-input v-else v-model="scope.row.QQOrWechat"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="联系地址">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.linkAddress }}</span>
+							<el-input v-else v-model="scope.row.linkAddress"></el-input>
+						</template>
+					</el-table-column>
+					<el-table-column label="首要联系人">
+						<template slot-scope="scope">
+							<span v-if="!scope.row.editFlag">{{ scope.row.primaryContact }}</span>
+							<el-input v-else v-model="scope.row.primaryContact"></el-input>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-form>
+			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveEdit('editForm')" v-on:close="closeEdit"></jgb-form-footer>
+		</el-dialog>
+		<!-- 添加-选择协助人员 -->
+		<el-dialog :visible.sync="addSetMemberVisible" title="选择协助人员">
+			<jgb-set-member ref="setRoleMember"
+				v-if="addSetMemberVisible"
+				v-model="addCheckedAssistantsMember"
+				:company-list="companyList"
+				:department-list="departmentList"
+				:user-list="userList"
+				:user-props="defaultUserProps"
+				:company-props="defaultCompanyProps"
+				:department-props="defaultDepartmentProps"
+				v-on:company-change="setMemberCompanyChange"
+				v-on:department-change="setMemberGetUser"
+				v-on:search="setMemberGetUser">
+			</jgb-set-member>
+			<div slot="footer">
+				<el-button type="primary" :loading="btnLoading" :disable="btnLoading" v-on:click="saveAddSetMember">保存</el-button>
+				<el-button v-on:click="addSetMemberVisible = false">关闭</el-button>
+             </div>
+		</el-dialog>
+		<!-- 添加-选择销售人员 -->
+		<el-dialog :visible.sync="addSetSalesVisible" title="选择协助人员">
+			<jgb-set-member ref="setRoleMember_sale"
+				v-if="addSetSalesVisible"
+				v-model="addCheckedSalesMember"
+				:company-list="companyList"
+				:department-list="departmentList"
+				:user-list="userList"
+				:user-props="defaultUserProps"
+				:company-props="defaultCompanyProps"
+				:department-props="defaultDepartmentProps"
+				v-on:company-change="setMemberCompanyChange"
+				v-on:department-change="setMemberGetUser"
+				v-on:search="setMemberGetUser">
+			</jgb-set-member>
+			<div slot="footer">
+				<el-button type="primary" :loading="btnLoading" :disable="btnLoading" v-on:click="saveAddSetSales">保存</el-button>
+				<el-button v-on:click="addSetMemberVisible = false">关闭</el-button>
+             </div>
+		</el-dialog>
+		<!-- 编辑-选择协助人员 -->
+		<el-dialog title="选择协助人员" :visible.sync="editSetMemberVisible">
+			<jgb-set-member ref="setRoleMember"
+				v-if="editSetMemberVisible"
+				v-model="editCheckedAssistantsMember"
+				:company-list="companyList"
+				:department-list="departmentList"
+				:user-list="userList"
+				:user-props="defaultUserProps"
+				:company-props="defaultCompanyProps"
+				:department-props="defaultDepartmentProps"
+				v-on:company-change="setMemberCompanyChange"
+				v-on:department-change="setMemberGetUser"
+				v-on:search="setMemberGetUser">
+			</jgb-set-member>
+			<div slot="footer">
+				<el-button type="primary" :loading="btnLoading" :disable="btnLoading" v-on:click="saveEditSetMember">保存</el-button>
+				<el-button v-on:click="editSetMemberVisible = false">关闭</el-button>
+             </div>
+		</el-dialog>
+		<el-dialog :visible.sync="importVisible" title="导入">
+			<p>
+				<span>导入模板下载并填写</span>
+				<el-button>下载</el-button>
+			</p>
+			<p>
+				填写说明：
+				<ol>
+					<li>多次或重复导入同一编号的客户，默认覆盖之前的信息</li>
+					<li>客户编号、名称必填，多个联系人的客户信息只需填写一次。</li>
+				</ol>
+			</p>
+			<p>
+				<span>上传需要导入的文件</span>
+				<form :action="uploadUrl" method="post" enctype="multipart/form-data">
+				    <input type="file" v-on:change="getFile"></input>
+			    </form>
+			</p>
+			<p>
+				导入详情：
+				<ul>
+					<li>新增客户数据：{{ uploadInfo.newNumber }}条</li>
+					<li>更新客户数据: {{ uploadInfo.updateNumber }}条</li>
+					<li>错误数据：{{ uploadInfo.errNumber }}条</li>
+					<li v-if="uploadInfo.errRecord.length !== 0">
+						错误信息：
+						<dl>
+							<li v-for="item in uploadInfo.errRecord">
+								导入文件中第{{item}}行，请检查
+							</li>
+						</dl>
+					</li>
+				</ul>
+			</p>
+			<div slot="footer">
+				<el-button v-on:click="uploadFild">导入</el-button>
+				<el-button v-on:click="importVisible = false">关闭</el-button>
+			</div>
+		</el-dialog>
+		<el-dialog :visible.sync="exportVisible" title="导出">
+			<p>
+				<small>注：请选择需要导出的字段</small>
+			</p>
+			<el-checkbox v-for="item in exportForm" label="item.value" border v-model="item.checked" :key="item.value">{{item.name}}</el-checkbox>
+			<div slot="footer">
+				<el-button>导出</el-button>
+				<el-button v-on:click="exportVisible = false">关闭</el-button>
+			</div>
+		</el-dialog>
+		<transition name="fade">
+			<div class="slideshow-wrap" v-if="showSlideshow">
+				<div class="slideshow-mask" v-on:click="showSlideshow = false"></div>
+				<div class="slideshow-inner">
+					<div class="slideshow-inner-nav">
+						<a class="index-text">{{ currentImgIndex+1 + '/' +  slideshowArr.length}}</a>
+						<i class="el-icon-close" v-on:click="showSlideshow = false"></i>
+					</div>
+					<div class="slideshow-inner-wrap" :style="{width: currentImgWidth + 'px', height: currentImgHeight + 'px'}">
+						<!-- <img v-for="(item, index) in slideshowArr" :src="item.src" :style="{width:item.width+'px',height:item.height+'px', display: currentImgIndex === index ? 'block' : 'none'}"></img> -->
+						<img :src="currentImgSrc" :style="{width:currentImgWidth+'px',height:currentImgHeight+'px'}"/>
+						<i class="el-icon-arrow-right arrow-right arrow"  v-on:click="nextImg"></i>
+						<i class="el-icon-arrow-left arrow-left arrow" v-on:click="prevImg"></i>
+					</div>
+				</div>
+			</div>
+		</transition>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/equipmentManagement/equipmentManagement.js"></script>
+<script type="text/javascript">
+	/**
+	 * 初始信息/搜索
+	 * 获取快速查询option
+	 * 切换状态
+	 * 删除
+	 * 查看
+	 * 省
+	 * ...
+	 * 街区
+	 * 获取公司
+	 * 获取部门
+	 * 获取成员
+	 * 保存增加
+	 * 获取编辑数据
+	 * 保存编辑数据
+	 * 上传路径
+	 * 获取导出选项
+	 * 获取幻灯片
+	 */
+	JGBVue.module.equipmentManagement().init('/equipmentManagement/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow');
+</script>
+</html>

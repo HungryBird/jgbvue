@@ -24,7 +24,245 @@ JGBVue.module.index = ()=> {
           navItems: [{
             code: 'nav_001',
             cls: 'fa fa-home'
+<<<<<<< HEAD
           }],
+=======
+          }, {
+            id: 'nav_002',
+            cls: 'fa fa-list-ul',
+            name: '系统设置',
+            menuItems: [{
+              /*title: '',*/
+              parentFolder: 'systemSettings',
+              items: [{
+                id: 'systemParameter',
+                name: '系统参数'
+              }, {
+                id: 'phoneInfo',
+                name: '手机信息'
+              }, {
+                id: 'auditProcess',
+                name: '审核流程'
+              }, {
+                id: 'systemLog',
+                name: '系统日志'
+              }, {
+                id: 'printTemplate',
+                name: '套打模板'
+              }, {
+                id: 'recountCost',
+                name: '重算成本'
+              }, {
+                id: 'addedServer',
+                name: '增值服务'
+              }]
+            }, {
+              /*title: '采购报表',*/
+              parentFolder: 'systemSettings',
+              items: [{
+                id: 'messageInSite',
+                name: '站内信息'
+              }, {
+                id: 'emailInfo',
+                name: '邮件信息'
+              }, {
+                id: 'administrativeRegion',
+                name: '行政区域'
+              }, {
+                id: 'FBackup',
+                name: '备份与恢复'
+              }, {
+                id: 'settlementNAntiSettlement',
+                name: '结账/反结账'
+              }, {
+                id: 'reinitialize',
+                name: '重新初始化'
+              }]
+            }]
+          }, {
+            id: 'nav_003',
+            cls: 'fa fa-group',
+            name: '基础资料',
+            menuItems: [
+              {
+                parentFolder: 'baseData',
+                items: [{
+                  id: 'menuManagement',
+                  name: '功能菜单管理'
+                }, {
+                  id: 'dataDictionary',
+                  name: '数据字典'
+                }]
+              },
+              {
+                title: '公司组织',
+                parentFolder: 'companyOrganization',
+                items: [{
+                  id: 'companyManagement',
+                  name: '公司管理'
+                }, {
+                  id: 'departmentManagement',
+                  name: '部门管理'
+                }, {
+                  id: 'xsdj003',
+                  name: '职位管理'
+                }, {
+                  id: 'roleManagement',
+                  name: '角色管理'
+                }, {
+                  id: 'userManagement',
+                  name: '用户管理'
+                }]
+              },
+              {
+                title: '客户管理',
+                parentFolder: 'clientManagement',
+                items: [
+                  {
+                    id: 'clientInfo',
+                    name: '客户信息'
+                  },
+                  {
+                    id: 'xsbb002',
+                    name: '销售明细表'
+                  },
+                  {
+                    id: 'xsbb003',
+                    name: '销售汇总表(按商品)'
+                  },
+                  {
+                    id: 'xsbb004',
+                    name: '销售汇总表(按客户)'
+                  },
+                  {
+                    id: 'xsbb005',
+                    name: '销售汇总表(按销售人员)'
+                  }
+                ]
+              },
+              {
+                title: '商品管理',
+                parentFolder: 'commodityManagement',
+                items: [
+                  {
+                    id: 'commodityInfo',
+                    name: '商品信息'
+                  },
+                  {
+                    id: 'commodityCategory',
+                    name: '商品类别'
+                  },
+                  {
+                    id: 'commodityBrand',
+                    name: '商品品牌'
+                  },
+                  {
+                    id: 'commodityManagementAuxiliaryAttributes',
+                    name: '辅助属性'
+                  }
+                ]
+              },
+              {
+                title: '供应商管理',
+                parentFolder: 'supplierManagement',
+                items: [
+                  {
+                    id: 'supplierInfo',
+                    name: '供应商信息'
+                  }
+                ]
+              }
+            ]
+          }, {
+            id: 'nav_004',
+            cls: 'fa fa-group',
+            name: '售后',
+            menuItems: [
+            {
+              parentFolder: 'afterSale',
+              items: [{
+                id: '201804061000',
+                name: '客户回访'
+              }, {
+                id: '201804061001',
+                name: '统计报表'
+              }]
+            },
+            {
+              title: '设备管理',
+              parentFolder: 'equipmentManagement',
+              items: [
+              {
+                id: 'equipmentManagement',
+                name: '设备管理'
+              },
+              {
+                id: 'equipmentCategory',
+                name: '设备类别'
+              }, {
+                id: 'equipmentBrand',
+                name: '设备品牌'
+              }, {
+                id: 'equipmentManagementAuxiliaryAttributes',
+                name: '辅助属性'
+              }]
+            },
+            {
+              // title: '工单管理',
+              parentFolder: 'workOrderManagement',
+              items: [{
+                  id: 'orderManagement',
+                  name: '工单管理'
+                },
+                {
+                  id: 'waitingOrder',
+                  name: '未接工单'
+                },
+                {
+                  id: 'addOrder',
+                  name: '工单录入'
+                },
+                {
+                  id: 'faultDiagnosis',
+                  name: '故障诊断'
+                },
+                {
+                  id: 'offerAndContract',
+                  name: '报价与合同'
+                }
+              ]
+            },
+            {
+              title: '维修管理',
+              parentFolder: '201804090948',
+              items: [
+                {
+                  id: '201804090949',
+                  name: '维修'
+                },
+                {
+                  id: '201804090950',
+                  name: '维修报告与成本'
+                }
+              ]
+            },
+            {
+              title: '交付与回访',
+              parentFolder: '201804090954',
+              items: [
+                {
+                  id: '201804090955',
+                  name: '交付单'
+                },
+                {
+                  id: '201804090956',
+                  name: '快递单'
+                }
+              ]
+            }
+            ]
+          }]
+>>>>>>> 5f01cf60d186787850840d96d9e8f2d52d9653ff
         },
         action1: [{
           id: 'ac10001',

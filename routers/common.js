@@ -301,4 +301,42 @@ router.get('/getRepo', (req, res)=> {
 	})
 })
 
+router.get('/getQuickQueryOption', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/getOption/quickQueryOption.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+})
+
+router.post('/examine', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/slide_detailsInfo/detailsInfo.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+})
+
 module.exports = router;

@@ -2,45 +2,30 @@ JGBVue = {
 	module: {}
 };
 
-JGBVue.module.clientInfo = ()=> {
+JGBVue.module.equipmentManagement = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
+	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
 				return {
-					table: [],
+					table: {
+						header: [],
+						data: []
+					},
 					tempTable: [],
-					search: {
-						input: ''
+					searchData: {
+						input: '',
+						select: ''
 					},
 					detailsInfo: {},
-					isShowForbiddenClients: false,
+					isShowForbiddenEquipment: false,
 					activeIndex: -1,
-					queryType: [
-						{
-							label: "客户类别",
-							value: "clientCategory"
-						},
-						{
-							label: "重点客户",
-							value: "mvp"
-						},
-						{
-							label: "普通客户",
-							value: "normal"
-						}
-					],
-					category:[],
-					level: [],
-					sale: [],
+					queryType: [],
 					companyList: [],
-					clientInfo: {
-						info: [],
-						update: []
-					},
+					detailInfo: [],
 					selectedRows: [],
 					pageSize: 20,
 					currentPage: 1,
@@ -169,38 +154,56 @@ JGBVue.module.clientInfo = ()=> {
 	                companyList: [],
 	                departmentList: [],
 	                userList: [],
-	                btnLoading: false
+	                btnLoading: false,
+	                showSlideshow: false,
+	                slideshowArr: [],
+					currentImgWidth: 0,
+					currentImgHeight: 0,
+					currentImgIndex: 0,
+					currentImgSrc: '',
 				}
 			},
 			mounted() {
-				let _self = this;
-				axios.get(initDataUrl).then((res)=> {
-					if(res.data.status) {
-						let jdata = JSON.parse(res.data.data);
-						this.category = jdata.category;
-						this.level = jdata.level;
-						this.sale = jdata.sale;
-						//this.companyList = jdata.companyList;
-						this.tempTable = jdata.table;
-						this.tempTable.forEach((item)=> {
-							if(!_self.isShowForbiddenClients) {
-								if(item.status) {
-									_self.table.push(item);
-								}
-							}else{
-								_self.table.push(item);
-							}
-						});
-					}
-				}).catch((err)=> {
-					console.log('axios err: ', err);
-				})
-				this.getCompanyList();
+				this.search();
+				this.getClientOption();
+				this.getQuickQuery();
 			},
 			methods: {
-				getCompanyList() {
-					axios.get(getCompanyUrl).then((res)=> {
-						this.companyList = JSON.parse(res.data.data);
+				search(val) {
+					let _self = this;
+					axios.get(searchUrl, val).then((res)=> {
+						if(res.data.status) {
+							let jdata = JSON.parse(res.data.data);
+							this.table.header = [];
+							this.table.data = [];
+							this.table.header = jdata.header.concat();
+							this.tempTable = jdata.data.concat();
+							this.tempTable.forEach((item)=> {
+								if(!_self.isShowForbiddenEquipment) {
+									if(item.status) {
+										_self.table.data.push(item);
+									}
+								}else{
+									_self.table.push(item);
+								}
+							});
+						}
+					}).catch((err)=> {
+						console.log('axios err: ', err);
+					});
+				},
+				getClientOption() {
+					axios.get(getQuickQueryUrl).then((res)=> {
+						if(res.data.status) {
+							this.queryType = JSON.parse(res.data.data).concat();
+						}
+					})
+				},
+				getQuickQuery() {
+					axios.get(getQuickQueryUrl).then((res)=> {
+						if(res.data.status) {
+							this.queryType = JSON.parse(res.data.data).concat();
+						}
 					})
 				},
 				rowClick(row, event, column) {
@@ -247,10 +250,12 @@ JGBVue.module.clientInfo = ()=> {
 					axios.post(examineUrl, row).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							this.clientInfo = jdata;
+							this.detailInfo = jdata;
 							this.isUnfold = true;
 							this.loadingDetailInfo = false;
 						}
+					}).catch((err)=> {
+						console.log(err)
 					});
 				},
 				toggleInfo() {
@@ -310,7 +315,7 @@ JGBVue.module.clientInfo = ()=> {
 					if(this.activeIndex === index) return;
 					let _self = this;
 					this.activeIndex = index;
-					axios.get(initDataUrl, item.value).then((res)=> {
+					axios.get(searchUrl, item.value).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
 							this.table.splice(0, _self.table.length);
@@ -319,7 +324,7 @@ JGBVue.module.clientInfo = ()=> {
 								_self.tempTable.push(item);
 							});
 							this.tempTable.forEach((item)=> {
-								if(!_self.isShowForbiddenClients) {
+								if(!_self.isShowForbiddenEquipment) {
 									if(item.status) {
 										_self.table.push(item);
 									}
@@ -365,14 +370,14 @@ JGBVue.module.clientInfo = ()=> {
 							}
 						}
 					});
-					this.table.splice(0, _self.table.length);
+					this.table.data = [];
 					this.tempTable.forEach((item)=> {
-						if(!_self.isShowForbiddenClients) {
+						if(!_self.isShowForbiddenEquipment) {
 							if(item.status) {
-								_self.table.push(item);
+								_self.table.data.push(item);
 							}
 						}else{
-							_self.table.push(item);
+							_self.table.data.push(item);
 						}
 					})
 					this.selectedRows = [];
@@ -389,18 +394,19 @@ JGBVue.module.clientInfo = ()=> {
 									}
 								}
 							});
+							this.forbidden()
 						}
 					})
 				},
-				toggleForbiddenClients() {
+				toggleForbiddenEquipment() {
 					let _self = this;
-					this.table.splice(0, _self.table.length);
+					this.table.data = [];
 					this.tempTable.forEach((item)=> {
-						if(this.isShowForbiddenClients) {
-							_self.table.push(item);
+						if(this.isShowForbiddenEquipment) {
+							_self.table.data.push(item);
 						}else{
 							if(item.status) {
-								_self.table.push(item);
+								_self.table.data.push(item);
 							}
 						}
 					})
@@ -773,7 +779,48 @@ JGBVue.module.clientInfo = ()=> {
 						_self.addForm.sales.push(item);
 					})
 					this.addSetSalesVisible = false;
-				}
+				},
+				viewImage(item, row) {
+					this.selectedRows = [];
+					this.$refs['table'].clearSelection();
+					this.openSlideshow(item);
+				},
+				openSlideshow(item) {
+					let _self = this;
+					axios.post(getImageUrl, item).then((res)=> {
+						if(res.data.status) {
+							this.slideshowArr = [];
+							this.currentImgIndex = 0;
+							res.data.data.forEach((item)=> {
+								_self.slideshowArr.push(item);
+							});
+							this.currentImgSrc = this.slideshowArr[0].src;
+							this.currentImgWidth = this.slideshowArr[0].width;
+							this.currentImgHeight = this.slideshowArr[0].height;
+							this.showSlideshow = true;
+						}
+					});
+				},
+				nextImg() {
+					if(this.currentImgIndex === this.slideshowArr.length - 1) {
+						this.currentImgIndex = 0;
+					}else{
+						this.currentImgIndex++;
+					}
+					this.currentImgSrc = this.slideshowArr[this.currentImgIndex].src;
+					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
+					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
+				},
+				prevImg() {
+					if(this.currentImgIndex === 0) {
+						this.currentImgIndex = this.slideshowArr.length - 1;
+					}else{
+						this.currentImgIndex--;
+					}
+					this.currentImgSrc = this.slideshowArr[this.currentImgIndex].src;
+					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
+					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
+				},
 			},
 			watch: {
 				addCheckedSalesMember(newVal) {
@@ -786,8 +833,8 @@ JGBVue.module.clientInfo = ()=> {
 		})
 	}
 
-	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
-		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl);
+	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl)=> {
+		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl);
 	}
 
 	return that;
