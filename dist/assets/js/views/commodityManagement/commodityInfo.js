@@ -6,7 +6,7 @@ JGBVue.module.commodityInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl)=> {
+	_this.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -69,6 +69,7 @@ JGBVue.module.commodityInfo = ()=> {
 						branchWarehouseWarning: false,
 						repo: [],
 						setCommodityAuxiliaryAttributes: false,
+						auxiliaryAttributesClassify: [],
 						quickGenerateTable: [],
 						batchExpirationDateManagement: false,
 						serialNumberManagement: false,
@@ -106,24 +107,6 @@ JGBVue.module.commodityInfo = ()=> {
 						serialNumberManagement: false,
 						initSet: false
 					},
-					addAddress: {
-						provinces: [],
-						cities: [],
-						districts: [],
-						blocks: []
-					},
-					editAddress: {
-						provinces: [],
-						cities: [],
-						districts: [],
-						blocks: []
-					},
-					setMemberVisible: false,
-					getCompanyUrl: getCompanyUrl,
-					getDepartmentUrl: getDepartmentUrl,
-					getUserUrl: getUserUrl,
-					loadingSetRoleMember: false,
-					checkedRoleMember: [],
 					importVisible: false,
 					exportVisible: false,
 					uploadUrl: uploadUrl,
@@ -146,15 +129,20 @@ JGBVue.module.commodityInfo = ()=> {
 					auxiliaryAttributesClassify: [],
 					quickGenerateTable: {
 						header: [
-							{
-								label: "属性编号",
-								prop: 'attributesNumber'
-							}
+							/*{
+								prop: 'attributesNumber',
+								label: '属性编号'
+							}*/
 						],
 						data: [
-							{
+							/*{
 								editFlag: false,
-								attributesNumber: 111
+								type: 'input',
+								attributesNumber: '',
+							}*/
+							{
+								indexNum: 1,
+								editFlag: false,
 							}
 						]
 					}
@@ -406,96 +394,6 @@ JGBVue.module.commodityInfo = ()=> {
 				rowStatusClassName({row, rowIndex}) {
 					if(!row.status) {
 						return 'forbidden-row';
-					}
-				},
-				foucsAddProvince() {
-					let _self = this;
-					if(this.addAddress.provinces.length === 0) {
-						axios.get(getProvincesUrl).then((req)=> {
-							if(req.data.status) {
-								let jdata = JSON.parse(req.data.data);
-								jdata.forEach((item)=> {
-									_self.addAddress.provinces.push(item);
-								});
-							}
-						}).catch((err)=> {
-							console.log('err: ', err);
-						})
-					}
-				},
-				foucsAddCity() {
-					let _self = this;
-					if(this.addAddress.cities.length === 0) {
-						axios.post(getCitiesUrl, this.addAddress.provinces).then((req)=> {
-							if(req.data.status) {
-								let jdata = JSON.parse(req.data.data);
-								jdata.forEach((item)=> {
-									_self.addAddress.cities.push(item);
-								});
-							}
-						}).catch((err)=> {
-							console.log('err: ', err);
-						})
-					}
-				},
-				foucsAddDistrict() {
-					let _self = this;
-					if(this.addAddress.districts.length === 0) {
-						axios.post(getDistrictsUrl, this.addAddress.cities).then((req)=> {
-							if(req.data.status) {
-								let jdata = JSON.parse(req.data.data);
-								jdata.forEach((item)=> {
-									_self.addAddress.districts.push(item);
-								});
-							}
-						}).catch((err)=> {
-							console.log('err: ', err);
-						})
-					}
-				},
-				foucsAddBlock() {
-					let _self = this;
-					if(this.addAddress.blocks.length === 0) {
-						axios.post(getBlocksUrl, this.addAddress.districts).then((req)=> {
-							if(req.data.status) {
-								let jdata = JSON.parse(req.data.data);
-								jdata.forEach((item)=> {
-									_self.addAddress.blocks.push(item);
-								});
-							}
-						}).catch((err)=> {
-							console.log('err: ', err);
-						})
-					}
-				},
-				changeAddProvince(val) {
-					if(this.addAddress.cities.length !== 0) {
-						this.addAddress.cities.splice(0, this.addAddress.cities.length);
-						this.addForm.city = '';
-					}
-					if(this.addAddress.districts.length !== 0) {
-						this.addAddress.districts.splice(0, this.addAddress.districts.length);
-						this.addForm.district = '';
-					}
-					if(this.addAddress.blocks.length !== 0) {
-						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
-						this.addForm.block = '';
-					}
-				},
-				changeAddCities() {
-					if(this.addAddress.districts.length !== 0) {
-						this.addAddress.districts.splice(0, this.addAddress.districts.length);
-						this.addForm.district = '';
-					}
-					if(this.addAddress.blocks.length !== 0) {
-						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
-						this.addForm.block = '';
-					}
-				},
-				changeAddDistrict() {
-					if(this.addAddress.blocks.length !== 0) {
-						this.addAddress.blocks.splice(0, this.addAddress.blocks.length);
-						this.addForm.block = '';
 					}
 				},
 				addRowClick(row, event, column) {
@@ -814,23 +712,45 @@ JGBVue.module.commodityInfo = ()=> {
 					}
 			    },
 			    addChangeAuxiliaryAttributesClassify(arr) {
+			    	console.log('arr: ', arr);
 			    	let _self = this;
 			    	this.addSelectedAxiliaryAttributesClassify = [];
+			    	this.quickGenerateTable.header = [];
 			    	arr.forEach((item)=> {
 			    		for(let i = 0; i < _self.auxiliaryAttributesClassify.length; i++ ) {
 			    			if(item === _self.auxiliaryAttributesClassify[i].value) {
 			    				let obj = {};
+			    				let hObj = {};
 			    				obj.parentName = _self.auxiliaryAttributesClassify[i].label;
-			    				obj.children = _self.auxiliaryAttributesClassify[i].chilren.concat();
+			    				obj.children = _self.auxiliaryAttributesClassify[i].chilren;
 			    				_self.addSelectedAxiliaryAttributesClassify.push(obj);
+			    				hObj.label = _self.auxiliaryAttributesClassify[i].label;
+			    				hObj.prop = _self.auxiliaryAttributesClassify[i].value;
+			    				_self.quickGenerateTable.header.splice(0, 0, hObj);
 			    			}
 			    		}
 			    	})
-			    	console.log(_self.auxiliaryAttributesClassify)
-			    	//auxiliaryAttributesClassify
+			    	console.log('_self.quickGenerateTable.header: ', _self.quickGenerateTable.header);
 			    },
 			    addAuxiliaryAttributesClassify() {
-			    	//
+			    	let _self = this;
+					this.$prompt('名称', '新增分类', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+			        }).then(({ value }) => {
+						axios.post(addAuxiliaryAttributesClassifyUrl, value).then((res)=> {
+							if(res.data.status) {
+								let obj = {};
+								obj.label = value;
+								this.auxiliaryAttributesClassify.push(obj);
+							}
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
 			    },
 			    addQuickGenerate() {
 			    	if(this.auxiliaryAttributesClassifyChildren.length !== 0) {
@@ -843,10 +763,20 @@ JGBVue.module.commodityInfo = ()=> {
 			    	}
 			    },
 			    addQuickGenerateTable_add_btn() {
-			    	//
+			    	let index = this.quickGenerateTable.data[this.quickGenerateTable.data.length - 1].index + 1;
+					let initFormRow = {
+						index: 0,
+						editFlag: false
+					}
+					initFormRow.index = index;
+					this.quickGenerateTable.data.push(initFormRow);
 			    },
-			    addQuickGenerateTable_delete_btn() {
-			    	//
+			    addQuickGenerateTable_delete_btn(row) {
+			    	for(let i = 0; i < this.quickGenerateTable.data.length; i++ ) {
+						if(row === this.quickGenerateTable.data[i]) {
+							this.quickGenerateTable.data.splice(i, 1);
+						}
+					}
 			    },
 			    addQuickGenerateUploadPicIcon() {
 			    	this.addQuickGenerateUploadPic();
@@ -860,7 +790,48 @@ JGBVue.module.commodityInfo = ()=> {
 						{'class': 'required'},
 						[column.label]
 					);
-			    }
+			    },
+			    addQuickGenerateTableProp() {
+			    	let _self = this;
+					this.$prompt('名称', '新增分类', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+			        }).then(({ value }) => {
+						axios.post(addAuxiliaryAttributesClassifyUrl, value).then((res)=> {
+							if(res.data.status) {
+								let obj = {};
+								obj.label = value;
+								this.auxiliaryAttributesClassify.push(obj);
+							}
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+			    },
+			    addSelectChange(row, label) {
+		    		let _self = this;
+					this.$prompt('名称', '新增分类', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+			        }).then(({ value }) => {
+						axios.post(addAuxiliaryAttributesClassifyUrl, value).then((res)=> {
+							if(res.data.status) {
+								let obj = {};
+								obj.label = value;
+								
+							}
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+			        console.log(row, label)
+		    	}
 			},
 			watch: {
 				//
@@ -868,8 +839,8 @@ JGBVue.module.commodityInfo = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl)=> {
-		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, getUserUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl);
+	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl)=> {
+		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl);
 	}
 
 	return that;

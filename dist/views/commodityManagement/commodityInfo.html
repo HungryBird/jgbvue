@@ -306,7 +306,7 @@
 				</el-col>
 				<el-col :span="24" v-if="addForm.setCommodityAuxiliaryAttributes" style="padding: 10px;padding-top: 0;">
 					<h4>辅助属性分类</h4>
-					<el-checkbox-group v-model="auxiliaryAttributesClassify" v-on:change="addChangeAuxiliaryAttributesClassify" class="pull-left" style="padding-right: 5px;">
+					<el-checkbox-group v-model="addForm.auxiliaryAttributesClassify" v-on:change="addChangeAuxiliaryAttributesClassify" class="pull-left" style="padding-right: 5px;">
 						<el-checkbox v-for="item in auxiliaryAttributesClassify" :key="item.label" :label="item.value">{{ item.label }}</el-checkbox>
 					</el-checkbox-group>
 					<el-button icon="el-icon-plus" size="mini" class="pull-left" v-on:click="addAuxiliaryAttributesClassify">新增属性分类</el-button>
@@ -330,7 +330,7 @@
 								<template slot-scope="scope">
 									<el-button-group>
 										<el-button v-on:click="addQuickGenerateTable_add_btn" icon="el-icon-plus" size="small"></el-button>
-										<el-button v-on:click="addQuickGenerateTable_delete_btn" icon="el-icon-delete" size="small" type="danger"></el-button>
+										<el-button v-on:click="addQuickGenerateTable_delete_btn(scope.row)" icon="el-icon-delete" size="small" type="danger"></el-button>
 									</el-button-group>
 								</template>
 							</el-table-column>
@@ -343,15 +343,24 @@
 							<el-table-column v-for="(tb, index) in quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="addQuickGenerateHeader">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row[tb.prop] }}</div>
-									<el-input v-else v-model="scope.row[tb.prop]"></el-input>
+									<!-- <el-input v-else v-model="scope.row[tb.prop]"></el-input> -->
+									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else>
+										<el-option v-for="o in auxiliaryAttributesClassifyChildren" :value="o.value" :key="o.label" :label="o.label">
+											{{ o }}
+										</el-option>
+										<div v-on:click="addSelectChange(scope.row, tb.label)" class="el-select-dropdown__item">
+											<span style="float: left" class="el-icon-plus"></span>
+      										<span style="float: right; color: #8492a6; font-size: 13px">新增属性</span>
+										</div>
+									</el-select>
 								</template>
 							</el-table-column>
-							<!-- <el-table-column label="属性编号" prop="attributesNumber">
+							<el-table-column label="属性编号" prop="attributesNumber" :render-header="addQuickGenerateHeader">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.attributesNumber }}</div>
 									<el-input v-else v-model="scope.row.attributesNumber"></el-input>
 								</template>
-							</el-table-column> -->
+							</el-table-column>
 							<el-table-column label="属性条码" prop="attributesBarCode">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.attributesBarCode }}</div>
@@ -360,14 +369,14 @@
 							</el-table-column>
 							<el-table-column label="零售价" prop="retailPrice">
 								<template slot-scope="scope">
-									<div v-if="!scope.row.editFlag">{{ scope.row.linkman }}</div>
-									<el-input v-else v-model="scope.row.linkman"></el-input>
+									<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+									<el-input v-else v-model="scope.row.retailPrice"></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column label="批发价" prop="tradePrice">
 								<template slot-scope="scope">
-									<div v-if="!scope.row.editFlag">{{ scope.row.linkman }}</div>
-									<el-input v-else v-model="scope.row.linkman"></el-input>
+									<div v-if="!scope.row.editFlag">{{ scope.row.tradePrice }}</div>
+									<el-input v-else v-model="scope.row.tradePrice"></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column label="VIP价" prop="VIPPrice">
@@ -470,8 +479,13 @@
 	/**
 	 * 查询接口
 	 * 获取快速查询选项接口
+	 * 获取辅助属性分类
+	 * 获取仓库
+	 * 切换状态
+	 * 删除table
+	 * 查看table
 	 * 
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate');
+	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save');
 </script>
 </html>
