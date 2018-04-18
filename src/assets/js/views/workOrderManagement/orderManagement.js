@@ -19,7 +19,8 @@ JGBVue.module.workOrderManagement = () => {
     orderDetailsGetUrl, //获取工单详情
     dataExportRequestUrl, //导出申请地址
     printListUrl, //打印列表接口
-    defaultColumnSettingUrl //获取列设置默认数据
+    columnSettingUrl, //获取表头 列设置
+    defaultColumnSettingUrl //获取表头 列设置默认数据
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -80,6 +81,8 @@ JGBVue.module.workOrderManagement = () => {
           isLoadingExportRequest: false, //是否正在请求导出数据状态
 
           showColumnSetting: false, //列设置 窗
+          loadingColumnSettingComplete: false, //正在写入新的列设置
+          loadingColumnSettingReset: false, //正在恢复默认的列设置
         }
       },
       methods: {
@@ -288,18 +291,25 @@ JGBVue.module.workOrderManagement = () => {
         },
         //列设置-恢复默认设置
         btnColumnSettingReset: function() {
+          this.loadingColumnSettingReset = true
           axios.post(defaultColumnSettingUrl).then(res=> {
             if(res.data.status) {
-              let header = JSON.parse(res.data.data)
-              this.tableHeader= [];
+              let header = JSON.parse(res.data.data).waiting
+              this.tableHeader= []
+              this.$nextTick(function() {
+                for(let i = 0; i < header.length; i++) {
+                  this.tableHeader.push(header[i])
+                }
+              })
             }
             else {
               this.$message({
                 type: 'error',
-                message: res.data.status,
+                message: res.data.message,
                 center: true
               })
             };
+            this.loadingColumnSettingReset = false
           }).catch(err=> {
             console.log(err)
             this.$message({
@@ -307,25 +317,133 @@ JGBVue.module.workOrderManagement = () => {
               message: err,
               center: true
             })
+            this.loadingColumnSettingReset = false
           })
         },
         //列设置-完成
-        btnColumnSettingComplete: function() {},
+        btnColumnSettingComplete: function() {
+          this.loadingColumnSettingComplete = true
+          axios.post(columnSettingUrl, {
+            menu_id: this.c_menuId,
+            list: this.tableHeader
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+                center: true
+              })
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+            this.loadingColumnSettingComplete = false
+          }).catch(err=> {
+            console.log(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+            this.loadingColumnSettingComplete = false
+          })
+        },
+        //
+        /**
+         * 调用查看图片控件
+         * @param {Object, Array} data Object{图片数组, 序号} Array图片数组
+         */
+        callPictures: function(data) {
+          data.length
+            ? this.openPictureDialog(data)
+            : this.openPictureDialog(data.pics, data.index)
+        },
+        /**
+         * 下载文件
+         * @param {String} data 文件地址
+         */
+        callDownload: function(data) {
+          window.open(data)
+        },
         //关闭详情页
         closeDetails: function() {
           this.showOrderDetails = false
         },
         //获取业务人员数据
-        getBusinessData: function() {
-          axios.post(businessDataGetUrl).then().catch()
+        getBusinessData: function(query) {
+          axios.post(businessDataGetUrl, {
+            query: query || ''
+          }).then(res=> {
+            if(res.data.status) {
+              this.formBusinessList = JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
         },
         //获取维修人员数据
-        getMaintenanceData: function() {
-          axios.post(maintenanceDataGetUrl).then().catch()
+        getMaintenanceData: function(query) {
+          axios.post(maintenanceDataGetUrl, {
+            query: query || ''
+          }).then(res=> {
+            if(res.data.status) {
+              this.formMaintenanceList = JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        //获取表头数据
+        getTableHeader: function() {
+          axios.post(columnSettingUrl, {
+            menu_id: this.c_menuId
+          }).then(res=> {
+            if(res.data.status) {
+              this.tableHeader = JSON.parse(res.data.data).waiting
+            }
+            else {
+              this.$message({
+                type: 'error', 
+                message: res.data.message,
+                center: true
+              })
+            }
+          }).catch(err=> {
+            this.$message({
+              type: 'error', 
+              message: err,
+              center: true
+            })
+          })
         },
         //获取工单数据
-        //@param {Boolean} ifWriteHeader 是否更新表头
-        getWorkOrderData: function(ifWriteHeader) {
+        getWorkOrderData: function() {
           axios.post(workOrderDataGetUrl, {
             filter: this.selectForm,
             page_current: this.orderPage.page_current+1
@@ -335,9 +453,6 @@ JGBVue.module.workOrderManagement = () => {
               this.selectedRows = [] //清空选中行
               this.orderList = _data.data
               this.orderPage = this.$deepCopy(_data.page) //真实数据使用
-              if(ifWriteHeader) {
-                this.tableHeader = _data.header.concat()
-              }
             }
             else {
               this.$message({
@@ -362,9 +477,7 @@ JGBVue.module.workOrderManagement = () => {
             order_id: id
           }).then(res=> {
             if(res.data.status) {
-              console.log(JSON.parse(res.data.data).base_info.image)
               this.detailsData = this.$deepCopy(JSON.parse(res.data.data))
-              console.log(this.detailsData.base_info.image)
             }
             else {
               this.$message({
@@ -435,12 +548,29 @@ JGBVue.module.workOrderManagement = () => {
             clearInterval(timer)
           })
         },
+        /**
+         * 选择业务人员 输入时搜索
+         * @param {String} query 输入值
+         */
+        remoteBusiness: function(query) { console.log(1)
+          this.getBusinessData(query)
+        },
+        /**
+         * 选择维修人员 输入时搜索
+         * @param {String} query 输入值
+         */
+        remoteMaintenance: function(query) {
+          this.getMaintenance(query)
+        },
       },
       created: function () {
         //工单状态默认全选
         this.selectForm.checkedStatus = this.formOrderStatus.concat()
         //获取工单数据
-        this.getWorkOrderData(true);
+        this.getTableHeader()
+        this.getWorkOrderData();
+        this.getBusinessData()
+        this.getMaintenanceData()
       }
     })
   }
@@ -455,7 +585,8 @@ JGBVue.module.workOrderManagement = () => {
     orderDetailsGetUrl,
     dataExportRequestUrl,
     printListUrl,
-    defaultColumnSettingUrl
+    columnSettingUrl, 
+    defaultColumnSettingUrl 
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -468,7 +599,8 @@ JGBVue.module.workOrderManagement = () => {
       orderDetailsGetUrl,
       dataExportRequestUrl,
       printListUrl,
-      defaultColumnSettingUrl)
+      columnSettingUrl,
+      defaultColumnSettingUrl )
   }
   return that
 }

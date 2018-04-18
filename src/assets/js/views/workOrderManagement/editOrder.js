@@ -60,6 +60,8 @@ JGBVue.module.editOrder = () => {
 
           showPictures: false, //查看图片 窗
           pictureList: [], //图片列表
+
+          loadingSave: false, //正在写入保存的数据
         }
       },
       computed: {
@@ -72,6 +74,7 @@ JGBVue.module.editOrder = () => {
         btnAdd: function() {
           this.$refs.orderEditForm.validate((valid) => {
             if (valid) {
+              this.loadingSave = true
               axios.post(orderSaveUrl, this.orderEditForm).then(res=> {
                 if(res.data.status) {
                   this.$message({
@@ -87,13 +90,16 @@ JGBVue.module.editOrder = () => {
                     message: res.data.message,
                     center: true
                   })
-                }
+                };
+                this.loadingSave = false
               }).catch(err=> {
+                console.log(err)
                 this.$message({
                   type: 'error',
                   message: err,
                   center: true
                 })
+                this.loadingSave = false
               })
             }
             else {

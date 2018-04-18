@@ -66,6 +66,8 @@ JGBVue.module.waitingOrder = () => {
           isLoadingExportRequest: false, //是否正在请求导出数据状态
 
           showColumnSetting: false, //列设置 窗
+          loadingColumnSettingComplete: false, //正在写入新的列设置
+          loadingColumnSettingReset: false, //正在恢复默认的列设置
         }
       },
       computed: {
@@ -274,18 +276,25 @@ JGBVue.module.waitingOrder = () => {
         },
         //列设置-恢复默认设置
         btnColumnSettingReset: function() {
+          this.loadingColumnSettingReset = true
           axios.post(defaultColumnSettingUrl).then(res=> {
             if(res.data.status) {
-              let header = JSON.parse(res.data.data)
-              this.tableHeader= [];
+              let header = JSON.parse(res.data.data).waiting
+              this.tableHeader= []
+              this.$nextTick(function() {
+                for(let i = 0; i < header.length; i++) {
+                  this.tableHeader.push(header[i])
+                }
+              })
             }
             else {
               this.$message({
                 type: 'error',
-                message: res.data.status,
+                message: res.data.message,
                 center: true
               })
             };
+            this.loadingColumnSettingReset = false
           }).catch(err=> {
             console.log(err)
             this.$message({
@@ -293,10 +302,58 @@ JGBVue.module.waitingOrder = () => {
               message: err,
               center: true
             })
+            this.loadingColumnSettingReset = false
           })
         },
         //列设置-完成
-        btnColumnSettingComplete: function() {},
+        btnColumnSettingComplete: function() {
+          this.loadingColumnSettingComplete = true
+          axios.post(columnSettingUrl, {
+            menu_id: this.c_menuId,
+            list: this.tableHeader
+          }).then(res=> {
+            if(res.data.status) {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+                center: true
+              })
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+            this.loadingColumnSettingComplete = false
+          }).catch(err=> {
+            console.log(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+            this.loadingColumnSettingComplete = false
+          })
+        },
+        //
+        /**
+         * 调用查看图片控件
+         * @param {Object, Array} data Object{图片数组, 序号} Array图片数组
+         */
+        callPictures: function(data) {
+          data.length
+            ? this.openPictureDialog(data)
+            : this.openPictureDialog(data.pics, data.index)
+        },
+        /**
+         * 下载文件
+         * @param {String} data 文件地址
+         */
+        callDownload: function(data) {
+          window.open(data)
+        },
         //关闭详情页
         closeDetails: function() {
           this.showOrderDetails = false
