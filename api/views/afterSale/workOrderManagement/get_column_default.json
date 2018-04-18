@@ -1,0 +1,36 @@
+{
+  "waiting": [
+    { "label": "序号", "prop": "", "width": 50, "sortable": false, "type": "index", "enable": true},
+    { "label":"操作", "prop": "action", "width": 150, "sortable": false, "enable": true },
+    { "label":"状态", "prop": "status_label", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"工单日期", "prop": "date", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"工单编号", "prop": "order_id", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"业务人员", "prop": "business_name", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"客户名称", "prop": "customer_name", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"设备名称", "prop": "equipment_name", "width": 140, "sortable": "custom", "enable": true },
+    { "label": "设备图片", "prop": "image", "width": 100, "sortable": false, "enable": true },
+    { "label":"类别", "prop": "category", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"品牌", "prop": "brand", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"来源", "prop": "source", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"问题描述", "prop": "fault_info", "width": 120, "sortable": false, "enable": true },
+    { "label":"紧急程度", "prop": "level", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"报修方式", "prop": "repair_methods", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"备注", "prop": "remark", "width": 120, "sortable": false, "enable": true }
+  ],
+  "order": [
+    { "label": "序号", "prop": "index", "width": 50, "sortable": false, "type": "index", "enable": true},
+    { "label":"操作", "prop": "action", "width": 150, "sortable": false, "enable": false },
+    { "label":"状态", "prop": "status_label", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"时效", "prop": "aging", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"工单日期", "prop": "date", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"工单编号", "prop": "order_id", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"业务人员", "prop": "business_name", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"客户名称", "prop": "customer_name", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"设备名称", "prop": "equipment_name", "width": 140, "sortable": "custom", "enable": true },
+    { "label":"类别", "prop": "category_name", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"故障描述", "prop": "fault_info", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"紧急程度", "prop": "level", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"金额", "prop": "price", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"备注", "prop": "remark", "width": 120, "sortable": false, "enable": true }
+ ]
+}

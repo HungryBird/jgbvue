@@ -92,24 +92,52 @@
 					</li>
 					<li class="base-nav">
 						<ul class="base-nav-group">
-							<li v-for="navItem in user.navItems" :key="navItem.id" :id="navItem.id" class="base-nav-dropdown" v-on:mouseenter="dropdownIsActive = true">
+							<li v-for="navItem in user.navItems" class="base-nav-dropdown"
+								:key="navItem.code" 
+								:id="navItem.code"  
+								v-on:mouseenter="dropdownIsActive = true">
 								<a class="base-nav-item-link">
-									<i :class="navItem.cls"></i>
+									<i v-if="navItem.cls" :class="navItem.cls"></i>
 									<span v-if="navItem.name != undefined">{{ navItem.name }}</span>
 								</a>
-								<ul class="base-nav-dropdown-apps" v-if="dropdownIsActive">
-									<li v-for="(menuItem,index) in navItem.menuItems" :style="{width: navItem.menuItems.length*210 + 'px'}">
-										<div class="menu-item-wrap" :style="{'borderLeft': index !== 0 ? '1px dashed #ddd' : 'none'}">
-											<strong v-if="menuItem.title != undefined"><span>{{menuItem.title}}</span></strong>
+								<ul class="base-nav-dropdown-apps w-nav" v-if="dropdownIsActive">
+									<li v-if="navItem.fItems && navItem.fItems.length"
+										class="w-nav-fitems" :style="{
+											width: navItem.name == '系统设置' ? 180*Math.ceil(navItem.fItems.length/7)+'px' : '',
+											height: navItem.name == '系统设置' ? 36*7+'px' : ''}">
+										<div v-for="fitem in navItem.fItems" 
+											class="fitems-item"
+											v-on:click="fitem.isMenu && selectTab(fitem.code, fitem.name, fitem.url)">
+											{{fitem.name}}
+										</div>
+									</li>
+									<li v-for="(menuItem,index) in navItem.items" class="w-nav-items">
+										<strong class="items-item" :class="!menuItem.isMenu && 'isNotMenu'" style="display:block;"
+											v-on:click="menuItem.isMenu && selectTab(menuItem.code, menuItem.name, menuItem.url)">
+											{{menuItem.name}}
+										</strong>
+										<div v-for="item in menuItem.items" :id="item.code" class="items-item"
+											v-on:click="item.isMenu && selectTab(item.code, item.name, item.url)">
+											{{item.name}}
+										</div>
+									</li>
+									<!-- <li v-for="(menuItem,index) in navItem.items">
+										<div class="menu-item-wrap" :style="{'borderLeft': (navItem.fItems && !navItem.fItems.length && !index) ? 'none' : '1px dashed #ddd'}">
+											<strong :style="{cursor: menuItem.isMenu ? 'pointer': 'default'}">
+												<span v-on:click="menuItem.isMenu && selectTab(menuItem.code, menuItem.name, menuItem.url)">
+													{{menuItem.name}}
+												</span>
+											</strong>
 											<ul class="menu-item-group">
-												<li v-for="item in menuItem.items" :id="item.id" v-on:click="selectTab(item.id, item.name, menuItem.parentFolder)">
+												<li v-for="item in menuItem.items" :id="item.code" 
+													v-on:click="item.isMenu && selectTab(item.code, item.name, item.url)">
 													<a>
 														<span>{{item.name}}</span>
 													</a>
 												</li>
 											</ul>
 										</div>
-									</li>
+									</li> -->
 								</ul>
 							</li>
 						</ul>
@@ -232,6 +260,9 @@
 	 * 是否显示新手导航
 	 */
 	var indexFn = JGBVue.module.index();
-	indexFn.init('/index/is_show_guidance');
+	indexFn.init(
+		'/index/is_show_guidance',
+		'/index/get_menu',
+	);
 </script>
 </html>

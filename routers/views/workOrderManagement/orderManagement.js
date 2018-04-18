@@ -179,4 +179,19 @@ router.post('/equipment_info_get', (req, res)=> {
 	}).end();
 })
 
+router.post('/get_header', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/workOrderManagement/get_column_default.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end();
+	});
+})
+
 module.exports = router;

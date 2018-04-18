@@ -21,8 +21,7 @@ JGBVue.module.printOrder = ()=> {
       },
       computed: {
         c_orderId: function() {
-          let search = window.location.search
-          return search.split('=')[1]
+          return this.$getQuery(window.location.search).order_id
         },
       },
 			methods: {

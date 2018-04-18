@@ -24,12 +24,12 @@ JGBVue.module.printOrderList = ()=> {
       computed: {
         //工单筛选条件
         c_orderFilter: function() {
-          let filter = decodeURI(window.location.search.split('&&')[0].split('=')[1])
+          let filter = this.$getQuery(window.location.search).filter
           return JSON.parse(filter)
         },
         //工单接口
         c_orderInfoGetUrl: function() {
-          return window.location.search.split('&&')[1].split('=')[1]
+          return this.$getQuery(window.location.search).url
         },
       },
 			methods: {

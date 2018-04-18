@@ -119,8 +119,8 @@ JGBVue.module.addOrder = () => {
           this.$selectTab(
             'printOrder', 
             '打印工单', 
-            'workOrderManagement', 
-            `?order_id=${this.orderAddForm.orderId}`)},
+            './views/workOrderManagement/printOrder.html', 
+            `order_id=${this.orderAddForm.orderId}`)},
         //获取业务人员数据
         getBusinessData: function(query) {
           axios.post(businessDataGetUrl, {

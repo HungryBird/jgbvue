@@ -698,6 +698,7 @@
           v-on:save="btnExportSave" v-on:close="btnExportClose">
         </jgb-form-footer>
       </el-dialog>
+      <!-- 列设置 -->
       <el-dialog :visible.sync="showColumnSetting">
         <div class="title" slot="title">列设置</div>
         <jgb-column-setting v-if="tableHeader.length" v-model="tableHeader"></jgb-column-setting>
