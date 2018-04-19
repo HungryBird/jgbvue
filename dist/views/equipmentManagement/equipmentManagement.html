@@ -57,6 +57,7 @@
 								<el-button :disabled="selectedRows.length === 0" v-on:click="startUsing">启用</el-button>
 								<el-button v-on:click="importVisible = true">导入</el-button>
 								<el-button v-on:click="exportCilck">导出</el-button>
+								<el-button v-on:click="preview">打印设备预览</el-button>
 							</el-button-group>
 						</nav>
 						<el-table :data="table.data" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" :row-class-name="rowStatusClassName" v-loading="loadingDetailInfo">
@@ -162,8 +163,8 @@
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="设备名称" prop="equipmentName">
-							<el-select v-model="addForm.equipmentName" allow-create filterable v-on:focues="focusEquipmentNameSelect">
-								<el-option v-for="lo in equipmentNameOption" :key="lo.uid" :label="lo.name" :value="lo.uid"></el-option>
+							<el-select v-model="addForm.equipmentName" allow-create filterable v-on:focus="focusEquipmentNameSelect">
+								<el-option v-for="en in equipmentNameOption" :key="en.label" :label="en.label" :value="en.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -176,15 +177,15 @@
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="设备品牌" prop="equipmentBrand">
-							<el-select v-model="addForm.equipmentBrand" allow-create filterable v-on:focues="focusEquipmentBrandSelect">
-								<el-option v-for="lo in equipmentBrandOption" :key="lo.uid" :label="lo.name" :value="lo.uid"></el-option>
+							<el-select v-model="addForm.equipmentBrand" allow-create filterable v-on:focus="focusEquipmentBrandSelect">
+								<el-option v-for="eb in equipmentBrandOption" :key="eb.label" :label="eb.label" :value="eb.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="设备类别" prop="equipmentCategory">
-							<el-select v-model="addForm.equipmentCategory" allow-create filterable v-on:focues="focusEquipmentCategorySelect">
-								<el-option v-for="lo in equipmentCategoryOption" :key="lo.uid" :label="lo.name" :value="lo.uid"></el-option>
+							<el-select v-model="addForm.equipmentCategory" allow-create filterable v-on:focus="focusEquipmentCategorySelect">
+								<el-option v-for="ec in equipmentCategoryOption" :key="ec.label" :label="ec.label" :value="ec.value"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -205,8 +206,8 @@
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
-						<el-form-item label="设备序列号" prop="equipment_serial_number">
-							<el-input v-model="addForm.equipment_serial_number"></el-input>
+						<el-form-item label="设备序列号" prop="equipmentSerialNumber">
+							<el-input v-model="addForm.equipmentSerialNumber" v-on:blur="generateSerialNumber"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -231,13 +232,15 @@
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
-						<el-form-item label="计量单位" prop="unit_measurement">
-							<el-input v-model="addForm.unit_measurement"></el-input>
+						<el-form-item label="计量单位" prop="unitMeasurement">
+							<el-select v-model="addForm.unitMeasurement" allow-create filterable v-on:focus="focusUnitMeasurementSelect">
+								<el-option v-for="um in unitMeasurementOption" :key="um.label" :label="um.label" :value="um.value"></el-option>
+							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="唯一码" prop="uniqueCode">
-							<el-input v-model="addForm.uniqueCode"></el-input>
+							<el-input v-model="addForm.uniqueCode" disabled></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -261,6 +264,42 @@
 						</el-upload>
 					</el-col>
 				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<el-checkbox v-model="addForm.usingWarningWarranty">
+							<h3>启用质保期预警</h3>
+						</el-checkbox>
+						<div v-if="addForm.usingWarningWarranty">
+							<h4>预警提醒方式</h4>
+							<el-checkbox-group v-model="addForm.warningWarrantyMethod">
+								<el-checkbox label="BBS">站内信息</el-checkbox>
+								<el-checkbox label="phone">手机信息</el-checkbox>
+								<el-checkbox label="email">邮件信息</el-checkbox>
+							</el-checkbox-group>
+						</div>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<el-checkbox v-model="addForm.setEquipmentAuxiliaryAttributes">
+							<h3>设置设备辅助属性</h3>
+						</el-checkbox>
+						<div style="padding-left: 10px;" v-if="addForm.setEquipmentAuxiliaryAttributes">
+							<h4 style="display: inline-block;">辅助属性分类</h4>
+							<el-button icon="el-icon-plus" v-on:click="openAddAuxiliaryAttributes">新增辅助属性</el-button>
+							<dl>
+								<dd v-for="(aa, index) in auxiliaryAttributesClassify" :key="aa.value">
+									<label>
+										<el-checkbox :label="aa.value" v-model="addForm.addAuxiliaryAttributesClassify">{{  }}</el-checkbox>
+										<el-select v-model="addForm.addAuxiliaryAttributesClassifyOption[index].value" style="padding-top: 5px;">
+											<el-option v-for="op in aa.option" :key="op.value" :label="op.label" :value="op.value"></el-option>
+										</el-select>
+									</label>
+								</dd>
+							</dl>
+						</div>
+					</el-col>
+				</el-row>
 			</el-form>
 			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd('addForm')" v-on:close="closeAdd"></jgb-form-footer>
 		</el-dialog>
@@ -269,40 +308,134 @@
 			<div slot="title" class="title">
 				编辑客户
 			</div>
-			<el-form ref="editForm" label-position="right" label-width="100px" :model="editForm" :rules="formRules">
+			<el-form ref="editForm" label-position="right" label-width="120px" :model="editForm" :rules="formRules">
 				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="客户编号" prop="number">
-							<el-input v-model="editForm.number"></el-input>
-						</el-form-item>
-					</el-col>
 					<el-col :span="12">
 						<el-form-item label="客户名称" prop="name">
-							<el-input v-model="editForm.name"></el-input>
+							<el-select v-model="editForm.name" v-on:focus="focusClientSelect" v-on:change="changeClientOption">
+								<el-option v-for="u in clientOption" :key="u.uid" :label="u.name" :value="u.uid"></el-option>
+								<a v-on:click="openAddClientOption">
+									<div class="el-select-dropdown__item">
+										<span style="float: left" class="el-icon-plus"></span>
+										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>
+									</div>
+								</a>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="科室/部门" prop="department">
+							<el-input v-model="editForm.department"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
-						<el-form-item label="纳税人识别号" prop="identifyNumber">
-							<el-input v-model="editForm.identifyNumber"></el-input>
+						<el-form-item label="联系人" prop="linkman">
+							<el-select v-model="editForm.linkman" allow-create filterable v-on:change="changeLinkmanOption">
+								<el-option v-for="lo in linkmanOption" :key="lo.uid" :label="lo.name" :value="lo.uid"></el-option>
+							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
-						<el-form-item label="开户银行" prop="bankName">
-							<el-input v-model="editForm.bankName"></el-input>
+						<el-form-item label="手机号码" prop="phone">
+							<el-input v-model="editForm.phone"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
-						<el-form-item label="银行账号" prop="bankAccount">
-							<el-input v-model="editForm.email"></el-input>
+						<el-form-item label="微信/QQ/Email" prop="otherContact">
+							<el-input v-model="editForm.otherContact"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
-						<el-form-item label="公司电话" prop="companyTel">
-							<el-input v-model="editForm.companyTel"></el-input>
+						<el-form-item label="设备编号" prop="equipmentNumber">
+							<el-input v-model="editForm.equipmentNumber"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="设备名称" prop="equipmentName">
+							<el-select v-model="editForm.equipmentName" allow-create filterable v-on:focus="focusEquipmentNameSelect">
+								<el-option v-for="en in equipmentNameOption" :key="en.label" :label="en.label" :value="en.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="规格型号" prop="specificationModel">
+							<el-input v-model="editForm.specificationModel"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="设备品牌" prop="equipmentBrand">
+							<el-select v-model="editForm.equipmentBrand" allow-create filterable v-on:focus="focusEquipmentBrandSelect">
+								<el-option v-for="eb in equipmentBrandOption" :key="eb.label" :label="eb.label" :value="eb.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="设备类别" prop="equipmentCategory">
+							<el-select v-model="editForm.equipmentCategory" allow-create filterable v-on:focus="focusEquipmentCategorySelect">
+								<el-option v-for="ec in equipmentCategoryOption" :key="ec.label" :label="ec.label" :value="ec.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="附件" prop="attachment">
+							<el-input v-model="editForm.attachment"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="设备成本" prop="costEquipment">
+							<el-input v-model="editForm.costEquipment">
+								<template slot="append">元</template>
+							</el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="设备序列号" prop="equipmentSerialNumber">
+							<el-input v-model="editForm.equipmentSerialNumber" v-on:blur="generateSerialNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="质保期" prop="qualityGuaranteeDate">
+							<el-date-picker v-model="editForm.qualityGuaranteeDate" type="date" placeholder="选择日期"></el-date-picker>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="质保预警时间" prop="warning_warranty_time">
+							<el-input v-model="editForm.warning_warranty_time">
+								<template slot="append">天</template>
+							</el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="设备来源" prop="source_equipment">
+							<el-input v-model="editForm.source_equipment"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="计量单位" prop="unitMeasurement">
+							<el-select v-model="editForm.unitMeasurement" allow-create filterable v-on:focus="focusUnitMeasurementSelect">
+								<el-option v-for="um in unitMeasurementOption" :key="um.label" :label="um.label" :value="um.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="唯一码" prop="uniqueCode">
+							<el-input v-model="editForm.uniqueCode" disabled></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -313,8 +446,58 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<h3>添加设备图片</h3>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<el-upload action="/common/upload_img" :file-list="editForm.upload" list-type="picture-card" :limit="20" :on-remove="handleRemove" :auto-upload="false">
+							<div slot="tip" class="el-upload__tip">最多20张</div>
+							<i class="el-icon-plus"></i>
+						</el-upload>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<el-checkbox v-model="editForm.usingWarningWarranty">
+							<h3>启用质保期预警</h3>
+						</el-checkbox>
+						<div v-if="editForm.usingWarningWarranty">
+							<h4>预警提醒方式</h4>
+							<el-checkbox-group v-model="editForm.warningWarrantyMethod">
+								<el-checkbox label="BBS">站内信息</el-checkbox>
+								<el-checkbox label="phone">手机信息</el-checkbox>
+								<el-checkbox label="email">邮件信息</el-checkbox>
+							</el-checkbox-group>
+						</div>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
+						<el-checkbox v-model="editForm.setEquipmentAuxiliaryAttributes">
+							<h3>设置设备辅助属性</h3>
+						</el-checkbox>
+						<div style="padding-left: 10px;" v-if="editForm.setEquipmentAuxiliaryAttributes">
+							<h4 style="display: inline-block;">辅助属性分类</h4>
+							<el-button icon="el-icon-plus" v-on:click="openAddAuxiliaryAttributes">新增辅助属性</el-button>
+							<dl>
+								<dd v-for="(ea, index) in auxiliaryAttributesClassify" :key="ea.value">
+									<!-- <label>
+										<el-checkbox :label="ea.value" v-model="editForm.addAuxiliaryAttributesClassify">{{  }}</el-checkbox>
+										<el-select v-model="editForm.addAuxiliaryAttributesClassifyOption[index].value" style="padding-top: 5px;">
+											<el-option v-for="op in ea.option" :key="op.value" :label="op.label" :value="op.value"></el-option>
+										</el-select>
+									</label> -->
+									{{ auxiliaryAttributesClassify }}
+								</dd>
+							</dl>
+						</div>
+					</el-col>
+				</el-row>
 			</el-form>
-			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveEdit('editForm')" v-on:close="closeEdit"></jgb-form-footer>
+			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveEdit('editForm')" v-on:close="editVisible = false"></jgb-form-footer>
 		</el-dialog>
 		<el-dialog :visible.sync="importVisible" title="导入">
 			<p>
@@ -387,9 +570,9 @@
 	        <jgb-column-setting v-if="table.header.length" v-model="table.header"></jgb-column-setting>
 	        <div slot="footer">
 	            <el-button v-on:click="btnColumnSettingReset">恢复默认设置</el-button>
-	          <el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
+	          	<el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
 	        </div>
-	      </el-dialog>
+	     </el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -404,12 +587,6 @@
 	 * 切换状态
 	 * 删除
 	 * 查看
-	 * 省
-	 * ...
-	 * 街区
-	 * 获取公司
-	 * 获取部门
-	 * 获取成员
 	 * 保存增加
 	 * 获取编辑数据
 	 * 保存编辑数据
@@ -420,7 +597,9 @@
 	 * 获取设备名option
 	 * 获取设备品牌option
 	 * 获取设备类别option
+	 * 获取计量单位option
+	 * 验证并声称唯一码
 	 */
-	JGBVue.module.equipmentManagement().init('/equipmentManagement/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory');
+	JGBVue.module.equipmentManagement().init('/equipmentManagement/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory', '/equipmentManagement/getUnitMeasurement', '/equipmentManagement/getuniqueCode', '/equipmentManagement/getAuxiliaryAttributesClassify');
 </script>
 </html>

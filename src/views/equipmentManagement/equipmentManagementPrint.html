@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>打印设备管理</title>
+    <link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body>
+    <div id="app" v-cloak class="workOrderManagement">
+        <div class="w-print-list">
+            <div class="header">
+                <el-button type="primary">打印</el-button>
+            </div>
+        <table class="w-order-list" v-loading="loadingOrderInfo">
+            <thead>
+                <tr>
+                <!-- 操作，设备图片不打印 -->
+                    <th v-for="item in tableHeader" v-if="item.prop != 'action' && item.prop != 'image'">
+                       {{item.label}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(tb, index) in tableData">
+                <!-- 操作，设备图片不打印 -->
+                    <td v-for="item in tableHeader" v-if="item.prop != 'action' && item.prop != 'image'">
+                        <span v-if="item.type == 'index'">{{index+1}}</span>
+                        <span v-else>{{tb[item.prop]}}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/equipmentManagement/equipmentManagementPrint.js"></script>
+<script type="text/javascript">
+    JGBVue.module.equipmentManagementPrint().init();
+</script>
+
+</html>
