@@ -6,11 +6,36 @@ JGBVue.module.equipmentManagement = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
+				var checkNumber = (rule, value, callback)=> {
+					if(!Number.isInteger(Number(value))) {
+						callback(new Error('请输入数字值'));
+					}
+				};
 				return {
+					formRules: {
+						number: [
+							{required: true, message: '请输入客户编号'}
+						],
+						name: [
+							{required: true, message: '请输入客户名称'}
+						],
+						equipmentName: [
+							{required: true, message: '请输入设备名称'}
+						],
+						equipment_serial_number: [
+							{required: true, message: '请输入设备序列号'}
+						],
+						costEquipment: [
+							{validator: checkNumber}
+						],
+						warning_warranty_time: [
+							{validator: checkNumber}
+						]
+					},
 					table: {
 						header: [],
 						data: []
@@ -31,37 +56,15 @@ JGBVue.module.equipmentManagement = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addVisible: false,
+					addVisible: true,
 					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
-					formRules: {
-						number: [
-							{required: true, message: '请输入客户编号'}
-						],
-						name: [
-							{required: true, message: '请输入客户名称'}
-						]
-					},
 					addForm: {
-						number: '',
-						name: '',
-						category: '',
-						level: null,
-						identifyNumber: '',
-						bankName: '',
-						bankAccount: '',
-						companyTel: ''
+						
 					},
 					editForm: {
-						number: '',
-						name: '',
-						category: '',
-						level: null,
-						identifyNumber: '',
-						bankName: '',
-						bankAccount: '',
-						companyTel: ''
+						
 					},
 					addSetMemberVisible: false,
 					addSetSalesVisible: false,
@@ -106,6 +109,11 @@ JGBVue.module.equipmentManagement = ()=> {
 					currentImgIndex: 0,
 					currentImgSrc: '',
 					showColumnSetting: false,
+					clientOption: [{}],
+					linkmanOption: [],
+					equipmentNameOption: [],
+					equipmentBrandOption: [],
+					equipmentCategoryOption: []
 				}
 			},
 			mounted() {
@@ -339,7 +347,6 @@ JGBVue.module.equipmentManagement = ()=> {
 									}
 								}
 							});
-							this.forbidden()
 						}
 					})
 				},
@@ -718,7 +725,60 @@ JGBVue.module.equipmentManagement = ()=> {
 				},
 				handleRemove(file, fileList) {
 					//
-				}
+				},
+				openAddClientOption() {
+					this.$selectTab(
+						'clientInfo', 
+						'客户信息', 
+						'./views/clientManagement/clientInfo.html', 
+						`${'addVisible=true'}`
+					)
+				},
+				focusClientSelect(e) {
+					axios.get(getClientUrl).then((res)=> {
+						if(res.data.status) {
+							this.clientOption = JSON.parse(res.data.data);
+						}
+					})
+				},
+				changeClientOption(uid) {
+					for(let i = 0; i < this.clientOption.length;i++ ) {
+						if(this.clientOption[i].uid === uid) {
+							this.linkmanOption = this.clientOption[i].linkman;
+							/*this.addForm.phone = this.clientOption[i].phone;
+							this.addForm.otherContact = this.clientOption[i].otherContact;*/
+						}
+					}
+				},
+				changeLinkmanOption(uid) {
+					for(let i = 0; i < this.clientOption.length;i++ ) {
+						if(this.linkmanOption[i].uid === uid) {
+							this.addForm.phone = this.linkmanOption[i].phone;
+							this.addForm.otherContact = this.linkmanOption[i].other_contact;
+						}
+					}
+				},
+				focusEquipmentNameSelect() {
+					axios.get(getEquipmentNameOptionUrl).then((res)=> {
+						if(res.data.status) {
+							this.equipmentNameOption = JSON.parse(res.data.data);
+						}
+					})
+				},
+				focusEquipmentBrandSelect() {
+					axios.get(getEquipmentBrandOptionUrl).then((res)=> {
+						if(res.data.status) {
+							this.equipmentBrandOption = JSON.parse(res.data.data);
+						}
+					})
+				},
+				focusEquipmentCategorySelect() {
+					axios.get(getEquipmentCategoryOptionUrl).then((res)=> {
+						if(res.data.status) {
+							this.equipmentCategoryOption = JSON.parse(res.data.data);
+						}
+					})
+				},
 			},
 			watch: {
 				addCheckedSalesMember(newVal) {
@@ -731,8 +791,8 @@ JGBVue.module.equipmentManagement = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
-		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl);
+	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl)=> {
+		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl);
 	}
 
 	return that;

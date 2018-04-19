@@ -44,9 +44,89 @@ router.use('/defaultColumnSetting', (req, res)=> {
 
 router.use('/columnSettingComplete', (req, res)=> {
 	res.send({
-			status: true,
-			message: '列设置成功'
-		})
+		status: true,
+		message: '列设置成功'
+	})
 });
+
+router.get('/getClientOption', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/equipmentManagement/equipmentManagement/clientOption.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			message: '默认设置成功',
+			data: jdata
+		})
+	})
+})
+
+router.get('/getEquipmentName', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/equipmentManagement/equipmentManagement/clientOption.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			message: '默认设置成功',
+			data: jdata
+		})
+	})
+})
+
+router.get('/getEquipmentBrand', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/equipmentManagement/equipmentManagement/clientOption.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			message: '默认设置成功',
+			data: jdata
+		})
+	})
+})
+
+router.get('/getEquipmentCategory', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/equipmentManagement/equipmentManagement/clientOption.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			message: '默认设置成功',
+			data: jdata
+		})
+	})
+})
 
 module.exports = router;

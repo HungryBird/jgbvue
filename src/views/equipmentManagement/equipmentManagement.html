@@ -116,19 +116,29 @@
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="客户名称" prop="name">
-							<el-input v-model="addForm.name"></el-input>
+							<el-select v-model="addForm.name" v-on:focus="focusClientSelect" v-on:change="changeClientOption">
+								<el-option v-for="u in clientOption" :key="u.uid" :label="u.name" :value="u.uid"></el-option>
+								<a v-on:click="openAddClientOption">
+									<div class="el-select-dropdown__item">
+										<span style="float: left" class="el-icon-plus"></span>
+										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>
+									</div>
+								</a>
+							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="科室/部门" prop="department">
-							<el-input v-model="addForm.name"></el-input>
+							<el-input v-model="addForm.department"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="联系人" prop="linkman">
-							<el-input v-model="addForm.identifyNumber"></el-input>
+							<el-select v-model="addForm.linkman" allow-create filterable v-on:change="changeLinkmanOption">
+								<el-option v-for="lo in linkmanOption" :key="lo.uid" :label="lo.name" :value="lo.uid"></el-option>
+							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -140,7 +150,7 @@
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="微信/QQ/Email" prop="otherContact">
-							<el-input v-model="addForm.email"></el-input>
+							<el-input v-model="addForm.otherContact"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -152,7 +162,9 @@
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="设备名称" prop="equipmentName">
-							<el-input v-model="addForm.equipmentName"></el-input>
+							<el-select v-model="addForm.equipmentName" allow-create filterable v-on:focues="focusEquipmentNameSelect">
+								<el-option v-for="lo in equipmentNameOption" :key="lo.uid" :label="lo.name" :value="lo.uid"></el-option>
+							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -164,12 +176,16 @@
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="设备品牌" prop="equipmentBrand">
-							<el-input v-model="addForm.equipmentBrand"></el-input>
+							<el-select v-model="addForm.equipmentBrand" allow-create filterable v-on:focues="focusEquipmentBrandSelect">
+								<el-option v-for="lo in equipmentBrandOption" :key="lo.uid" :label="lo.name" :value="lo.uid"></el-option>
+							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="设备类别" prop="equipmentCategory">
-							<el-input v-model="addForm.equipmentCategory"></el-input>
+							<el-select v-model="addForm.equipmentCategory" allow-create filterable v-on:focues="focusEquipmentCategorySelect">
+								<el-option v-for="lo in equipmentCategoryOption" :key="lo.uid" :label="lo.name" :value="lo.uid"></el-option>
+							</el-select>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -181,7 +197,9 @@
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="设备成本" prop="costEquipment">
-							<el-input v-model="addForm.costEquipment"></el-input>
+							<el-input v-model="addForm.costEquipment">
+								<template slot="append">元</template>
+							</el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -192,15 +210,17 @@
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
-						<el-form-item label="质保期" prop="bankAccount">
-							<el-input v-model="addForm.email"></el-input>
+						<el-form-item label="质保期" prop="qualityGuaranteeDate">
+							<el-date-picker v-model="addForm.qualityGuaranteeDate" type="date" placeholder="选择日期"></el-date-picker>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="质保预警时间" prop="warning_warranty_time">
-							<el-input v-model="addForm.warning_warranty_time"></el-input>
+							<el-input v-model="addForm.warning_warranty_time">
+								<template slot="append">天</template>
+							</el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -396,7 +416,11 @@
 	 * 上传路径
 	 * 获取导出选项
 	 * 获取幻灯片
+	 * 下拉获取客户信息
+	 * 获取设备名option
+	 * 获取设备品牌option
+	 * 获取设备类别option
 	 */
-	JGBVue.module.equipmentManagement().init('/equipmentManagement/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete');
+	JGBVue.module.equipmentManagement().init('/equipmentManagement/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory');
 </script>
 </html>
