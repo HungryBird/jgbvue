@@ -196,6 +196,8 @@ JGBVue.module.clientInfo = ()=> {
 					console.log('axios err: ', err);
 				})
 				this.getCompanyList();
+				let addVisibleValue = this.$getQuery(window.location.search).addVisible ? true : false;
+				this.addVisible = addVisibleValue;
 			},
 			methods: {
 				getCompanyList() {

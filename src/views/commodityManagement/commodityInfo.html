@@ -313,7 +313,7 @@
 					<div style="clear: both;"></div>
 					<div style="padding: 5px;border-top: 1px solid #ddd;margin-top: 5px;" v-for="item in addSelectedAxiliaryAttributesClassify" :key="item.label">
 						<h5 class="pull-left" style="padding-right: 10px;">{{ item.parentName }}</h5>
-						<el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren">
+						<el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren" v-on:change="addChangeAuxiliaryAttributesClassifyChildren">
 							<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value">{{ c.label }}</el-checkbox>
 						</el-checkbox-group>
 						<div style="clear: both;"></div>
@@ -324,7 +324,7 @@
 						</label>
 						<span>(自动建立组合只能选择三个属性分类)</span>
 						<el-button size="mini" v-on:click="addQuickGenerate">快速生成</el-button>
-						<el-table :data="quickGenerateTable.data" ref="addQuickGenerateTable" border v-on:row-click="addQuickGenerateRowClick">
+						<el-table :data="addForm.quickGenerateTable.data" ref="addQuickGenerateTable" border v-on:row-click="addQuickGenerateRowClick">
 							<el-table-column label="序号" width="50px" type="index"></el-table-column>
 							<el-table-column label="操作">
 								<template slot-scope="scope">
@@ -336,17 +336,16 @@
 							</el-table-column>
 							<el-table-column label="图片" prop="img">
 								<template slot-scope="scope">
-									<i class="el-icon-picture jgb-table-icon" v-on:click="addQuickGenerateUploadPicIcon(scope.row.img, scope.row)"></i>
-									<input type="file" v-on:change="addQuickGenerateUploadPic(scope.row.img, scope.row)" style="display: none;"></input>
+									<i class="el-icon-picture jgb-table-icon"></i>
+									<input type="file" v-on:change="addQuickGenerateUploadPic($event)" style="width: 100%;height: 100%;z-index: 9;position: absolute;left: 0;top: 0;opacity: 0;"></input>
 								</template>
 							</el-table-column>
-							<el-table-column v-for="(tb, index) in quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="addQuickGenerateHeader">
+							<el-table-column v-for="(tb, index) in addForm.quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="addQuickGenerateHeader">
 								<template slot-scope="scope">
-									<div v-if="!scope.row.editFlag">{{ scope.row[tb.prop] }}</div>
-									<!-- <el-input v-else v-model="scope.row[tb.prop]"></el-input> -->
-									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else>
-										<el-option v-for="o in auxiliaryAttributesClassifyChildren" :value="o.value" :key="o.label" :label="o.label">
-											{{ o }}
+									<div v-if="!scope.row.editFlag">{{ scope.row[tb.label] }}</div>
+									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else v-on:focus="selectQuickGenerateOption(tb.prop)">
+										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label">
+											{{ o.label }}
 										</el-option>
 										<div v-on:click="addSelectChange(scope.row, tb.label)" class="el-select-dropdown__item">
 											<span style="float: left" class="el-icon-plus"></span>
