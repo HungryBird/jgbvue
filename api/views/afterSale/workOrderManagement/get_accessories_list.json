@@ -1,0 +1,26 @@
+[
+  {
+    "commodityName": "name-name-0",
+    "specifications": "AKB-48",
+    "commodityNumber": "123456",
+    "price": "10"
+  },
+  {
+    "commodityName": "name-name-1",
+    "specifications": "AKB-49",
+    "commodityNumber": "456789",
+    "price": "5"
+  },
+  {
+    "commodityName": "name-name-2",
+    "specifications": "AKB-50",
+    "commodityNumber": "123444",
+    "price": "3.5"
+  },
+  {
+    "commodityName": "name-name-3",
+    "specifications": "AKB-51",
+    "commodityNumber": "123555",
+    "price": "3.5"
+  }
+]

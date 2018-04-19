@@ -2,15 +2,33 @@
   "order_id": "123456",
   "date": "",
   "diagnosis": {
-    "label": "老王", 
-    "value": "10005"
+    "label": "", 
+    "value": ""
   },
   "result": "这里是故障原因",
   "measures": "这里是维修措施",
-  "rengong": "人工费",
-  "peijian": [],
+  "rengong": "",
+  "peijian": [
+    {
+      "count": 3,
+      "data": {
+        "commodityName": "name-name-0",
+        "specifications": "AKB-48",
+        "commodityNumber": "123456",
+        "price": "10"
+      }
+    },
+    {
+      "count": 1,
+      "data": {
+        "commodityName": "name-name-1",
+        "specifications": "AKB-49",
+        "commodityNumber": "456789",
+        "price": "5"
+      }
+    }
+  ],
   "peisong": "",
   "anzhuang": "",
-  "qita": "",
-  "heji": ""
+  "qita": ""
 }

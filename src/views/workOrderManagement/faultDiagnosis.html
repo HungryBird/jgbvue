@@ -201,7 +201,9 @@
       <!-- 故障诊断 -->
       <el-dialog :visible.sync="showDiagnosis">
         <div class="title" slot="title">工单{{diagnosisData.order_id || ''}}故障诊断</div>
-        <el-form class="diagnosis-form" label-width="120px" :model="diagnosisData">
+        <el-form ref="diagnosisForm" class="diagnosis-form" label-width="120px" 
+          :model="diagnosisData"
+          :rules="diagnosisRules">
           <el-row>
             <el-col :span="10">
               <el-form-item label="诊断时间：" prop="date">
@@ -209,22 +211,34 @@
               </el-form-item>
             </el-col>
             <el-col :span="14">
-              <el-form-item label="诊断人员：">
-                <el-input></el-input>
+              <el-form-item label="诊断人员：" prop="diagnosis">
+                <el-select v-model="diagnosisData.diagnosis" filterable remote placeholder="请选择"
+                  value-key="value"  
+                  :remote-method="remoteBusiness">
+                  <el-option v-for="item in formDiagnosisList"
+                    :key="item.number"
+                    :label="item.label"
+                    :value="item">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="故障原因：">
-                <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"></el-input>
+              <el-form-item label="故障原因：" prop="result">
+                <el-input type="textarea" v-model="diagnosisData.result" 
+                  :autosize="{minRows: 4, maxRows: 4}">
+                </el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="维修措施：">
-                <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"></el-input>
+              <el-form-item label="维修措施：" prop="measures">
+                <el-input type="textarea" v-model="diagnosisData.measures" 
+                  :autosize="{minRows: 4, maxRows: 4}">
+                </el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -232,28 +246,68 @@
             <el-form-item label="成本估算：" class="cost"></el-form-item>
           </el-row>
           <el-row>
-            <el-form-item label="人工维修费用：">
-              <el-input></el-input>
+            <el-form-item label="人工维修费用：" prop="rengong">
+              <el-input v-model="diagnosisData.rengong" v-on:change=""></el-input>
             </el-form-item>
-            <el-form-item label="配送费：">
-              <el-input></el-input>
+            <el-form-item v-for="(accessories, index) in diagnosisData.peijian"
+              label="配件费：" 
+              :key="'key'+index">
+              <div slot="label" class="accessories-label">
+                配件费用：
+                <div class="label-action">
+                  <i class="circle el-icon-circle-close" v-on:click="removeOneDiagnosis(index)"></i>
+                  <i class="circle el-icon-circle-plus" v-on:click="addOneDiagnosis"></i>
+                </div>
+              </div>
+              <div class="accessories-content">
+                <!-- 直接判断diagnosisData.peijian[index].data == formAccessoriesList[对应项] 是false？ -->
+                <el-select v-model="diagnosisData.peijian[index].data.commodityNumber" filterable remote 
+                  placeholder="请选择" value-key="value" size="small"
+                  :remote-method="remoteAccessories"
+                  v-on:change="handleDiagnosisChange(index)">
+                  <el-option v-for="item in formAccessoriesList"
+                    :key="item.commodityNumber"
+                    :label="'商品'+item.commodityName+',型号'+item.specifications+',编号'+item.commodityNumber"
+                    :value="item.commodityNumber">
+                  </el-option>
+                </el-select>
+                <div class="accessories-subtotal">
+                  数量：
+                  <el-input-number v-model="accessories.count" size="small" controls-position="right" 
+                    :min="1" :step="1"
+                    :disabled="!diagnosisData.peijian[index].data.commodityNumber"
+                    v-on:change="handleDiagnosisCountChange(index)" >
+                  </el-input-number>
+                  小计：
+                  <el-input class="subtotal" size="small" readonly v-model="accessories.subTotal"></el-input>
+                </div>
+              </div>
             </el-form-item>
-            <el-form-item label="安装费：">
-              <el-input></el-input>
+            <el-form-item label="配送费用：" prop="peisong">
+              <el-input v-model="diagnosisData.peisong" v-on:change=""></el-input>
             </el-form-item>
-            <el-form-item label="其他费用：">
-              <el-input></el-input>
+            <el-form-item label="安装费：" prop="anzhuang">
+              <el-input v-model="diagnosisData.anzhuang" v-on:change=""></el-input>
+            </el-form-item>
+            <el-form-item label="其他费用：" prop="qita">
+              <el-input v-model="diagnosisData.qita" v-on:change=""></el-input>
             </el-form-item>
             <el-form-item label="合计：">
-              <el-input></el-input>
+              <el-input v-model="diagnosisData.heji" readonly></el-input>
             </el-form-item>
           </el-row>
         </el-form>
         <div class="diagnosis-form-footer">
-          <el-button type="primary" v-on:click="">暂存</el-button>
+          <el-button type="primary"
+            :loading="loadingTempStorage"
+            :disabled="loadingTempStorage"
+            v-on:click="btnTempStorage('temp')">暂存</el-button>
           <div>
-            <el-button type="primary" v-on:click="">提交诊断结果</el-button>
-            <el-button v-on:click="">取消</el-button>
+              <el-button type="primary"
+                :loading="loadingTempStorage"
+                :disabled="loadingTempStorage"
+                v-on:click="btnTempStorage('submit')">提交诊断结果</el-button>
+            <el-button v-on:click="showDiagnosis = false">取消</el-button>
           </div>
         </div>
       </el-dialog>
@@ -276,9 +330,11 @@
     '/orderManagement/get_work_order_data', //打印列表接口
     '/orderManagement/get_header', //获取表头 列设置
     '/orderManagement/get_header', //获取表头 列设置默认数据
-    '/orderManagement/get_business_data', //获取诊断人员数据
-    '/orderManagement/get_user', //获取当前用户信息
-    '/orderManagement/get_order_fault_details' //获取工单故障诊断数据
+    '/orderManagement/get_diagnosis_data', //获取诊断人员数据
+    '/common/getUser', //获取当前用户信息
+    '/orderManagement/get_order_fault_details', //获取工单故障诊断数据
+    '/orderManagement/get_accessories_list', //查询配件信息
+    '/common/data_add_save' //故障诊断单暂存、提交诊断结果接口
 
 	);
 </script>

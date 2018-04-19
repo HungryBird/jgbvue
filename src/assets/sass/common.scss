@@ -1417,6 +1417,38 @@ table{
 			width:100%;
 		}
 	} 
+	// 配件
+	.accessories-label {
+		position:relative;
+		.label-action {
+			@include w-flex(column, nowrap, space-around, center);
+			margin-right: -10px;
+			position:absolute;
+			top:0;
+			right:0;
+			bottom:0;
+		}
+		.circle {
+			color:#f00;
+			font-size:18px;
+			cursor:pointer;
+			&:hover {
+				opacity: .7;
+			}
+		}
+	}
+	.accessories-content {
+		.accessories-subtotal {
+			@include w-flex(row, nowrap, flex-start, center);
+			line-height:25px;
+			.subtotal{
+				width:150px;
+			}
+			.el-input-number {
+				margin-right:10px;
+			}
+		}
+	}
 }
 .diagnosis-form-footer {
 	@include w-flex(row, nowrap, space-between, center);
