@@ -71,18 +71,8 @@ JGBVue.module.commodityInfo = ()=> {
 						setCommodityAuxiliaryAttributes: false,
 						auxiliaryAttributesClassify: [],
 						quickGenerateTable: {
-							header: [
-								/*{
-									prop: 'attributesNumber',
-									label: '属性编号'
-								}*/
-							],
+							header: [],
 							data: [
-								/*{
-									editFlag: false,
-									type: 'input',
-									attributesNumber: '',
-								}*/
 								{
 									indexNum: 1,
 									editFlag: false,
@@ -92,12 +82,22 @@ JGBVue.module.commodityInfo = ()=> {
 						batchExpirationDateManagement: false,
 						serialNumberManagement: false,
 						initSet: false,
+						initSetTable: [
+							{
+								index: 1,
+								editFlag: false
+							},
+							{
+								index: 2,
+								editFlag: false
+							}
+						]
 					},
 					addSelectedAxiliaryAttributesClassify: [],
 					addFormBasicData: {
 						commodityCategory: [],
 						primaryRepo: [],
-						unitOfMeasurement: []
+						unitOfMeasurement: [],
 					},
 					editForm: {
 						number: '',
@@ -123,7 +123,15 @@ JGBVue.module.commodityInfo = ()=> {
 						setCommodityAuxiliaryAttributes: false,
 						batchExpirationDateManagement: false,
 						serialNumberManagement: false,
-						initSet: false
+						initSet: false,
+						initSetTable: [
+							{
+								index: 1
+							},
+							{
+								index: 2
+							}
+						]
 					},
 					importVisible: false,
 					exportVisible: false,
@@ -770,10 +778,9 @@ JGBVue.module.commodityInfo = ()=> {
 			    },
 			    addQuickGenerate() {
 			    	if(this.auxiliaryAttributesClassifyChildren.length !== 0) {
-			    		console.log(111)
 			    		axios.post(quickGenerateUrl, this.auxiliaryAttributesClassifyChildren).then((res)=> {
 			    			if(res.data.status) {
-
+			    				this.addForm.quickGenerateTable.data = JSON.parse(res.data.data);
 			    			}
 			    		})
 			    	}
@@ -804,6 +811,13 @@ JGBVue.module.commodityInfo = ()=> {
 						[column.label]
 					);
 			    },
+			    requiredHeader(createElement, { column }) {
+			    	return createElement(
+						'span',
+						{'class': 'required'},
+						[column.label]
+					);
+			    },
 			    addQuickGenerateTableProp() {
 			    	let _self = this;
 					this.$prompt('名称', '新增分类', {
@@ -824,26 +838,37 @@ JGBVue.module.commodityInfo = ()=> {
 						});       
 			        });
 			    },
-			    addSelectChange(row, label) {
+			    addNewAttribute(row, prop) {
 		    		let _self = this;
+		    		console.log('row: ', row);
+		    		console.log('prop: ', prop);
 					this.$prompt('名称', '新增分类', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 			        }).then(({ value }) => {
-						axios.post(addAuxiliaryAttributesClassifyUrl, value).then((res)=> {
-							if(res.data.status) {
+						for(let i = 0; i < this.auxiliaryAttributesClassify.length; i++ ) {
+							if(this.auxiliaryAttributesClassify[i].value === prop) {
 								let obj = {};
+								obj.parent = prop;
 								obj.label = value;
-								
+								obj.value = value;
+								axios.post(addAuxiliaryAttributesClassifyUrl, obj).then((res)=> {
+									if(res.data.status) {
+										this.auxiliaryAttributesClassify[i].chilren.push(obj);
+									}else{
+										this.$message.error(res.data.err);
+										return;
+									}
+								})
+								return;
 							}
-						})
+						}
 			        }).catch(() => {
 						this.$message({
 							type: 'info',
 							message: '取消输入'
 						});       
 			        });
-			        console.log(row, label)
 		    	},
 		    	selectQuickGenerateOption(prop) {
 		    		/**
@@ -876,7 +901,12 @@ JGBVue.module.commodityInfo = ()=> {
 	    					})
 	    				}
 	    			}
-	    			console.log('quickGenerateTable: ', this.addForm.quickGenerateTable);
+		    	},
+		    	handleInitSetAdd() {
+		    		//
+		    	},
+		    	handleInitSetDelete() {
+		    		//
 		    	}
 			},
 			watch: {
