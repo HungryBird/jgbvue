@@ -1295,6 +1295,34 @@ table {
     padding: 0; }
   .diagnosis-form .el-form-item .el-input, .diagnosis-form .el-form-item .el-select {
     width: 100%; }
+  .diagnosis-form .accessories-label {
+    position: relative; }
+    .diagnosis-form .accessories-label .label-action {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-around;
+      align-items: center;
+      margin-right: -10px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0; }
+    .diagnosis-form .accessories-label .circle {
+      color: #f00;
+      font-size: 18px;
+      cursor: pointer; }
+      .diagnosis-form .accessories-label .circle:hover {
+        opacity: .7; }
+  .diagnosis-form .accessories-content .accessories-subtotal {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    line-height: 25px; }
+    .diagnosis-form .accessories-content .accessories-subtotal .subtotal {
+      width: 150px; }
+    .diagnosis-form .accessories-content .accessories-subtotal .el-input-number {
+      margin-right: 10px; }
 
 .diagnosis-form-footer {
   display: flex;

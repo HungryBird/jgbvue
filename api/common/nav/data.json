@@ -123,10 +123,10 @@
 						"url": "./views/workOrderManagement/offerAndContract.html" }
 				] 
 			},
-			{ "code": "201804090948", "name": "维修管理", "isMenu": false, "url": "",
+			{ "code": "maintenanceManagement", "name": "维修管理", "isMenu": false, "url": "",
 				"items": [
-					{ "code": "201804090949", "name": "维修", "isMenu": true, 
-						"url": "./views/201804090948/201804090949.html" },
+					{ "code": "maintenanceOrder", "name": "维修工单", "isMenu": true, 
+						"url": "./views/maintenanceManagement/maintenanceOrder.html" },
 					{ "code": "201804090950", "name": "维修报告与成本", "isMenu": true, 
 						"url": "./views/201804090948/201804090950.html" }
 				] 
