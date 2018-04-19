@@ -1,0 +1,36 @@
+[
+	{
+		"value": "color",
+		"option": [
+			{
+				"label": "颜色1",
+				"value": "c_colr1"
+			},
+			{
+				"label": "颜色2",
+				"value": "c_colr2"
+			},
+			{
+				"label": "颜色3",
+				"value": "c_colr3"
+			}
+		]
+	},
+	{
+		"value": "size",
+		"option": [
+			{
+				"label": "尺寸1",
+				"value": "s_size1"
+			},
+			{
+				"label": "尺寸2",
+				"value": "s_size2"
+			},
+			{
+				"label": "尺寸3",
+				"value": "s_size3"
+			}
+		]
+	}
+]

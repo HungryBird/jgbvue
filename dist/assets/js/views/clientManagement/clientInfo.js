@@ -594,7 +594,6 @@ JGBVue.module.clientInfo = ()=> {
 							axios.post(saveAddUrl, this.addForm).then((res)=> {
 								if(res.data.status) {
 									this.$refs[formName].resetFields();
-									this.addDialogVisiable = false;
 									this.$message({
 										type: 'success',
 										message: res.data.message

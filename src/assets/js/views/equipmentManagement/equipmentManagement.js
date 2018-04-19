@@ -6,15 +6,21 @@ JGBVue.module.equipmentManagement = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl)=> {
+	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
-				var checkNumber = (rule, value, callback)=> {
+				/*var checkNumber = (rule, value, callback)=> {
 					if(!Number.isInteger(Number(value))) {
 						callback(new Error('请输入数字值'));
 					}
 				};
+				var equipmentSerialNumber = (rule, value, callback)=> {
+					if(!this.equipmentSerialNumberValid) {
+						console.log(1111)
+						callback(new Error(this.equipmentSerialNumberError));
+					}
+				}*/
 				return {
 					formRules: {
 						number: [
@@ -26,15 +32,16 @@ JGBVue.module.equipmentManagement = ()=> {
 						equipmentName: [
 							{required: true, message: '请输入设备名称'}
 						],
-						equipment_serial_number: [
-							{required: true, message: '请输入设备序列号'}
+						equipmentSerialNumber: [
+							{required: true, message: '请输入设备序列号'},
+							/*{validator: equipmentSerialNumber}*/
 						],
-						costEquipment: [
+						/*costEquipment: [
 							{validator: checkNumber}
 						],
 						warning_warranty_time: [
 							{validator: checkNumber}
-						]
+						]*/
 					},
 					table: {
 						header: [],
@@ -56,15 +63,21 @@ JGBVue.module.equipmentManagement = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addVisible: true,
+					addVisible: false,
 					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
 					addForm: {
-						
+						uniqueCode: null,
+						warningWarrantyMethod: [],
+						addAuxiliaryAttributesClassify: [],
+						addAuxiliaryAttributesClassifyOption: []
 					},
 					editForm: {
-						
+						uniqueCode: null,
+						warningWarrantyMethod: [],
+						addAuxiliaryAttributesClassify: [],
+						addAuxiliaryAttributesClassifyOption: []
 					},
 					addSetMemberVisible: false,
 					addSetSalesVisible: false,
@@ -83,24 +96,6 @@ JGBVue.module.equipmentManagement = ()=> {
 						errRecord: []
 					},
 					exportForm: [],
-					tempAssistantsGroup: [],
-					assistants: {
-	                    company: '',
-	                    companyName: '',
-	                    departmentName: '',
-	                    searchValue: '',
-	                    companyList: [],
-	                    departmentList: [],
-	                    curCompanyVal: '',
-	                    auditorList: [],
-	                    activeIndex: -1,
-	                    activeDepartment: '',
-	                    selectedAuditors: []
-	                },
-	                showSelectedAuditors: true,
-	                companyList: [],
-	                departmentList: [],
-	                userList: [],
 	                btnLoading: false,
 	                showSlideshow: false,
 	                slideshowArr: [],
@@ -113,15 +108,34 @@ JGBVue.module.equipmentManagement = ()=> {
 					linkmanOption: [],
 					equipmentNameOption: [],
 					equipmentBrandOption: [],
-					equipmentCategoryOption: []
+					equipmentCategoryOption: [],
+					unitMeasurementOption: [],
+					equipmentSerialNumberValid: true,
+					equipmentSerialNumberError: '',
+					auxiliaryAttributesClassify: []
 				}
 			},
 			mounted() {
 				this.search();
 				this.getClientOption();
 				this.getQuickQuery();
+				this.getAuxiliaryAttributesClassify()
 			},
 			methods: {
+				getAuxiliaryAttributesClassify() {
+					let _self = this;
+					axios.get(getAuxiliaryAttributesClassifyUrl).then((res)=> {
+						if(res.data.status) {
+							this.auxiliaryAttributesClassify = JSON.parse(res.data.data);
+							this.auxiliaryAttributesClassify.forEach((item)=> {
+								let obj = {};
+								obj.value = '';
+								_self.addForm.addAuxiliaryAttributesClassifyOption.push(obj);
+								_self.editForm.addAuxiliaryAttributesClassifyOption.push(obj);
+							})
+						}
+					})
+				},
 				search(val) {
 					let _self = this;
 					axios.get(searchUrl, val).then((res)=> {
@@ -460,21 +474,21 @@ JGBVue.module.equipmentManagement = ()=> {
 					}
 				},
 				saveAdd(formName) {
+					console.log(formName)
 					this.$refs[formName].validate((valid)=> {
 						if(valid) {
 							axios.post(saveAddUrl, this.addForm).then((res)=> {
 								if(res.data.status) {
 									this.$refs[formName].resetFields();
-									this.addDialogVisiable = false;
+									this.addVisible = false;
 									this.$message({
 										type: 'success',
 										message: res.data.message
 									})
-									this.addCheckedAssistantsMember = [];
-									this.addVisible = false;
 								}
 							})
 						}else{
+							console.log(false)
 							return false;
 						}
 					})
@@ -490,27 +504,7 @@ JGBVue.module.equipmentManagement = ()=> {
 										type: 'success',
 										message: res.data.message
 									})
-									this.editCheckedAssistantsMember = [];
 									this.editVisible = false;
-								}
-							})
-						}else{
-							return false;
-						}
-					})
-				},
-				saveAdd(formName) {
-					this.$refs[formName].validate((valid)=> {
-						if(valid) {
-							axios.post(saveAddUrl, this.addForm).then((res)=> {
-								if(res.data.status) {
-									this.$refs[formName].resetFields();
-									this.addDialogVisiable = false;
-									this.$message({
-										type: 'success',
-										message: res.data.message
-									})
-									this.addVisible = false;
 								}
 							})
 						}else{
@@ -734,6 +728,13 @@ JGBVue.module.equipmentManagement = ()=> {
 						`${'addVisible=true'}`
 					)
 				},
+				openAddAuxiliaryAttributes() {
+					this.$selectTab(
+						'commodityManagementAuxiliaryAttributes', 
+						'辅助属性', 
+						'./views/equipmentManagement/equipmentManagementAuxiliaryAttributes.html',
+					)
+				},
 				focusClientSelect(e) {
 					axios.get(getClientUrl).then((res)=> {
 						if(res.data.status) {
@@ -745,8 +746,6 @@ JGBVue.module.equipmentManagement = ()=> {
 					for(let i = 0; i < this.clientOption.length;i++ ) {
 						if(this.clientOption[i].uid === uid) {
 							this.linkmanOption = this.clientOption[i].linkman;
-							/*this.addForm.phone = this.clientOption[i].phone;
-							this.addForm.otherContact = this.clientOption[i].otherContact;*/
 						}
 					}
 				},
@@ -779,6 +778,33 @@ JGBVue.module.equipmentManagement = ()=> {
 						}
 					})
 				},
+				focusUnitMeasurementSelect() {
+					axios.get(getUnitMeasurementOptionUrl).then((res)=> {
+						if(res.data.status) {
+							this.unitMeasurementOption = JSON.parse(res.data.data);
+						}
+					})
+				},
+				generateSerialNumber(e) {
+					if(!this.addForm.equipmentSerialNumber) return;
+					axios.post(getUniqueCodeUrl, {serialNumber:this.addForm.equipmentSerialNumber}).then((res)=> {
+						if(res.data.status) {
+							this.addForm.uniqueCode = res.data.data;
+						}else{
+							this.equipmentSerialNumberError = res.data.message;
+							this.equipmentSerialNumberValid = false;
+							console.log(this.equipmentSerialNumberValid)
+						}
+					})
+				},
+				preview() {
+					this.$selectTab(
+						'equipmentManagementPrint', 
+						'打印设备管理', 
+						'./views/equipmentManagement/equipmentManagementPrint.html', 
+						`url=${printListUrl}`)
+					}
+					console.log(printListUrl)
 			},
 			watch: {
 				addCheckedSalesMember(newVal) {
@@ -791,8 +817,8 @@ JGBVue.module.equipmentManagement = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl)=> {
-		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl);
+	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
+		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl);
 	}
 
 	return that;
