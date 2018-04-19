@@ -1,0 +1,87 @@
+{
+  "data": [
+    {
+      "status_label": "待维修",
+      "status_value": 6,
+      "date": "",
+      "order_id": "123456",
+      "business_name": "",
+      "business_id" : "",
+      "customer_name": "",
+      "customer_id": "",
+      "equipment_name": "",
+      "equipment_id": "",
+      "image": [
+        "http://img5.duitang.com/uploads/item/201509/30/20150930171714_K4iWc.jpeg", 
+        "http://imgsrc.baidu.com/image/c0%3Dpixel_huitu%2C0%2C0%2C294%2C40/sign=c4ffe93b576034a83defb0c1a26b2c38/a686c9177f3e670994e725c530c79f3df8dc5520.jpg", 
+        "http://img5.duitang.com/uploads/item/201411/30/20141130235256_VaPJM.jpeg", 
+        "http://p3.wmpic.me/article/2016/01/02/1451705414_FCsmpfEP.jpg"],
+      "category": "",
+      "brand": "",
+      "source": "",
+      "category_id": "",
+      "fault_info": "",
+      "level": "",
+      "repair_methods": "",
+      "remark": "",
+      "action": ""
+    },
+    {
+      "status_label": "维修中",
+      "status_value": 7,
+      "date": "",
+      "order_id": "987654",
+      "business_name": "",
+      "business_id" : "",
+      "customer_name": "",
+      "customer_id": "",
+      "equipment_name": "",
+      "equipment_id": "",
+      "image": [
+        "http://img5.duitang.com/uploads/item/201509/30/20150930171714_K4iWc.jpeg", 
+        "http://imgsrc.baidu.com/image/c0%3Dpixel_huitu%2C0%2C0%2C294%2C40/sign=c4ffe93b576034a83defb0c1a26b2c38/a686c9177f3e670994e725c530c79f3df8dc5520.jpg", 
+        "http://img5.duitang.com/uploads/item/201411/30/20141130235256_VaPJM.jpeg", 
+        "http://p3.wmpic.me/article/2016/01/02/1451705414_FCsmpfEP.jpg"],
+      "category_name": "",
+      "category_brand": "",
+      "category_source": "",
+      "category_id": "",
+      "fault_info": "",
+      "level": "",
+      "repair_methods": "",
+      "remark": "",
+      "action": ""
+    },
+    {
+      "status_label": "完成维修",
+      "status_value": 8,
+      "date": "",
+      "order_id": "987653",
+      "business_name": "",
+      "business_id" : "",
+      "customer_name": "",
+      "customer_id": "",
+      "equipment_name": "",
+      "equipment_id": "",
+      "image": [
+        "http://img5.duitang.com/uploads/item/201509/30/20150930171714_K4iWc.jpeg", 
+        "http://imgsrc.baidu.com/image/c0%3Dpixel_huitu%2C0%2C0%2C294%2C40/sign=c4ffe93b576034a83defb0c1a26b2c38/a686c9177f3e670994e725c530c79f3df8dc5520.jpg", 
+        "http://img5.duitang.com/uploads/item/201411/30/20141130235256_VaPJM.jpeg", 
+        "http://p3.wmpic.me/article/2016/01/02/1451705414_FCsmpfEP.jpg"],
+      "category_name": "",
+      "category_brand": "",
+      "category_source": "",
+      "category_id": "",
+      "fault_info": "",
+      "level": "",
+      "repair_methods": "",
+      "remark": "",
+      "action": ""
+    }
+  ],
+  "page": {
+    "page_current": 1,
+    "page_total": 1,
+    "page_size": 10
+  }
+}

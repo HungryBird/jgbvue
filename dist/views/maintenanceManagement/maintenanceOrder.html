@@ -104,18 +104,29 @@
 								<template slot-scope="scope">
                   <!-- 操作 -->
                   <div v-if="item.prop == 'action'" >
-                    <!-- 待诊断 -->
-                    <div v-if="scope.row.status_value == 2" class="order-button">
-                      <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                      <el-button type="" size="mini" v-on:click="">设备定位</el-button>
-                      <el-button type="" size="mini" v-on:click="btnDiagnosis(scope.row, scope.$index)">故障诊断</el-button>
-                    </div>
-                    <!-- 诊断中 -->
-                    <div v-else-if="scope.row.status_value == 3" class="order-button">
-                      <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                      <el-button type="" size="mini" v-on:click="">设备定位</el-button>
-                      <el-button type="" size="mini" v-on:click="btnDiagnosis(scope.row, scope.$index)">故障诊断</el-button>
-                    </div>
+                      <!-- 待维修 -->
+                      <div v-if="scope.row.status_value == 6" class="order-button">
+                        <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                        <el-button type="" size="mini" v-on:click="">设备定位</el-button>
+                        <el-button type="" size="mini" v-on:click="">开始维修</el-button>
+                        <el-button type="" size="mini" v-on:click="">开票申请</el-button>
+                      </div>
+                      <!-- 维修中 -->
+                      <div v-else-if="scope.row.status_value == 7" class="order-button">
+                        <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                        <el-button type="" size="mini" v-on:click="">测试报告</el-button>
+                        <el-button type="" size="mini" v-on:click="">换人修</el-button>
+                        <el-button type="" size="mini" v-on:click="">送外修</el-button>
+                        <el-button type="" size="mini" v-on:click="btnDiagnosis(scope.row, scope.$index)">再次诊断</el-button>
+                        <el-button type="" size="mini" v-on:click="">开票申请</el-button>
+                      </div>
+                      <!-- 完成维修 -->
+                      <div v-else-if="scope.row.status_value == 8" class="order-button">
+                        <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                        <el-button type="" size="mini" v-on:click="">维修报告</el-button>
+                        <el-button type="" size="mini" v-on:click="">最终成本</el-button>
+                        <el-button type="" size="mini" v-on:click="">开票申请</el-button>
+                      </div>
                   </div>
                   <!-- 时效 -->
                   <div v-else-if="item.prop == 'aging'" 
@@ -198,9 +209,9 @@
             </el-button>
         </div>
       </el-dialog>
-      <!-- 故障诊断 -->
+      <!-- 重新故障诊断 -->
       <el-dialog :visible.sync="showDiagnosis">
-        <div class="title" slot="title">工单{{diagnosisData.order_id || ''}}故障诊断</div>
+        <div class="title" slot="title">工单{{diagnosisData.order_id || ''}}重新故障诊断</div>
         <el-form ref="diagnosisForm" class="diagnosis-form" label-width="120px" 
           :model="diagnosisData"
           :rules="diagnosisRules">
@@ -318,12 +329,12 @@
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
 <script type="text/javascript" src="../../assets/js/common.js"></script>
-<script type="text/javascript" src="../../assets/js/views/workOrderManagement/maintenanceOrder.js"></script>
+<script type="text/javascript" src="../../assets/js/views/maintenanceManagement/maintenanceOrder.js"></script>
 <script type="text/javascript">
-	JGBVue.module.workOrderManagement().init(
+	JGBVue.module.maintenanceOrder().init(
     '/orderManagement/get_business_data', //获取业务人员数据
     '/orderManagement/get_maintenance_data', //获取维修人员数据
-    '/orderManagement/get_fault_order_data', //获取工单数据
+    '/maintenanceManagement/get_maintenance_order_data', //获取工单数据
     '/orderManagement/order_invalid', //作废工单
     '/orderManagement/get_order_details', //获取工单详情
     '/common/data_add_save', //导出申请地址

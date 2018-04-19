@@ -1,12 +1,12 @@
 /**
  * created by lanw 2018-04-09
- * 工单管理
+ * 故障诊断
  */
 JGBVue = {
   module: {}
 }
 
-JGBVue.module.workOrderManagement = () => {
+JGBVue.module.faultDiagnosis = () => {
   let _this = {}, that = {}
   _this.init = (
     businessDataGetUrl, //获取业务人员数据
