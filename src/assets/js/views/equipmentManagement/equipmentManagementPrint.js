@@ -17,16 +17,19 @@ JGBVue.module.equipmentManagementPrint = ()=> {
 				}
 			},
 			mounted() {
-				//this.getTableData();
-				console.log('this.$getQuery(window.location.search): ', this.$getQuery(window.location.search));
+				/*this.$nextTick(() => {
+					this.getTableData();
+				})*/
+				this.getTableData();
 			},
-			method: {
-				getUrl: function() {
+			methods: {
+				getUrl() {
 					return this.$getQuery(window.location.search).url
 				},
 				getTableData() {
 					this.loadingOrderInfo = true;
-					axois.post(this.getUrl).then((res)=> {
+					axios.post(this.getUrl()).then((res)=> {
+						console.log('res: ', res);
 						if(res.data.status) {
 							let _jdata = JSON.parse(res.data.data);
 							this.tableHeader = jdata.header;
@@ -52,9 +55,6 @@ JGBVue.module.equipmentManagementPrint = ()=> {
 				btnPrint() {
 
 				}
-			},
-			watch: {
-				//
 			}
 		})
 	}

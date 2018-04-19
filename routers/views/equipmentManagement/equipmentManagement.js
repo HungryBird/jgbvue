@@ -193,4 +193,24 @@ function generateUUID() {
 	return uuid;
 };
 
+router.post('/edit_data_get', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/equipmentManagement/equipmentManagement/edit_data_get.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			message: '默认设置成功',
+			data: jdata
+		})
+	})
+})
+
 module.exports = router;

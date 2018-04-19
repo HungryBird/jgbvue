@@ -804,7 +804,7 @@ JGBVue.module.equipmentManagement = ()=> {
 						'./views/equipmentManagement/equipmentManagementPrint.html', 
 						`url=${printListUrl}`)
 					}
-					console.log(printListUrl)
+					//console.log(printListUrl)
 			},
 			watch: {
 				addCheckedSalesMember(newVal) {
