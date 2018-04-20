@@ -85,11 +85,13 @@ JGBVue.module.commodityInfo = ()=> {
 						initSetTable: [
 							{
 								index: 1,
-								editFlag: false
+								editFlag: false,
+								shelfLife: null
 							},
 							{
 								index: 2,
-								editFlag: false
+								editFlag: false,
+								shelfLife: null
 							}
 						]
 					},
@@ -154,6 +156,8 @@ JGBVue.module.commodityInfo = ()=> {
 					repo: [],
 					auxiliaryAttributesClassify: [],
 					quickGenerateOption: [],
+					add_initSetTable_header: [],
+					loading: false
 				}
 			},
 			mounted() {
@@ -424,6 +428,16 @@ JGBVue.module.commodityInfo = ()=> {
 						}
 					}
 				},
+				addRowClickInitSetTable(row) {
+					this.addForm.initSetTable.forEach((item)=> {
+						item.editFlag = false;
+					})
+					for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
+						if(row === this.addForm.initSetTable[i]) {
+							this.addForm.initSetTable[i].editFlag = true;
+						}
+					}
+				},
 				editRowClick(row, event, column) {
 					this.editForm.table.forEach((item)=> {
 						item.editFlag = false;
@@ -522,25 +536,6 @@ JGBVue.module.commodityInfo = ()=> {
 										message: res.data.message
 									})
 									this.editVisible = false;
-								}
-							})
-						}else{
-							return false;
-						}
-					})
-				},
-				saveAdd(formName) {
-					this.$refs[formName].validate((valid)=> {
-						if(valid) {
-							axios.post(saveAddUrl, this.addForm).then((res)=> {
-								if(res.data.status) {
-									this.$refs[formName].resetFields();
-									this.addDialogVisiable = false;
-									this.$message({
-										type: 'success',
-										message: res.data.message
-									})
-									this.addVisible = false;
 								}
 							})
 						}else{
@@ -840,8 +835,6 @@ JGBVue.module.commodityInfo = ()=> {
 			    },
 			    addNewAttribute(row, prop) {
 		    		let _self = this;
-		    		console.log('row: ', row);
-		    		console.log('prop: ', prop);
 					this.$prompt('名称', '新增分类', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
@@ -903,14 +896,151 @@ JGBVue.module.commodityInfo = ()=> {
 	    			}
 		    	},
 		    	handleInitSetAdd() {
-		    		//
+		    		let index = this.addForm.initSetTable[this.addForm.initSetTable.length - 1].index + 1;
+					let initFormRow = {
+						index: 0,
+						editFlag: false,
+						shelfLife: null
+					}
+					initFormRow.index = index;
+					this.addForm.initSetTable.push(initFormRow);
 		    	},
-		    	handleInitSetDelete() {
-		    		//
-		    	}
+		    	handleInitSetDelete(index, row) {
+		    		for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
+						if(row === this.addForm.initSetTable[i]) {
+
+							this.addForm.initSetTable.splice(i, 1);
+						}
+					}
+		    	},
+		    	addChangeShelfLife() {
+		    		let _self = this;
+    				this.addForm.initSetTable.forEach((item)=> {
+		    			item.shelfLife = _self.addForm.shelfLife;
+		    		});
+		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
+		    			let formatDate = new Date((this.addForm.initSetTable[i].productionDate || 0) + Number.parseInt(this.addForm.initSetTable[i].shelfLife + 1)*24*60*60*1000 || 0);
+    					this.addForm.initSetTable[i].validUntil = this.formatDate(formatDate);
+	    			}
+		    	},
+		    	toggleBatchExpirationDateManagement(val) {
+		    		let _self = this;
+		    		this.add_initSetTable_header = [];
+		    		if(val) {
+		    			let arr = [
+		    				{
+		    					label: '批次',
+		    					prop: 'batch',
+		    					type: 'input'
+		    				},
+		    				{
+		    					label: '生产日期',
+		    					prop: 'productionDate',
+		    					type: 'date'
+		    				},
+		    				{
+		    					label: '保质期（天）',
+		    					prop: 'shelfLife',
+		    					type: 'text'
+		    				},
+		    				{
+		    					label: '有效期至',
+		    					prop: 'validUntil',
+		    					type: 'text'
+		    				}
+		    			]
+		    			arr.forEach((item)=> {
+		    				_self.add_initSetTable_header.push(item);
+		    			})
+		    		}
+		    	},
+		    	addFormInitSetTablePickDate(val, row, prop) {
+		    		let _self = this;
+
+	    			let ms = new Date(val).getTime() + (Number.parseInt(_self.addForm.shelfLife)*24*60*60*1000 || 0);
+	    			let formatValue = new Date(ms);
+	    			for(let i = 0; i < this.addForm.initSetTable.length; i++) {
+	    				if(this.addForm.initSetTable[i] === row) {
+	    					this.addForm.initSetTable[i].validUntil = this.formatDate(formatValue);
+	    				}
+	    			}
+		    	},
+		    	formatDate(val) {
+		    		return val.getFullYear() + '-' + `${val.getMonth() + 1 < 10 ? '0' + (val.getMonth() + 1) : (val.getMonth() + 1)}` + '-' +  `${val.getDate() < 10 ? '0' + val.getDate() : val.getDate()}`;
+		    	},
+		    	addFormInitialNumberChange(val, row) {
+		    		if(isNaN(Number(val))) return;
+		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
+	    				if(this.addForm.initSetTable[i] === row) {
+	    					if(!isNaN(this.addForm.initSetTable[i].unitCost)) {
+	    						this.addForm.initSetTable[i].atFirstTotalPrice = this.addForm.initSetTable[i].unitCost*val;
+	    					}
+	    				}
+	    			}
+		    	},
+		    	addFormUnitCostChange(val, row) {
+		    		if(isNaN(Number(val))) return;
+		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
+	    				if(this.addForm.initSetTable[i] === row) {
+	    					if(!isNaN(this.addForm.initSetTable[i].initialNumber)) {
+	    						this.addForm.initSetTable[i].atFirstTotalPrice = this.addForm.initSetTable[i].initialNumber*val;
+	    					}
+	    				}
+	    			}
+		    	},
+		    	addQuickGenerateTable_add_btn() {
+			    	let index = this.addForm.quickGenerateTable.data[this.addForm.quickGenerateTable.data.length - 1].index + 1;
+					let initFormRow = {
+						index: 0,
+						editFlag: false
+					}
+					initFormRow.index = index;
+					this.addForm.quickGenerateTable.data.push(initFormRow);
+			    },
+			    addQuickGenerateTable_delete_btn(row) {
+			    	for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
+						if(row === this.addForm.quickGenerateTable.data[i]) {
+							this.addForm.quickGenerateTable.data.splice(i, 1);
+						}
+					}
+			    },
+			    usingSerialNumberManagement(val) {
+			    	for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
+			    		if(this.addForm.initSetTable[i].initialNumber) {
+			    			this.$message({
+			    				type: 'error',
+			    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
+			    			})
+			    			this.addForm.serialNumberManagement = false;
+			    			return;
+			    		}
+			    	}
+			    }
 			},
 			watch: {
 				//
+			},
+			filters: {
+				formatDate(value) {
+					if(!value) return;
+					let formatValue = new Date(value);
+					return formatValue.getFullYear() + '-' + `${formatValue.getMonth() + 1 < 10 ? '0' + (formatValue.getMonth() + 1) : (formatValue.getMonth() + 1)}` + '-' +  `${formatValue.getDate() < 10 ? '0' + formatValue.getDate() : formatValue.getDate()}`;
+				},
+				doubleDecimals(value) {
+					if(isNaN(value)) return;
+					let val = Math.round(parseFloat(value)*100)/100;
+					let xsd = val.toString().split(".");
+					if(xsd.length == 1){
+					val = val.toString() + ".00";
+						return val;
+					}
+					if(xsd.length > 1){
+						if(xsd[1].length < 2){
+							val = val.toString() + "0";
+						}
+						return val;
+					}
+				}
 			}
 		})
 	}

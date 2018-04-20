@@ -198,6 +198,7 @@ JGBVue.module.clientInfo = ()=> {
 				this.getCompanyList();
 				let addVisibleValue = this.$getQuery(window.location.search).addVisible ? true : false;
 				this.addVisible = addVisibleValue;
+				console.log('this.$timeStampFormat: ', this.$timeStampFormat)
 			},
 			methods: {
 				getCompanyList() {
