@@ -1332,3 +1332,6 @@ table {
   width: 100%;
   border-top: 1px solid #ddd;
   padding-top: 5px; }
+
+.w-common-form .el-form-item .el-input, .w-common-form .el-form-item .el-select {
+  width: 100%; }

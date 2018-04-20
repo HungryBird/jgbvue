@@ -1456,3 +1456,12 @@ table{
 	border-top:1px solid #ddd;
 	padding-top:5px;
 }
+
+//公共表单样式复写
+.w-common-form {
+	.el-form-item {
+		.el-input, .el-select {
+			width: 100%;
+		}
+	}
+}
