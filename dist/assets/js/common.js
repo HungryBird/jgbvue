@@ -53,6 +53,29 @@ let timeStampFormat = function(stamp, format) {
 Vue.prototype.$timeStampFormat = timeStampFormat
 
 /**
+ *  数字保留两位小数
+ *  created by 何俊洁 2018-4-20
+ *  @param {Number, string} value
+ */
+
+let doubleDecimals = (value)=> {
+  if(isNaN(value)) return;
+  let val = Math.round(parseFloat(value)*100)/100;
+  let xsd = val.toString().split(".");
+  if(xsd.length == 1){
+  val = val.toString() + ".00";
+    return val;
+  }
+  if(xsd.length > 1){
+    if(xsd[1].length < 2){
+      val = val.toString() + "0";
+    }
+    return val;
+  }
+}
+Vue.prototype.$doubleDecimals = doubleDecimals;
+
+/**
  * 获取location.search
  * created by lanw 2018-4-17
  * search format ?key1=val1&&key2=val2

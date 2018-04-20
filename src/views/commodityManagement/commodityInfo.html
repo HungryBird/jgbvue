@@ -354,12 +354,6 @@
 									</el-select>
 								</template>
 							</el-table-column>
-							<el-table-column label="属性编号" prop="attributesNumber" :render-header="addQuickGenerateHeader">
-								<template slot-scope="scope">
-									<div v-if="!scope.row.editFlag">{{ scope.row.attributesNumber }}</div>
-									<el-input v-else v-model="scope.row.attributesNumber"></el-input>
-								</template>
-							</el-table-column>
 							<el-table-column label="属性条码" prop="attributesBarCode">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.attributesBarCode }}</div>
@@ -402,13 +396,14 @@
 									<el-input v-else v-model="scope.row.expectPurchasePrice"></el-input>
 								</template>
 							</el-table-column>
+							<el-table-column label="属性编号" prop="attributesNumber" :render-header="addQuickGenerateHeader"></el-table-column>
 						</el-table>
 					</div>
 				</el-col>
 			</el-row>
 			<el-row>
 				<el-col :span="24">
-					<el-checkbox v-model="addForm.batchExpirationDateManagement" :disabled="addForm.serialNumberManagement">
+					<el-checkbox v-model="addForm.batchExpirationDateManagement" :disabled="addForm.serialNumberManagement" v-on:change="toggleBatchExpirationDateManagement">
 						<h3>启用批次保质期管理</h3>
 					</el-checkbox>
 				</el-col>
@@ -416,18 +411,18 @@
 			<el-row v-if="addForm.batchExpirationDateManagement">
 				<el-col :span="12">
 					<el-form-item label="保质期天数" prop="shelfLife">
-						<el-input v-model="addForm.shelfLife"></el-input>
+						<el-input v-model="addForm.shelfLife" v-on:blur="addChangeShelfLife" type="number"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
 					<el-form-item label="报警天数" prop="alarmDate">
-						<el-input v-model="addForm.alarmDate"></el-input>
+						<el-input v-model="addForm.alarmDate" type="number"></el-input>
 					</el-form-item>
 				</el-col>
 			</el-row>
 			<el-row>
 				<el-col :span="24">
-					<el-checkbox v-model="addForm.serialNumberManagement" :disabled="addForm.batchExpirationDateManagement">
+					<el-checkbox v-model="addForm.serialNumberManagement" :disabled="addForm.batchExpirationDateManagement" v-on:change="usingSerialNumberManagement">
 						<h3>启用序列号管理</h3>
 					</el-checkbox>
 					<a class="fa fa-video-camera icon-link"></a>
@@ -442,7 +437,7 @@
 			</el-row>
 			<el-row>
 				<el-col :span="24">
-					<el-table :data="addForm.initSetTable">
+					<el-table :data="addForm.initSetTable" border ref="addInitSetTable" v-on:row-click="addRowClickInitSetTable" v-if="addForm.initSet">
 						<el-table-column type="index" label="序号" width="50px"></el-table-column>
 						<el-table-column label="操作">
 							<template slot-scope="scope">
@@ -452,22 +447,72 @@
 								</el-button-group>
 							</template>
 						</el-table-column>
-						<el-table-column label="仓库" prop="repo" :render-header="requiredHeader"></el-table-column>
-						<el-table-column label="属性" prop="attribute"></el-table-column>
-						<el-table-column label="批次" prop="batch" v-if="addForm.batchExpirationDateManagement"></el-table-column>
-						<el-table-column label="生产日期" prop="productionDate" v-if="addForm.batchExpirationDateManagement"></el-table-column>
-						<el-table-column label="保质期（天）" prop="shelfLife" v-if="addForm.batchExpirationDateManagement&&addForm.shelfLife !== ''"></el-table-column>
-						<el-table-column label="有效期至" prop="validUntil" v-if="addForm.batchExpirationDateManagement"></el-table-column>
-						<el-table-column label="产地" prop="periodOfValidity"></el-table-column>
-						<el-table-column label="注册证号" prop="registrationNumber"></el-table-column>
-						<el-table-column label="生产许可证" prop="licence"></el-table-column>
-						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader"></el-table-column>
-						<el-table-column label="单位成本" prop="unitCost"></el-table-column>
-						<el-table-column label="起初总价" prop="atFirstTotalPrice"></el-table-column>
+						<el-table-column label="仓库" prop="repo" :render-header="requiredHeader">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.repo }}</div>
+								<el-input v-else v-model="scope.row.repo"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="属性" prop="attribute">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.attribute }}</div>
+								<el-input v-else v-model="scope.row.attribute"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column v-for="ai in add_initSetTable_header" :label="ai.label" :key="ai.prop" >
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag&&ai.type !== 'date'">{{ scope.row[ai.prop] }}</div>
+								<div v-else-if="!scope.row.editFlag&&ai.type === 'date'">{{ scope.row[ai.prop] | formatDate }}</div>
+								<el-date-picker v-model="scope.row[ai.prop]" type="date" placeholder="选择日期" v-else-if="ai.type === 'date'" v-on:change="(value)=>addFormInitSetTablePickDate(value, scope.row, ai.prop)"></el-date-picker>
+								<div v-else-if="scope.row.editFlag&&ai.type === 'text'">{{ scope.row[ai.prop] }}</div>
+								<el-input v-else v-model="scope.row[ai.prop]"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="产地" prop="periodOfValidity">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.periodOfValidity }}</div>
+								<el-input v-else v-model="scope.row.periodOfValidity"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="注册证号" prop="registrationNumber">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.registrationNumber }}</div>
+								<el-input v-else v-model="scope.row.registrationNumber"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="生产许可证" prop="licence">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.licence }}</div>
+								<el-input v-else v-model="scope.row.licence"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
+							<template slot-scope="scope">
+								<div v-if="addForm.serialNumberManagement">
+									
+								</div>
+								<div v-else-if="!scope.row.editFlag">{{ scope.row.initialNumber }}</div>
+								<el-input v-else v-model="scope.row.initialNumber" type="number" v-on:change="(value)=>addFormInitialNumberChange(value, scope.row)"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="单位成本" prop="unitCost">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.unitCost | doubleDecimals }}</div>
+								<el-input v-else v-model="scope.row.unitCost" v-on:change="(value)=>addFormUnitCostChange(value, scope.row)"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="起初总价" prop="atFirstTotalPrice">
+							<template slot-scope="scope">
+								{{ scope.row.atFirstTotalPrice | doubleDecimals }}
+							</template>
+						</el-table-column>
 					</el-table>
 				</el-col>
 			</el-row>
 		</el-form>
+		<div slot="footer">
+			<jgb-form-footer :loading="loading" v-on:save="saveAdd('addForm')" v-on:close="addVisible = false"></jgb-form-footer>
+		</div>
 	</el-dialog>
 	<transition name="slide-fade">
 		<div class="details-wrap" v-show="isUnfold">
