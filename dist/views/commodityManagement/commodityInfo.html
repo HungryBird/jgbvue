@@ -488,10 +488,10 @@
 						</el-table-column>
 						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
 							<template slot-scope="scope">
-								<div v-if="addForm.serialNumberManagement">
-									
+								<div v-if="addForm.serialNumberManagement" v-on:click="openEnterSerialNumberDialog(scope.row)">
+									11
 								</div>
-								<div v-else-if="!scope.row.editFlag">{{ scope.row.initialNumber }}</div>
+								<div v-else-if="!scope.row.editFlag&&!addForm.serialNumberManagement">{{ scope.row.initialNumber }}</div>
 								<el-input v-else v-model="scope.row.initialNumber" type="number" v-on:change="(value)=>addFormInitialNumberChange(value, scope.row)"></el-input>
 							</template>
 						</el-table-column>
@@ -512,6 +512,44 @@
 		</el-form>
 		<div slot="footer">
 			<jgb-form-footer :loading="loading" v-on:save="saveAdd('addForm')" v-on:close="addVisible = false"></jgb-form-footer>
+		</div>
+	</el-dialog>
+	<el-dialog :visible.sync="addEnterSerialNumberVisible" title="序列号录入">
+		<el-button-group>
+			<el-button v-on:click="addBatchSetWrap = false">基本录入序列号</el-button>
+			<el-button v-on:click="addBatchSetWrap = true">批量录入序列号</el-button>
+		</el-button-group>
+		<div v-if="addBatchSetWrap" style="margin: 6px 0;">
+			<div>
+				<el-input v-model="addEnterSerialNumberForm.prefix" placeholder="输入前缀（可以为空）" style="width: 140px;"></el-input>
+				<span>起始号：</span>
+				<el-input v-model="addEnterSerialNumberForm.startNumber" value="001" style="width: 140px;" type="number"></el-input>
+				<span>递增量</span>
+				<el-input v-model="addEnterSerialNumberForm.increment" value="1" type="number" min="0" style="width: 110px;"></el-input>
+				<span>个数</span>
+				<el-input v-model="addEnterSerialNumberForm.number" value="1" type="number" min="0" style="width: 110px;"></el-input>
+				<el-button v-on:click="addBatchGenerateSerialNumber">添加</el-button>
+			</div>
+			<div style="margin-top: 6px;">
+				<el-input style="width: 652px;" placeholder="将word excel txt文档中的序列号复制粘贴到此处，支持以【空格、逗号、分号(英文格式)】分隔" v-model="addEnterSerialNumberForm.copy"></el-input>
+				<el-button v-on:click="addCodyGenerateSerialNumber">添加</el-button>
+			</div>
+		</div>
+		<el-table border ref="addEnterSerialNumberForm" :data="addEnterSerialNumberForm.table" style="margin-top: 6px;">
+			<el-table-column type="index" width="50px" label="序号"></el-table-column>
+			<el-table-column label="操作">
+				<template slot-scope="scope">
+					<el-button-group>
+						<el-button icon="el-icon-plus" v-on:click="handleAddEnterSerialNumberAddRow"></el-button>
+						<el-button icon="el-icon-delete" type="danger" v-on:click="handleAddEnterSerialNumberDeleteRow"></el-button>
+					</el-button-group>
+				</template>
+			</el-table-column>
+			<el-table-column label="序列号" prop="serialNumber"></el-table-column>
+			<el-table-column label="备注" prop="remark"></el-table-column>
+		</el-table>
+		<div slot="footer">
+			<jgb-form-footer :loading="loading" v-on:save="saveAddSerialNumber" v-on:close="addEnterSerialNumberVisible = false"></jgb-form-footer>
 		</div>
 	</el-dialog>
 	<transition name="slide-fade">

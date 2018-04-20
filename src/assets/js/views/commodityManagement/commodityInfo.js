@@ -157,7 +157,15 @@ JGBVue.module.commodityInfo = ()=> {
 					auxiliaryAttributesClassify: [],
 					quickGenerateOption: [],
 					add_initSetTable_header: [],
-					loading: false
+					loading: false,
+					addEnterSerialNumberVisible: true,
+					addBatchSetWrap: false,
+					addEnterSerialNumberForm: {
+						startNumber: '001',
+						increment: 1,
+						number: 1,
+						table: []
+					}
 				}
 			},
 			mounted() {
@@ -428,7 +436,7 @@ JGBVue.module.commodityInfo = ()=> {
 						}
 					}
 				},
-				addRowClickInitSetTable(row) {
+				addRowClickInitSetTable(row, event, column) {
 					this.addForm.initSetTable.forEach((item)=> {
 						item.editFlag = false;
 					})
@@ -1015,6 +1023,47 @@ JGBVue.module.commodityInfo = ()=> {
 			    			return;
 			    		}
 			    	}
+			    },
+			    openEnterSerialNumberDialog(row, prop) {
+			    	//
+			    },
+			    addTabClick() {
+			    	//
+			    },
+			    saveAddSerialNumber() {
+			    	//
+			    },
+			    handleAddEnterSerialNumberAddRow() {
+			    	//
+			    },
+			    handleAddEnterSerialNumberDeleteRow() {
+			    	//
+			    },
+			    addBatchGenerateSerialNumber() {
+			    	/**
+			    	 * zeroLength 起始号0开头长度
+			    	 * @param  {Boolean} isNaN(this.addEnterSerialNumberForm.startNumber) [description]
+			    	 * @return {[type]}                                                   [description]
+			    	 */
+			    	if(isNaN(this.addEnterSerialNumberForm.startNumber)) {
+			    		this.$message({
+			    			type: 'error',
+			    			message: '起始号非法！'
+			    		})
+			    		return;
+			    	};
+			    	let zeroLength = 0
+			    	,strArr = this.addEnterSerialNumberForm.startNumber.trim().split('');
+			    	for(let i = 0, strLength = strArr.length; i < strLength; i++) {
+			    		if(strArr[i] != 0) {
+			    			break;
+			    		}
+			    		zeroLength++;
+			    	}
+
+			    },
+			    addCodyGenerateSerialNumber() {
+			    	//
 			    }
 			},
 			watch: {
