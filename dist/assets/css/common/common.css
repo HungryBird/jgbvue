@@ -1222,12 +1222,6 @@ table {
     .w-print-page .order-info .right {
       flex-grow: 0;
       flex-shrink: 0; }
-  .w-print-page .footer-btn {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-end;
-    align-items: center;
-    margin: 20px 0; }
   .w-print-page .w-print-column-6 {
     width: 100%;
     border-collapse: collapse; }
@@ -1240,6 +1234,14 @@ table {
       font-weight: 500; }
       .w-print-page .w-print-column-6 td[colspan], .w-print-page .w-print-column-6 th[colspan] {
         text-align: left; }
+
+.w-print-footer-btn {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 20px 0;
+  padding: 0 20px; }
 
 .w-print-list {
   background: #fff;
