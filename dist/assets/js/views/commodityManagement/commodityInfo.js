@@ -1045,7 +1045,10 @@ JGBVue.module.commodityInfo = ()=> {
 			    	 * @param  {Boolean} isNaN(this.addEnterSerialNumberForm.startNumber) [description]
 			    	 * @return {[type]}                                                   [description]
 			    	 */
-			    	if(isNaN(this.addEnterSerialNumberForm.startNumber)) {
+			    	//addEnterSerialNumberForm.table table数据
+			    	//serialNumber 生成的序列号
+			    	//remark 备注
+			    	if(isNaN(this.addEnterSerialNumberForm.startNumber.trim())) {
 			    		this.$message({
 			    			type: 'error',
 			    			message: '起始号非法！'
@@ -1053,17 +1056,74 @@ JGBVue.module.commodityInfo = ()=> {
 			    		return;
 			    	};
 			    	let zeroLength = 0
-			    	,strArr = this.addEnterSerialNumberForm.startNumber.trim().split('');
+			    	,strArr = this.addEnterSerialNumberForm.startNumber.trim().split('')
+			    	,zeroStr = '';
 			    	for(let i = 0, strLength = strArr.length; i < strLength; i++) {
 			    		if(strArr[i] != 0) {
 			    			break;
 			    		}
 			    		zeroLength++;
 			    	}
+			    	for(let k = 0; k < zeroLength; k++) {
+			    		zeroStr += '0';
+			    	}
+			    	if(this.addEnterSerialNumberForm.number > 0) {
+			    		/**
+			    		 * 转换起始值为整数
+			    		 * 转换递增值为整数
+			    		 * @type {[type]}
+			    		 */
+			    		let initNumber = Number.parseInt(this.addEnterSerialNumberForm.startNumber)
+			    		,increment = Number.parseInt(this.addEnterSerialNumberForm.increment)
+			    		,incrementSerialNumber = initNumber;
 
+			    		/**
+			    		 * 遍历录入序列号录入个数
+			    		 * 序列号字符串
+			    		 * 空对象
+			    		 */
+
+			    		for(let j = 0; j < this.addEnterSerialNumberForm.number; j++ ) {
+			    			let numberStr = ''
+			    			,obj = {
+			    				editFlag: false
+			    			};
+
+			    			if(this.addEnterSerialNumberForm.prefix) {
+			    				obj.serialNumber = this.addEnterSerialNumberForm.prefix + zeroStr + initNumber + incrementSerialNumber;
+			    			} else {
+			    				obj.serialNumber = zeroStr + incrementSerialNumber;
+			    			}
+			    			/**
+			    			 * 判断对象内序列号的值是否重复
+			    			 * @param  {[type]} let o             [description]
+			    			 * @return {[type]}     [description]
+			    			 */
+			    			for(let o = 0; o < this.addEnterSerialNumberForm.table.length; o++ ) {
+			    				if(obj.serialNumber === this.addEnterSerialNumberForm.table[o].serialNumber) {
+			    					obj.remark = '与第' + Number.parseInt(o + 1) + '行序列号重复';
+			    					obj.isRepeat = true;
+			    					break;
+			    				}
+			    			}
+
+			    			this.addEnterSerialNumberForm.table.push(obj);
+			    			incrementSerialNumber += increment;
+			    		}
+			    	}
 			    },
 			    addCodyGenerateSerialNumber() {
 			    	//
+			    },
+			    addEnterSerialNumberFormRowClick(row) {
+			    	this.addEnterSerialNumberForm.table.forEach((item)=> {
+						item.editFlag = false;
+					})
+					for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++ ) {
+						if(row === this.addEnterSerialNumberForm.table[i]) {
+							this.addEnterSerialNumberForm.table[i].editFlag = true;
+						}
+					}
 			    }
 			},
 			watch: {

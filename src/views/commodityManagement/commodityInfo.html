@@ -535,19 +535,33 @@
 				<el-button v-on:click="addCodyGenerateSerialNumber">添加</el-button>
 			</div>
 		</div>
-		<el-table border ref="addEnterSerialNumberForm" :data="addEnterSerialNumberForm.table" style="margin-top: 6px;">
-			<el-table-column type="index" width="50px" label="序号"></el-table-column>
-			<el-table-column label="操作">
-				<template slot-scope="scope">
-					<el-button-group>
-						<el-button icon="el-icon-plus" v-on:click="handleAddEnterSerialNumberAddRow"></el-button>
-						<el-button icon="el-icon-delete" type="danger" v-on:click="handleAddEnterSerialNumberDeleteRow"></el-button>
-					</el-button-group>
-				</template>
-			</el-table-column>
-			<el-table-column label="序列号" prop="serialNumber"></el-table-column>
-			<el-table-column label="备注" prop="remark"></el-table-column>
-		</el-table>
+		<div style="max-height: 300px;overflow-y: auto;">
+			<el-table border ref="addEnterSerialNumberForm" :data="addEnterSerialNumberForm.table" style="margin-top: 6px;" v-on:row-click="addEnterSerialNumberFormRowClick">
+				<el-table-column type="index" width="50px" label="序号"></el-table-column>
+				<el-table-column label="操作">
+					<template slot-scope="scope">
+						<el-button-group>
+							<el-button icon="el-icon-plus" v-on:click="handleAddEnterSerialNumberAddRow"></el-button>
+							<el-button icon="el-icon-delete" type="danger" v-on:click="handleAddEnterSerialNumberDeleteRow"></el-button>
+						</el-button-group>
+					</template>
+				</el-table-column>
+				<el-table-column label="序列号" prop="serialNumber">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.serialNumber }}</div>
+						<el-input v-else v-model="scope.row.serialNumber"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="备注" prop="remark">
+					<template slot-scope="scope">
+						<!-- <div v-if="!scope.row.editFlag&&!scope.row.isRepat">{{ scope.row.remark }}</div>
+						<div v-if="!scope.row.editFlag&&scope.row.isRepat" style="color: #f00;">{{ scope.row.remark + 'isRepeat' }}</div>
+						<el-input v-else v-model="scope.row.remark"></el-input> -->
+						{{ scope.row }}
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
 		<div slot="footer">
 			<jgb-form-footer :loading="loading" v-on:save="saveAddSerialNumber" v-on:close="addEnterSerialNumberVisible = false"></jgb-form-footer>
 		</div>
