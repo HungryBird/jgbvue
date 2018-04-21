@@ -31,6 +31,14 @@ JGBVue.module.printOrderList = ()=> {
         c_orderInfoGetUrl: function() {
           return this.$getQuery(window.location.search).url
         },
+        //工单菜单id
+        c_mid: function() {
+          return this.$getQuery(window.location.search).mid
+        },
+        //获取表头的接口地址
+        c_headerUrl: function() {
+          return this.$getQuery(window.location.search).hurl
+        },
       },
 			methods: {
         //打印
@@ -48,6 +56,7 @@ JGBVue.module.printOrderList = ()=> {
               let _data = JSON.parse(res.data.data)
               this.orderHeader = _data.header
               this.orderInfo = _data.data
+              console.log(this.orderInfo)
             }
             else {
               this.$message({
@@ -67,6 +76,33 @@ JGBVue.module.printOrderList = ()=> {
             this.loadingOrderInfo = false
           })
         },
+        //获取工单表头
+        getOrderHeader: function() {
+          axios.post(this.c_headerUrl, {
+            menu_id: this.c_mid
+          }).then(res=> {
+            if(res.data.status) {
+              this.orderHeader = JSON.parse(res.data.data)[this.c_mid]
+              //正常接口请使用下句
+              // this.orderHeader = JSON.parse(res.data.data)
+              console.log(this.orderHeader)
+            }
+            else {
+              this.$message({
+                type: 'error', 
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            console.log(err)
+            this.$message({
+              type: 'error', 
+              message: err,
+              center: true
+            })
+          })
+        },
       },
       watch: {
         c_orderFilter: function() {
@@ -78,6 +114,7 @@ JGBVue.module.printOrderList = ()=> {
       },
       created: function() {
         this.getOrderInfo()
+        this.getOrderHeader()
         // console.log(window.location.search)
       },
 		})

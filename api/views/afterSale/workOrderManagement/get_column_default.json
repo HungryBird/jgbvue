@@ -1,5 +1,5 @@
 {
-  "waiting": [
+  "waitingOrder": [
     { "label": "序号", "prop": "", "width": 50, "sortable": false, "type": "index", "enable": true},
     { "label":"操作", "prop": "action", "width": 150, "sortable": false, "enable": true },
     { "label":"状态", "prop": "status_label", "width": 80, "sortable": "custom", "enable": true },
@@ -17,7 +17,7 @@
     { "label":"报修方式", "prop": "repair_methods", "width": 120, "sortable": "custom", "enable": true },
     { "label":"备注", "prop": "remark", "width": 120, "sortable": false, "enable": true }
   ],
-  "order": [
+  "workOrderManagement": [
     { "label": "序号", "prop": "index", "width": 50, "sortable": false, "type": "index", "enable": true},
     { "label":"操作", "prop": "action", "width": 150, "sortable": false, "enable": false },
     { "label":"状态", "prop": "status_label", "width": 80, "sortable": "custom", "enable": true },
@@ -33,7 +33,7 @@
     { "label":"金额", "prop": "price", "width": 80, "sortable": "custom", "enable": true },
     { "label":"备注", "prop": "remark", "width": 120, "sortable": false, "enable": true }
  ],
- "fault": [
+ "faultDiagnosis": [
     { "label": "序号", "prop": "", "width": 50, "sortable": false, "type": "index", "enable": true},
     { "label":"操作", "prop": "action", "width": 150, "sortable": false, "enable": true },
     { "label":"状态", "prop": "status_label", "width": 80, "sortable": "custom", "enable": true },

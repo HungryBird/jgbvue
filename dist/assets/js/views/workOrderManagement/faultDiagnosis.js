@@ -118,6 +118,11 @@ JGBVue.module.faultDiagnosis = () => {
           userData: {}, //用户信息 用于填入诊断人员默认项
         }
       },
+      computed: {
+        c_menuId: function() {
+          return this.$getQuery(window.location.search).menu_id
+        },
+      },
       methods: {
         //新增一列配件
         addOneDiagnosis: function() {
@@ -211,7 +216,8 @@ JGBVue.module.faultDiagnosis = () => {
         },
         //打印列表
         btnPrintList: function() {
-          let filter = this.$deepCopy(this.selectForm)
+          let filter = this.$deepCopy(this.selectForm) 
+          console.log(printListUrl)
           // console.log(`query=`)
           // console.log(`?filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
           //调用父级框架打开标签页
@@ -219,7 +225,7 @@ JGBVue.module.faultDiagnosis = () => {
             'printOrderList', 
             '打印工单列表', 
             './views/workOrderManagement/printOrderList.html', 
-            `filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
+            `filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}&&mid=${this.c_menuId}&&hurl=${defaultColumnSettingUrl}`)
         },
         //打印工单
         btnPrint: function() {
@@ -304,7 +310,6 @@ JGBVue.module.faultDiagnosis = () => {
           this.getDiagnosisList()
           this.getAccessoriesList()
         },
-        //故障诊断 - 暂存、提交诊断结果
         /**
          * 故障诊断 - 暂存、提交诊断结果
          * @param {String} type 提交类型 temp暂存 submit提交
@@ -450,7 +455,9 @@ JGBVue.module.faultDiagnosis = () => {
             menu_id: this.c_menuId
           }).then(res=> {
             if(res.data.status) {
-              this.tableHeader = JSON.parse(res.data.data).waiting
+              this.tableHeader = JSON.parse(res.data.data)[this.c_menuId]
+              // 正常接口请使用下句
+              // this.tableHeader = JSON.parse(res.data.data)
             }
             else {
               this.$message({
