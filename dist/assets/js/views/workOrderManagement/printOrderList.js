@@ -43,7 +43,9 @@ JGBVue.module.printOrderList = ()=> {
 			methods: {
         //打印
         btnPrint: function() {
-          //
+          this.$refs.printHeader.style.display = 'none'
+          window.print()
+          this.$refs.printHeader.style.display = ''
         },
         //获取工单信息
         getOrderInfo: function() {
