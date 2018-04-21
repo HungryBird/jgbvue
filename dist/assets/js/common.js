@@ -855,9 +855,14 @@ let orderDetails = Vue.extend({
                           </td>
                         </tr>
                         <tr>
+                          <td colspan="4" class="preview-pdf">
+                            <embed :src="detailsData.contract.contract_url" type="application/pdf" width="100%" height="100%">
+                          </td>
+                        </tr>
+                        <tr>
                           <td>盖章合同文件：</td>
                           <td colspan="3" style="text-align:left;">
-                            <i class="el-icon-document download-contract" v-on:click="$emit('call-download', detailsData.contract.contract_url)"></i>
+                            <a class="el-icon-document download-contract" download :href="detailsData.contract.contract_url"></a>
                           </td>
                         </tr>
                       </tbody>
