@@ -10,11 +10,11 @@
 </head>
 
 <body>
-	<div id="app" v-cloak class="workOrderManagement">
+	<div id="app" v-cloak ref="mainContent" class="workOrderManagement">
 		<el-container>
 			<el-main>
-        <div class="jgb-wrap">
-          <div class="w-print-page">
+        <div class="jgb-wrap" ref="printContent">
+          <div class="w-print-page" >
             <div class="print-title">{{orderInfo.equipmentName}}维修单</div>
             <div class="order-info">
               <div class="left">
@@ -59,10 +59,10 @@
                 </tr>
               </tbody>
             </table>
-            <div class="footer-btn">
-              <el-button type="primary" v-on:click="btnPrint">打印</el-button>
-            </div>
           </div>
+        </div>
+        <div class="w-print-footer-btn">
+          <el-button type="primary" v-on:click="btnPrint">打印</el-button>
         </div>
 			</el-main>
 		</el-container>
