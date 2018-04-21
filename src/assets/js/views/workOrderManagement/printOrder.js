@@ -27,8 +27,8 @@ JGBVue.module.printOrder = ()=> {
         },
       },
 			methods: {
-        //打印
-        btnPrint: function() {
+        //打印  edit by lanw 2018-4-21
+        btnPrint: function() { 
           this.oldHTML = this.$refs.mainContent.innerHTML
           // console.log(this.oldHTML)
           this.newHTML = this.$refs.printContent.innerHTML
