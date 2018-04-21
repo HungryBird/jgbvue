@@ -41,7 +41,7 @@ JGBVue.module.printOrderList = ()=> {
         },
       },
 			methods: {
-        //打印
+        //打印 edit by lanw 2018-4-21
         btnPrint: function() {
           this.$refs.printHeader.style.display = 'none'
           window.print()
@@ -58,7 +58,7 @@ JGBVue.module.printOrderList = ()=> {
               let _data = JSON.parse(res.data.data)
               this.orderHeader = _data.header
               this.orderInfo = _data.data
-              console.log(this.orderInfo)
+              // console.log(this.orderInfo)
             }
             else {
               this.$message({
@@ -87,7 +87,7 @@ JGBVue.module.printOrderList = ()=> {
               this.orderHeader = JSON.parse(res.data.data)[this.c_mid]
               //正常接口请使用下句
               // this.orderHeader = JSON.parse(res.data.data)
-              console.log(this.orderHeader)
+              // console.log(this.orderHeader)
             }
             else {
               this.$message({
