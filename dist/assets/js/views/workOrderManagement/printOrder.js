@@ -18,6 +18,8 @@ JGBVue.module.printOrder = ()=> {
 			data: {
         loadingOrderInfo: false, //加载工单信息状态
         orderInfo: {}, //工单信息
+        oldHTML: "",
+        newHTML: "",
       },
       computed: {
         c_orderId: function() {
@@ -25,9 +27,15 @@ JGBVue.module.printOrder = ()=> {
         },
       },
 			methods: {
-        //打印
-        btnPrint: function() {
-          //
+        //打印  edit by lanw 2018-4-21
+        btnPrint: function() { 
+          this.oldHTML = this.$refs.mainContent.innerHTML
+          // console.log(this.oldHTML)
+          this.newHTML = this.$refs.printContent.innerHTML
+          // console.log(this.newHTML)
+          this.$refs.mainContent.innerHTML = this.newHTML
+          window.print()
+          this.$refs.mainContent.innerHTML = this.oldHTML
         },
         //获取工单信息
         getOrderInfo: function() {

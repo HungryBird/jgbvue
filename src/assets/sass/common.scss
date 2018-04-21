@@ -1335,10 +1335,6 @@ table{
 			@include w-flex-grow(0, 0);
 		}
 	}
-	.footer-btn {
-		@include w-flex(row, wrap, flex-end, center);
-		margin: 20px 0;
-	}
 	.w-print-column-6 {
 		width:100%;
 		border-collapse:collapse;
@@ -1355,6 +1351,11 @@ table{
 		}
 	} 
 }
+.w-print-footer-btn {
+	@include w-flex(row, wrap, flex-end, center);
+	margin: 20px 0;
+	padding: 0 20px;
+}
 
 //工单列表打印页
 .w-print-list {
@@ -1362,17 +1363,6 @@ table{
 	background:#fff;
 	padding: $header-height 10px 20px;
 	position:relative;
-	.header {
-		@include w-flex(row, nowrap, flex-end, center);
-		height:$header-height;
-		padding:0 30px;
-		background:rgba(0,0,0,.5);
-		position:fixed;
-		top:0;
-		left:0;
-		right:0;
-		z-index:500;
-	}
 	.w-order-list {
 		width: 100%;
 		border-collapse:collapse;
@@ -1384,6 +1374,18 @@ table{
 			line-height:$fs-normal*1.2
 		}
 	}
+}
+.w-print-list-header {
+	$header-height: 50px;
+	@include w-flex(row, nowrap, flex-end, center);
+	height:$header-height;
+	padding:0 30px;
+	background:rgba(0,0,0,.5);
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	z-index:500;
 }
 
 //列设置

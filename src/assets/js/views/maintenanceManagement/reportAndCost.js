@@ -1,6 +1,6 @@
 /**
- * created by lanw 2018-04-19
- * 维修工单
+ * created by lanw 2018-04-21
+ * 维修报告与成本
  */
 JGBVue = {
   module: {}
@@ -22,17 +22,11 @@ JGBVue.module.maintenanceOrder = () => {
     userDataGetUrl, //获取当前用户信息
     orderDiagnosisGetUrl, //获取工单故障诊断数据
     accessoriesListGetUrl, //查询配件信息
-    submitDiagnosisUrl, //故障诊断单暂存、提交诊断结果接口
-    submitTestReportUrl, //测试报告提交接口
-    submitOutsideUrl, //送外修提交接口
-    submitChangePersonUrl, //换人修提交接口
-    maintenanceStartUrl, //开始维修接口
-    testPersonDataGetUrl //获取测试人员数据
+    submitDiagnosisUrl //故障诊断单暂存、提交诊断结果接口
   ) => {
     that.vm = new Vue({
       el: '#app',
       data: function () {
-        //验证金额 只允许两位小数 正数 零
         let validateCost = (rule, value, callback) => {
           let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
           if (value != value.match(reg)) {
@@ -44,19 +38,6 @@ JGBVue.module.maintenanceOrder = () => {
             } else {
               callback();
             };
-          };
-        }
-        //验证手机号
-        let validatePhone = (rule, value, callback) => {
-          let reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/g
-          if(!value) {
-            callback(new Error('请输入联系人手机号'));
-          }
-          else if (value != value.match(reg)) {
-            callback(new Error('请输入正确的手机号'));
-          }
-          else {
-            callback()
           };
         }
         return {
@@ -75,7 +56,6 @@ JGBVue.module.maintenanceOrder = () => {
           formBusinessList: [], //表单 业务人员组
           formMaintenanceList: [], //表单 维修人员组
           formDiagnosisList: [], //诊断人员组
-          formTestPersonList: [], //测试人员组
           formAccessoriesList: [], //配件组
           formOrderStatus: [ //工单状态 *value会关联html显示按钮组的判断条件,v-if需同步修改
             { label: '待维修', value: 6 },
@@ -137,63 +117,6 @@ JGBVue.module.maintenanceOrder = () => {
           loadingTempStorage: false, //正在提交诊断结果
 
           userData: {}, //用户信息 用于填入诊断人员默认项
-          currentOrder: "", //打开测试、送修、换人修窗口时对应的工单号
-
-          showTestReport: false, //测试报告 窗
-          reportFormData: { //测试报告表单
-            testPerson: "",
-            testDate: "",
-            testEnvironment: "",
-            testTool: "",
-            testStep: "",
-            testResult: "",
-            testRemark: "",
-          },
-          reportFormRule: { //测试报告验证规则
-            testPerson: { required: true, message: '请填写测试人员', trigger: 'blur' },
-            testDate: { required: true, message: '请选择测试时间', trigger: 'blur' },
-            testResult: { required: true, message: '请填写测试结果', trigger: 'blur' },
-          },
-          loadingSaveTestReport: false, //正在提交测试报告
-          
-          showOutside: false, //送外修 窗
-          outsideFormData: { //送外修表单
-            company: "",
-            date: "",
-            method: "",
-            cost: "0",
-            reason: "",
-            howLong: "",
-            contract: "",
-            phone: "",
-            wx: "",
-            remark: ""
-          },
-          outsideFormRule: { //送外修验证规则
-            company: { required: true, message: '请填写送修公司', trigger: 'blur' },
-            date: { required: true, message: '请选择送修时间', trigger: 'blur' },
-            cost: { validator: validateCost, trigger: 'blur' },
-            reason: { required: true, message: '请填写送修原因', trigger: 'blur' },
-            contract: { required: true, message: '请填写联系人', trigger: 'blur' },
-            phone: { required: true, validator: validatePhone, trigger: 'blur' },
-          },
-          loadingSaveOutside: false, //正在提交送外修
-          
-          showChangePerson: false, //换人修 窗
-          changePersonFormData: { //换人修表单
-            person: "",
-            date: "",
-            reason: "",
-            remark: "",
-            cost: "",
-          },
-          changePersonFormRule: { //换人修验证规则
-            person: { required: true, message: '请选择换修人员', trigger: 'blur' },
-            date: { required: true, message: '请选择换修时间', trigger: 'blur' },
-            cost: { required: true, validator: validateCost, trigger: 'blur' },
-            reason: { required: true, message: '请填写换修原因', trigger: 'blur' },
-          },
-          loadingSaveChangePerson: false, //正在提交换人修
         }
       },
       computed: {
@@ -438,66 +361,6 @@ JGBVue.module.maintenanceOrder = () => {
           })
         },
         /**
-         * 测试报告
-         * @param {Object} row 行数据
-         * @param {Number} index 所在行
-         */
-        btnReport: function(row, index) {
-          this.getTestPersonData()
-          this.showTestReport = true
-          this.currentOrder = row.order_id
-          //设置默认选中测试人员为当前用户
-          this.reportFormData.testPerson = {
-            value: this.userData.jobNumber,
-            label: this.userData.name
-          }
-        },
-        /**
-         * 送外修
-         * @param {Object} row 行数据
-         * @param {Number} index 所在行
-         */
-        btnOutside: function(row, index) {
-          this.showOutside = true
-          this.currentOrder = row.order_id
-        },
-        /**
-         * 换人修
-         * @param {Object} row 行数据
-         * @param {Number} index 所在行
-         */
-        btnChangePerson: function(row, index) {
-          this.getDiagnosisList()
-          this.showChangePerson = true
-          this.currentOrder = row.order_id
-        },
-        /**
-         * 开始维修
-         * @param {Object} row 行数据
-         * @param {Number} index 所在行
-         */
-        btnMaintenanceStart: function(row, index) {
-          axios.post(maintenanceStartUrl, {
-            order_id: row.order_id
-          }).then(res=> {
-            this.$message({
-              type:  res.data.status ? 'success': 'error',
-              message: res.data.message,
-              center: true
-            })
-            if(res.data.status) {
-              //如需更新列表请在此
-            }
-          }).catch(err=> {
-            console.log(err)
-            this.$message({
-              type: 'error',
-              message: err,
-              center: true
-            })
-          })
-        },
-        /**
          * 调用查看图片控件
          * @param {Object, Array} data Object{图片数组, 序号} Array图片数组
          */
@@ -516,21 +379,6 @@ JGBVue.module.maintenanceOrder = () => {
         //关闭详情页
         closeDetails: function() {
           this.showOrderDetails = false
-        },
-        //关闭 送外修
-        closeOutside: function() {
-          this.showOutside = false
-          this.currentOrder = ""
-        },
-        //关闭测试报告
-        closeTestReport: function() {
-          this.showTestReport = false
-          this.currentOrder = ""
-        },
-        //关闭 换人修
-        closeChangePerson: function() {
-          this.showcloseChangePerson = false
-          this.currentOrder = ""
         },
         //获取业务人员数据
         getBusinessData: function(query) {
@@ -587,30 +435,6 @@ JGBVue.module.maintenanceOrder = () => {
           }).then(res=> {
             if(res.data.status) {
               this.formMaintenanceList = JSON.parse(res.data.data)
-            }
-            else {
-              this.$message({
-                type: 'error',
-                message: res.data.message,
-                center: true
-              })
-            };
-          }).catch(err=> {
-            this.$message({
-              type: 'error',
-              message: err,
-              center: true
-            })
-          })
-        },
-        //获取测试人员数据
-        getTestPersonData: function(query) {
-          axios.post(testPersonDataGetUrl, {
-            query: query || ''
-          }).then(res=> {
-            if(res.data.status) {
-              this.formTestPersonList = JSON.parse(res.data.data)
-              console.log(this.formTestPersonList)
             }
             else {
               this.$message({
@@ -743,7 +567,6 @@ JGBVue.module.maintenanceOrder = () => {
                 Math.round(new Date().getTime()/1000),
                 'yyyy-mm-dd hh:mm'
               )
-              // console.log(this.diagnosisData.date)
               //未选择诊断人员默认选中自己
               if(!this.diagnosisData.diagnosis.number) {
                 this.diagnosisData.diagnosis = {
@@ -909,25 +732,11 @@ JGBVue.module.maintenanceOrder = () => {
           this.getAccessoriesList(query)
         },
         /**
-         * 选择诊断人员 输入时搜索
-         * @param {String} query 输入值
-         */
-        remoteDiagnosis: function(query) {
-          this.getDiagnosisList(query)
-        },
-        /**
          * 选择维修人员 输入时搜索
          * @param {String} query 输入值
          */
         remoteMaintenance: function(query) {
           this.getMaintenance(query)
-        },
-        /**
-         * 选择测试人员 输入时搜索
-         * @param {String} query 输入值
-         */
-        remoteTestPerson: function(query) {
-          this.getTestPersonData(query)
         },
         /**
          * 删除一行配件信息
@@ -936,129 +745,6 @@ JGBVue.module.maintenanceOrder = () => {
         removeOneDiagnosis: function(index) {
           this.diagnosisData.peijian.splice(index, 1)
           this.sumDiagnosisData()
-        },
-        //提交送外修
-        saveOutside: function() {  console.log(1)
-          this.$refs.outsideForm.validate((valid) => {
-            if (valid) {
-              this.loadingSaveOutside = true
-              axios.post(submitOutsideUrl, {
-                data: this.outsideFormData,
-                order_id: this.currentOrder
-              }).then(res=> {
-                if(res.data.status) {
-                  this.$message({
-                    type: 'success',
-                    message: res.data.message,
-                    center: true
-                  })
-                  this.showOutside = false
-                  //如需更新工单列表信息请在此编写逻辑
-                }
-                else {
-                  this.$message({
-                    type: 'error',
-                    message: res.data.message,
-                    center: true
-                  })
-                };
-                this.loadingSaveOutside = false
-              }).catch(err=> {
-                console.log(err)
-                this.$message({
-                  type: 'error',
-                  message: err,
-                  center: true
-                })
-                this.loadingSaveOutside = false
-              })
-            }
-            else {
-              return false;
-            };
-          });
-        },
-        //提交测试报告
-        saveTestReport: function() {
-          this.$refs.testReportForm.validate((valid) => {
-            if (valid) {
-              this.loadingSaveTestReport = true
-              axios.post(submitTestReportUrl, {
-                data: this.reportFormData,
-                order_id: this.currentOrder
-              }).then(res=> {
-                if(res.data.status) {
-                  this.$message({
-                    type: 'success',
-                    message: res.data.message,
-                    center: true
-                  })
-                  this.showTestReport = false
-                  //如需更新工单列表信息请在此编写逻辑
-                }
-                else {
-                  this.$message({
-                    type: 'error',
-                    message: res.data.message,
-                    center: true
-                  })
-                };
-                this.loadingSaveTestReport = false
-              }).catch(err=> {
-                console.log(err)
-                this.$message({
-                  type: 'error',
-                  message: err,
-                  center: true
-                })
-                this.loadingSaveTestReport = false
-              })
-            }
-            else {
-              return false;
-            };
-          });
-        },
-        //提交 换人修
-        saveChangePerson: function() {
-          this.$refs.changePersonForm.validate((valid) => {
-            if (valid) {
-              this.loadingSaveChangePerson = true
-              axios.post(submitChangePersonUrl, {
-                data: this.reportFormData,
-                order_id: this.currentOrder
-              }).then(res=> {
-                if(res.data.status) {
-                  this.$message({
-                    type: 'success',
-                    message: res.data.message,
-                    center: true
-                  })
-                  this.showChangePerson = false
-                  //如需更新工单列表信息请在此编写逻辑
-                }
-                else {
-                  this.$message({
-                    type: 'error',
-                    message: res.data.message,
-                    center: true
-                  })
-                };
-                this.loadingSaveChangePerson = false
-              }).catch(err=> {
-                console.log(err)
-                this.$message({
-                  type: 'error',
-                  message: err,
-                  center: true
-                })
-                this.loadingSaveChangePerson = false
-              })
-            }
-            else {
-              return false;
-            };
-          });
         },
         //查询
         search: function() {
@@ -1137,12 +823,7 @@ JGBVue.module.maintenanceOrder = () => {
     userDataGetUrl,
     orderDiagnosisGetUrl,
     accessoriesListGetUrl,
-    submitDiagnosisUrl,
-    submitTestReportUrl,
-    submitOutsideUrl,
-    submitChangePersonUrl,
-    maintenanceStartUrl,
-    testPersonDataGetUrl
+    submitDiagnosisUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -1158,12 +839,7 @@ JGBVue.module.maintenanceOrder = () => {
       userDataGetUrl,
       orderDiagnosisGetUrl,
       accessoriesListGetUrl,
-      submitDiagnosisUrl,
-      submitTestReportUrl,
-      submitOutsideUrl,
-      submitChangePersonUrl,
-      maintenanceStartUrl,
-      testPersonDataGetUrl
+      submitDiagnosisUrl
     )
   }
   return that

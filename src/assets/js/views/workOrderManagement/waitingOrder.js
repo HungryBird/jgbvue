@@ -252,14 +252,16 @@ JGBVue.module.waitingOrder = () => {
         //打印列表
         btnPrintList: function() {
           let filter = this.$deepCopy(this.selectForm)
-          // console.log(`query=`)
-          // console.log(`?filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
           //调用父级框架打开标签页
+          //传参filter: 列表数据筛选条件  edit by lanw 2018-4-21
+          //传参url: 列表获取数据接口
+          //传参mid: 待接工单菜单id
+          //传参hurl：获取表头数据的接口
           this.$selectTab(
             'printOrderList', 
             '打印工单列表', 
             './views/workOrderManagement/printOrderList.html', 
-            `filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
+            `filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}&&mid=${this.c_menuId}&&hurl=${defaultColumnSettingUrl}`)
         },
         //打印工单
         btnPrint: function() {
@@ -387,7 +389,9 @@ JGBVue.module.waitingOrder = () => {
             menu_id: this.c_menuId
           }).then(res=> {
             if(res.data.status) {
-              this.tableHeader = JSON.parse(res.data.data).waiting
+              this.tableHeader = JSON.parse(res.data.data)[this.c_menuId]
+              //正常接口用下句
+              // this.tableHeader = JSON.parse(res.data.data)
             }
             else {
               this.$message({
