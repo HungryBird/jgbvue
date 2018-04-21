@@ -217,10 +217,11 @@ JGBVue.module.faultDiagnosis = () => {
         //打印列表
         btnPrintList: function() {
           let filter = this.$deepCopy(this.selectForm) 
-          console.log(printListUrl)
-          // console.log(`query=`)
-          // console.log(`?filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}`)
           //调用父级框架打开标签页
+          //传参filter: 列表数据筛选条件
+          //传参url: 列表获取数据接口
+          //传参mid: 故障诊断菜单id
+          //传参hurl：获取表头数据的接口
           this.$selectTab(
             'printOrderList', 
             '打印工单列表', 
