@@ -30,7 +30,7 @@ JGBVue.module.commodityInfo = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addVisible: true,
+					addVisible: false,
 					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
@@ -46,6 +46,69 @@ JGBVue.module.commodityInfo = ()=> {
 					auxiliaryAttributesClassifyChildren: [], //添加-点击属性分类-子属性
 					initQuickGenerateTable: [],
 					addForm: {
+						number: 'f011',
+						name: '',
+						commodityCategory: '',
+						barCode: '',
+						specifications: '',
+						primaryRepo: '',
+						commodityBrand: '',
+						unitOfMeasurement: '',
+						multiple: '',
+						retailPrice: '',
+						tradePrice: '',
+						lowestPrince: '',
+						highestPrince: '',
+						discountRate1: '',
+						discountRate2: '',
+						discountRate3: '',
+						expectPurchasePrice: '',
+						remark: '',
+						upload: [],
+						inventoryWarning: false,
+						branchWarehouseWarning: false,
+						repo: [],
+						setCommodityAuxiliaryAttributes: false,
+						auxiliaryAttributesClassify: [],
+						quickGenerateTable: {
+							header: [],
+							data: [
+								{
+									indexNum: 1,
+									editFlag: false,
+								}
+							]
+						},
+						batchExpirationDateManagement: false,
+						serialNumberManagement: false,
+						initSet: false,
+						initSetTable: [
+							{
+								index: 1,
+								editFlag: false,
+								shelfLife: null
+							},
+							{
+								index: 2,
+								editFlag: false,
+								shelfLife: null
+							}
+						],
+						enterSerialNumberTable: []
+					},
+					addSelectedAxiliaryAttributesClassify: [],
+					editSelectedAxiliaryAttributesClassify: [],
+					addFormBasicData: {
+						commodityCategory: [],
+						primaryRepo: [],
+						unitOfMeasurement: [],
+					},
+					editFormBasicData: {
+						commodityCategory: [],
+						primaryRepo: [],
+						unitOfMeasurement: [],
+					},
+					editForm: {
 						number: '',
 						name: '',
 						commodityCategory: '',
@@ -93,47 +156,8 @@ JGBVue.module.commodityInfo = ()=> {
 								editFlag: false,
 								shelfLife: null
 							}
-						]
-					},
-					addSelectedAxiliaryAttributesClassify: [],
-					addFormBasicData: {
-						commodityCategory: [],
-						primaryRepo: [],
-						unitOfMeasurement: [],
-					},
-					editForm: {
-						number: '',
-						name: '',
-						commodityCategory: '',
-						barCode: '',
-						specifications: '',
-						primaryRepo: '',
-						commodityBrand: '',
-						unitOfMeasurement: '',
-						multiple: '',
-						retailPrice: '',
-						tradePrice: '',
-						minPrince: '',
-						maxPrince: '',
-						discountRate1: '',
-						discountRate2: '',
-						discountRate3: '',
-						expectPurchasePrice: '',
-						remark: '',
-						upload: [],
-						inventoryWarning: false,
-						setCommodityAuxiliaryAttributes: false,
-						batchExpirationDateManagement: false,
-						serialNumberManagement: false,
-						initSet: false,
-						initSetTable: [
-							{
-								index: 1
-							},
-							{
-								index: 2
-							}
-						]
+						],
+						enterSerialNumberTable: []
 					},
 					importVisible: false,
 					exportVisible: false,
@@ -158,7 +182,7 @@ JGBVue.module.commodityInfo = ()=> {
 					quickGenerateOption: [],
 					add_initSetTable_header: [],
 					loading: false,
-					addEnterSerialNumberVisible: true,
+					addEnterSerialNumberVisible: false,
 					addBatchSetWrap: false,
 					addEnterSerialNumberForm: {
 						startNumber: '001',
@@ -174,14 +198,15 @@ JGBVue.module.commodityInfo = ()=> {
 								editFlag: false
 							}
 						]
-					}
+					},
+					value: ''
 				}
 			},
 			mounted() {
 				this.searchData();
 				this.getQuickQuery();
 				this.getRepo();
-				this.addQuickGenerate();
+				this.quickGenerate();
 				this.getAuxiliaryAttributesClassify();
 			},
 			methods: {
@@ -590,7 +615,7 @@ JGBVue.module.commodityInfo = ()=> {
 					console.log('handleRemove file: ', file);
 					console.log('handleRemove file:', fileList);
 				},
-				lowestInventoryHeader(createElement, { column }) {
+				addLowestInventoryHeader(createElement, { column }) {
 					return createElement(
 						'div',
 						{class: 'jgb-popover-wrap'},
@@ -601,13 +626,13 @@ JGBVue.module.commodityInfo = ()=> {
 										type: 'default',
 										size: 'small'
 									},
-									on: { click: this.showLowestInventoryPopover }
+									on: { click: this.addShowLowestInventoryPopover }
 								}, ['批量']
 							)
 						]
 					);
 				},
-				highestInventoryHeader(createElement, { column }) {
+				addHighestInventoryHeader(createElement, { column }) {
 					return createElement(
 						'div',
 						{class: 'jgb-popover-wrap'},
@@ -618,13 +643,47 @@ JGBVue.module.commodityInfo = ()=> {
 										type: 'default',
 										size: 'small'
 									},
-									on: { click: this.showHighestInventoryPopover }
+									on: { click: this.addShowHighestInventoryPopover }
 								}, ['批量']
 							)
 						]
 					);
 				},
-				showLowestInventoryPopover(e) {
+				editLowestInventoryHeader(createElement, { column }) {
+					return createElement(
+						'div',
+						{class: 'jgb-popover-wrap'},
+						[
+							createElement('span', [column.label]),
+							createElement('el-button', {
+									attrs: { 
+										type: 'default',
+										size: 'small'
+									},
+									on: { click: this.editShowLowestInventoryPopover }
+								}, ['批量']
+							)
+						]
+					);
+				},
+				editHighestInventoryHeader(createElement, { column }) {
+					return createElement(
+						'div',
+						{class: 'jgb-popover-wrap'},
+						[
+							createElement('span', [column.label]),
+							createElement('el-button', {
+									attrs: { 
+										type: 'default',
+										size: 'small'
+									},
+									on: { click: this.editShowHighestInventoryPopover }
+								}, ['批量']
+							)
+						]
+					);
+				},
+				addShowLowestInventoryPopover(e) {
 					let _self = this;
 					this.$prompt(' ', '请输入最低库存量', {
 						confirmButtonText: '确定',
@@ -640,12 +699,43 @@ JGBVue.module.commodityInfo = ()=> {
 						});       
 			        });
 				},
-				showHighestInventoryPopover(e) {
+				addShowHighestInventoryPopover(e) {
 					this.$prompt('请输入邮箱', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 			        }).then(({ value }) => {
 						this.addForm.repo.forEach((item)=> {
+							item.highestInventory = value;
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+			    },
+			    editShowLowestInventoryPopover(e) {
+					let _self = this;
+					this.$prompt(' ', '请输入最低库存量', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+			        }).then(({ value }) => {
+						this.editForm.repo.forEach((item)=> {
+							item.lowestInventory = value;
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+				},
+				editShowHighestInventoryPopover(e) {
+					this.$prompt('请输入邮箱', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+			        }).then(({ value }) => {
+						this.editForm.repo.forEach((item)=> {
 							item.highestInventory = value;
 						})
 			        }).catch(() => {
@@ -684,16 +774,34 @@ JGBVue.module.commodityInfo = ()=> {
 			    		}
 			    	})
 			    },
+			    editChangeAuxiliaryAttributesClassify(arr) {
+			    	let _self = this;
+			    	this.editSelectedAxiliaryAttributesClassify = [];
+			    	this.editForm.quickGenerateTable.header = [];
+			    	arr.forEach((item)=> {
+			    		for(let i = 0; i < _self.auxiliaryAttributesClassify.length; i++ ) {
+			    			if(item === _self.auxiliaryAttributesClassify[i].value) {
+			    				let obj = {};
+			    				let hObj = {};
+			    				obj.parentName = _self.auxiliaryAttributesClassify[i].label;
+			    				obj.children = _self.auxiliaryAttributesClassify[i].chilren;
+			    				_self.editSelectedAxiliaryAttributesClassify.push(obj);
+			    				hObj.label = _self.auxiliaryAttributesClassify[i].label;
+			    				hObj.prop = _self.auxiliaryAttributesClassify[i].value;
+			    				_self.editForm.quickGenerateTable.header.splice(0, 0, hObj);
+			    			}
+			    		}
+			    	})
+			    },
 			    /**
 			     * 点击属性分类子属性
 			     * @param {[type]} arr [description]
 			     */
 			    addChangeAuxiliaryAttributesClassifyChildren(arr) {
-			    	let _self = this;
-			    	arr.forEach((item)=> {
-
-			    	})
-			    	console.log('quickGenerateTable.data: ', this.addForm.quickGenerateTable)
+			    	//
+			    },
+			    editChangeAuxiliaryAttributesClassifyChildren(arr) {
+			    	//
 			    },
 			    /**
 			     * 点击新增属性分类按钮
@@ -718,35 +826,39 @@ JGBVue.module.commodityInfo = ()=> {
 						});       
 			        });
 			    },
-			    addQuickGenerate() {
+			    quickGenerate(formName) {
 			    	if(this.auxiliaryAttributesClassifyChildren.length !== 0) {
 			    		axios.post(quickGenerateUrl, this.auxiliaryAttributesClassifyChildren).then((res)=> {
 			    			if(res.data.status) {
-			    				this.addForm.quickGenerateTable.data = JSON.parse(res.data.data);
+			    				this[formName].quickGenerateTable.data = JSON.parse(res.data.data);
 			    			}
 			    		})
 			    	}
 			    },
-			    addQuickGenerateTable_add_btn() {
-			    	let index = this.addForm.quickGenerateTable.data[this.addForm.quickGenerateTable.data.length - 1].index + 1;
+			    quickGenerateTable_add_btn(formName) {
+			    	let index = this[formName].quickGenerateTable.data[this[formName].quickGenerateTable.data.length - 1].index + 1;
 					let initFormRow = {
 						index: 0,
 						editFlag: false
 					}
 					initFormRow.index = index;
-					this.addForm.quickGenerateTable.data.push(initFormRow);
+					this[formName].quickGenerateTable.data.push(initFormRow);
 			    },
-			    addQuickGenerateTable_delete_btn(row) {
-			    	for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
-						if(row === this.addForm.quickGenerateTable.data[i]) {
-							this.addForm.quickGenerateTable.data.splice(i, 1);
+			    quickGenerateTable_delete_btn(row, formName) {
+			    	for(let i = 0; i < this.formName.quickGenerateTable.data.length; i++ ) {
+						if(row === this[formName].quickGenerateTable.data[i]) {
+							this[formName].quickGenerateTable.data.splice(i, 1);
 						}
 					}
 			    },
-			    addQuickGenerateUploadPic(e) {
-			    	console.log('e: ', e);
+			    quickGenerateUploadPic(event, data, row) {
+			    	for(let i = 0; i < data.length; i++ ) {
+			    		if(data[i] === row) {
+			    			data[i].upload = event.target.files[0];
+			    		}
+			    	}
 			    },
-			    addQuickGenerateHeader(createElement, { column }) {
+			    quickGenerateHeader(createElement, { column }) {
 			    	return createElement(
 						'span',
 						{'class': 'required'},
@@ -841,6 +953,7 @@ JGBVue.module.commodityInfo = ()=> {
 	    					})
 	    				}
 	    			}
+	    			console.log('addForm.quickGenerateTable.data: ', this.addForm.quickGenerateTable.data)
 		    	},
 		    	handleInitSetAdd() {
 					let obj = {
@@ -935,6 +1048,14 @@ JGBVue.module.commodityInfo = ()=> {
 					this.$deleteRow(this.addForm.quickGenerateTable.data, row, _self);
 			    },
 			    usingSerialNumberManagement(val) {
+			    	if(this.addForm.enterSerialNumberTable.length !== 0) {
+			    		this.$message({
+		    				type: 'error',
+		    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
+		    			})
+		    			this.addForm.serialNumberManagement = true;
+		    			return;
+			    	}
 			    	for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
 			    		if(this.addForm.initSetTable[i].initialNumber) {
 			    			this.$message({
@@ -947,15 +1068,43 @@ JGBVue.module.commodityInfo = ()=> {
 			    	}
 			    },
 			    saveAddSerialNumber() {
+			    	let serialNumberLen = 0;
 			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++) {
-
+			    		if(this.addEnterSerialNumberForm.table[i].isRepeat) {
+			    			return;
+			    		}
+			    	}
+			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++) {
+			    		if(this.addEnterSerialNumberForm.table[i].serialNumber) {
+			    			serialNumberLen++;
+			    		}
+			    	}
+			    	if(serialNumberLen > 0) {
+			    		this.addEnterSerialNumberForm.table.forEach((item)=> {
+			    			if(item.serialNumber&&!item.isRepeat) {
+			    				this.addForm.enterSerialNumberTable.push(item);
+			    			}
+			    		});
+			    		this.addEnterSerialNumberVisible = false;
+			    	}else{
+			    		this.$message({
+				    		type: 'warning',
+				    		message: '请输入序列号'
+				    	})	
 			    	}
 			    },
-			    addEnterSerialNumberInputBlur(row) {
+			    addEnterSerialNumberInputBlur(row, serialNumber, index) {
 			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++ ) {
-			    		
+			    		if(this.addEnterSerialNumberForm.table[i].index === index){
+			    			continue;
+			    		}else if(this.addEnterSerialNumberForm.table[i].serialNumber === serialNumber) {
+			    			this.addEnterSerialNumberForm.table[index-1].isRepeat = true;
+			    			this.addEnterSerialNumberForm.table[index-1].remark = '与第' + Number.parseInt(i + 1) + '行序列号重复';
+			    			return;
+			    		}
 			    	}
-			    	//Object.assign(row, this.$checkSerialNumberIsRepeat(this.addEnterSerialNumberForm.table, row))
+			    	this.addEnterSerialNumberForm.table[index-1].isRepeat = false;
+			    	this.addEnterSerialNumberForm.table[index-1].remark = null;
 			    },
 			    handleAddEnterSerialNumberAddRow() {
 					this.$addRow(this.addEnterSerialNumberForm.table);
@@ -1052,6 +1201,18 @@ JGBVue.module.commodityInfo = ()=> {
 			    },
 			    addEnterSerialNumberFormRowClick(row) {
 					this.$toggleRowEditable(this.addEnterSerialNumberForm.table, row);
+			    },
+			    addCheckAttributesNumber(val) {
+			    	//检查属性编号
+			    	if(!val) {
+			    		this.$message({
+			    			type: 'warning',
+			    			message: '请输入编号!'
+			    		})
+			    	}
+			    	/*axios.post().then((res)=> {
+			    		
+			    	})*/
 			    }
 			},
 			watch: {

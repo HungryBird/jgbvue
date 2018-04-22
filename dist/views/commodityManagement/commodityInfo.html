@@ -279,16 +279,16 @@
 					</el-row>
 				</el-col>
 				<div v-if="addForm.inventoryWarning&&addForm.branchWarehouseWarning">
-					<el-table :data="addForm.repo" border ref="inventoryWarningTable" v-on:row-click="addRowClick">
+					<el-table :data="addForm.repo" border ref="addinventoryWarningTable" v-on:row-click="addRowClick">
 						<el-table-column type="index" width="50px" label="序号"></el-table-column>
 						<el-table-column label="仓库" prop="label"></el-table-column>
-						<el-table-column :render-header="lowestInventoryHeader" label="最低库存">
+						<el-table-column :render-header="addLowestInventoryHeader" label="最低库存">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.lowestInventory }}</div>
 								<el-input v-else v-model="scope.row.lowestInventory"></el-input>
 							</template>
 						</el-table-column>
-						<el-table-column :render-header="highestInventoryHeader" label="最高库存">
+						<el-table-column :render-header="addHighestInventoryHeader" label="最高库存">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.highestInventory }}</div>
 								<el-input v-else v-model="scope.row.highestInventory"></el-input>
@@ -323,24 +323,24 @@
 							<strong>自动建立属性组合</strong>
 						</label>
 						<span>(自动建立组合只能选择三个属性分类)</span>
-						<el-button size="mini" v-on:click="addQuickGenerate">快速生成</el-button>
+						<el-button size="mini" v-on:click="quickGenerate('addForm')">快速生成</el-button>
 						<el-table :data="addForm.quickGenerateTable.data" ref="addQuickGenerateTable" border v-on:row-click="addQuickGenerateRowClick">
 							<el-table-column label="序号" width="50px" type="index"></el-table-column>
 							<el-table-column label="操作">
 								<template slot-scope="scope">
 									<el-button-group>
-										<el-button v-on:click="addQuickGenerateTable_add_btn" icon="el-icon-plus" size="small"></el-button>
-										<el-button v-on:click="addQuickGenerateTable_delete_btn(scope.row)" icon="el-icon-delete" size="small" type="danger"></el-button>
+										<el-button v-on:click="quickGenerateTable_add_btn('addForm')" icon="el-icon-plus" size="small"></el-button>
+										<el-button v-on:click="quickGenerateTable_delete_btn(scope.row, addForm)" icon="el-icon-delete" size="small" type="danger"></el-button>
 									</el-button-group>
 								</template>
 							</el-table-column>
 							<el-table-column label="图片" prop="img">
 								<template slot-scope="scope">
 									<i class="el-icon-picture jgb-table-icon"></i>
-									<input type="file" v-on:change="addQuickGenerateUploadPic($event)" style="width: 100%;height: 100%;z-index: 9;position: absolute;left: 0;top: 0;opacity: 0;"></input>
+									<input type="file" v-on:change="quickGenerateUploadPic($event, addForm.quickGenerateTable.data, scope.row)" style="width: 100%;height: 100%;z-index: 9;position: absolute;left: 0;top: 0;opacity: 0;"></input>
 								</template>
 							</el-table-column>
-							<el-table-column v-for="(tb, index) in addForm.quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="addQuickGenerateHeader">
+							<el-table-column v-for="(tb, index) in addForm.quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="quickGenerateHeader">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row[tb.label] }}</div>
 									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else v-on:focus="selectQuickGenerateOption(tb.prop)">
@@ -352,6 +352,12 @@
       										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>
 										</div>
 									</el-select>
+								</template>
+							</el-table-column>
+							<el-table-column label="属性编号" prop="attributesNumber" :render-header="quickGenerateHeader">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.attributesNumber }}</div>
+									<el-input v-else v-model="scope.row.attributesNumber" v-on:blur="addCheckAttributesNumber(scope.row.attributesNumber)"></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column label="属性条码" prop="attributesBarCode">
@@ -396,7 +402,6 @@
 									<el-input v-else v-model="scope.row.expectPurchasePrice"></el-input>
 								</template>
 							</el-table-column>
-							<el-table-column label="属性编号" prop="attributesNumber" :render-header="addQuickGenerateHeader"></el-table-column>
 						</el-table>
 					</div>
 				</el-col>
@@ -489,9 +494,12 @@
 						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
 							<template slot-scope="scope">
 								<div v-if="addForm.serialNumberManagement" v-on:click="addEnterSerialNumberVisible = true">
-									11
+									<el-button v-show="addForm.enterSerialNumberTable.length === 0" size="small">录入</el-button>
+									<div class="pull-right" v-show="addForm.enterSerialNumberTable.length !== 0">{{ addForm.enterSerialNumberTable.length }}</div>
+									<div class="pull-right jgb-brand" v-show="addForm.enterSerialNumberTable.length !== 0">SN</div>
+									<div class="jgb-clearFloat">.</div>
 								</div>
-								<div v-else-if="!scope.row.editFlag&&!addForm.serialNumberManagement">{{ scope.row.initialNumber }}</div>
+								<div v-else-if="!scope.row.editFlag&&!addForm.serialNumberManagement&&addForm.initSet">{{ scope.row.initialNumber }}</div>
 								<el-input v-else v-model="scope.row.initialNumber" type="number" v-on:change="(value)=>addFormInitialNumberChange(value, scope.row)"></el-input>
 							</template>
 						</el-table-column>
@@ -512,6 +520,424 @@
 		</el-form>
 		<div slot="footer">
 			<jgb-form-footer :loading="loading" v-on:save="saveAdd('addForm')" v-on:close="addVisible = false"></jgb-form-footer>
+		</div>
+	</el-dialog>
+	<!-- 编辑商品 -->
+	<el-dialog :visible.sync="editVisible" title="编辑商品">
+		<el-form ref="editForm" label-position="right" label-width="100px" :model="editForm" :rules="formRules">
+			<el-row>
+				<el-col :span="24">
+					<h3>
+						基础资料
+						<a class="fa fa-video-camera icon-link"></a>
+					</h3>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="number" label="商品编号">
+						<el-input v-model="editForm.number"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="name" label="商品名称">
+						<el-input v-model="editForm.name"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="barCode" label="商品条码">
+						<el-input v-model="editForm.barCode"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="specifications" label="规格型号">
+						<el-input v-model="editForm.specifications"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="commodityCategory" label="商品类别">
+						<el-select v-model="editForm.commodityCategory">
+							<el-option v-for="item in editFormBasicData.commodityCategory" :value="item.value" :key="item.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="primaryRepo" label="首选仓库">
+						<el-select v-model="editForm.primaryRepo">
+							<el-option v-for="item in editFormBasicData.primaryRepo" :value="item.value" :key="item.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="commodityBrand" label="商品品牌">
+						<el-input v-model="editForm.commodityBrand"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="unitOfMeasurement" label="计量单位">
+						<el-select v-model="editForm.unitOfMeasurement">
+							<el-option v-for="item in editFormBasicData.unitOfMeasurement" :value="item.value" :key="item.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="multiple" label="多单位">
+						<el-checkbox border v-model="editForm.multiple"></el-checkbox>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<h3 title="各销售价格分别对应客户信息中的客户等级，如：零售价-零售客户，批发价-批发客户...开单时选择客户后再选择该商品，可自动填写相应的价格或折扣">
+						价格策略
+						<a class="fa fa-video-camera icon-link"></a>
+					</h3>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="retailPrice" label="零售价">
+						<el-input v-model="editForm.retailPrice"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="tradePrice" label="批发价">
+						<el-input v-model="editForm.tradePrice"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="lowestPrince" label="最低价">
+						<el-input v-model="editForm.lowestPrince"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="heighestPrince" label="最高价">
+						<el-input v-model="editForm.heighestPrince"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="discountRate1" label="折扣率一(%)">
+						<el-input v-model="editForm.discountRate1"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="discountRate3" label="折扣率二(%)">
+						<el-input v-model="editForm.discountRate1"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12">
+					<el-form-item prop="discountRate3" label="折扣率三(%)">
+						<el-input v-model="editForm.discountRate3"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item prop="expectPurchasePrice" label="预计采购价">
+						<el-input v-model="editForm.expectPurchasePrice"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-form-item prop="remark" label="备注">
+						<el-input v-model="editForm.remark" type="textarea"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<h3>添加商品图册</h3>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-upload action="/common/upload_img" :file-list="editForm.upload" list-type="picture-card" :limit="20" :on-remove="handleRemove" :auto-upload="false">
+						<div slot="tip" class="el-upload__tip">最多20张</div>
+						<i class="el-icon-plus"></i>
+					</el-upload>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="editForm.inventoryWarning">
+						<h3>库存预警</h3>
+					</el-checkbox>
+					<a class="fa fa-video-camera icon-link"></a>
+				</el-col>
+				<el-col :span="24" v-if="editForm.inventoryWarning" style="padding: 10px;">
+					<el-checkbox v-model="editForm.branchWarehouseWarning">启用分仓预警</el-checkbox>
+				</el-col>
+				<el-col :span="24" v-if="editForm.inventoryWarning&&!editForm.branchWarehouseWarning" style="padding: 10px;padding-top: 0;">
+					<el-row :gutter="4">
+						<el-form :model="editForm" label-position="top">
+							<el-col :span="12">
+								<el-form-item label="最低库存">
+									<el-input v-model="editForm.lowestInventory"></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="最高库存">
+									<el-input v-model="editForm.highestInventory"></el-input>
+								</el-form-item>
+							</el-col>
+						</el-form>
+					</el-row>
+				</el-col>
+				<div v-if="editForm.inventoryWarning&&editForm.branchWarehouseWarning">
+					<el-table :data="editForm.repo" border ref="editInventoryWarningTable" v-on:row-click="addRowClick">
+						<el-table-column type="index" width="50px" label="序号"></el-table-column>
+						<el-table-column label="仓库" prop="label"></el-table-column>
+						<el-table-column :render-header="editLowestInventoryHeader" label="最低库存">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.lowestInventory }}</div>
+								<el-input v-else v-model="scope.row.lowestInventory"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column :render-header="editHighestInventoryHeader" label="最高库存">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.highestInventory }}</div>
+								<el-input v-else v-model="scope.row.highestInventory"></el-input>
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="editForm.setCommodityAuxiliaryAttributes">
+						<h3>设置商品辅助属性</h3>
+					</el-checkbox>
+					<a class="fa fa-video-camera icon-link"></a>
+				</el-col>
+				<el-col :span="24" v-if="editForm.setCommodityAuxiliaryAttributes" style="padding: 10px;padding-top: 0;">
+					<h4>辅助属性分类</h4>
+					<el-checkbox-group v-model="editForm.auxiliaryAttributesClassify" v-on:change="editChangeAuxiliaryAttributesClassify" class="pull-left" style="padding-right: 5px;">
+						<el-checkbox v-for="item in auxiliaryAttributesClassify" :key="item.label" :label="item.value">{{ item.label }}</el-checkbox>
+					</el-checkbox-group>
+					<el-button icon="el-icon-plus" size="mini" class="pull-left" v-on:click="addAuxiliaryAttributesClassify">新增属性分类</el-button>
+					<div style="clear: both;"></div>
+					<div style="padding: 5px;border-top: 1px solid #ddd;margin-top: 5px;" v-for="item in editSelectedAxiliaryAttributesClassify" :key="item.label">
+						<h5 class="pull-left" style="padding-right: 10px;">{{ item.parentName }}</h5>
+						<el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren" v-on:change="editChangeAuxiliaryAttributesClassifyChildren">
+							<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value">{{ c.label }}</el-checkbox>
+						</el-checkbox-group>
+						<div style="clear: both;"></div>
+					</div>
+					<div style="padding: 5px 0;">
+						<label>
+							<strong>自动建立属性组合</strong>
+						</label>
+						<span>(自动建立组合只能选择三个属性分类)</span>
+						<el-button size="mini" v-on:click="quickGenerate('editForm')">快速生成</el-button>
+						<el-table :data="editForm.quickGenerateTable.data" ref="addQuickGenerateTable" border v-on:row-click="addQuickGenerateRowClick">
+							<el-table-column label="序号" width="50px" type="index"></el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="scope">
+									<el-button-group>
+										<el-button v-on:click="quickGenerateTable_add_btn('editForm')" icon="el-icon-plus" size="small"></el-button>
+										<el-button v-on:click="quickGenerateTable_delete_btn(scope.row, editForm)" icon="el-icon-delete" size="small" type="danger"></el-button>
+									</el-button-group>
+								</template>
+							</el-table-column>
+							<el-table-column label="图片" prop="img">
+								<template slot-scope="scope">
+									<i class="el-icon-picture jgb-table-icon"></i>
+									<input type="file" v-on:change="quickGenerateUploadPic($event, editForm.quickGenerateTable.data, scope.row)" style="width: 100%;height: 100%;z-index: 9;position: absolute;left: 0;top: 0;opacity: 0;"></input>
+								</template>
+							</el-table-column>
+							<el-table-column v-for="(tb, index) in editForm.quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="quickGenerateHeader">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row[tb.label] }}</div>
+									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else v-on:focus="selectQuickGenerateOption(tb.prop)">
+										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label">
+											{{ o.label }}
+										</el-option>
+										<div v-on:click="addNewAttribute(scope.row, tb.prop)" class="el-select-dropdown__item">
+											<span style="float: left" class="el-icon-plus"></span>
+      										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>
+										</div>
+									</el-select>
+								</template>
+							</el-table-column>
+							<el-table-column label="属性编号" prop="attributesNumber" :render-header="quickGenerateHeader">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.attributesNumber }}</div>
+									<el-input v-else v-model="scope.row.attributesNumber" v-on:blur="addCheckAttributesNumber(scope.row.attributesNumber)"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="属性条码" prop="attributesBarCode">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.attributesBarCode }}</div>
+									<el-input v-else v-model="scope.row.attributesBarCode"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="零售价" prop="retailPrice">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+									<el-input v-else v-model="scope.row.retailPrice"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="批发价" prop="tradePrice">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.tradePrice }}</div>
+									<el-input v-else v-model="scope.row.tradePrice"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="VIP价" prop="VIPPrice">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.VIPPrice }}</div>
+									<el-input v-else v-model="scope.row.VIPPrice"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="折扣率一" prop="discountRate1">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.discountRate1 }}</div>
+									<el-input v-else v-model="scope.row.discountRate1"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="折扣率二" prop="discountRate2">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.discountRate2 }}</div>
+									<el-input v-else v-model="scope.row.discountRate2"></el-input>
+								</template>
+							</el-table-column>
+							<el-table-column label="预计采购价" prop="expectPurchasePrice">
+								<template slot-scope="scope">
+									<div v-if="!scope.row.editFlag">{{ scope.row.expectPurchasePrice }}</div>
+									<el-input v-else v-model="scope.row.expectPurchasePrice"></el-input>
+								</template>
+							</el-table-column>
+						</el-table>
+					</div>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="editForm.batchExpirationDateManagement" :disabled="editForm.serialNumberManagement" v-on:change="toggleBatchExpirationDateManagement">
+						<h3>启用批次保质期管理</h3>
+					</el-checkbox>
+				</el-col>
+			</el-row>
+			<el-row v-if="editForm.batchExpirationDateManagement">
+				<el-col :span="12">
+					<el-form-item label="保质期天数" prop="shelfLife">
+						<el-input v-model="editForm.shelfLife" v-on:blur="addChangeShelfLife" type="number"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12">
+					<el-form-item label="报警天数" prop="alarmDate">
+						<el-input v-model="editForm.alarmDate" type="number"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="editForm.serialNumberManagement" :disabled="editForm.batchExpirationDateManagement" v-on:change="usingSerialNumberManagement">
+						<h3>启用序列号管理</h3>
+					</el-checkbox>
+					<a class="fa fa-video-camera icon-link"></a>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-checkbox v-model="editForm.initSet">
+						<h3>期初设置</h3>
+					</el-checkbox>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-table :data="editForm.initSetTable" border ref="addInitSetTable" v-on:row-click="addRowClickInitSetTable" v-if="editForm.initSet">
+						<el-table-column type="index" label="序号" width="50px"></el-table-column>
+						<el-table-column label="操作">
+							<template slot-scope="scope">
+								<el-button-group>
+									<el-button size="mini" v-on:click="handleInitSetAdd(scope.$index, scope.row)" size="small" icon="el-icon-plus"></el-button>
+									<el-button size="mini" type="danger" v-on:click="handleInitSetDelete(scope.$index, scope.row)" size="small" icon="el-icon-delete"></el-button>
+								</el-button-group>
+							</template>
+						</el-table-column>
+						<el-table-column label="仓库" prop="repo" :render-header="requiredHeader">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.repo }}</div>
+								<el-input v-else v-model="scope.row.repo"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="属性" prop="attribute">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.attribute }}</div>
+								<el-input v-else v-model="scope.row.attribute"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column v-for="ai in add_initSetTable_header" :label="ai.label" :key="ai.prop" >
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag&&ai.type !== 'date'">{{ scope.row[ai.prop] }}</div>
+								<div v-else-if="!scope.row.editFlag&&ai.type === 'date'">{{ scope.row[ai.prop] | formatDate }}</div>
+								<el-date-picker v-model="scope.row[ai.prop]" type="date" placeholder="选择日期" v-else-if="ai.type === 'date'" v-on:change="(value)=>addFormInitSetTablePickDate(value, scope.row, ai.prop)"></el-date-picker>
+								<div v-else-if="scope.row.editFlag&&ai.type === 'text'">{{ scope.row[ai.prop] }}</div>
+								<el-input v-else v-model="scope.row[ai.prop]"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="产地" prop="periodOfValidity">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.periodOfValidity }}</div>
+								<el-input v-else v-model="scope.row.periodOfValidity"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="注册证号" prop="registrationNumber">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.registrationNumber }}</div>
+								<el-input v-else v-model="scope.row.registrationNumber"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="生产许可证" prop="licence">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.licence }}</div>
+								<el-input v-else v-model="scope.row.licence"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
+							<template slot-scope="scope">
+								<div v-if="editForm.serialNumberManagement" v-on:click="addEnterSerialNumberVisible = true">
+									<el-button v-show="editForm.enterSerialNumberTable.length === 0" size="small">录入</el-button>
+									<div class="pull-right" v-show="editForm.enterSerialNumberTable.length !== 0">{{ editForm.enterSerialNumberTable.length }}</div>
+									<div class="pull-right jgb-brand" v-show="editForm.enterSerialNumberTable.length !== 0">SN</div>
+									<div class="jgb-clearFloat">.</div>
+								</div>
+								<div v-else-if="!scope.row.editFlag&&!editForm.serialNumberManagement&&editForm.initSet">{{ scope.row.initialNumber }}</div>
+								<el-input v-else v-model="scope.row.initialNumber" type="number" v-on:change="(value)=>addFormInitialNumberChange(value, scope.row)"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="单位成本" prop="unitCost">
+							<template slot-scope="scope">
+								<div v-if="!scope.row.editFlag">{{ scope.row.unitCost | doubleDecimals }}</div>
+								<el-input v-else v-model="scope.row.unitCost" v-on:change="(value)=>addFormUnitCostChange(value, scope.row)"></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column label="起初总价" prop="atFirstTotalPrice">
+							<template slot-scope="scope">
+								{{ scope.row.atFirstTotalPrice | doubleDecimals }}
+							</template>
+						</el-table-column>
+					</el-table>
+				</el-col>
+			</el-row>
+		</el-form>
+		<div slot="footer">
+			<jgb-form-footer :loading="loading" v-on:save="saveEdit('editForm')" v-on:close="addVisible = false"></jgb-form-footer>
 		</div>
 	</el-dialog>
 	<el-dialog :visible.sync="addEnterSerialNumberVisible" title="序列号录入">
@@ -549,7 +975,7 @@
 				<el-table-column label="序列号" prop="serialNumber">
 					<template slot-scope="scope">
 						<div v-if="!scope.row.editFlag">{{ scope.row.serialNumber }}</div>
-						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="addEnterSerialNumberInputBlur(scope.row)"></el-input>
+						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="addEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.row.index)"></el-input>
 					</template>
 				</el-table-column>
 				<el-table-column label="备注" prop="remark">
@@ -594,7 +1020,6 @@
 					<i class="el-icon-close" v-on:click="showSlideshow = false"></i>
 				</div>
 				<div class="slideshow-inner-wrap" :style="{width: currentImgWidth + 'px', height: currentImgHeight + 'px'}">
-					<!-- <img v-for="(item, index) in slideshowArr" :src="item.src" :style="{width:item.width+'px',height:item.height+'px', display: currentImgIndex === index ? 'block' : 'none'}"></img> -->
 					<img :src="currentImgSrc" :style="{width:currentImgWidth+'px',height:currentImgHeight+'px'}"/>
 					<i class="el-icon-arrow-right arrow-right arrow"  v-on:click="nextImg"></i>
 					<i class="el-icon-arrow-left arrow-left arrow" v-on:click="prevImg"></i>
@@ -618,7 +1043,14 @@
 	 * 切换状态
 	 * 删除table
 	 * 查看table
-	 * 
+	 * 保存添加
+	 * 获取编辑数据
+	 * 保存编辑
+	 * 上传信息
+	 * 导出
+	 * 切换是否常用
+	 * 获取轮播（可以从数据获取）
+	 * 添加辅助属性分类
 	 */
 	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save');
 </script>

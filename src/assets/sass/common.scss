@@ -67,6 +67,21 @@ table{
 	border-bottom: 1px solid #ddd;
 	margin: 0;
 }
+.jgb-brand{
+	background: #3AB922;
+	color: #fff;
+	padding: 0 5px;
+	margin: 0 5px;
+	border-radius: 5px;
+}
+.jgb-clearFloat{
+	clear: both;
+	visibility: hidden;
+	display: block;
+	width: 0;
+	font-size: 0;
+	content: '.';
+}
 .jgb-input-dropdown__wrap{
 	position: relative;
 	.jgb-select-dropdown__wrap{
