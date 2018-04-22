@@ -1,0 +1,25 @@
+[
+  {
+    "order_id": "123456",
+    "report_id": "123456",
+    "title": "维修报告标题",
+    "date": "2018-4-21",
+    "client": "123456",
+    "clientName": "客户名称名称",
+    "equipment": "123456",
+    "equipmentName": "设备1",
+    "file": "http://p3.wmpic.me/article/2016/01/02/1451705414_FCsmpfEP.jpg",
+    "status": ""
+  },{
+    "order_id": "123456",
+    "report_id": "456789",
+    "title": "维修报告标题",
+    "date": "2018-4-21",
+    "client": "123456",
+    "clientName": "客户名称名称",
+    "equipment": "123456",
+    "equipmentName": "设备1",
+    "file": "",
+    "status": "作废"
+  }
+]

@@ -71,6 +71,36 @@ router.post('/get_maintenance_order_data', (req, res)=> {
 	});
 })
 
+router.post('/get_maintenace_report_cost_data', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/maintenanceManagement/get_maintenace_report_cost_data.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end();
+	});
+})
+
+router.post('/get_maintenace_report', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/maintenanceManagement/get_maintenace_report.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end();
+	});
+})
+
 router.post('/get_order_details', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/views/afterSale/workOrderManagement/get_order_details.json', 'utf-8', (err, data)=> {
@@ -129,6 +159,15 @@ router.post('/get_accessories_list', (req, res)=> {
 			data: jdata
 		}).end();
 	});
+})
+
+
+router.post('/is_exist', (req, res)=> {
+	let jdata = Math.round(Math.random());
+	res.send({
+		status: true,
+		data: jdata ? true : false
+	}).end();
 })
 
 module.exports = router;

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>维修报告信息</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body>
+	<div id="app" v-cloak class="workOrderManagement">
+		<el-container>
+			<el-main>
+        <div class="jgb-wrap">
+          <div style="margin:10px;">
+            <el-button type="primary" size="mini" v-on:click="">交付</el-button>
+          </div>
+          <div class="w-main-table">
+            <div class="w-main-title">
+              <span>工单号：{{c_orderId}}</span>
+              <el-button-group>
+                <el-button type="primary" size="mini" v-on:click="">新增</el-button>
+                <el-button type="primary" size="mini" v-on:click="">导出</el-button>
+                <el-button type="primary" size="mini" 
+                  :disabled="selectedRows.length != 1"
+                  v-on:click="btnPrint">
+                  打印
+              </el-button>
+                <el-button type="primary" size="mini" v-on:click="">作废</el-button>
+              </el-button-group>
+            </div>
+            <el-table ref="reportTable"
+              border highlight-current-row
+              :data="orderList"
+              v-on:selection-change="handleOrderSelectionChange">
+              <el-table-column type="selection" align="center" width="40" key="selection"></el-table-column>
+              <el-table-column align="center" label="操作">
+                <template slot-scope="scope">
+                  <div class="order-button">
+                    <el-button size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                    <el-button size="mini" v-on:click="">上传报告扫描件</el-button>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+              <el-table-column align="center" width="120px" label="标题"
+                key="title" prop="title">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="工单编号"
+                key="order_id" prop="order_id">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="报告日期"
+                key="date" prop="date">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="客户名称"
+                key="clientName" prop="clientName">
+              </el-table-column>
+              <el-table-column align="center" label="设备名称"
+                key="equipmentName" prop="equipmentName">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="报告扫描件"
+                key="file" prop="file">
+                <template slot-scope="scope">
+                  <a v-if="scope.row.file" class="el-icon-document table-img-icon"
+                    :href="scope.row.file" download>
+                  </a>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="状态"
+                key="status" prop="status">
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+      </el-main>
+      <!-- 查看维修报告 -->
+      <transition name="slide-fade">
+        <jgb-slide-details v-show="showReport" v-on:close="showReport = false" class="for-html-import">
+          <object :data="reportDetailsUrl" 
+            width="100%" type="text/html">
+            您的浏览器不支持object标签
+          </object>
+        </jgb-slide-details>
+      </transition>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/maintenanceManagement/maintenanceReport.js"></script>
+<script type="text/javascript">
+	JGBVue.module.maintenanceReport().init(
+    '/maintenanceManagement/get_maintenace_report' //获取维修报告数据
+  );
+</script>
+
+</html>

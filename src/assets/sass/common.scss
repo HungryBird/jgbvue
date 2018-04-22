@@ -501,10 +501,15 @@ table{
 		width: 640px;
 		background: #fff;
 		padding: 4px;
-	    background: none repeat scroll 0 0 #fff;
-	    border-left: 1px solid #e1e1e1;
-	    bottom: 0;
-	    box-shadow: -3px 0 11px rgba(0,0,0,0.2);
+		background: none repeat scroll 0 0 #fff;
+		border-left: 1px solid #e1e1e1;
+		bottom: 0;
+		box-shadow: -3px 0 11px rgba(0,0,0,0.2);
+		&.for-html-import {//edit by lanw 2018-4-22 适配在元素内引入html
+			.details-inner {
+				@include w-flex(row, nowrap, flex-start, stretch);
+			}
+		}
 		.details-inner{
 			height: 100%;
 			overflow-x: auto;
@@ -984,6 +989,13 @@ table{
 			font-size:20px;
 			cursor:pointer;
 		}
+		.w-main-title {
+			@include w-flex(row, nowrap, space-between, center);
+			width:100%;
+			height:45px;
+			font-size:$fs-big;
+			color:$fc-import;
+		}
 	}
 	.w-table-pagination {
 		@include w-flex(row, nowrap, center, center);
@@ -1217,6 +1229,7 @@ table{
 		height:120px;
 		overflow:auto;
 		padding:0 10px;
+		box-sizing: border-box;
 		p {
 			margin:8px 0;
 			line-height:$fs-normal*1.5;

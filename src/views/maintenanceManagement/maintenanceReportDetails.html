@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>维修报告信息</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body style="background:#fff;">
+	<div id="app" v-cloak v-loading="loadingDetailsData" class="workOrderManagement">
+		<div class="order-details" style="overflow-y:auto;">
+      <div class="details-title">查看维修报告</div>
+      <div class="details-container">
+        <table v-if="reportDetailsData.report"  class="details-table repair-column-4">
+          <tr>
+            <th>标题：</th>
+            <td colspan="3">{{reportDetailsData.report.title}}</td>
+          </tr>
+          <tr>
+            <th>工单编号：</th>
+            <td>{{reportDetailsData.report.id}}</td>
+            <th>编写日期：</th>
+            <td>{{$timeStampFormat(reportDetailsData.report.date)}}</td>
+          </tr>
+        </table>
+        <div class="block-title">基本信息:</div>
+        <table v-if="reportDetailsData.base_info"  class="details-table repair-column-6">
+          <tbody>
+            <tr>
+              <th>工单日期:</th>
+              <td>{{$timeStampFormat(reportDetailsData.base_info.date)}}</td>
+              <th>客户名称：</th>
+              <td>{{reportDetailsData.base_info.client_name}}</td>
+              <th>维修公司：</th>
+              <td>{{reportDetailsData.base_info.repair_company}}</td>
+            </tr>
+            <tr>
+              <th>设备名称:</th>
+              <td>{{reportDetailsData.base_info.equipment_name}}</td>
+              <th>设备类别：</th>
+              <td>{{reportDetailsData.base_info.equipment_category}}</td>
+              <th>设备品牌：</th>
+              <td>{{reportDetailsData.base_info.equipment_brand}}</td>
+            </tr>
+            <tr>
+              <th>设备来源:</th>
+              <td>{{reportDetailsData.base_info.equipment_source}}</td>
+              <th>报修方式：</th>
+              <td>{{reportDetailsData.base_info.repair_methods}}</td>
+              <th>紧急程度：</th>
+              <td>{{reportDetailsData.base_info.level}}</td>
+            </tr>
+            <tr>
+              <th>维修人员:</th>
+              <td>{{reportDetailsData.base_info.repair_peopel}}</td>
+              <th>联系方式：</th>
+              <td>{{reportDetailsData.base_info.contact}}</td>
+              <th>完成时间：</th>
+              <td>{{$timeStampFormat(reportDetailsData.base_info.fin)}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="block-title">维修信息:</div>
+        <table v-if="reportDetailsData.repair_info"  class="details-table repair-column-2">
+          <tbody>
+            <tr>
+              <th>故障描述：</th>
+              <td>{{reportDetailsData.repair_info.fault_info}}</td>
+            </tr>
+            <tr>
+              <th>故障原因：</th>
+              <td>{{reportDetailsData.repair_info.fault_reason}}</td>
+            </tr>
+            <tr>
+              <th>维修措施：</th>
+              <td>{{reportDetailsData.repair_info.fault_methods}}</td>
+            </tr>
+            <tr>
+              <th>完成情况：</th>
+              <td>{{reportDetailsData.repair_info.result}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="block-title">维修成本:</div>
+        <table v-if="reportDetailsData.repair_cost"  class="details-table repair-column-6">
+          <tbody>
+            <tr>
+              <th>人工维修费用</th>
+              <th>配件费用</th>
+              <th>配送费用</th>
+              <th>安装费用</th>
+              <th>其他费用</th>
+              <th>合计（元）</th>
+            </tr>
+            <tr>
+              <td>{{reportDetailsData.repair_cost.price1}}</td>
+              <td>{{reportDetailsData.repair_cost.price2}}</td>
+              <td>{{reportDetailsData.repair_cost.price3}}</td>
+              <td>{{reportDetailsData.repair_cost.price4}}</td>
+              <td>{{reportDetailsData.repair_cost.price5}}</td>
+              <td>{{reportDetailsData.repair_cost.total}}</td>
+            </tr>
+            <tr>
+              <th>备注：</th>
+              <td colspan="5">{{reportDetailsData.repair_cost.remark}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="block-title">维修日志：</div>
+        <div v-if="reportDetailsData" class="repair-log">
+          <p v-for="log in reportDetailsData.repair_log">{{log}}</p>
+        </div>
+      </div>
+    </div>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/maintenanceManagement/maintenanceReportDetails.js"></script>
+<script type="text/javascript">
+	JGBVue.module.maintenanceReportDetails().init(
+    '/orderManagement/get_order_details' //获取维修报告数据
+  );
+</script>
+
+</html>

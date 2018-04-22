@@ -298,7 +298,7 @@ JGBVue.module.maintenanceOrder = () => {
           //调用父级框架打开标签页
           //传参filter: 列表数据筛选条件 edit by lanw 2018-4-21
           //传参url: 列表获取数据接口
-          //传参mid: 故障诊断菜单id
+          //传参mid: 菜单id
           //传参hurl：获取表头数据的接口
           this.$selectTab(
             'printOrderList', 

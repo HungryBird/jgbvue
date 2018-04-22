@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>打印维修报告</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body>
+	<div id="app" v-cloak ref="mainContent" class="workOrderManagement">
+		<el-container>
+			<el-main>
+        <div class="jgb-wrap" ref="printContent">
+          <div class="w-print-page" >
+            <div class="print-title">XXXXXXXXXXXXXX设备维修报告</div>
+            <div class="order-details">
+              <div class="details-container">
+                <div class="block-title">
+                  <div class="order-info">
+                    <div class="left">
+                      <div>工单编号：</div>
+                    </div>
+                    <div class="right">报告日期：{{$timeStampFormat(Math.round(new Date().getTime()/1000))}}</div>
+                  </div>
+                </div>
+                <table class="details-table repair-column-6">
+                  <tbody>
+                    <tr>
+                      <th>工单日期:</th>
+                      <td></td>
+                      <th>客户名称：</th>
+                      <td></td>
+                      <th>维修公司：</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>设备名称:</th>
+                      <td></td>
+                      <th>设备类别：</th>
+                      <td></td>
+                      <th>设备品牌：</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>设备来源:</th>
+                      <td></td>
+                      <th>报修方式：</th>
+                      <td></td>
+                      <th>紧急程度：</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>维修人员:</th>
+                      <td></td>
+                      <th>联系方式：</th>
+                      <td></td>
+                      <th>完成时间：</th>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="block-title">维修信息:</div>
+                <table class="details-table repair-column-2">
+                  <tbody>
+                    <tr>
+                      <th>故障描述：</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>故障原因：</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>维修措施：</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>完成情况：</th>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="block-title">维修费用:</div>
+                <table class="details-table repair-column-6">
+                  <tbody>
+                    <tr>
+                      <th>人工维修费用</th>
+                      <th>配件费用</th>
+                      <th>配送费用</th>
+                      <th>安装费用</th>
+                      <th>其他费用</th>
+                      <th>合计（元）</th>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>备注：</th>
+                      <td colspan="5"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="block-title">客户意见：</div>
+                <table class="details-table repair-column-6">
+                  <tbody>
+                    <tr>
+                      <th>客户意见：</th>
+                      <td colspan="2"></td>
+                      <th></th>
+                      <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                      <th>客户签字：</th>
+                      <td colspan="2"></td>
+                      <th>签字日期：</th>
+                      <td colspan="2"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-print-footer-btn">
+          <el-button type="primary" v-on:click="btnPrint">打印</el-button>
+        </div>
+			</el-main>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/maintenanceManagement/printMaintenanceReport.js"></script>
+<script type="text/javascript">
+	JGBVue.module.printOrder().init(
+    '/orderManagement/order_edit_init' //获取工单信息
+	);
+</script>
+
+</html>
