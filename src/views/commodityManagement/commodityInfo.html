@@ -488,7 +488,7 @@
 						</el-table-column>
 						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
 							<template slot-scope="scope">
-								<div v-if="addForm.serialNumberManagement" v-on:click="openEnterSerialNumberDialog(scope.row)">
+								<div v-if="addForm.serialNumberManagement" v-on:click="addEnterSerialNumberVisible = true">
 									11
 								</div>
 								<div v-else-if="!scope.row.editFlag&&!addForm.serialNumberManagement">{{ scope.row.initialNumber }}</div>
@@ -542,22 +542,21 @@
 					<template slot-scope="scope">
 						<el-button-group>
 							<el-button icon="el-icon-plus" v-on:click="handleAddEnterSerialNumberAddRow"></el-button>
-							<el-button icon="el-icon-delete" type="danger" v-on:click="handleAddEnterSerialNumberDeleteRow"></el-button>
+							<el-button icon="el-icon-delete" type="danger" v-on:click="handleAddEnterSerialNumberDeleteRow(scope.row)"></el-button>
 						</el-button-group>
 					</template>
 				</el-table-column>
 				<el-table-column label="序列号" prop="serialNumber">
 					<template slot-scope="scope">
 						<div v-if="!scope.row.editFlag">{{ scope.row.serialNumber }}</div>
-						<el-input v-else v-model="scope.row.serialNumber"></el-input>
+						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="addEnterSerialNumberInputBlur(scope.row)"></el-input>
 					</template>
 				</el-table-column>
 				<el-table-column label="备注" prop="remark">
 					<template slot-scope="scope">
-						<!-- <div v-if="!scope.row.editFlag&&!scope.row.isRepat">{{ scope.row.remark }}</div>
-						<div v-if="!scope.row.editFlag&&scope.row.isRepat" style="color: #f00;">{{ scope.row.remark + 'isRepeat' }}</div>
-						<el-input v-else v-model="scope.row.remark"></el-input> -->
-						{{ scope.row }}
+						<div v-if="!scope.row.editFlag&&!scope.row.isRepeat">{{ scope.row.remark }}</div>
+						<div v-else-if="!scope.row.editFlag&&scope.row.isRepeat" style="color: #f00;">{{ scope.row.remark }}</div>
+						<el-input v-else v-model="scope.row.remark"></el-input>
 					</template>
 				</el-table-column>
 			</el-table>

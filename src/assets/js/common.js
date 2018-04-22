@@ -76,6 +76,86 @@ let doubleDecimals = (value)=> {
 Vue.prototype.$doubleDecimals = doubleDecimals;
 
 /**
+ * 检查序列号是否重复
+ * created by 何俊洁 2018-4-22
+ * @param  {[type]} data [传入的table的数据]
+ * @param  {[type]} row   [选中的行]
+ */
+
+let checkSerialNumberIsRepeat = (data, obj)=> {
+  for(let o = 0; o < data.length; o++ ) {
+    if(obj.serialNumber === data[o].serialNumber) {
+      obj.remark = '与第' + Number.parseInt(o + 1) + '行序列号重复';
+      obj.isRepeat = true;
+      break;
+    }
+  }
+  return obj;
+}
+Vue.prototype.$checkSerialNumberIsRepeat = checkSerialNumberIsRepeat;
+
+/**
+ * 删除行
+ * created by 何俊洁 2018-4-22
+ * @param  {[type]} data [传入的table的数据]
+ * @param  {[type]} row   [选中的行]
+ * @return {[type]}       [description]
+ */
+let deleteRow = (data, row, self)=> {
+  if(data.length === 1) {
+    self.$message({
+      type: 'warning',
+      message: '请至少保留一行'
+    })
+    return;
+  }
+  for(let i = 0; i < data.length; i++ ) {
+    if(row === data[i]) {
+      data.splice(i, 1);
+    }
+  }
+}
+Vue.prototype.$deleteRow = deleteRow;
+
+/**
+ * 添加行
+ * created by 何俊洁 2018-4-22
+ * @param  {[type]} table [description]
+ * @param  {[type]} row   [description]
+ * @return {[type]}       [description]
+ */
+let addRow =(table, obj)=> {
+  let index = table[table.length - 1].index + 1
+  ,addObj = {
+    index: 0,
+    editFlag: false
+  }
+  Object.assign(addObj, obj);
+  addObj.index = index;
+  table.push(addObj);
+}
+Vue.prototype.$addRow = addRow;
+
+/**
+ * 点击行切换可编辑状态
+ * created by 何俊洁 2018-4-22
+ * @param  {[type]} data [description]
+ * @param  {[type]} row  [description]
+ * @return {[type]}      [description]
+ */
+let toggleRowEditable = (data, row)=> {
+  data.forEach((item)=> {
+    item.editFlag = false;
+  })
+  for(let i = 0; i < data.length; i++ ) {
+    if(row === data[i]) {
+      data[i].editFlag = true;
+    }
+  }
+}
+Vue.prototype.$toggleRowEditable = toggleRowEditable;
+
+/**
  * 获取location.search
  * created by lanw 2018-4-17
  * search format ?key1=val1&&key2=val2

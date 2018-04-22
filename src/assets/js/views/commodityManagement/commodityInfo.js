@@ -164,7 +164,16 @@ JGBVue.module.commodityInfo = ()=> {
 						startNumber: '001',
 						increment: 1,
 						number: 1,
-						table: []
+						table: [
+							{
+								index: 1,
+								editFlag: false
+							},
+							{
+								index: 2,
+								editFlag: false
+							}
+						]
 					}
 				}
 			},
@@ -416,77 +425,17 @@ JGBVue.module.commodityInfo = ()=> {
 						return 'forbidden-row';
 					}
 				},
-				addRowClick(row, event, column) {
-					this.addForm.table.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.table.length; i++ ) {
-						if(row === this.addForm.table[i]) {
-							this.addForm.table[i].editFlag = true;
-						}
-					}
-				},
 				addQuickGenerateRowClick(row) {
-					this.addForm.quickGenerateTable.data.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
-						if(row === this.addForm.quickGenerateTable.data[i]) {
-							this.addForm.quickGenerateTable.data[i].editFlag = true;
-						}
-					}
+					this.$toggleRowEditable(this.addForm.quickGenerateTable.data, row);
 				},
 				addRowClickInitSetTable(row, event, column) {
-					this.addForm.initSetTable.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
-						if(row === this.addForm.initSetTable[i]) {
-							this.addForm.initSetTable[i].editFlag = true;
-						}
-					}
-				},
-				editRowClick(row, event, column) {
-					this.editForm.table.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.editForm.table.length; i++ ) {
-						if(row === this.editForm.table[i]) {
-							this.editForm.table[i].editFlag = true;
-						}
-					}
+					this.$toggleRowEditable(this.addForm.initSetTable, row);
 				},
 				addFormTableAdd() {
-					let index = this.addForm.table[this.addForm.table.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false,
-						linkman: '',
-						job: '',
-						tel: '',
-						phone: '',
-						QQOrWechat: '',
-						linkAddress: '',
-						primaryContact: ''
-					}
-					initFormRow.index = index;
-					this.addForm.table.push(initFormRow)
+					this.$addRow(this.addForm.table)
 				},
 				editFormTableAdd() {
-					let index = this.editForm.table[this.editForm.table.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false,
-						linkman: '',
-						job: '',
-						tel: '',
-						phone: '',
-						QQOrWechat: '',
-						linkAddress: '',
-						primaryContact: ''
-					}
-					initFormRow.index = index;
-					this.editForm.table.push(initFormRow)
+					this.$addRow(this.editForm.table)
 				},
 				addFormTableDelete(row) {
 					for(let i = 0; i < this.addForm.table.length; i++ ) {
@@ -555,12 +504,6 @@ JGBVue.module.commodityInfo = ()=> {
 					//
 				},
 				closeEdit() {
-					//
-				},
-				addCloseTag(tag) {
-					//
-				},
-				editCloseTag(tag) {
 					//
 				},
 				getFile($event) {
@@ -713,14 +656,10 @@ JGBVue.module.commodityInfo = ()=> {
 			        });
 			    },
 			    addRowClick(row) {
-			    	this.addForm.repo.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.repo.length; i++ ) {
-						if(row === this.addForm.repo[i]) {
-							this.addForm.repo[i].editFlag = true;
-						}
-					}
+					this.$toggleRowEditable(this.addForm.repo, row);
+			    },
+			    editRowClick(row) {
+					this.$toggleRowEditable(this.editForm.repo, row);
 			    },
 			    /**
 			     * 点击属性分类
@@ -904,22 +843,14 @@ JGBVue.module.commodityInfo = ()=> {
 	    			}
 		    	},
 		    	handleInitSetAdd() {
-		    		let index = this.addForm.initSetTable[this.addForm.initSetTable.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false,
+					let obj = {
 						shelfLife: null
 					}
-					initFormRow.index = index;
-					this.addForm.initSetTable.push(initFormRow);
+					this.$addRow(this.addForm.initSetTable, obj);
 		    	},
 		    	handleInitSetDelete(index, row) {
-		    		for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
-						if(row === this.addForm.initSetTable[i]) {
-
-							this.addForm.initSetTable.splice(i, 1);
-						}
-					}
+					let _self = this;
+					this.$deleteRow(this.addForm.initSetTable, row, _self);
 		    	},
 		    	addChangeShelfLife() {
 		    		let _self = this;
@@ -997,20 +928,11 @@ JGBVue.module.commodityInfo = ()=> {
 	    			}
 		    	},
 		    	addQuickGenerateTable_add_btn() {
-			    	let index = this.addForm.quickGenerateTable.data[this.addForm.quickGenerateTable.data.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false
-					}
-					initFormRow.index = index;
-					this.addForm.quickGenerateTable.data.push(initFormRow);
+					this.$addRow(this.addForm.quickGenerateTable.data);
 			    },
 			    addQuickGenerateTable_delete_btn(row) {
-			    	for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
-						if(row === this.addForm.quickGenerateTable.data[i]) {
-							this.addForm.quickGenerateTable.data.splice(i, 1);
-						}
-					}
+					let _self = this;
+					this.$deleteRow(this.addForm.quickGenerateTable.data, row, _self);
 			    },
 			    usingSerialNumberManagement(val) {
 			    	for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
@@ -1024,22 +946,26 @@ JGBVue.module.commodityInfo = ()=> {
 			    		}
 			    	}
 			    },
-			    openEnterSerialNumberDialog(row, prop) {
-			    	//
-			    },
-			    addTabClick() {
-			    	//
-			    },
 			    saveAddSerialNumber() {
-			    	//
+			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++) {
+
+			    	}
+			    },
+			    addEnterSerialNumberInputBlur(row) {
+			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++ ) {
+			    		
+			    	}
+			    	//Object.assign(row, this.$checkSerialNumberIsRepeat(this.addEnterSerialNumberForm.table, row))
 			    },
 			    handleAddEnterSerialNumberAddRow() {
-			    	//
+					this.$addRow(this.addEnterSerialNumberForm.table);
 			    },
-			    handleAddEnterSerialNumberDeleteRow() {
-			    	//
+			    handleAddEnterSerialNumberDeleteRow(row) {
+					let _self = this;
+					this.$deleteRow(this.addEnterSerialNumberForm.table, row, _self);
 			    },
 			    addBatchGenerateSerialNumber() {
+			    	let _self = this;
 			    	/**
 			    	 * zeroLength 起始号0开头长度
 			    	 * @param  {Boolean} isNaN(this.addEnterSerialNumberForm.startNumber) [description]
@@ -1086,6 +1012,7 @@ JGBVue.module.commodityInfo = ()=> {
 			    		for(let j = 0; j < this.addEnterSerialNumberForm.number; j++ ) {
 			    			let numberStr = ''
 			    			,obj = {
+			    				index: 0,
 			    				editFlag: false
 			    			};
 
@@ -1094,36 +1021,37 @@ JGBVue.module.commodityInfo = ()=> {
 			    			} else {
 			    				obj.serialNumber = zeroStr + incrementSerialNumber;
 			    			}
+
+			    			obj.index = this.addEnterSerialNumberForm.table[this.addEnterSerialNumberForm.table.length - 1]['index'] + 1;
 			    			/**
 			    			 * 判断对象内序列号的值是否重复
 			    			 * @param  {[type]} let o             [description]
 			    			 * @return {[type]}     [description]
 			    			 */
-			    			for(let o = 0; o < this.addEnterSerialNumberForm.table.length; o++ ) {
-			    				if(obj.serialNumber === this.addEnterSerialNumberForm.table[o].serialNumber) {
-			    					obj.remark = '与第' + Number.parseInt(o + 1) + '行序列号重复';
-			    					obj.isRepeat = true;
-			    					break;
+			    			Object.assign(obj, this.$checkSerialNumberIsRepeat(this.addEnterSerialNumberForm.table, obj));
+
+
+			    			for(let m = this.addEnterSerialNumberForm.table.length - 1; m >= 0; m--) {
+			    				if(this.addEnterSerialNumberForm.table[m].serialNumber) {
+			    					continue;
+			    				}else{
+			    					this.addEnterSerialNumberForm.table.splice(m, 1);
 			    				}
 			    			}
-
 			    			this.addEnterSerialNumberForm.table.push(obj);
 			    			incrementSerialNumber += increment;
 			    		}
 			    	}
 			    },
 			    addCodyGenerateSerialNumber() {
-			    	//
+			    	let obj = {};
+			    	obj.serialNumber = this.addEnterSerialNumberForm.copy;
+			    	Object.assign(obj, this.$checkSerialNumberIsRepeat(this.addEnterSerialNumberForm.table, obj));
+			    	obj.index = this.addEnterSerialNumberForm.table[this.addEnterSerialNumberForm.table.length - 1]['index'] + 1;
+			    	this.addEnterSerialNumberForm.table.push(obj);
 			    },
 			    addEnterSerialNumberFormRowClick(row) {
-			    	this.addEnterSerialNumberForm.table.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++ ) {
-						if(row === this.addEnterSerialNumberForm.table[i]) {
-							this.addEnterSerialNumberForm.table[i].editFlag = true;
-						}
-					}
+					this.$toggleRowEditable(this.addEnterSerialNumberForm.table, row);
 			    }
 			},
 			watch: {
