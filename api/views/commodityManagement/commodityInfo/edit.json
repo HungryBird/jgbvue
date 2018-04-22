@@ -1,0 +1,31 @@
+{
+	"number": "alsdkj",
+	"name": "asd",
+	"commodityCategory": 1,
+	"inventoryWarning": true,
+	"branchWarehouseWarning": true,
+	"setCommodityAuxiliaryAttributes": false,
+	"auxiliaryAttributesClassify": [],
+	"quickGenerateTable": {
+		"header": [],
+		"data": [{
+			"indexNum": 1,
+			"editFlag": false
+		}]
+	},
+	"batchExpirationDateManagement": false,
+	"serialNumberManagement": false,
+	"initSet": false,
+	"initSetTable": [{
+			"index": 1,
+			"editFlag": false,
+			"shelfLife": null
+		},
+		{
+			"index": 2,
+			"editFlag": false,
+			"shelfLife": null
+		}
+	],
+	"enterSerialNumberTable": []
+}

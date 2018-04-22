@@ -48,6 +48,25 @@ router.post('/toggleCommonUse', (req, res)=> {
 	}).end();
 });
 
+router.post('/edit_data_get', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/commodityManagement/commodityInfo/edit.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			}).end();
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end()
+	})
+});
+
 router.post('/examine', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/views/commodityManagement/commodityInfo/examine.json', 'utf-8', (err, data)=> {
@@ -87,9 +106,27 @@ router.get('/getAuxiliaryAttributesClassify', (req, res)=> {
 });
 
 router.post('/quickGenerate', (req, res)=> {
-	console.log('auxiliaryAttributesClassifyChildren: ', res.body);
 	let jdata = '';
 	fs.readFile('api/views/commodityManagement/commodityInfo/quickGenerate.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			}).end();
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end()
+	})
+})
+
+router.use('/defaultColumnSettingUrl', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/commodityManagement/commodityInfo/header.json', 'utf-8', (err, data)=> {
 		if(err) {
 			res.send({
 				status: false,
