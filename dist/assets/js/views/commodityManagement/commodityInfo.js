@@ -6,12 +6,15 @@ JGBVue.module.commodityInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl)=> {
+	_this.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
 				return {
-					table: [],
+					table: {
+						header: [],
+						data: []
+					},
 					tempTable: [],
 					search: {
 						input: ''
@@ -30,7 +33,7 @@ JGBVue.module.commodityInfo = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addVisible: true,
+					addVisible: false,
 					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
@@ -46,6 +49,57 @@ JGBVue.module.commodityInfo = ()=> {
 					auxiliaryAttributesClassifyChildren: [], //添加-点击属性分类-子属性
 					initQuickGenerateTable: [],
 					addForm: {
+						number: 'f011',
+						name: '',
+						commodityCategory: '',
+						barCode: '',
+						specifications: '',
+						primaryRepo: '',
+						commodityBrand: '',
+						unitOfMeasurement: '',
+						multiple: '',
+						retailPrice: '',
+						tradePrice: '',
+						lowestPrince: '',
+						highestPrince: '',
+						discountRate1: '',
+						discountRate2: '',
+						discountRate3: '',
+						expectPurchasePrice: '',
+						remark: '',
+						upload: [],
+						inventoryWarning: false,
+						branchWarehouseWarning: false,
+						repo: [],
+						setCommodityAuxiliaryAttributes: false,
+						auxiliaryAttributesClassify: [],
+						quickGenerateTable: {
+							header: [],
+							data: [
+								{
+									indexNum: 1,
+									editFlag: false,
+								}
+							]
+						},
+						batchExpirationDateManagement: false,
+						serialNumberManagement: false,
+						initSet: false,
+						initSetTable: [
+							{
+								index: 1,
+								editFlag: false,
+								shelfLife: null
+							},
+							{
+								index: 2,
+								editFlag: false,
+								shelfLife: null
+							}
+						],
+						enterSerialNumberTable: []
+					},
+					editForm: {
 						number: '',
 						name: '',
 						commodityCategory: '',
@@ -93,47 +147,20 @@ JGBVue.module.commodityInfo = ()=> {
 								editFlag: false,
 								shelfLife: null
 							}
-						]
+						],
+						enterSerialNumberTable: []
 					},
 					addSelectedAxiliaryAttributesClassify: [],
+					editSelectedAxiliaryAttributesClassify: [],
 					addFormBasicData: {
 						commodityCategory: [],
 						primaryRepo: [],
 						unitOfMeasurement: [],
 					},
-					editForm: {
-						number: '',
-						name: '',
-						commodityCategory: '',
-						barCode: '',
-						specifications: '',
-						primaryRepo: '',
-						commodityBrand: '',
-						unitOfMeasurement: '',
-						multiple: '',
-						retailPrice: '',
-						tradePrice: '',
-						minPrince: '',
-						maxPrince: '',
-						discountRate1: '',
-						discountRate2: '',
-						discountRate3: '',
-						expectPurchasePrice: '',
-						remark: '',
-						upload: [],
-						inventoryWarning: false,
-						setCommodityAuxiliaryAttributes: false,
-						batchExpirationDateManagement: false,
-						serialNumberManagement: false,
-						initSet: false,
-						initSetTable: [
-							{
-								index: 1
-							},
-							{
-								index: 2
-							}
-						]
+					editFormBasicData: {
+						commodityCategory: [],
+						primaryRepo: [],
+						unitOfMeasurement: [],
 					},
 					importVisible: false,
 					exportVisible: false,
@@ -157,22 +184,50 @@ JGBVue.module.commodityInfo = ()=> {
 					auxiliaryAttributesClassify: [],
 					quickGenerateOption: [],
 					add_initSetTable_header: [],
+					edit_initSetTable_header: [],
 					loading: false,
-					addEnterSerialNumberVisible: true,
+					addEnterSerialNumberVisible: false,
 					addBatchSetWrap: false,
 					addEnterSerialNumberForm: {
 						startNumber: '001',
 						increment: 1,
 						number: 1,
-						table: []
-					}
+						table: [
+							{
+								index: 1,
+								editFlag: false
+							},
+							{
+								index: 2,
+								editFlag: false
+							}
+						]
+					},
+					editEnterSerialNumberVisible: false,
+					editBatchSetWrap: false,
+					editEnterSerialNumberForm: {
+						startNumber: '001',
+						increment: 1,
+						number: 1,
+						table: [
+							{
+								index: 1,
+								editFlag: false
+							},
+							{
+								index: 2,
+								editFlag: false
+							}
+						]
+					},
+					showColumnSetting: false
 				}
 			},
 			mounted() {
 				this.searchData();
 				this.getQuickQuery();
 				this.getRepo();
-				this.addQuickGenerate();
+				this.quickGenerate();
 				this.getAuxiliaryAttributesClassify();
 			},
 			methods: {
@@ -181,11 +236,14 @@ JGBVue.module.commodityInfo = ()=> {
 					axios.get(searchUrl, val).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							this.tempTable = jdata;
+							this.table.header = [];
+							this.table.data = [];
+							this.table.header = jdata.header.concat();
+							this.tempTable = jdata.data.concat();
 							this.tempTable.forEach((item)=> {
-								if(!_self.isShowForbiddenCommodity) {
+								if(!_self.isShowForbiddenEquipment) {
 									if(item.status) {
-										_self.table.push(item);
+										_self.table.data.push(item);
 									}
 								}else{
 									_self.table.push(item);
@@ -194,7 +252,7 @@ JGBVue.module.commodityInfo = ()=> {
 						}
 					}).catch((err)=> {
 						console.log('axios err: ', err);
-					})
+					});
 				},
 				getQuickQuery() {
 					axios.get(quickQueryUrl).then((res)=> {
@@ -287,7 +345,7 @@ JGBVue.module.commodityInfo = ()=> {
 				handleDelete() {
 					let _self = this;
                     this.selectedRows.splice(0, _self.selectedRows.length);
-                    this.$refs.table.clearSelection();
+                    this.$refs.table.data.clearSelection();
                     this.remove();
 				},
 				remove() {
@@ -329,7 +387,7 @@ JGBVue.module.commodityInfo = ()=> {
 					axios.get(searchUrl, item.value).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							this.table.splice(0, _self.table.length);
+							this.table.data.splice(0, _self.table.data.length);
 							this.tempTable.splice(0, _self.tempTable.length);
 							jdata.forEach((item)=> {
 								_self.tempTable.push(item);
@@ -337,10 +395,10 @@ JGBVue.module.commodityInfo = ()=> {
 							this.tempTable.forEach((item)=> {
 								if(!_self.isShowForbiddenCommodity) {
 									if(item.status) {
-										_self.table.push(item);
+										_self.table.data.push(item);
 									}
 								}else{
-									_self.table.push(item);
+									_self.table.data.push(item);
 								}
 							});
 							this.$message({
@@ -357,31 +415,44 @@ JGBVue.module.commodityInfo = ()=> {
 					//翻页时
 				},
 				handleStatus(index, row) {
-					this.selectedRows = [];
-					this.$refs['table'].clearSelection();
-					this.forbidden();
+					axios.post(startUsingUrl, row).then((res)=> {
+						this.loadingDetailInfo = true;
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							this.loadingDetailInfo = false;
+							this.forbidden();
+						}
+					}).catch((err)=> {
+						console.log('err: ', err);
+					})
+					console.log('this.selectedRows: ', this.selectedRows)
 				},
 				forbidden() {
 					let _self = this
 					,arr = [];
 					this.selectedRows.forEach((item, index)=> {
 						for(let i = 0; i < _self.tempTable.length; i++ ) {
-							if(item.clientNumber === _self.tempTable[i].clientNumber) {
+							if(item.commodityNumber === _self.tempTable[i].commodityNumber) {
 								_self.tempTable[i].status = false;
 							}
 						}
 					});
-					this.table.splice(0, _self.table.length);
+					this.table.data.splice(0, _self.table.data.length);
 					this.tempTable.forEach((item)=> {
 						if(!_self.isShowForbiddenCommodity) {
 							if(item.status) {
-								_self.table.push(item);
+								_self.table.data.push(item);
 							}
 						}else{
-							_self.table.push(item);
+							_self.table.data.push(item);
 						}
 					})
-					this.selectedRows = [];
+					if(!this.isShowForbiddenCommodity) {
+						this.selectedRows = [];
+					}
 				},
 				startUsing() {
 					let _self = this
@@ -390,7 +461,7 @@ JGBVue.module.commodityInfo = ()=> {
 						if(res.data.status) {
 							this.selectedRows.forEach((item, index)=> {
 								for(let i = 0; i < _self.tempTable.length; i++ ) {
-									if(item.clientNumber === _self.tempTable[i].clientNumber) {
+									if(item.commodityNumber === _self.tempTable[i].commodityNumber) {
 										_self.tempTable[i].status = true;
 									}
 								}
@@ -400,13 +471,13 @@ JGBVue.module.commodityInfo = ()=> {
 				},
 				toggleForbiddenCommdity() {
 					let _self = this;
-					this.table.splice(0, _self.table.length);
+					this.table.data.splice(0, _self.table.data.length);
 					this.tempTable.forEach((item)=> {
 						if(this.isShowForbiddenCommodity) {
-							_self.table.push(item);
+							_self.table.data.push(item);
 						}else{
 							if(item.status) {
-								_self.table.push(item);
+								_self.table.data.push(item);
 							}
 						}
 					})
@@ -416,77 +487,20 @@ JGBVue.module.commodityInfo = ()=> {
 						return 'forbidden-row';
 					}
 				},
-				addRowClick(row, event, column) {
-					this.addForm.table.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.table.length; i++ ) {
-						if(row === this.addForm.table[i]) {
-							this.addForm.table[i].editFlag = true;
-						}
-					}
-				},
 				addQuickGenerateRowClick(row) {
-					this.addForm.quickGenerateTable.data.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
-						if(row === this.addForm.quickGenerateTable.data[i]) {
-							this.addForm.quickGenerateTable.data[i].editFlag = true;
-						}
-					}
+					this.$toggleRowEditable(this.addForm.quickGenerateTable.data, row);
+				},
+				editQuickGenerateRowClick(row) {
+					this.$toggleRowEditable(this.editForm.quickGenerateTable.data, row);
 				},
 				addRowClickInitSetTable(row, event, column) {
-					this.addForm.initSetTable.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
-						if(row === this.addForm.initSetTable[i]) {
-							this.addForm.initSetTable[i].editFlag = true;
-						}
-					}
-				},
-				editRowClick(row, event, column) {
-					this.editForm.table.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.editForm.table.length; i++ ) {
-						if(row === this.editForm.table[i]) {
-							this.editForm.table[i].editFlag = true;
-						}
-					}
+					this.$toggleRowEditable(this.addForm.initSetTable, row);
 				},
 				addFormTableAdd() {
-					let index = this.addForm.table[this.addForm.table.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false,
-						linkman: '',
-						job: '',
-						tel: '',
-						phone: '',
-						QQOrWechat: '',
-						linkAddress: '',
-						primaryContact: ''
-					}
-					initFormRow.index = index;
-					this.addForm.table.push(initFormRow)
+					this.$addRow(this.addForm.table)
 				},
 				editFormTableAdd() {
-					let index = this.editForm.table[this.editForm.table.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false,
-						linkman: '',
-						job: '',
-						tel: '',
-						phone: '',
-						QQOrWechat: '',
-						linkAddress: '',
-						primaryContact: ''
-					}
-					initFormRow.index = index;
-					this.editForm.table.push(initFormRow)
+					this.$addRow(this.editForm.table)
 				},
 				addFormTableDelete(row) {
 					for(let i = 0; i < this.addForm.table.length; i++ ) {
@@ -557,12 +571,6 @@ JGBVue.module.commodityInfo = ()=> {
 				closeEdit() {
 					//
 				},
-				addCloseTag(tag) {
-					//
-				},
-				editCloseTag(tag) {
-					//
-				},
 				getFile($event) {
 					this.getFileInfo = $event.target.files[0];
 				},
@@ -590,15 +598,16 @@ JGBVue.module.commodityInfo = ()=> {
 					this.$refs['table'].clearSelection();
 					axios.post(toggleCommonUseUrl, row).then((res)=> {
 						if(res.data.status) {
-							for(let i = 0; i < this.table.length; i++ ) {
-								if(row === this.table[i]) {
-									this.table[i].isCommonUse = !this.table[i].isCommonUse;
+							for(let i = 0; i < this.table.data.length; i++ ) {
+								if(row === this.table.data[i]) {
+									this.table.data[i].isCommonUse = !this.table.data[i].isCommonUse;
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+									return;
 								}
 							}
-							this.$message({
-								type: 'success',
-								message: res.data.message
-							})
 						}
 					})
 				},
@@ -647,7 +656,7 @@ JGBVue.module.commodityInfo = ()=> {
 					console.log('handleRemove file: ', file);
 					console.log('handleRemove file:', fileList);
 				},
-				lowestInventoryHeader(createElement, { column }) {
+				addLowestInventoryHeader(createElement, { column }) {
 					return createElement(
 						'div',
 						{class: 'jgb-popover-wrap'},
@@ -658,13 +667,13 @@ JGBVue.module.commodityInfo = ()=> {
 										type: 'default',
 										size: 'small'
 									},
-									on: { click: this.showLowestInventoryPopover }
+									on: { click: this.addShowLowestInventoryPopover }
 								}, ['批量']
 							)
 						]
 					);
 				},
-				highestInventoryHeader(createElement, { column }) {
+				addHighestInventoryHeader(createElement, { column }) {
 					return createElement(
 						'div',
 						{class: 'jgb-popover-wrap'},
@@ -675,13 +684,47 @@ JGBVue.module.commodityInfo = ()=> {
 										type: 'default',
 										size: 'small'
 									},
-									on: { click: this.showHighestInventoryPopover }
+									on: { click: this.addShowHighestInventoryPopover }
 								}, ['批量']
 							)
 						]
 					);
 				},
-				showLowestInventoryPopover(e) {
+				editLowestInventoryHeader(createElement, { column }) {
+					return createElement(
+						'div',
+						{class: 'jgb-popover-wrap'},
+						[
+							createElement('span', [column.label]),
+							createElement('el-button', {
+									attrs: { 
+										type: 'default',
+										size: 'small'
+									},
+									on: { click: this.editShowLowestInventoryPopover }
+								}, ['批量']
+							)
+						]
+					);
+				},
+				editHighestInventoryHeader(createElement, { column }) {
+					return createElement(
+						'div',
+						{class: 'jgb-popover-wrap'},
+						[
+							createElement('span', [column.label]),
+							createElement('el-button', {
+									attrs: { 
+										type: 'default',
+										size: 'small'
+									},
+									on: { click: this.editShowHighestInventoryPopover }
+								}, ['批量']
+							)
+						]
+					);
+				},
+				addShowLowestInventoryPopover(e) {
 					let _self = this;
 					this.$prompt(' ', '请输入最低库存量', {
 						confirmButtonText: '确定',
@@ -697,7 +740,7 @@ JGBVue.module.commodityInfo = ()=> {
 						});       
 			        });
 				},
-				showHighestInventoryPopover(e) {
+				addShowHighestInventoryPopover(e) {
 					this.$prompt('请输入邮箱', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
@@ -712,18 +755,45 @@ JGBVue.module.commodityInfo = ()=> {
 						});       
 			        });
 			    },
+			    editShowLowestInventoryPopover(e) {
+					let _self = this;
+					this.$prompt(' ', '请输入最低库存量', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+			        }).then(({ value }) => {
+						this.editForm.repo.forEach((item)=> {
+							item.lowestInventory = value;
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+				},
+				editShowHighestInventoryPopover(e) {
+					this.$prompt('请输入邮箱', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+			        }).then(({ value }) => {
+						this.editForm.repo.forEach((item)=> {
+							item.highestInventory = value;
+						})
+			        }).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+			        });
+			    },
 			    addRowClick(row) {
-			    	this.addForm.repo.forEach((item)=> {
-						item.editFlag = false;
-					})
-					for(let i = 0; i < this.addForm.repo.length; i++ ) {
-						if(row === this.addForm.repo[i]) {
-							this.addForm.repo[i].editFlag = true;
-						}
-					}
+					this.$toggleRowEditable(this.addForm.repo, row);
+			    },
+			    editRowClick(row) {
+					this.$toggleRowEditable(this.editForm.repo, row);
 			    },
 			    /**
-			     * 点击属性分类
+			     * 点击辅助属性分类
 			     * @param {[type]} arr [description]
 			     */
 			    addChangeAuxiliaryAttributesClassify(arr) {
@@ -745,16 +815,34 @@ JGBVue.module.commodityInfo = ()=> {
 			    		}
 			    	})
 			    },
+			    editChangeAuxiliaryAttributesClassify(arr) {
+			    	let _self = this;
+			    	this.editSelectedAxiliaryAttributesClassify = [];
+			    	this.editForm.quickGenerateTable.header = [];
+			    	arr.forEach((item)=> {
+			    		for(let i = 0; i < _self.auxiliaryAttributesClassify.length; i++ ) {
+			    			if(item === _self.auxiliaryAttributesClassify[i].value) {
+			    				let obj = {};
+			    				let hObj = {};
+			    				obj.parentName = _self.auxiliaryAttributesClassify[i].label;
+			    				obj.children = _self.auxiliaryAttributesClassify[i].chilren;
+			    				_self.editSelectedAxiliaryAttributesClassify.push(obj);
+			    				hObj.label = _self.auxiliaryAttributesClassify[i].label;
+			    				hObj.prop = _self.auxiliaryAttributesClassify[i].value;
+			    				_self.editForm.quickGenerateTable.header.splice(0, 0, hObj);
+			    			}
+			    		}
+			    	})
+			    },
 			    /**
 			     * 点击属性分类子属性
 			     * @param {[type]} arr [description]
 			     */
 			    addChangeAuxiliaryAttributesClassifyChildren(arr) {
-			    	let _self = this;
-			    	arr.forEach((item)=> {
-
-			    	})
-			    	console.log('quickGenerateTable.data: ', this.addForm.quickGenerateTable)
+			    	//
+			    },
+			    editChangeAuxiliaryAttributesClassifyChildren(arr) {
+			    	//
 			    },
 			    /**
 			     * 点击新增属性分类按钮
@@ -779,35 +867,39 @@ JGBVue.module.commodityInfo = ()=> {
 						});       
 			        });
 			    },
-			    addQuickGenerate() {
+			    quickGenerate(formName) {
 			    	if(this.auxiliaryAttributesClassifyChildren.length !== 0) {
 			    		axios.post(quickGenerateUrl, this.auxiliaryAttributesClassifyChildren).then((res)=> {
 			    			if(res.data.status) {
-			    				this.addForm.quickGenerateTable.data = JSON.parse(res.data.data);
+			    				this[formName].quickGenerateTable.data = JSON.parse(res.data.data);
 			    			}
 			    		})
 			    	}
 			    },
-			    addQuickGenerateTable_add_btn() {
-			    	let index = this.addForm.quickGenerateTable.data[this.addForm.quickGenerateTable.data.length - 1].index + 1;
+			    quickGenerateTable_add_btn(formName) {
+			    	let index = this[formName].quickGenerateTable.data[this[formName].quickGenerateTable.data.length - 1].index + 1;
 					let initFormRow = {
 						index: 0,
 						editFlag: false
 					}
 					initFormRow.index = index;
-					this.addForm.quickGenerateTable.data.push(initFormRow);
+					this[formName].quickGenerateTable.data.push(initFormRow);
 			    },
-			    addQuickGenerateTable_delete_btn(row) {
-			    	for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
-						if(row === this.addForm.quickGenerateTable.data[i]) {
-							this.addForm.quickGenerateTable.data.splice(i, 1);
+			    quickGenerateTable_delete_btn(row, formName) {
+			    	for(let i = 0; i < this.formName.quickGenerateTable.data.length; i++ ) {
+						if(row === this[formName].quickGenerateTable.data[i]) {
+							this[formName].quickGenerateTable.data.splice(i, 1);
 						}
 					}
 			    },
-			    addQuickGenerateUploadPic(e) {
-			    	console.log('e: ', e);
+			    quickGenerateUploadPic(event, data, row) {
+			    	for(let i = 0; i < data.length; i++ ) {
+			    		if(data[i] === row) {
+			    			data[i].upload = event.target.files[0];
+			    		}
+			    	}
 			    },
-			    addQuickGenerateHeader(createElement, { column }) {
+			    quickGenerateHeader(createElement, { column }) {
 			    	return createElement(
 						'span',
 						{'class': 'required'},
@@ -903,23 +995,25 @@ JGBVue.module.commodityInfo = ()=> {
 	    				}
 	    			}
 		    	},
-		    	handleInitSetAdd() {
-		    		let index = this.addForm.initSetTable[this.addForm.initSetTable.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false,
+		    	handleAddInitSetAdd() {
+					let obj = {
 						shelfLife: null
 					}
-					initFormRow.index = index;
-					this.addForm.initSetTable.push(initFormRow);
+					this.$addRow(this.addForm.initSetTable, obj);
 		    	},
-		    	handleInitSetDelete(index, row) {
-		    		for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
-						if(row === this.addForm.initSetTable[i]) {
-
-							this.addForm.initSetTable.splice(i, 1);
-						}
+		    	handleAddInitSetDelete(index, row) {
+					let _self = this;
+					this.$deleteRow(this.addForm.initSetTable, row, _self);
+		    	},
+		    	handleEditInitSetAdd() {
+					let obj = {
+						shelfLife: null
 					}
+					this.$addRow(this.editForm.initSetTable, obj);
+		    	},
+		    	handleEditInitSetDelete(index, row) {
+					let _self = this;
+					this.$deleteRow(this.editForm.initSetTable, row, _self);
 		    	},
 		    	addChangeShelfLife() {
 		    		let _self = this;
@@ -931,7 +1025,17 @@ JGBVue.module.commodityInfo = ()=> {
     					this.addForm.initSetTable[i].validUntil = this.formatDate(formatDate);
 	    			}
 		    	},
-		    	toggleBatchExpirationDateManagement(val) {
+		    	editChangeShelfLife() {
+		    		let _self = this;
+    				this.editForm.initSetTable.forEach((item)=> {
+		    			item.shelfLife = _self.editForm.shelfLife;
+		    		});
+		    		for(let i = 0; i < this.editForm.initSetTable.length; i++) {
+		    			let formatDate = new Date((this.editForm.initSetTable[i].productionDate || 0) + Number.parseInt(this.editForm.initSetTable[i].shelfLife + 1)*24*60*60*1000 || 0);
+    					this.editForm.initSetTable[i].validUntil = this.formatDate(formatDate);
+	    			}
+		    	},
+		    	addToggleBatchExpirationDateManagement(val) {
 		    		let _self = this;
 		    		this.add_initSetTable_header = [];
 		    		if(val) {
@@ -962,14 +1066,56 @@ JGBVue.module.commodityInfo = ()=> {
 		    			})
 		    		}
 		    	},
-		    	addFormInitSetTablePickDate(val, row, prop) {
+		    	editToggleBatchExpirationDateManagement(val) {
 		    		let _self = this;
+		    		this.edit_initSetTable_header = [];
+		    		if(val) {
+		    			let arr = [
+		    				{
+		    					label: '批次',
+		    					prop: 'batch',
+		    					type: 'input'
+		    				},
+		    				{
+		    					label: '生产日期',
+		    					prop: 'productionDate',
+		    					type: 'date'
+		    				},
+		    				{
+		    					label: '保质期（天）',
+		    					prop: 'shelfLife',
+		    					type: 'text'
+		    				},
+		    				{
+		    					label: '有效期至',
+		    					prop: 'validUntil',
+		    					type: 'text'
+		    				}
+		    			]
+		    			arr.forEach((item)=> {
+		    				_self.edit_initSetTable_header.push(item);
+		    			})
+		    		}
+		    	},
+		    	addFormInitSetTablePickDate(val, row, prop) {
+		    		let _self = this
+	    			,ms = new Date(val).getTime() + (Number.parseInt(_self.addForm.shelfLife)*24*60*60*1000 || 0)
+	    			,formatValue = new Date(ms);
 
-	    			let ms = new Date(val).getTime() + (Number.parseInt(_self.addForm.shelfLife)*24*60*60*1000 || 0);
-	    			let formatValue = new Date(ms);
 	    			for(let i = 0; i < this.addForm.initSetTable.length; i++) {
 	    				if(this.addForm.initSetTable[i] === row) {
 	    					this.addForm.initSetTable[i].validUntil = this.formatDate(formatValue);
+	    				}
+	    			}
+		    	},
+		    	editFormInitSetTablePickDate(val, row, prop) {
+		    		let _self = this
+	    			,ms = new Date(val).getTime() + (Number.parseInt(_self.editForm.shelfLife)*24*60*60*1000 || 0)
+	    			,formatValue = new Date(ms);
+	    			
+	    			for(let i = 0; i < this.editForm.initSetTable.length; i++) {
+	    				if(this.editForm.initSetTable[i] === row) {
+	    					this.editForm.initSetTable[i].validUntil = this.formatDate(formatValue);
 	    				}
 	    			}
 		    	},
@@ -986,6 +1132,16 @@ JGBVue.module.commodityInfo = ()=> {
 	    				}
 	    			}
 		    	},
+		    	editFormInitialNumberChange(val, row) {
+		    		if(isNaN(Number(val))) return;
+		    		for(let i = 0; i < this.editForm.initSetTable.length; i++) {
+	    				if(this.editForm.initSetTable[i] === row) {
+	    					if(!isNaN(this.editForm.initSetTable[i].unitCost)) {
+	    						this.editForm.initSetTable[i].atFirstTotalPrice = this.editForm.initSetTable[i].unitCost*val;
+	    					}
+	    				}
+	    			}
+		    	},
 		    	addFormUnitCostChange(val, row) {
 		    		if(isNaN(Number(val))) return;
 		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
@@ -996,23 +1152,25 @@ JGBVue.module.commodityInfo = ()=> {
 	    				}
 	    			}
 		    	},
-		    	addQuickGenerateTable_add_btn() {
-			    	let index = this.addForm.quickGenerateTable.data[this.addForm.quickGenerateTable.data.length - 1].index + 1;
-					let initFormRow = {
-						index: 0,
-						editFlag: false
-					}
-					initFormRow.index = index;
-					this.addForm.quickGenerateTable.data.push(initFormRow);
-			    },
-			    addQuickGenerateTable_delete_btn(row) {
-			    	for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
-						if(row === this.addForm.quickGenerateTable.data[i]) {
-							this.addForm.quickGenerateTable.data.splice(i, 1);
-						}
-					}
-			    },
-			    usingSerialNumberManagement(val) {
+		    	editFormUnitCostChange(val, row) {
+		    		if(isNaN(Number(val))) return;
+		    		for(let i = 0; i < this.editForm.initSetTable.length; i++) {
+	    				if(this.editForm.initSetTable[i] === row) {
+	    					if(!isNaN(this.editForm.initSetTable[i].initialNumber)) {
+	    						this.editForm.initSetTable[i].atFirstTotalPrice = this.editForm.initSetTable[i].initialNumber*val;
+	    					}
+	    				}
+	    			}
+		    	},
+			    addUsingSerialNumberManagement(val) {
+			    	if(this.addForm.enterSerialNumberTable.length !== 0) {
+			    		this.$message({
+		    				type: 'error',
+		    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
+		    			})
+		    			this.addForm.serialNumberManagement = true;
+		    			return;
+			    	}
 			    	for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
 			    		if(this.addForm.initSetTable[i].initialNumber) {
 			    			this.$message({
@@ -1024,22 +1182,121 @@ JGBVue.module.commodityInfo = ()=> {
 			    		}
 			    	}
 			    },
-			    openEnterSerialNumberDialog(row, prop) {
-			    	//
-			    },
-			    addTabClick() {
-			    	//
+			    editUsingSerialNumberManagement(val) {
+			    	if(this.editForm.enterSerialNumberTable.length !== 0) {
+			    		this.$message({
+		    				type: 'error',
+		    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
+		    			})
+		    			this.editForm.serialNumberManagement = true;
+		    			return;
+			    	}
+			    	for(let i = 0; i < this.editForm.initSetTable.length; i++ ) {
+			    		if(this.editForm.initSetTable[i].initialNumber) {
+			    			this.$message({
+			    				type: 'error',
+			    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
+			    			})
+			    			this.editForm.serialNumberManagement = false;
+			    			return;
+			    		}
+			    	}
 			    },
 			    saveAddSerialNumber() {
-			    	//
+			    	let serialNumberLen = 0;
+			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++) {
+			    		if(this.addEnterSerialNumberForm.table[i].isRepeat) {
+			    			return;
+			    		}
+			    	}
+			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++) {
+			    		if(this.addEnterSerialNumberForm.table[i].serialNumber) {
+			    			serialNumberLen++;
+			    		}
+			    	}
+			    	if(serialNumberLen > 0) {
+			    		this.addEnterSerialNumberForm.table.forEach((item)=> {
+			    			if(item.serialNumber&&!item.isRepeat) {
+			    				this.addForm.enterSerialNumberTable.push(item);
+			    			}
+			    		});
+			    		this.addEnterSerialNumberVisible = false;
+			    	}else{
+			    		this.$message({
+				    		type: 'warning',
+				    		message: '请输入序列号'
+				    	})	
+			    	}
+			    },
+			    saveEditSerialNumber() {
+			    	let serialNumberLen = 0;
+			    	for(let i = 0; i < this.editEnterSerialNumberForm.table.length; i++) {
+			    		if(this.editEnterSerialNumberForm.table[i].isRepeat) {
+			    			return;
+			    		}
+			    	}
+			    	for(let i = 0; i < this.editEnterSerialNumberForm.table.length; i++) {
+			    		if(this.editEnterSerialNumberForm.table[i].serialNumber) {
+			    			serialNumberLen++;
+			    		}
+			    	}
+			    	if(serialNumberLen > 0) {
+			    		this.editEnterSerialNumberForm.table.forEach((item)=> {
+			    			if(item.serialNumber&&!item.isRepeat) {
+			    				this.editForm.enterSerialNumberTable.push(item);
+			    			}
+			    		});
+			    		this.editEnterSerialNumberVisible = false;
+			    	}else{
+			    		this.$message({
+				    		type: 'warning',
+				    		message: '请输入序列号'
+				    	})	
+			    	}
+
+			    },
+			    addEnterSerialNumberInputBlur(row, serialNumber, index) {
+			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++ ) {
+			    		if(this.addEnterSerialNumberForm.table[i].index === index){
+			    			continue;
+			    		}else if(this.addEnterSerialNumberForm.table[i].serialNumber === serialNumber) {
+			    			this.addEnterSerialNumberForm.table[index-1].isRepeat = true;
+			    			this.addEnterSerialNumberForm.table[index-1].remark = '与第' + Number.parseInt(i + 1) + '行序列号重复';
+			    			return;
+			    		}
+			    	}
+			    	this.addEnterSerialNumberForm.table[index-1].isRepeat = false;
+			    	this.addEnterSerialNumberForm.table[index-1].remark = null;
+			    },
+			    editEnterSerialNumberInputBlur(row, serialNumber, index) {
+			    	for(let i = 0; i < this.editEnterSerialNumberForm.table.length; i++ ) {
+			    		if(this.editEnterSerialNumberForm.table[i].index === index){
+			    			continue;
+			    		}else if(this.editEnterSerialNumberForm.table[i].serialNumber === serialNumber) {
+			    			this.editEnterSerialNumberForm.table[index-1].isRepeat = true;
+			    			this.editEnterSerialNumberForm.table[index-1].remark = '与第' + Number.parseInt(i + 1) + '行序列号重复';
+			    			return;
+			    		}
+			    	}
+			    	this.editEnterSerialNumberForm.table[index-1].isRepeat = false;
+			    	this.editEnterSerialNumberForm.table[index-1].remark = null;
 			    },
 			    handleAddEnterSerialNumberAddRow() {
-			    	//
+					this.$addRow(this.addEnterSerialNumberForm.table);
 			    },
-			    handleAddEnterSerialNumberDeleteRow() {
-			    	//
+			    handleAddEnterSerialNumberDeleteRow(row) {
+					let _self = this;
+					this.$deleteRow(this.addEnterSerialNumberForm.table, row, _self);
+			    },
+			    handleEditEnterSerialNumberAddRow() {
+					this.$addRow(this.editEnterSerialNumberForm.table);
+			    },
+			    handleEditEnterSerialNumberDeleteRow(row) {
+					let _self = this;
+					this.$deleteRow(this.editEnterSerialNumberForm.table, row, _self);
 			    },
 			    addBatchGenerateSerialNumber() {
+			    	let _self = this;
 			    	/**
 			    	 * zeroLength 起始号0开头长度
 			    	 * @param  {Boolean} isNaN(this.addEnterSerialNumberForm.startNumber) [description]
@@ -1086,6 +1343,7 @@ JGBVue.module.commodityInfo = ()=> {
 			    		for(let j = 0; j < this.addEnterSerialNumberForm.number; j++ ) {
 			    			let numberStr = ''
 			    			,obj = {
+			    				index: 0,
 			    				editFlag: false
 			    			};
 
@@ -1094,37 +1352,189 @@ JGBVue.module.commodityInfo = ()=> {
 			    			} else {
 			    				obj.serialNumber = zeroStr + incrementSerialNumber;
 			    			}
+
+			    			obj.index = this.addEnterSerialNumberForm.table[this.addEnterSerialNumberForm.table.length - 1]['index'] + 1;
 			    			/**
 			    			 * 判断对象内序列号的值是否重复
 			    			 * @param  {[type]} let o             [description]
 			    			 * @return {[type]}     [description]
 			    			 */
-			    			for(let o = 0; o < this.addEnterSerialNumberForm.table.length; o++ ) {
-			    				if(obj.serialNumber === this.addEnterSerialNumberForm.table[o].serialNumber) {
-			    					obj.remark = '与第' + Number.parseInt(o + 1) + '行序列号重复';
-			    					obj.isRepeat = true;
-			    					break;
+			    			Object.assign(obj, this.$checkSerialNumberIsRepeat(this.addEnterSerialNumberForm.table, obj));
+
+
+			    			for(let m = this.addEnterSerialNumberForm.table.length - 1; m >= 0; m--) {
+			    				if(this.addEnterSerialNumberForm.table[m].serialNumber) {
+			    					continue;
+			    				}else{
+			    					this.addEnterSerialNumberForm.table.splice(m, 1);
 			    				}
 			    			}
-
 			    			this.addEnterSerialNumberForm.table.push(obj);
 			    			incrementSerialNumber += increment;
 			    		}
 			    	}
 			    },
+			    editBatchGenerateSerialNumber() {
+			    	let _self = this;
+			    	/**
+			    	 * zeroLength 起始号0开头长度
+			    	 * @param  {Boolean} isNaN(this.addEnterSerialNumberForm.startNumber) [description]
+			    	 * @return {[type]}                                                   [description]
+			    	 */
+			    	//addEnterSerialNumberForm.table table数据
+			    	//serialNumber 生成的序列号
+			    	//remark 备注
+			    	if(isNaN(this.editEnterSerialNumberForm.startNumber.trim())) {
+			    		this.$message({
+			    			type: 'error',
+			    			message: '起始号非法！'
+			    		})
+			    		return;
+			    	};
+			    	let zeroLength = 0
+			    	,strArr = this.editEnterSerialNumberForm.startNumber.trim().split('')
+			    	,zeroStr = '';
+			    	for(let i = 0, strLength = strArr.length; i < strLength; i++) {
+			    		if(strArr[i] != 0) {
+			    			break;
+			    		}
+			    		zeroLength++;
+			    	}
+			    	for(let k = 0; k < zeroLength; k++) {
+			    		zeroStr += '0';
+			    	}
+			    	if(this.editEnterSerialNumberForm.number > 0) {
+			    		/**
+			    		 * 转换起始值为整数
+			    		 * 转换递增值为整数
+			    		 * @type {[type]}
+			    		 */
+			    		let initNumber = Number.parseInt(this.editEnterSerialNumberForm.startNumber)
+			    		,increment = Number.parseInt(this.editEnterSerialNumberForm.increment)
+			    		,incrementSerialNumber = initNumber;
+
+			    		/**
+			    		 * 遍历录入序列号录入个数
+			    		 * 序列号字符串
+			    		 * 空对象
+			    		 */
+
+			    		for(let j = 0; j < this.editEnterSerialNumberForm.number; j++ ) {
+			    			let numberStr = ''
+			    			,obj = {
+			    				index: 0,
+			    				editFlag: false
+			    			};
+
+			    			if(this.editEnterSerialNumberForm.prefix) {
+			    				obj.serialNumber = this.editEnterSerialNumberForm.prefix + zeroStr + initNumber + incrementSerialNumber;
+			    			} else {
+			    				obj.serialNumber = zeroStr + incrementSerialNumber;
+			    			}
+
+			    			obj.index = this.editEnterSerialNumberForm.table[this.editEnterSerialNumberForm.table.length - 1]['index'] + 1;
+			    			/**
+			    			 * 判断对象内序列号的值是否重复
+			    			 * @param  {[type]} let o             [description]
+			    			 * @return {[type]}     [description]
+			    			 */
+			    			Object.assign(obj, this.$checkSerialNumberIsRepeat(this.editEnterSerialNumberForm.table, obj));
+
+
+			    			for(let m = this.editEnterSerialNumberForm.table.length - 1; m >= 0; m--) {
+			    				if(this.editEnterSerialNumberForm.table[m].serialNumber) {
+			    					continue;
+			    				}else{
+			    					this.editEnterSerialNumberForm.table.splice(m, 1);
+			    				}
+			    			}
+			    			this.editEnterSerialNumberForm.table.push(obj);
+			    			incrementSerialNumber += increment;
+			    		}
+			    	}
+			    },
 			    addCodyGenerateSerialNumber() {
-			    	//
+			    	let obj = {};
+			    	obj.serialNumber = this.addEnterSerialNumberForm.copy;
+			    	Object.assign(obj, this.$checkSerialNumberIsRepeat(this.addEnterSerialNumberForm.table, obj));
+			    	obj.index = this.addEnterSerialNumberForm.table[this.addEnterSerialNumberForm.table.length - 1]['index'] + 1;
+			    	this.addEnterSerialNumberForm.table.push(obj);
+			    },
+			    editCodyGenerateSerialNumber() {
+			    	let obj = {};
+			    	obj.serialNumber = this.editEnterSerialNumberForm.copy;
+			    	Object.assign(obj, this.$checkSerialNumberIsRepeat(this.editEnterSerialNumberForm.table, obj));
+			    	obj.index = this.editEnterSerialNumberForm.table[this.editEnterSerialNumberForm.table.length - 1]['index'] + 1;
+			    	this.editEnterSerialNumberForm.table.push(obj);
 			    },
 			    addEnterSerialNumberFormRowClick(row) {
-			    	this.addEnterSerialNumberForm.table.forEach((item)=> {
-						item.editFlag = false;
+					this.$toggleRowEditable(this.addEnterSerialNumberForm.table, row);
+			    },
+			    editEnterSerialNumberFormRowClick(row) {
+					this.$toggleRowEditable(this.editEnterSerialNumberForm.table, row);
+			    },
+			    addCheckAttributesNumber(val) {
+			    	//检查属性编号
+			    	if(!val) {
+			    		this.$message({
+			    			type: 'warning',
+			    			message: '请输入编号!'
+			    		})
+			    	}
+			    	/*axios.post().then((res)=> {
+			    		
+			    	})*/
+			    },
+			    btnColumnSettingReset() {
+					axios.post(defaultColumnSettingUrl).then(res=> {
+						if(res.data.status) {
+							this.table.header= [];
+							this.table.header = JSON.parse(res.data.data)
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
 					})
-					for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++ ) {
-						if(row === this.addEnterSerialNumberForm.table[i]) {
-							this.addEnterSerialNumberForm.table[i].editFlag = true;
-						}
-					}
-			    }
+				},
+				btnColumnSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.table.header).then(res=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							});
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
 			},
 			watch: {
 				//
@@ -1154,8 +1564,8 @@ JGBVue.module.commodityInfo = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl)=> {
-		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl);
+	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl);
 	}
 
 	return that;
