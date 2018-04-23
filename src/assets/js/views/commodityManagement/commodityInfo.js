@@ -6,7 +6,7 @@ JGBVue.module.commodityInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+	_this.init = (searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -19,6 +19,12 @@ JGBVue.module.commodityInfo = ()=> {
 					search: {
 						input: ''
 					},
+					multipleOption: [],
+					multipleTotalOption: [],
+					addMultiplePreferredOutOption: [],
+					addMultiplePreferredEnterOption: [],
+					editMultiplePreferredOutOption: [],
+					editMultiplePreferredEnterOption: [],
 					detailsInfo: {},
 					isShowForbiddenCommodity: false,
 					activeIndex: -1,
@@ -43,6 +49,9 @@ JGBVue.module.commodityInfo = ()=> {
 						],
 						name: [
 							{required: true, message: '请输入客户名称'}
+						],
+						jibendanwei: [
+							{required: true, message: '请输入基本单位'}
 						]
 					},
 					auxiliaryAttributesClassify: [], //添加-点击属性分类-父属性
@@ -58,6 +67,7 @@ JGBVue.module.commodityInfo = ()=> {
 						commodityBrand: '',
 						unitOfMeasurement: '',
 						multiple: '',
+						multipleTable: [],
 						retailPrice: '',
 						tradePrice: '',
 						lowestPrince: '',
@@ -66,6 +76,9 @@ JGBVue.module.commodityInfo = ()=> {
 						discountRate2: '',
 						discountRate3: '',
 						expectPurchasePrice: '',
+						multipleTotalOption: [],
+						multiplePreferredOutOption: [],
+						multiplePreferredEnterOption: [],
 						remark: '',
 						upload: [],
 						inventoryWarning: false,
@@ -100,7 +113,7 @@ JGBVue.module.commodityInfo = ()=> {
 						enterSerialNumberTable: []
 					},
 					editForm: {
-						number: '',
+						number: 'f011',
 						name: '',
 						commodityCategory: '',
 						barCode: '',
@@ -109,6 +122,7 @@ JGBVue.module.commodityInfo = ()=> {
 						commodityBrand: '',
 						unitOfMeasurement: '',
 						multiple: '',
+						multipleTable: [],
 						retailPrice: '',
 						tradePrice: '',
 						lowestPrince: '',
@@ -117,6 +131,9 @@ JGBVue.module.commodityInfo = ()=> {
 						discountRate2: '',
 						discountRate3: '',
 						expectPurchasePrice: '',
+						multipleTotalOption: [],
+						multiplePreferredOutOption: [],
+						multiplePreferredEnterOption: [],
 						remark: '',
 						upload: [],
 						inventoryWarning: false,
@@ -220,7 +237,12 @@ JGBVue.module.commodityInfo = ()=> {
 							}
 						]
 					},
-					showColumnSetting: false
+					showColumnSetting: false,
+					addNewMultipleDialogVisible: true,
+					newUnit: {
+						jibendanwei: '',
+						fudanwei: []
+					}
 				}
 			},
 			mounted() {
@@ -229,6 +251,7 @@ JGBVue.module.commodityInfo = ()=> {
 				this.getRepo();
 				this.quickGenerate();
 				this.getAuxiliaryAttributesClassify();
+				this.getMultiple();
 			},
 			methods: {
 				searchData(val) {
@@ -253,6 +276,31 @@ JGBVue.module.commodityInfo = ()=> {
 					}).catch((err)=> {
 						console.log('axios err: ', err);
 					});
+				},
+				getMultiple() {
+					axios.get(duodanweiUrl).then((res)=> {
+						let _self = this;
+						if(res.data.status) {
+							let jdata = JSON.parse(res.data.data);
+							this.multipleOption = jdata.concat();
+							jdata.forEach((item)=> {
+								let obj = {}
+								,label = ''
+								,value = ''
+								,labelArr = []
+								,beishuArr = [];
+								labelArr.push(item.jibendanwei);
+								beishuArr.push(1);
+								item.fudanwei.forEach((fdw)=> {
+									labelArr.push(fdw.value);
+									beishuArr.push(fdw.beishu);
+								})
+								obj.label = labelArr.join(',') + '(' +beishuArr.join(',') + ')';
+								obj.value = item.jibendanwei;
+								_self.multipleTotalOption.push(obj);
+							})
+						}
+					})
 				},
 				getQuickQuery() {
 					axios.get(quickQueryUrl).then((res)=> {
@@ -1535,6 +1583,131 @@ JGBVue.module.commodityInfo = ()=> {
 						})
 					})
 				},
+				addChangeMultipleTotalSelect(val) {
+					let _self = this
+					,obj = {}
+					,tableObj = {
+						editFlag: false
+					}
+					,index = 1;
+					this.addForm.multiplePreferredOutOption = null;
+					this.addForm.multiplePreferredEnterOption = null;
+					this.addMultiplePreferredOutOption = [];
+					this.addMultiplePreferredEnterOption = [];
+
+					obj.label = val;
+					obj.value = val;
+					_self.addMultiplePreferredOutOption.push(obj);
+					_self.addMultiplePreferredEnterOption.push(obj);
+
+					this.addForm.multipleTable = [];
+
+					tableObj.unitName = '基本单位';
+					tableObj.unitOfMeasurement = val;
+
+					this.addForm.multipleTable.push(tableObj);
+					for (var i = this.multipleOption.length - 1; i >= 0; i--) {
+						if(this.multipleOption[i].jibendanwei === val) {
+							this.multipleOption[i].fudanwei.forEach((item)=> {
+								let obj1 = {}
+								,tableObj1 = {
+									editFlag: false
+								};
+
+								obj1.label = item.value;
+								obj1.value = item.value;
+								_self.addMultiplePreferredOutOption.push(obj1);
+								_self.addMultiplePreferredEnterOption.push(obj1);
+
+								tableObj1.unitName = '副单位' + index;
+								tableObj1.unitOfMeasurement = item.value;
+								index++;
+
+								_self.addForm.multipleTable.push(tableObj1);
+							})
+						}
+					}
+				},
+				editChangeMultipleTotalSelect(val) {
+					let _self = this
+					,obj = {}
+					,tableObj = {
+						editFlag: false
+					}
+					,index = 1;
+					this.editForm.multiplePreferredOutOption = null;
+					this.editForm.multiplePreferredEnterOption = null;
+					this.editMultiplePreferredOutOption = [];
+					this.editMultiplePreferredEnterOption = [];
+
+					obj.label = val;
+					obj.value = val;
+					_self.editMultiplePreferredOutOption.push(obj);
+					_self.editMultiplePreferredEnterOption.push(obj);
+
+					this.editForm.multipleTable = [];
+
+					tableObj.unitName = '基本单位';
+					tableObj.unitOfMeasurement = val;
+
+					this.editForm.multipleTable.push(tableObj);
+					for (var i = this.multipleOption.length - 1; i >= 0; i--) {
+						if(this.multipleOption[i].jibendanwei === val) {
+							this.multipleOption[i].fudanwei.forEach((item)=> {
+								let obj1 = {}
+								,tableObj1 = {
+									editFlag: false
+								};
+
+								obj1.label = item.value;
+								obj1.value = item.value;
+								_self.editMultiplePreferredOutOption.push(obj1);
+								_self.editMultiplePreferredEnterOption.push(obj1);
+
+								tableObj1.unitName = '副单位' + index;
+								tableObj1.unitOfMeasurement = item.value;
+								index++;
+
+								_self.editForm.multipleTable.push(tableObj1);
+							})
+						}
+					}
+				},
+				addMultipleTableRowClick(row) {
+					this.$toggleRowEditable(this.addForm.multipleTable, row);
+				},
+				editMultipleTableRowClick(row) {
+					this.$toggleRowEditable(this.editForm.multipleTable, row);
+				},
+				saveMultiple(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							/*for (var i = 0; i < this.newUnit.fudanwei.length; i++) {
+								if(this.newUnit.fudanwei[i].value.length === 0||this.newUnit.fudanwei[i].beishu.length||this.newUnit.fudanwei[i].beishu <= 0) {
+									this.$message({
+										type: 'warning',
+										message: '副单位的值不能为空且倍数不能小于0'
+									})
+									return false;
+								}
+							}*/
+							console.log('this.newUnit.fudanwei[i].value: ', this.newUnit.fudanwei[0].value)
+						}else{
+							return false;
+						}
+					})
+				},
+				removeFdw(fdw) {
+					for (var i = 0; i < this.newUnit.fudanwei.length; i++) {
+						if(this.newUnit.fudanwei[i] === fdw) {
+							this.newUnit.fudanwei.splice(i, 1);
+						}
+					}
+				},
+				addFwd() {
+					let obj = {};
+					this.newUnit.fudanwei.push(obj);
+				}
 			},
 			watch: {
 				//
@@ -1564,8 +1737,8 @@ JGBVue.module.commodityInfo = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
-		_this.init(searchUrl, quickQueryUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl);
+	that.init = (searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+		_this.init(searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl);
 	}
 
 	return that;

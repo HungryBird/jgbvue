@@ -135,7 +135,7 @@
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
-					<el-form-item prop="unitOfMeasurement" label="计量单位">
+					<el-form-item prop="unitOfMeasurement" label="计量单位" v-if="!addForm.multiple">
 						<el-select v-model="addForm.unitOfMeasurement">
 							<el-option v-for="item in addFormBasicData.unitOfMeasurement" :value="item.value" :key="item.value"></el-option>
 						</el-select>
@@ -149,7 +149,36 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row>
+			<el-row :gutter="4">
+				<el-col :span="12" v-if="addForm.multiple">
+					<el-form-item prop="multipleTotalOption" label="多单位选择">
+						<el-select v-model="addForm.multipleTotalOption" clearable v-on:change="addChangeMultipleTotalSelect">
+							<el-option v-for="mo in multipleTotalOption" :key="mo.value" :value="mo.value" :label="mo.label"></el-option>
+							<div v-on:click="addNewMultipleDialogVisible = true" class="el-select-dropdown__item">
+								<span style="float: left" class="el-icon-plus"></span>
+								<span style="float: left; color: #8492a6; font-size: 13px">新增单位</span>
+							</div>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12" v-if="addForm.multiple">
+					<el-form-item prop="multiplePreferredOutOption" label="首选出库单位">
+						<el-select v-model="addForm.multiplePreferredOutOption" clearable>
+							<el-option v-for="mo in addMultiplePreferredOutOption" :key="mo.value" :value="mo.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12" v-if="addForm.multiple">
+					<el-form-item prop="multiplePreferredEnterOption" label="首选入库单位">
+						<el-select v-model="addForm.multiplePreferredEnterOption" clearable>
+							<el-option v-for="mo in addMultiplePreferredEnterOption" :key="mo.value" :value="mo.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row v-if="!addForm.setCommodityAuxiliaryAttributes||addForm.multiple">
 				<el-col :span="24">
 					<h3 title="各销售价格分别对应客户信息中的客户等级，如：零售价-零售客户，批发价-批发客户...开单时选择客户后再选择该商品，可自动填写相应的价格或折扣">
 						价格策略
@@ -157,7 +186,48 @@
 					</h3>
 				</el-col>
 			</el-row>
-			<el-row :gutter="4">
+			<!-- 表格 -->
+			<el-table v-if="addForm.multiple" ref="addMultipleTable" :data="addForm.multipleTable" border v-on:row-click="addMultipleTableRowClick">
+				<el-table-column label="单位名字" prop="unitName"></el-table-column>
+				<el-table-column label="计量单位" prop="unitOfMeasurement"></el-table-column>
+				<el-table-column label="零售价" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="批发价" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="VIP会员价" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="折扣率一(%)" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="折扣率二(%)" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="预计采购价" prop="expectPurchasePrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.expectPurchasePrice }}</div>
+						<el-input v-else v-model="scope.row.expectPurchasePrice"></el-input>
+					</template>
+				</el-table-column>
+			</el-table>
+			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="retailPrice" label="零售价">
 						<el-input v-model="addForm.retailPrice"></el-input>
@@ -169,7 +239,7 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row :gutter="4">
+			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="lowestPrince" label="最低价">
 						<el-input v-model="addForm.lowestPrince"></el-input>
@@ -181,7 +251,7 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row :gutter="4">
+			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="discountRate1" label="折扣率一(%)">
 						<el-input v-model="addForm.discountRate1"></el-input>
@@ -189,11 +259,11 @@
 				</el-col>
 				<el-col :span="12">
 					<el-form-item prop="discountRate3" label="折扣率二(%)">
-						<el-input v-model="addForm.discountRate1"></el-input>
+						<el-input v-model="addForm.discountRate2"></el-input>
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row :gutter="4">
+			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="discountRate3" label="折扣率三(%)">
 						<el-input v-model="addForm.discountRate3"></el-input>
@@ -342,37 +412,37 @@
 							<el-table-column label="零售价" prop="retailPrice">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
-									<el-input v-else v-model="scope.row.retailPrice"></el-input>
+									<el-input v-else v-model="scope.row.retailPrice" :disabled="addForm.multiple"></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column label="批发价" prop="tradePrice">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.tradePrice }}</div>
-									<el-input v-else v-model="scope.row.tradePrice"></el-input>
+									<el-input v-else v-model="scope.row.tradePrice" :disabled="addForm.multiple"></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column label="VIP价" prop="VIPPrice">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.VIPPrice }}</div>
-									<el-input v-else v-model="scope.row.VIPPrice"></el-input>
+									<el-input v-else v-model="scope.row.VIPPrice" :disabled="addForm.multiple"></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column label="折扣率一" prop="discountRate1">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.discountRate1 }}</div>
-									<el-input v-else v-model="scope.row.discountRate1"></el-input>
+									<el-input v-else v-model="scope.row.discountRate1" :disabled="addForm.multiple"></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column label="折扣率二" prop="discountRate2">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.discountRate2 }}</div>
-									<el-input v-else v-model="scope.row.discountRate2"></el-input>
+									<el-input v-else v-model="scope.row.discountRate2" :disabled="addForm.multiple"></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column label="预计采购价" prop="expectPurchasePrice">
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row.expectPurchasePrice }}</div>
-									<el-input v-else v-model="scope.row.expectPurchasePrice"></el-input>
+									<el-input v-else v-model="scope.row.expectPurchasePrice" :disabled="addForm.multiple"></el-input>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -567,7 +637,32 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row>
+			<el-row :gutter="4">
+				<el-col :span="12" v-if="editForm.multiple">
+					<el-form-item prop="multipleTotalOption" label="多单位选择">
+						<el-select v-model="editForm.multipleTotalOption" clearable v-on:change="editChangeMultipleTotalSelect">
+							<el-option v-for="mo in multipleTotalOption" :key="mo.value" :value="mo.value" :label="mo.label"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<el-col :span="12" v-if="editForm.multiple">
+					<el-form-item prop="multiplePreferredOutOption" label="首选出库单位">
+						<el-select v-model="editForm.multiplePreferredOutOption" clearable>
+							<el-option v-for="mo in editMultiplePreferredOutOption" :key="mo.value" :value="mo.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="4">
+				<el-col :span="12" v-if="editForm.multiple">
+					<el-form-item prop="multiplePreferredEnterOption" label="首选入库单位">
+						<el-select v-model="editForm.multiplePreferredEnterOption" clearable>
+							<el-option v-for="mo in editMultiplePreferredEnterOption" :key="mo.value" :value="mo.value"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row v-if="!editForm.setCommodityAuxiliaryAttributes||editForm.multiple">
 				<el-col :span="24">
 					<h3 title="各销售价格分别对应客户信息中的客户等级，如：零售价-零售客户，批发价-批发客户...开单时选择客户后再选择该商品，可自动填写相应的价格或折扣">
 						价格策略
@@ -575,7 +670,48 @@
 					</h3>
 				</el-col>
 			</el-row>
-			<el-row :gutter="4">
+			<!-- 表格 -->
+			<el-table v-if="editForm.multiple" ref="editMultipleTable" :data="editForm.multipleTable" border v-on:row-click="editMultipleTableRowClick">
+				<el-table-column label="单位名字" prop="unitName"></el-table-column>
+				<el-table-column label="计量单位" prop="unitOfMeasurement"></el-table-column>
+				<el-table-column label="零售价" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="批发价" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="VIP会员价" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="折扣率一(%)" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="折扣率二(%)" prop="retailPrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.retailPrice }}</div>
+						<el-input v-else v-model="scope.row.retailPrice"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="预计采购价" prop="expectPurchasePrice">
+					<template slot-scope="scope">
+						<div v-if="!scope.row.editFlag">{{ scope.row.expectPurchasePrice }}</div>
+						<el-input v-else v-model="scope.row.expectPurchasePrice"></el-input>
+					</template>
+				</el-table-column>
+			</el-table>
+			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="retailPrice" label="零售价">
 						<el-input v-model="editForm.retailPrice"></el-input>
@@ -587,7 +723,7 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row :gutter="4">
+			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="lowestPrince" label="最低价">
 						<el-input v-model="editForm.lowestPrince"></el-input>
@@ -599,7 +735,7 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row :gutter="4">
+			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="discountRate1" label="折扣率一(%)">
 						<el-input v-model="editForm.discountRate1"></el-input>
@@ -607,11 +743,11 @@
 				</el-col>
 				<el-col :span="12">
 					<el-form-item prop="discountRate3" label="折扣率二(%)">
-						<el-input v-model="editForm.discountRate1"></el-input>
+						<el-input v-model="editForm.discountRate2"></el-input>
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row :gutter="4">
+			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="discountRate3" label="折扣率三(%)">
 						<el-input v-model="editForm.discountRate3"></el-input>
@@ -1110,6 +1246,29 @@
           	<el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
         </div>
      </el-dialog>
+     <!-- 新增多计量单位窗口 -->
+     <el-dialog title="新增多计量单位" :visible.sync="addNewMultipleDialogVisible">
+     	<el-form :model="newUnit" :rules="formRules" label-position="left" label-width="100px" ref="newUnitForm">
+     		<div>
+     			<el-form-item label="基本单位" prop="jibendanwei">
+	     			<el-input v-model="newUnit.jibendanwei"></el-input>
+	     			基本单位应为最小度量单位
+	     		</el-form-item>
+     		</div>
+     		<div v-for="(fdw, index) in newUnit.fudanwei" :key="fdw.value" style="margin-bottom: 6px;">
+     			<i class="el-icon-delete" style="color: #ff0000;cursor: pointer;" v-on:click="removeFdw(fdw)"></i>
+     			<span>副单位 {{ index + 1 }}</span>
+     			<el-input v-model="fdw.value" style="display: inline-block;width: 170px;"></el-input>
+     			<span>=</span>
+     			<el-input v-model="fdw.beishu" style="display: inline-block;width: 170px;" type="number" min="1"></el-input>
+     			{{ newUnit.jibendanwei }}
+     		</div>
+     	</el-form>
+     	<el-button v-on:click.prevent="addFwd">增加单位</el-button>
+     	<div slot="footer">
+     		<jgb-form-footer :loading="loading" v-on:save="saveMultiple('newUnitForm')" v-on:close="addNewMultipleDialogVisible = false"></jgb-form-footer>
+     	</div>
+     </el-dialog>
 </div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -1121,6 +1280,7 @@
 	/**
 	 * 查询接口
 	 * 获取快速查询选项接口
+	 * 获取多单位选项
 	 * 获取辅助属性分类
 	 * 获取仓库
 	 * 切换状态
@@ -1137,6 +1297,6 @@
 	 * 获取默认列设置
 	 * 列设置完成
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete');
+	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete');
 </script>
 </html>
