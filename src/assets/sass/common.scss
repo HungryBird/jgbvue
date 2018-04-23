@@ -1517,5 +1517,23 @@ table{
 		@include common-border;
 		padding:5px;
 		text-align: center;
+		position:relative;
+		.el-form-item {
+			&.cost {
+				width: 100px;
+				margin:0 auto;
+				.el-input {
+					width: 100%;
+				}
+			}
+		}
 	}
+}
+
+.w-empty-cell {
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
 }

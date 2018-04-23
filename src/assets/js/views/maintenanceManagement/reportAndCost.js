@@ -24,12 +24,14 @@ JGBVue.module.reportAndCost = () => {
     reportDataCheckExistUrl, //工单是否已有维修报告
     costDataCheckExistUrl, //工单是否已有最终成本
     editMaintenanceReportUrl, //暂存、确认新增维修报告
+    submitFinalCostUrl //提交最终成本
   ) => {
     that.vm = new Vue({
       el: '#app',
       data: function () {
         let validateCost = (rule, value, callback) => {
           let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
+          value = value.toString()
           if (value != value.match(reg)) {
             callback(new Error('请输入正确的金额'));
           } 
@@ -139,22 +141,23 @@ JGBVue.module.reportAndCost = () => {
             level: { required: true, message: '请选择紧急程度', trigger: 'blur' },
             maintenance_person: { required: true, message: '请选择维修人员', trigger: 'blur' },
             order_fin: { required: true, message: '请选择完成时间', trigger: 'blur' },
-            rengong: { validator: validateCost, trigger: 'blur' },
-            peijian: { validator: validateCost, trigger: 'blur' },
-            peisong: { validator: validateCost, trigger: 'blur' },
-            anzhuang: { validator: validateCost, trigger: 'blur' },
-            qita: { validator: validateCost, trigger: 'blur' },
+            rengong: { validator: validateCost, trigger: 'blur,change' },
+            peijian: { validator: validateCost, trigger: 'blur,change' },
+            peisong: { validator: validateCost, trigger: 'blur,change' },
+            anzhuang: { validator: validateCost, trigger: 'blur,change' },
+            qita: { validator: validateCost, trigger: 'blur,change' },
           },
           loadingReportTempStorage: false, //正在写入数据
 
           showFinalCost: false, //最终成本 窗
           finalCostForm: {}, //最终成本表单数据
           finalCostFormRules: { //最终成本验证规则
-            anzhuang: { validator: validateCost, trigger: 'blur' },
-            peisong: { validator: validateCost, trigger: 'blur' },
-            qita: { validator: validateCost, trigger: 'blur' },
+            anzhuang: { validator: validateCost, trigger: 'blur,change' },
+            peisong: { validator: validateCost, trigger: 'blur,change' },
+            qita: { validator: validateCost, trigger: 'blur,change' },
           },
-          validateCost: validateCost,
+          validateCost: validateCost, //公用金额验证规则
+          loadingFinalCostSure: false, //正在提交最终报告
         }
       },
       computed: {
@@ -376,7 +379,55 @@ JGBVue.module.reportAndCost = () => {
           this.showFinalCost = true
           this.$refs.finalCostForm && this.$refs.finalCostForm.resetFields()
           this.finalCostForm = this.$deepCopy(row.costInfo)
-          console.log(row.costInfo)
+          // console.log(row.costInfo)
+          //为每一条配件信息添加 小计属性
+          this.finalCostForm.peijian.forEach(item=> {
+            item.subTotal = Number(item.count) * Number(item.data.price)
+          })
+          //为最终成本表单添加合计属性
+          this.sumFinalCost()
+        },
+        //最终成本 - 确定
+        btnFinalCostSubmit: function() {
+          this.$refs.finalCostForm.validate((valid) => {
+            if (valid) {
+              this.loadingFinalCostSure = true
+              axios.post(submitFinalCostUrl, {
+                data: this.finalCostForm
+              }).then(res=> {
+                if(res.data.status) {
+                  this.$message({
+                    type: 'success',
+                    message: res.data.message,
+                    center: true
+                  })
+                  //在此处理是否关闭窗口
+                  this.showFinalCost = false
+                  this.$refs.finalCostForm.resetFields()
+                }
+                else {
+                  this.$message({
+                    type: 'error',
+                    message: res.data.message,
+                    center: true
+                  })
+                };
+                this.loadingFinalCostSure = false
+              }).catch(err=> {
+                console.error(err)
+                this.$message({
+                  type: 'error',
+                  message: err,
+                  center: true
+                })
+                this.loadingFinalCostSure = false
+              })
+            } 
+            else {
+              console.log('error submit!!');
+              return false;
+            };
+          })
         },
         //打印列表
         btnPrintList: function() {
@@ -859,6 +910,31 @@ JGBVue.module.reportAndCost = () => {
             + getCost(this.reportAddForm.anzhuang)
             + getCost(this.reportAddForm.qita)
         },
+        /**
+         * 合计-最终成本
+         * 费用中任意一项不匹配金额规则 不计入合计中
+         */
+        sumFinalCost: function() {
+          let getCost = (value) => {
+            let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
+            return value == value.match(reg)
+                    ? Number(value)
+                    : 0
+          }
+          let subTotal = 0
+          this.finalCostForm.peijian.forEach(item=> {
+            subTotal += item.subTotal
+          })
+          this.finalCostForm.rengong.forEach(item=> {
+            subTotal += Number(item.price)
+          })
+          this.finalCostForm.total_price 
+            = getCost(this.finalCostForm.peisong) 
+            + getCost(this.finalCostForm.anzhuang)
+            + getCost(this.finalCostForm.qita)
+            + subTotal;
+          this.finalCostForm.cn_price = 'abc'
+        },
       },
       watch: {
         'reportAddForm.rengong': function() {
@@ -875,6 +951,13 @@ JGBVue.module.reportAndCost = () => {
         },
         'reportAddForm.qita': function() {
           this.sumReportAddFormCost()
+        },
+        //最终成本 -合计
+        finalCostForm: {
+          deep: true,
+          handler: function() {
+            this.sumFinalCost()
+          }
         },
       },
       created: function () {
@@ -902,7 +985,8 @@ JGBVue.module.reportAndCost = () => {
     deliveryOrderUrl,
     reportDataCheckExistUrl,
     costDataCheckExistUrl,
-    editMaintenanceReportUrl
+    editMaintenanceReportUrl,
+    submitFinalCostUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -919,7 +1003,8 @@ JGBVue.module.reportAndCost = () => {
       deliveryOrderUrl,
       reportDataCheckExistUrl,
       costDataCheckExistUrl,
-      editMaintenanceReportUrl
+      editMaintenanceReportUrl,
+      submitFinalCostUrl
     )
   }
   return that

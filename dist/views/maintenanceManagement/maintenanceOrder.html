@@ -125,7 +125,7 @@
                         <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
                         <el-button type="" v-if="scope.row.hasReport && scope.row.hasCost" size="mini" v-on:click="btnDelivery(scope.row, scope.$index)">交付</el-button>
                         <el-button type="" size="mini" v-on:click="btnReport(scope.row, scope.$index)">维修报告</el-button>
-                        <el-button type="" size="mini" v-on:click="">最终成本</el-button>
+                        <el-button type="" size="mini" v-on:click="btnFinalCost(scope.row, scope.$index)">最终成本</el-button>
                         <el-button type="" size="mini" v-on:click="">开票申请</el-button>
                       </div>
                   </div>
@@ -697,6 +697,97 @@
           </div>
         </div>
       </el-dialog>
+      <!-- 最终成本 -->
+      <el-dialog :visible.sync="showFinalCost">
+        <div class="title" slot="title">最终成本</div>
+        <el-form class="w-common-form" ref="finalCostForm"
+          :model="finalCostForm" :rules="finalCostFormRules">
+          <table class="final-cost">
+            <thead>
+              <th>费用项</th>
+              <th>配件名称</th>
+              <th>规格型号</th>
+              <th>单位</th>
+              <th>数量</th>
+              <th>金额</th>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in finalCostForm.peijian">
+                <th>配件费用{{index+1}}</th>
+                <td>{{item.data.commodityName}}</td>
+                <td>{{item.data.specifications}}</td>
+                <td>{{item.data.unit}}</td>
+                <td>{{item.count}}</td>
+                <td>
+                  <el-form-item class="cost"
+                    :key="`peijian${index}`"
+                    :prop="`peijian[${index}].subTotal`"
+                    :rules="{validator: validateCost, trigger: 'blur,change'}">
+                    <el-input v-model="finalCostForm.peijian[index].subTotal">
+                    </el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr v-for="(item,index) in finalCostForm.rengong">
+                <th>
+                  <div>人工维修费用：</div>
+                  <div>(维修人员：{{item.person_name}})</div>
+                </th>
+                <td colspan="4"><jgb-empty-cell /></td>
+                <td>
+                  <el-form-item class="cost"
+                    :key="`rengong${index}`"
+                    :prop="`rengong[${index}].price`"
+                    :rules="{validator: validateCost, trigger: 'blur,change'}">
+                    <el-input v-model="finalCostForm.rengong[index].price">
+                    </el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <th>安装费用：</th>
+                <td colspan="4"><jgb-empty-cell /></td>
+                <td>
+                  <el-form-item class="cost" prop="anzhuang">
+                    <el-input v-model="finalCostForm.anzhuang">
+                    </el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <th>配送费用：</th>
+                <td colspan="4"><jgb-empty-cell /></td>
+                <td>
+                  <el-form-item class="cost" prop="peisong">
+                    <el-input v-model="finalCostForm.peisong">
+                    </el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <th>其他费用：</th>
+                <td colspan="4"><jgb-empty-cell /></td>
+                <td>
+                  <el-form-item class="cost" prop="qita">
+                    <el-input v-model="finalCostForm.qita">
+                    </el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <th>大写：</th>
+                <td colspan="3">{{finalCostForm.total_price && $convertCurrency(finalCostForm.total_price)}}</td>
+                <th>小写：</th>
+                <td>{{finalCostForm.total_price && finalCostForm.total_price.toFixed(2)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </el-form>
+        <jgb-form-footer slot="footer"
+          save-text="确认" close-text="取消"
+          v-on:save="btnFinalCostSubmit" v-on:close="showFinalCost = false;">
+        </jgb-form-footer>
+      </el-dialog>
 		</el-container>
 	</div>
 </body>
@@ -729,7 +820,8 @@
     '/common/data_add_save', //交付工单接口
     '/maintenanceManagement/is_report_exist', //工单是否已有维修报告
     '/maintenanceManagement/is_cost_exist', //工单是否已有最终成本
-    '/common/data_add_save' //暂存、确认新增维修报告
+    '/common/data_add_save', //暂存、确认新增维修报告
+    '/common/data_add_save' //提交最终成本
 
 	);
 </script>
