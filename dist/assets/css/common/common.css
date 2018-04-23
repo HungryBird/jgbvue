@@ -1381,4 +1381,17 @@ table {
   .final-cost th, .final-cost td {
     border: 1px solid #ddd;
     padding: 5px;
-    text-align: center; }
+    text-align: center;
+    position: relative; }
+    .final-cost th .el-form-item.cost, .final-cost td .el-form-item.cost {
+      width: 100px;
+      margin: 0 auto; }
+      .final-cost th .el-form-item.cost .el-input, .final-cost td .el-form-item.cost .el-input {
+        width: 100%; }
+
+.w-empty-cell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; }

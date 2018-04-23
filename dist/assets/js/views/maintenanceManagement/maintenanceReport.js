@@ -22,6 +22,7 @@ JGBVue.module.maintenanceReport = () => {
       data: function () {
         let validateCost = (rule, value, callback) => {
           let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
+          value = value.toString()
           if (value != value.match(reg)) {
             callback(new Error('请输入正确的金额'));
           } 
@@ -89,11 +90,11 @@ JGBVue.module.maintenanceReport = () => {
             level: { required: true, message: '请选择紧急程度', trigger: 'blur' },
             maintenance_person: { required: true, message: '请选择维修人员', trigger: 'blur' },
             order_fin: { required: true, message: '请选择完成时间', trigger: 'blur' },
-            rengong: { validator: validateCost, trigger: 'blur' },
-            peijian: { validator: validateCost, trigger: 'blur' },
-            peisong: { validator: validateCost, trigger: 'blur' },
-            anzhuang: { validator: validateCost, trigger: 'blur' },
-            qita: { validator: validateCost, trigger: 'blur' },
+            rengong: { validator: validateCost, trigger: 'blur,change' },
+            peijian: { validator: validateCost, trigger: 'blur,change' },
+            peisong: { validator: validateCost, trigger: 'blur,change' },
+            anzhuang: { validator: validateCost, trigger: 'blur,change' },
+            qita: { validator: validateCost, trigger: 'blur,change' },
           },
           loadingReportTempStorage: false, //正在写入数据
 
