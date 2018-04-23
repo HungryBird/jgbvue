@@ -19,7 +19,26 @@ JGBVue.module.maintenanceReport = () => {
           selectedRows: "", //选中行
 
           showReport: false, //查看维修报告 窗
-          reportDetailsUrl:"" //查看维修报告页面的路径
+          reportDetailsUrl:"", //查看维修报告页面的路径
+
+          showReportAddForm: true, //新增
+          reportAddForm: {}, //新增维修报告表单数据
+          defaultReportAddForm: { //新增维修报告默认空数据
+            title: "",
+            order_id: "",
+            date: "",
+            base_info: {
+              order_date: "",
+              client_name: "",
+              maintenance_company: "",
+              equipment_name: "",
+              equipment_category: "",
+              equipment_brand: "",
+              equipment_source: "",
+              
+            },
+          }, 
+          loadingTempStorage: false, //正在写入数据
         }
       },
       computed: {
@@ -31,6 +50,13 @@ JGBVue.module.maintenanceReport = () => {
         },
       },
       methods: {
+        /**
+         * 新增
+         */
+        btnAdd: function() {
+          this.reportAddForm = this.$deepCopy(this.defaultReportAddForm)
+          this.showReportAddForm = true
+        },
         /**
          * 查看
          * @param {Object} row 行数据
@@ -51,6 +77,11 @@ JGBVue.module.maintenanceReport = () => {
             './views/maintenanceManagement/printMaintenanceReport.html', 
             `order_id=${this.selectedRows[0].order_id}&&report_id=${this.selectedRows[0].report_id}`)
         },
+        /**
+         * 新增维修报告 - 暂存、确认
+         * @param {String} type temp暂存 submit确认
+         */
+        btnTempStorage: function(type) {},
         /**
          * 获取维修报告数据
          */
