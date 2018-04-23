@@ -11,13 +11,13 @@ JGBVue.module.printOrder = ()=> {
 	,that = {};
 
 	_this.init = (
-    orderInfoGetUrl //获取维修报告
+    reportInfoGetUrl //获取维修报告
   )=> {
 		new Vue({
 			el: '#app',
 			data: {
         loadingOrderInfo: false, //加载工单信息状态
-        orderInfo: {}, //工单信息
+        reportInfo: {}, //工单信息
         oldHTML: "",
         newHTML: "",
       },
@@ -43,12 +43,13 @@ JGBVue.module.printOrder = ()=> {
         //获取工单信息
         getOrderInfo: function() {
           this.loadingOrderInfo = true
-          axios.post(orderInfoGetUrl, {
-            order_id: this.c_orderId
+          axios.post(reportInfoGetUrl, {
+            report_id: this.c_reportId
           }).then(res=> {
             if(res.data.status) {
               // console.log(res.data.data)
-              this.orderInfo = JSON.parse(res.data.data).order_data
+              let _data = JSON.parse(res.data.data)
+              this.reportInfo = JSON.parse(_data.data)
             }
             else {
               this.$message({
@@ -84,10 +85,10 @@ JGBVue.module.printOrder = ()=> {
 	}
 
 	that.init = (
-    orderInfoGetUrl
+    reportInfoGetUrl
   )=> {
 		_this.init(
-      orderInfoGetUrl
+      reportInfoGetUrl
     );
 	}
 

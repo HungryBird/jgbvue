@@ -103,7 +103,7 @@
                         <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
                         <el-button type="" v-if="scope.row.hasReport && scope.row.hasCost" size="mini" v-on:click="btnDelivery(scope.row, scope.$index)">交付</el-button>
                         <el-button type="" size="mini" v-on:click="btnReport(scope.row, scope.$index)">维修报告</el-button>
-                        <el-button type="" size="mini" v-on:click="">最终成本</el-button>
+                        <el-button type="" size="mini" v-on:click="btnFinalCost(scope.row, scope.$index)">最终成本</el-button>
                         <el-button type="" size="mini" v-on:click="">开票申请</el-button>
                       </div>
                   </div>
@@ -156,6 +156,9 @@
       <!-- 导出 -->
       <el-dialog :visible.sync="showExport" width="600px">
         <div class="title" slot="title">导出</div>
+        <el-alert title="注：请选择需要导出的字段。" style="margin-bottom:10px;"
+          type="warning" :closable="false">
+        </el-alert>
         <el-checkbox-group v-model="exportChecked" class="w-export">
           <el-checkbox v-if="item.prop != 'action'"
             v-for="item in tableHeader" border checked
@@ -192,11 +195,11 @@
       <el-dialog :visible.sync="showReportAddForm">
         <div class="title" slot="title">新增维修报告</div>
         <el-form ref="reportAddForm" label-width="100px" class="w-common-form"
-          :module="reportAddForm" :rules="reportAddFormRules">
+          :model="reportAddForm" :rules="reportAddFormRules">
           <el-form-item label="标题：" prop="title">
             <el-input v-model="reportAddForm.title"></el-input>
           </el-form-item>
-          <el-row :gutter="10">
+          <el-row :gutter="5">
             <el-col :span="12">
               <el-form-item label="工单编号：" prop="order_id">
                 <el-input v-model="reportAddForm.order_id" readonly></el-input>
@@ -208,101 +211,250 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="10">
-            <el-col ::span="8">
+          <el-form-item label="基本信息："></el-form-item>
+          <el-row :gutter="5">
+            <el-col :span="8">
               <el-form-item label="工单日期：" prop="order_date">
                 <el-input v-model="reportAddForm.order_date" readonly></el-input>
               </el-form-item>
             </el-col>
-            <el-col ::span="8">
+            <el-col :span="8">
               <el-form-item label="客户名称：" prop="client_name">
                 <el-input v-model="reportAddForm.client_name" readonly></el-input>
               </el-form-item>
             </el-col>
-            <el-col ::span="8">
+            <el-col :span="8">
               <el-form-item label="维修公司：" prop="maintenance_company">
                 <el-input v-model="reportAddForm.maintenance_company" readonly></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="10">
-            <el-col ::span="8">
+          <el-row :gutter="5">
+            <el-col :span="8">
               <el-form-item label="设备名称：" prop="equipment_name">
                 <el-input v-model="reportAddForm.equipment_name" readonly></el-input>
               </el-form-item>
             </el-col>
-            <el-col ::span="8">
+            <el-col :span="8">
               <el-form-item label="设备类别：" prop="equipment_category">
                 <el-input v-model="reportAddForm.equipment_category" readonly></el-input>
               </el-form-item>
             </el-col>
-            <el-col ::span="8">
+            <el-col :span="8">
               <el-form-item label="设备品牌：" prop="equipment_brand">
                 <el-input v-model="reportAddForm.equipment_brand" readonly></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="10">
-            <el-col ::span="8">
+          <el-row :gutter="5">
+            <el-col :span="8">
               <el-form-item label="设备来源：" prop="equipment_source">
                 <el-input v-model="reportAddForm.equipment_source" readonly></el-input>
               </el-form-item>
             </el-col>
-            <el-col ::span="8">
+            <el-col :span="8">
               <el-form-item label="报修方式：" prop="equipment_method">
                 <el-input v-model="reportAddForm.equipment_method" readonly></el-input>
               </el-form-item>
             </el-col>
-            <el-col ::span="8">
-              <el-form-item label="紧急程度：" prop="equipment_level">
-                <el-input v-model="reportAddForm.equipment_level" readonly></el-input>
+            <el-col :span="8">
+              <el-form-item label="紧急程度：" prop="level">
+                <el-input v-model="reportAddForm.level" readonly></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="10">
-            <el-col ::span="8">
+          <el-row :gutter="5">
+            <el-col :span="8">
               <el-form-item label="维修人员：" prop="maintenance_person">
                 <el-input v-model="reportAddForm.maintenance_person" readonly></el-input>
               </el-form-item>
             </el-col>
-            <el-col ::span="8">
+            <el-col :span="8">
               <el-form-item label="联系方式：" prop="maintenance_phone">
                 <el-input v-model="reportAddForm.maintenance_phone" readonly></el-input>
               </el-form-item>
             </el-col>
-            <el-col ::span="8">
+            <el-col :span="8">
               <el-form-item label="完成时间：" prop="fin">
-                <el-input v-model="reportAddForm.fin" readonly></el-input>
+                <el-input v-model="reportAddForm.order_fin" readonly></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-form-item label="维修信息："></el-form-item>
           <el-form-item label="故障描述：" prop="fault_info">
-            <el-input type="textarea" v-model="reportAddForm.fault_info"></el-input>
+            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"
+              v-model="reportAddForm.fault_info">
+            </el-input>
           </el-form-item>
           <el-form-item label="故障原因：" prop="fault_reason">
-            <el-input type="textarea" v-model="reportAddForm.fault_reason"></el-input>
+            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"
+              v-model="reportAddForm.fault_reason">
+            </el-input>
           </el-form-item>
           <el-form-item label="维修措施：" prop="maintenance_way">
-            <el-input type="textarea" v-model="reportAddForm.maintenance_way"></el-input>
+            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"
+              v-model="reportAddForm.maintenance_way">
+            </el-input>
           </el-form-item>
           <el-form-item label="完成情况：" prop="maintenance_fin">
-            <el-input type="textarea" v-model="reportAddForm.maintenance_fin"></el-input>
+            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"
+              v-model="reportAddForm.maintenance_fin">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="维修费用："></el-form-item>
+          <el-row :gutter="5">
+            <el-col :span="8">
+              <el-form-item label="人工维修费用：" prop="rengong" label-width="120px">
+                <el-input v-model="reportAddForm.rengong"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="配件费用：" prop="peijian">
+                <el-input v-model="reportAddForm.peijian" ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="配送费用：" prop="peisong">
+                <el-input v-model="reportAddForm.peisong"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="5">
+            <el-col :span="8">
+              <el-form-item label="安装费用：" prop="anzhuang">
+                <el-input v-model="reportAddForm.anzhuang"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="其他费用：" prop="qita">
+                <el-input v-model="reportAddForm.qita"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="合计（元）" prop="total_price">
+            <el-input v-model="reportAddForm.total_price" readonly></el-input>
+          </el-form-item>
+          <el-form-item label="备注：" prop="remark">
+            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}" v-model="reportAddForm.remark"></el-input>
+          </el-form-item>
+          <el-form-item label="客户意见："></el-form-item>
+            <el-form-item label="客户意见：" prop="opinion">
+              <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}" v-model="reportAddForm.opinion"></el-input>
+            </el-form-item>
+            <el-row :gutter="5">
+              <el-col :span="12">
+                <el-form-item label="客户签字：" prop="sign">
+                  <el-input v-model="reportAddForm.sign" readonly></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="签字日期：" prop="sign_date">
+                  <el-input v-model="reportAddForm.sign_date" readonly></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </el-form-item>
         </el-form>
         <div class="diagnosis-form-footer">
           <el-button type="primary"
-            :loading="loadingTempStorage"
-            :disabled="loadingTempStorage"
-            v-on:click="btnTempStorage('temp')">暂存</el-button>
+            :loading="loadingReportTempStorage"
+            :disabled="loadingReportTempStorage"
+            v-on:click="btnReportTempStorage('temp')">暂存</el-button>
           <div>
               <el-button type="primary"
-                :loading="loadingTempStorage"
-                :disabled="loadingTempStorage"
-                v-on:click="btnTempStorage('submit')">确认</el-button>
-            <el-button v-on:click="showReportAddForm = false">取消</el-button>
+                :loading="loadingReportTempStorage"
+                :disabled="loadingReportTempStorage"
+                v-on:click="btnReportTempStorage('submit')">确认</el-button>
+            <el-button v-on:click="btnReportTempStorage = false">取消</el-button>
           </div>
         </div>
+      </el-dialog>
+      <!-- 最终成本 -->
+      <el-dialog :visible.sync="showFinalCost">
+        <div class="title" slot="title">最终成本</div>
+        <el-form class="w-common-form" ref="finalCostForm"
+          :model="finalCostForm" :rules="finalCostFormRules">
+          <table class="final-cost">
+            <thead>
+              <th>操作</th>
+              <th>费用项</th>
+              <th>配件名称</th>
+              <th>规格型号</th>
+              <th>单位</th>
+              <th>数量</th>
+              <th>金额</th>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in finalCostForm.peijian">
+                <td>
+                  <el-button type="" size="mini">删除</el-button>
+                </td>
+                <th>配件费用{{index+1}}</th>
+                <td>{{item.data.commodityName}}</td>
+                <td>{{item.data.specifications}}</td>
+                <td>{{item.data.unit}}</td>
+                <td>{{item.count}}</td>
+                <td>
+                  <el-form-item :key="`peijian${index}`"
+                    :prop="`peijian[${index}].subTotal`"
+                    :rules="{validator: validateCost, trigger: 'blur'}">
+                    <el-input v-model="finalCostForm.peijian[index].subTotal"></el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr v-for="(item,index) in finalCostForm.rengong">
+                <td></td>
+                <th>
+                  <p>人工维修费用：</p>
+                  <p>(维修人员：{{item.person_name}})</p>
+                </th>
+                <td colspan="4"></td>
+                <td>
+                  <el-form-item :key="`rengong${index}`"
+                    :prop="`rengong[${index}].price`"
+                    :rules="{validator: validateCost, trigger: 'blur'}">
+                    <el-input v-model="finalCostForm.rengong[index].price"></el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <th>安装费用：</th>
+                <td colspan="4"></td>
+                <td>
+                  <el-form-item prop="anzhuang">
+                    <el-input v-model="finalCostForm.anzhuang"></el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <th>配送费用：</th>
+                <td colspan="4"></td>
+                <td>
+                  <el-form-item prop="peisong">
+                    <el-input v-model="finalCostForm.peisong"></el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <th>其他费用：</th>
+                <td colspan="4"></td>
+                <td>
+                  <el-form-item prop="qita">
+                    <el-input v-model="finalCostForm.qita"></el-input>
+                  </el-form-item>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </el-form>
+        <!-- <jgb-form-footer slot="footer"
+          save-text="确认" close-text="取消"
+          :loading=""
+          v-on:save="" v-on:close="">
+        </jgb-form-footer> -->
       </el-dialog>
 		</el-container>
 	</div>
@@ -326,8 +478,9 @@
     '/common/getUser', //获取当前用户信息
     '/orderManagement/get_accessories_list', //查询配件信息
     '/common/data_add_save', //交付工单接口
-    '/maintenanceManagement/is_exist', //工单是否已有维修报告
-    '/maintenanceManagement/is_exist' //工单是否已有最终成本
+    '/maintenanceManagement/is_report_exist', //工单是否已有维修报告
+    '/maintenanceManagement/is_cost_exist', //工单是否已有最终成本
+    '/common/data_add_save' //暂存、确认新增维修报告
 	);
 </script>
 

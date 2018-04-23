@@ -161,13 +161,40 @@ router.post('/get_accessories_list', (req, res)=> {
 	});
 })
 
+router.post('/is_report_exist', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/maintenanceManagement/is_report_exist.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: JSON.stringify({
+				data: jdata,
+				status: Math.round(Math.random()) ? true : false
+			})
+		}).end();
+	});
+})
 
-router.post('/is_exist', (req, res)=> {
-	let jdata = Math.round(Math.random());
-	res.send({
-		status: true,
-		data: jdata ? true : false
-	}).end();
+router.post('/is_cost_exist', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/maintenanceManagement/is_cost_exist.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: JSON.stringify({
+				data: jdata,
+				status: Math.round(Math.random()) ? true : false
+			})
+		}).end();
+	});
 })
 
 module.exports = router;

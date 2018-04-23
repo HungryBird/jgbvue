@@ -15,50 +15,50 @@
 			<el-main>
         <div class="jgb-wrap" ref="printContent">
           <div class="w-print-page" >
-            <div class="print-title">XXXXXXXXXXXXXX设备维修报告</div>
+            <div class="print-title">{{reportInfo.title}}</div>
             <div class="order-details">
               <div class="details-container">
                 <div class="block-title">
                   <div class="order-info">
                     <div class="left">
-                      <div>工单编号：</div>
+                      <div>工单编号：{{reportInfo.order_id}}</div>
                     </div>
-                    <div class="right">报告日期：{{$timeStampFormat(Math.round(new Date().getTime()/1000))}}</div>
+                    <div class="right">报告日期：{{reportInfo.date}}</div>
                   </div>
                 </div>
                 <table class="details-table repair-column-6">
                   <tbody>
                     <tr>
                       <th>工单日期:</th>
-                      <td></td>
+                      <td>{{reportInfo.order_date}}</td>
                       <th>客户名称：</th>
-                      <td></td>
+                      <td>{{reportInfo.client_name}}</td>
                       <th>维修公司：</th>
-                      <td></td>
+                      <td>{{reportInfo.maintenance_company}}</td>
                     </tr>
                     <tr>
                       <th>设备名称:</th>
-                      <td></td>
+                      <td>{{reportInfo.equipment_name}}</td>
                       <th>设备类别：</th>
-                      <td></td>
+                      <td>{{reportInfo.equipment_category}}</td>
                       <th>设备品牌：</th>
-                      <td></td>
+                      <td>{{reportInfo.equipment_brand}}</td>
                     </tr>
                     <tr>
                       <th>设备来源:</th>
-                      <td></td>
+                      <td>{{reportInfo.equipment_source}}</td>
                       <th>报修方式：</th>
-                      <td></td>
+                      <td>{{reportInfo.equipment_method}}</td>
                       <th>紧急程度：</th>
-                      <td></td>
+                      <td>{{reportInfo.level}}</td>
                     </tr>
                     <tr>
                       <th>维修人员:</th>
-                      <td></td>
+                      <td>{{reportInfo.maintenance_person}}</td>
                       <th>联系方式：</th>
-                      <td></td>
+                      <td>{{reportInfo.maintenance_phone}}</td>
                       <th>完成时间：</th>
-                      <td></td>
+                      <td>{{reportInfo.order_fin}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -67,19 +67,19 @@
                   <tbody>
                     <tr>
                       <th>故障描述：</th>
-                      <td></td>
+                      <td>{{reportInfo.fault_info}}</td>
                     </tr>
                     <tr>
                       <th>故障原因：</th>
-                      <td></td>
+                      <td>{{reportInfo.fault_reason}}</td>
                     </tr>
                     <tr>
                       <th>维修措施：</th>
-                      <td></td>
+                      <td>{{reportInfo.maintenance_way}}</td>
                     </tr>
                     <tr>
                       <th>完成情况：</th>
-                      <td></td>
+                      <td>{{reportInfo.maintenance_fin}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -95,16 +95,16 @@
                       <th>合计（元）</th>
                     </tr>
                     <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      <td>{{reportInfo.rengong}}</td>
+                      <td>{{reportInfo.peijian}}</td>
+                      <td>{{reportInfo.peisong}}</td>
+                      <td>{{reportInfo.anzhuang}}</td>
+                      <td>{{reportInfo.qita}}</td>
+                      <td>{{Number(reportInfo.rengong)+ Number(reportInfo.peijian)+ Number(reportInfo.peisong)+ Number(reportInfo.anzhuang)+ Number(reportInfo.qita)}}</td>
                     </tr>
                     <tr>
                       <th>备注：</th>
-                      <td colspan="5"></td>
+                      <td colspan="5">{{reportInfo.remark}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -113,15 +113,13 @@
                   <tbody>
                     <tr>
                       <th>客户意见：</th>
-                      <td colspan="2"></td>
-                      <th></th>
-                      <td colspan="2"></td>
+                      <td colspan="5">{{reportInfo.opinion}}</td>
                     </tr>
                     <tr>
                       <th>客户签字：</th>
-                      <td colspan="2"></td>
+                      <td colspan="2">{{reportInfo.sign}}</td>
                       <th>签字日期：</th>
-                      <td colspan="2"></td>
+                      <td colspan="2">{{reportInfo.sign_date}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -143,7 +141,7 @@
 <script type="text/javascript" src="../../assets/js/views/maintenanceManagement/printMaintenanceReport.js"></script>
 <script type="text/javascript">
 	JGBVue.module.printOrder().init(
-    '/orderManagement/order_edit_init' //获取工单信息
+    '/maintenanceManagement/is_report_exist' //获取维修报告信息
 	);
 </script>
 

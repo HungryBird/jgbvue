@@ -27,7 +27,7 @@ JGBVue.module.faultDiagnosis = () => {
     that.vm = new Vue({
       el: '#app',
       data: function () {
-        let validateCost = (rule, value, callback) => {
+        let validateCost = (rule, value, callback) => { 
           let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
           if (value != value.match(reg)) {
             callback(new Error('请输入正确的金额'));

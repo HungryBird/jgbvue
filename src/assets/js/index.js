@@ -182,7 +182,7 @@ JGBVue.module.index = ()=> {
               this.dropdownIsActive = false;
               //规定参数以外的传参当做query处理
                 _self.tabs[i].link = `${tabUrl}?menu_id=${tabId}${arguments[3] ? '&&'+arguments[3] : ''}`
-                console.log('arguments[3]: ', arguments[3]);
+                // console.log('arguments[3]: ', arguments[3]);
               return;
             }
           }

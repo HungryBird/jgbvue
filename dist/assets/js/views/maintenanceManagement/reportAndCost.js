@@ -22,11 +22,25 @@ JGBVue.module.reportAndCost = () => {
     accessoriesListGetUrl, //查询配件信息
     deliveryOrderUrl, //交付工单接口
     reportDataCheckExistUrl, //工单是否已有维修报告
-    costDataCheckExistUrl //工单是否已有最终成本
+    costDataCheckExistUrl, //工单是否已有最终成本
+    editMaintenanceReportUrl, //暂存、确认新增维修报告
   ) => {
     that.vm = new Vue({
       el: '#app',
       data: function () {
+        let validateCost = (rule, value, callback) => {
+          let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
+          if (value != value.match(reg)) {
+            callback(new Error('请输入正确的金额'));
+          } 
+          else {
+            if (value < 0) {
+              callback(new Error('金额必须大于等于0'));
+            } else {
+              callback();
+            };
+          };
+        }
         return {
           selectForm: { //表单
             dateRange: [], //日期范围
@@ -77,29 +91,70 @@ JGBVue.module.reportAndCost = () => {
           userData: {}, //用户信息 用于填入诊断人员默认项
           currentOrder: "", //打开测试、送修、换人修窗口时对应的工单号
 
-          showReportAddForm: true, //新增维修报告
-          reportAddForm: {}, //新增维修报告表单数据
+          showReportAddForm: false, //新增维修报告
+          reportAddForm: {},  //新增维修报告表单数据
           defaultReportAddForm: { //新增维修报告默认空数据
             title: "",
             order_id: "",
             date: "",
-            base_info: {
-              order_date: "",
-              client_name: "",
-              maintenance_company: "",
-              equipment_name: "",
-              equipment_category: "",
-              equipment_brand: "",
-              equipment_source: "",
-              
-            },
+
+            order_date: "",
+            client_name: "",
+            maintenance_company: "",
+            equipment_name: "",
+            equipment_category: "",
+            equipment_brand: "",
+            equipment_source: "",
+            equipment_method: "",
+            level: "",
+            maintenance_person: "",
+            maintenance_phone: "",
+            order_fin: "",
+            
+            fault_info: "",
+            fault_reason: "",
+            maintenance_way: "",
+            maintenance_fin: "",
+
+            rengong: "",
+            anzhuang: "",
+            peijian: "",
+            peisong: "",
+            qita: "",
+
+            remark: "",
+
+            opinion: "",
+            sign: "",
+            sign_date: "",
           }, 
           reportAddFormRules: { //新增维修报告表单验证规则
             title: { required: true, message: '请填写报告标题', trigger: 'blur' },
-            order_id: { required: true, message: '请填写工单编号', trigger: 'blur' },
             date: { required: true, message: '请选择编写日期', trigger: 'blur' },
+            order_id: { required: true, message: '请填写工单编号', trigger: 'blur' },
+            order_date: { required: true, message: '请选择工单日期', trigger: 'blur' },
+            client_name: { required: true, message: '请选择客户', trigger: 'blur' },
+            maintenance_company: { required: true, message: '请选择维修公司', trigger: 'blur' },
+            equipment_name: { required: true, message: '请选择设备', trigger: 'blur' },
+            level: { required: true, message: '请选择紧急程度', trigger: 'blur' },
+            maintenance_person: { required: true, message: '请选择维修人员', trigger: 'blur' },
+            order_fin: { required: true, message: '请选择完成时间', trigger: 'blur' },
+            rengong: { validator: validateCost, trigger: 'blur' },
+            peijian: { validator: validateCost, trigger: 'blur' },
+            peisong: { validator: validateCost, trigger: 'blur' },
+            anzhuang: { validator: validateCost, trigger: 'blur' },
+            qita: { validator: validateCost, trigger: 'blur' },
           },
-          loadingTempStorage: false, //正在写入数据
+          loadingReportTempStorage: false, //正在写入数据
+
+          showFinalCost: false, //最终成本 窗
+          finalCostForm: {}, //最终成本表单数据
+          finalCostFormRules: { //最终成本验证规则
+            anzhuang: { validator: validateCost, trigger: 'blur' },
+            peisong: { validator: validateCost, trigger: 'blur' },
+            qita: { validator: validateCost, trigger: 'blur' },
+          },
+          validateCost: validateCost,
         }
       },
       computed: {
@@ -260,13 +315,69 @@ JGBVue.module.reportAndCost = () => {
             }
             else {
               //打开新增维修报告弹窗
+              this.showReportAddForm = true
+              this.reportAddForm = this.$deepCopy(this.defaultReportAddForm)
+              this.reportAddForm = this.$deepCopy(row.reportInfo)
+              this.sumReportAddFormCost()
             };
         },
         /**
          * 新增维修报告 - 暂存、确认
          * @param {String} type temp暂存 submit确认
          */
-        btnTempStorage: function(type) {},
+        btnReportTempStorage: function(type) {
+          this.$refs.reportAddForm.validate((valid) => {
+            if (valid || type == 'temp') {
+              this.loadingReportTempStorage = true
+              axios.post(editMaintenanceReportUrl, {
+                data: this.reportAddForm,
+                type: type
+              }).then(res=> {
+                if(res.data.status) {
+                  this.$message({
+                    type: 'success',
+                    message: res.data.message,
+                    center: true
+                  })
+                  //在此处理是否关闭窗口
+                  this.showReportAddForm = false
+                  this.$refs.reportAddForm.resetFields()
+                }
+                else {
+                  this.$message({
+                    type: 'error',
+                    message: res.data.message,
+                    center: true
+                  })
+                };
+                this.loadingReportTempStorage = false
+              }).catch(err=> {
+                console.error(err)
+                this.$message({
+                  type: 'error',
+                  message: err,
+                  center: true
+                })
+                this.loadingReportTempStorage = false
+              })
+            } 
+            else {
+              console.log('error submit!!');
+              return false;
+            };
+          })
+        },
+        /**
+         * 最终成本
+         * @param {Object} row 行数据
+         * @param {Number} index 行数
+         */
+        btnFinalCost: function(row, index) {
+          this.showFinalCost = true
+          this.$refs.finalCostForm && this.$refs.finalCostForm.resetFields()
+          this.finalCostForm = this.$deepCopy(row.costInfo)
+          console.log(row.costInfo)
+        },
         //打印列表
         btnPrintList: function() {
           let filter = this.$deepCopy(this.selectForm)
@@ -685,11 +796,11 @@ JGBVue.module.reportAndCost = () => {
               switch(type) {
                 case 'report':
                   this.orderList[index].hasReport = _data.status
-                  this.orderList[index].reportInfo = _data.data
+                  this.orderList[index].reportInfo = JSON.parse(_data.data)
                   break
                 case 'cost':
                   this.orderList[index].hasCost = _data.status
-                  this.orderList[index].costInfo = _data.data
+                  this.orderList[index].costInfo = JSON.parse(_data.data)
                   break
               }
             }
@@ -730,6 +841,41 @@ JGBVue.module.reportAndCost = () => {
                                     getCost(this.diagnosisData.qita) +
                                     subTotal;
         },
+        /**
+         * 合计-新增维修报告
+         * 费用中任意一项不匹配金额规则 不计入合计中
+         */
+        sumReportAddFormCost: function() {
+          let getCost = (value) => {
+            let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
+            return value == value.match(reg)
+                    ? Number(value)
+                    : 0
+          }
+          this.reportAddForm.total_price
+            = getCost(this.reportAddForm.rengong)
+            + getCost(this.reportAddForm.peijian)
+            + getCost(this.reportAddForm.peisong)
+            + getCost(this.reportAddForm.anzhuang)
+            + getCost(this.reportAddForm.qita)
+        },
+      },
+      watch: {
+        'reportAddForm.rengong': function() {
+          this.sumReportAddFormCost()
+        },
+        'reportAddForm.peijian': function() {
+          this.sumReportAddFormCost()
+        },
+        'reportAddForm.peisong': function() {
+          this.sumReportAddFormCost()
+        },
+        'reportAddForm.anzhuang': function() {
+          this.sumReportAddFormCost()
+        },
+        'reportAddForm.qita': function() {
+          this.sumReportAddFormCost()
+        },
       },
       created: function () {
         //获取工单数据
@@ -755,7 +901,8 @@ JGBVue.module.reportAndCost = () => {
     accessoriesListGetUrl,
     deliveryOrderUrl,
     reportDataCheckExistUrl,
-    costDataCheckExistUrl
+    costDataCheckExistUrl,
+    editMaintenanceReportUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -771,7 +918,8 @@ JGBVue.module.reportAndCost = () => {
       accessoriesListGetUrl,
       deliveryOrderUrl,
       reportDataCheckExistUrl,
-      costDataCheckExistUrl
+      costDataCheckExistUrl,
+      editMaintenanceReportUrl
     )
   }
   return that

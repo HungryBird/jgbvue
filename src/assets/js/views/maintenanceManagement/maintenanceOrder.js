@@ -27,7 +27,11 @@ JGBVue.module.maintenanceOrder = () => {
     submitOutsideUrl, //送外修提交接口
     submitChangePersonUrl, //换人修提交接口
     maintenanceStartUrl, //开始维修接口
-    testPersonDataGetUrl //获取测试人员数据
+    testPersonDataGetUrl, //获取测试人员数据
+    deliveryOrderUrl, //交付工单接口
+    reportDataCheckExistUrl, //工单是否已有维修报告
+    costDataCheckExistUrl, //工单是否已有最终成本
+    editMaintenanceReportUrl //暂存、确认新增维修报告
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -194,6 +198,63 @@ JGBVue.module.maintenanceOrder = () => {
             reason: { required: true, message: '请填写换修原因', trigger: 'blur' },
           },
           loadingSaveChangePerson: false, //正在提交换人修
+
+          
+          showReportAddForm: false, //新增维修报告
+          reportAddForm: {},  //新增维修报告表单数据
+          defaultReportAddForm: { //新增维修报告默认空数据
+            title: "",
+            order_id: "",
+            date: "",
+
+            order_date: "",
+            client_name: "",
+            maintenance_company: "",
+            equipment_name: "",
+            equipment_category: "",
+            equipment_brand: "",
+            equipment_source: "",
+            equipment_method: "",
+            level: "",
+            maintenance_person: "",
+            maintenance_phone: "",
+            order_fin: "",
+            
+            fault_info: "",
+            fault_reason: "",
+            maintenance_way: "",
+            maintenance_fin: "",
+
+            rengong: "",
+            anzhuang: "",
+            peijian: "",
+            peisong: "",
+            qita: "",
+
+            remark: "",
+
+            opinion: "",
+            sign: "",
+            sign_date: "",
+          }, 
+          reportAddFormRules: { //新增维修报告表单验证规则
+            title: { required: true, message: '请填写报告标题', trigger: 'blur' },
+            date: { required: true, message: '请选择编写日期', trigger: 'blur' },
+            order_id: { required: true, message: '请填写工单编号', trigger: 'blur' },
+            order_date: { required: true, message: '请选择工单日期', trigger: 'blur' },
+            client_name: { required: true, message: '请选择客户', trigger: 'blur' },
+            maintenance_company: { required: true, message: '请选择维修公司', trigger: 'blur' },
+            equipment_name: { required: true, message: '请选择设备', trigger: 'blur' },
+            level: { required: true, message: '请选择紧急程度', trigger: 'blur' },
+            maintenance_person: { required: true, message: '请选择维修人员', trigger: 'blur' },
+            order_fin: { required: true, message: '请选择完成时间', trigger: 'blur' },
+            rengong: { validator: validateCost, trigger: 'blur' },
+            peijian: { validator: validateCost, trigger: 'blur' },
+            peisong: { validator: validateCost, trigger: 'blur' },
+            anzhuang: { validator: validateCost, trigger: 'blur' },
+            qita: { validator: validateCost, trigger: 'blur' },
+          },
+          loadingReportTempStorage: false, //正在写入数据
         }
       },
       computed: {
@@ -472,6 +533,52 @@ JGBVue.module.maintenanceOrder = () => {
           this.currentOrder = row.order_id
         },
         /**
+         * 交付
+         * @param {Object} row 行数据
+         * @param {Number} index 行数
+         */
+        btnDelivery: function(row, index) {
+          const h = this.$createElement
+          this.$msgbox({
+            title: '提示',
+            message: h('p', null, `确认交付工单：${row.order_id}吗？`),
+            showCancelButton: true,
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            beforeClose: (action, instance, done) => {
+              if (action === 'confirm') {
+                instance.confirmButtonLoading = true
+                instance.confirmButtonText = '交付中...'
+                axios.post(deliveryOrderUrl, {
+                  order_id: row.order_id
+                }).then(res=> {
+                  this.$message({
+                    type: res.data.status ? 'success' : 'error',
+                    message: res.data.message,
+                    center: true
+                  })
+                  instance.confirmButtonLoading = false
+                  done()
+                }).catch(err=> {
+                  console.error(err)
+                  this.$message({
+                    type: 'error',
+                    message: err,
+                    center: true
+                  })
+                  instance.confirmButtonLoading = false
+                  done()
+                })
+              } else {
+                done()
+              }
+            }
+          }).then(() => {
+            //如需更新工单信息请在此
+            // this.getWorkOrderData()
+          }).catch()
+        },
+        /**
          * 开始维修
          * @param {Object} row 行数据
          * @param {Number} index 所在行
@@ -495,6 +602,74 @@ JGBVue.module.maintenanceOrder = () => {
               message: err,
               center: true
             })
+          })
+        },
+        /**
+         * 维修报告
+         * @param {Object} row 行数据
+         * @param {Number} index 行数
+         */
+        btnReport: function(row, index) {
+          if(row.hasReport) { 
+            //调用父级框架打开标签页
+            this.$selectTab(
+              'maintenanceReport', 
+              '维修报告信息', 
+              './views/maintenanceManagement/maintenanceReport.html', 
+              `order_id=${row.order_id}`)
+            }
+            else {
+              //打开新增维修报告弹窗
+              this.showReportAddForm = true
+              this.reportAddForm = this.$deepCopy(this.defaultReportAddForm)
+              this.reportAddForm = this.$deepCopy(row.reportInfo)
+              this.sumReportAddFormCost()
+            };
+        },
+        /**
+         * 新增维修报告 - 暂存、确认
+         * @param {String} type temp暂存 submit确认
+         */
+        btnReportTempStorage: function(type) {
+          this.$refs.reportAddForm.validate((valid) => {
+            if (valid || type == 'temp') {
+              this.loadingReportTempStorage = true
+              axios.post(editMaintenanceReportUrl, {
+                data: this.reportAddForm,
+                type: type
+              }).then(res=> {
+                if(res.data.status) {
+                  this.$message({
+                    type: 'success',
+                    message: res.data.message,
+                    center: true
+                  })
+                  //在此处理是否关闭窗口
+                  this.showReportAddForm = false
+                  this.$refs.reportAddForm.resetFields()
+                }
+                else {
+                  this.$message({
+                    type: 'error',
+                    message: res.data.message,
+                    center: true
+                  })
+                };
+                this.loadingReportTempStorage = false
+              }).catch(err=> {
+                console.error(err)
+                this.$message({
+                  type: 'error',
+                  message: err,
+                  center: true
+                })
+                this.loadingReportTempStorage = false
+              })
+            } 
+            else {
+              console.log('error submit!!');
+              return false;
+            };
           })
         },
         /**
@@ -686,6 +861,14 @@ JGBVue.module.maintenanceOrder = () => {
               this.selectedRows = [] //清空选中行
               this.orderList = _data.data
               this.orderPage = this.$deepCopy(_data.page) //真实数据使用
+              //为每一条数据写入检测是否存在维修报告、最终成本属性、维修报告数据、最终成本数据
+              for(let i = 0; i < this.orderList.length; i++) {
+                let item = this.orderList[i]
+                if(item.status_value == 8) {
+                  this.setDataExist(item.order_id, i, 'report', reportDataCheckExistUrl)
+                  this.setDataExist(item.order_id, i, 'cost', costDataCheckExistUrl)
+                }
+              }
             }
             else {
               this.$message({
@@ -953,6 +1136,7 @@ JGBVue.module.maintenanceOrder = () => {
                     center: true
                   })
                   this.showOutside = false
+                  this.$refs.outsideForm.resetFields()
                   //如需更新工单列表信息请在此编写逻辑
                 }
                 else {
@@ -994,6 +1178,7 @@ JGBVue.module.maintenanceOrder = () => {
                     center: true
                   })
                   this.showTestReport = false
+                  this.$refs.testReportForm.resetFields()
                   //如需更新工单列表信息请在此编写逻辑
                 }
                 else {
@@ -1035,6 +1220,7 @@ JGBVue.module.maintenanceOrder = () => {
                     center: true
                   })
                   this.showChangePerson = false
+                  this.$refs.changePersonForm.resetFields()
                   //如需更新工单列表信息请在此编写逻辑
                 }
                 else {
@@ -1072,6 +1258,48 @@ JGBVue.module.maintenanceOrder = () => {
           this.getWorkOrderData()
         },
         /**
+         * 设置数据指定项是否存在
+         * @param {String, Number} id 工单id
+         * @param {String} url 检测接口
+         * @param {Number} index 数据序号
+         * @param {String} type 类型 report维修报告 cost最终成本
+         */
+        setDataExist: function(id, index, type, url) {
+          axios.post(url, {
+            order_id: id
+          }).then(res=> {
+            if(res.data.status) { 
+              // console.log(`axios: ${JSON.parse(res.data.data).status}`)
+              // res.data.data.status 随机true false 刷不出交付按钮 多刷几次
+              let _data = JSON.parse(res.data.data)
+              switch(type) {
+                case 'report':
+                  this.orderList[index].hasReport = _data.status
+                  this.orderList[index].reportInfo = JSON.parse(_data.data)
+                  break
+                case 'cost':
+                  this.orderList[index].hasCost = _data.status
+                  this.orderList[index].costInfo = JSON.parse(_data.data)
+                  break
+              }
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            console.error(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        /**
          * 合计-成本估算
          * 费用中任意一项不匹配金额规则 不计入合计中
          */
@@ -1092,6 +1320,24 @@ JGBVue.module.maintenanceOrder = () => {
                                     getCost(this.diagnosisData.qita) +
                                     subTotal;
         },
+        /**
+         * 合计-新增维修报告
+         * 费用中任意一项不匹配金额规则 不计入合计中
+         */
+        sumReportAddFormCost: function() {
+          let getCost = (value) => {
+            let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
+            return value == value.match(reg)
+                    ? Number(value)
+                    : 0
+          }
+          this.reportAddForm.total_price
+            = getCost(this.reportAddForm.rengong)
+            + getCost(this.reportAddForm.peijian)
+            + getCost(this.reportAddForm.peisong)
+            + getCost(this.reportAddForm.anzhuang)
+            + getCost(this.reportAddForm.qita)
+        },
       },
       watch: {
         //人工费变更 重新计算合计
@@ -1109,6 +1355,26 @@ JGBVue.module.maintenanceOrder = () => {
         //其他费用变更 重新计算合计
         'diagnosisData.qita': function() {
           this.sumDiagnosisData()
+        },
+        //新增维修报告 -合计
+        'reportAddForm.rengong': function() {
+          this.sumReportAddFormCost()
+        },
+        //新增维修报告 -合计
+        'reportAddForm.peijian': function() {
+          this.sumReportAddFormCost()
+        },
+        //新增维修报告 -合计
+        'reportAddForm.peisong': function() {
+          this.sumReportAddFormCost()
+        },
+        //新增维修报告 -合计
+        'reportAddForm.anzhuang': function() {
+          this.sumReportAddFormCost()
+        },
+        //新增维修报告 -合计
+        'reportAddForm.qita': function() {
+          this.sumReportAddFormCost()
         },
       },
       created: function () {
@@ -1142,7 +1408,11 @@ JGBVue.module.maintenanceOrder = () => {
     submitOutsideUrl,
     submitChangePersonUrl,
     maintenanceStartUrl,
-    testPersonDataGetUrl
+    testPersonDataGetUrl,
+    deliveryOrderUrl, 
+    reportDataCheckExistUrl,
+    costDataCheckExistUrl, 
+    editMaintenanceReportUrl
   ) => {
     _this.init(
       businessDataGetUrl,
@@ -1163,7 +1433,11 @@ JGBVue.module.maintenanceOrder = () => {
       submitOutsideUrl,
       submitChangePersonUrl,
       maintenanceStartUrl,
-      testPersonDataGetUrl
+      testPersonDataGetUrl,
+      deliveryOrderUrl, 
+      reportDataCheckExistUrl, 
+      costDataCheckExistUrl, 
+      editMaintenanceReportUrl
     )
   }
   return that

@@ -1495,3 +1495,14 @@ table{
 		}
 	}
 }
+
+//最终成本 表格
+.final-cost {
+	width:100%;
+	border-collapse:collapse;
+	th, td {
+		@include common-border;
+		padding:5px;
+		text-align: center;
+	}
+}

@@ -1369,3 +1369,11 @@ table {
 
 .w-common-form .el-form-item .el-input, .w-common-form .el-form-item .el-select {
   width: 100%; }
+
+.final-cost {
+  width: 100%;
+  border-collapse: collapse; }
+  .final-cost th, .final-cost td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: center; }

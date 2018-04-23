@@ -1,0 +1,37 @@
+{
+  "peijian": [
+    {
+      "count": 3,
+      "data": {
+        "commodityName": "name-name-0",
+        "specifications": "AKB-48",
+        "commodityNumber": "123456",
+        "unit":"单位1",
+        "price": "10"
+      }
+    },
+    {
+      "count": 1,
+      "data": {
+        "commodityName": "name-name-1",
+        "specifications": "AKB-49",
+        "commodityNumber": "456789",
+        "unit":"单位1",
+        "price": "5"
+      }
+    }
+  ],
+  "rengong": [
+    {
+      "person_name": "laowang",
+      "price": "200"
+    },
+    {
+      "person_name": "laozhang",
+      "price": "100"
+    }
+  ],
+  "anzhuang": "300",
+  "peisong": "0",
+  "qita": "0"
+}
