@@ -74,9 +74,32 @@ JGBVue.module.reportAndCost = () => {
           loadingColumnSettingComplete: false, //正在写入新的列设置
           loadingColumnSettingReset: false, //正在恢复默认的列设置
 
-
           userData: {}, //用户信息 用于填入诊断人员默认项
           currentOrder: "", //打开测试、送修、换人修窗口时对应的工单号
+
+          showReportAddForm: true, //新增维修报告
+          reportAddForm: {}, //新增维修报告表单数据
+          defaultReportAddForm: { //新增维修报告默认空数据
+            title: "",
+            order_id: "",
+            date: "",
+            base_info: {
+              order_date: "",
+              client_name: "",
+              maintenance_company: "",
+              equipment_name: "",
+              equipment_category: "",
+              equipment_brand: "",
+              equipment_source: "",
+              
+            },
+          }, 
+          reportAddFormRules: { //新增维修报告表单验证规则
+            title: { required: true, message: '请填写报告标题', trigger: 'blur' },
+            order_id: { required: true, message: '请填写工单编号', trigger: 'blur' },
+            date: { required: true, message: '请选择编写日期', trigger: 'blur' },
+          },
+          loadingTempStorage: false, //正在写入数据
         }
       },
       computed: {
@@ -191,7 +214,7 @@ JGBVue.module.reportAndCost = () => {
             beforeClose: (action, instance, done) => {
               if (action === 'confirm') {
                 instance.confirmButtonLoading = true
-                instance.confirmButtonText = '交付中...';
+                instance.confirmButtonText = '交付中...'
                 axios.post(deliveryOrderUrl, {
                   order_id: row.order_id
                 }).then(res=> {
@@ -239,6 +262,11 @@ JGBVue.module.reportAndCost = () => {
               //打开新增维修报告弹窗
             };
         },
+        /**
+         * 新增维修报告 - 暂存、确认
+         * @param {String} type temp暂存 submit确认
+         */
+        btnTempStorage: function(type) {},
         //打印列表
         btnPrintList: function() {
           let filter = this.$deepCopy(this.selectForm)
@@ -454,11 +482,11 @@ JGBVue.module.reportAndCost = () => {
               this.selectedRows = [] //清空选中行
               this.orderList = _data.data
               this.orderPage = this.$deepCopy(_data.page) //真实数据使用
-              //为每一条数据写入检测是否存在维修报告、最终成本属性
+              //为每一条数据写入检测是否存在维修报告、最终成本属性、维修报告数据、最终成本数据
               for(let i = 0; i < this.orderList.length; i++) {
                 let item = this.orderList[i]
-                this.setDataExist(item.order_id, i, 'hasReport', reportDataCheckExistUrl)
-                this.setDataExist(item.order_id, i, 'hasCost', costDataCheckExistUrl)
+                this.setDataExist(item.order_id, i, 'report', reportDataCheckExistUrl)
+                this.setDataExist(item.order_id, i, 'cost', costDataCheckExistUrl)
               }
             }
             else {
@@ -644,16 +672,26 @@ JGBVue.module.reportAndCost = () => {
          * @param {String, Number} id 工单id
          * @param {String} url 检测接口
          * @param {Number} index 数据序号
-         * @param {String} key 数据属性名
+         * @param {String} type 类型 report维修报告 cost最终成本
          */
-        setDataExist: function(id, index, key, url) {
+        setDataExist: function(id, index, type, url) {
           axios.post(url, {
             order_id: id
           }).then(res=> {
             if(res.data.status) { 
-              // console.log(`axios: ${res.data.data}`)
-              // res.data.data 随机true false 刷不出交付按钮 多刷几次
-              this.orderList[index][key] = res.data.data
+              // console.log(`axios: ${JSON.parse(res.data.data).status}`)
+              // res.data.data.status 随机true false 刷不出交付按钮 多刷几次
+              let _data = JSON.parse(res.data.data)
+              switch(type) {
+                case 'report':
+                  this.orderList[index].hasReport = _data.status
+                  this.orderList[index].reportInfo = _data.data
+                  break
+                case 'cost':
+                  this.orderList[index].hasCost = _data.status
+                  this.orderList[index].costInfo = _data.data
+                  break
+              }
             }
             else {
               this.$message({
