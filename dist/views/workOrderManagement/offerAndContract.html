@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>报价与合同</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+<body>
+	<div id="app" v-cloak class="offerAndContract">
+		<el-container>
+			<el-header style="padding: 0;">
+				<el-form :inline="true">
+					<el-form-item>
+						<el-date-picker v-model="searchData.date" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+					</el-form-item>
+					<el-form-item>
+						<el-select v-model="searchData.businessPersonnel" placeholder="请选择业务人员">
+							<el-option v-for="b in businessPersonnelQuickOption" :key="b.value" :value="b.value" :label="b.label"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-select v-model="searchData.serviceman" placeholder="请选择维修人员">
+							<el-option v-for="s in servicemanQuickOption" :key="s.value" :value="s.value" :label="s.label"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-input v-model="searchData.iput" placeholder="工单编号、客户名称、设备名称">
+							<template slot="append">
+								<el-button v-on:click="search(searchData)">搜索</el-button>
+							</template>
+						</el-input>
+					</el-form-item>
+				</el-form>
+			</el-header>
+			<el-container>
+				<el-main>
+					<div class="jgb-wrap">
+						<nav class="jgb-nav">
+							<el-button-group class="pull-left">
+								<el-button v-on:click="showColumnSetting = true" size="mini">
+									列设置
+								</el-button>
+							</el-button-group>
+							<div class="pull-left" style="padding-left: 6px;">
+								<small>工单状态</small>
+								<el-checkbox v-model="formStatusCheckAll" v-on:change="handleFormCheckAllChange" style="margin: 0 30px;">全选</el-checkbox>
+								<el-checkbox-group v-model="statusForm" v-on:change="handleFormCheckStatusChange" style="display: inline-block;">
+									<el-checkbox v-for="item in formOrderStatus" :label="item.value" :key="item.value">{{item.label}}</el-checkbox>
+								</el-checkbox-group>
+							</div>
+							<el-button-group class="pull-right">
+								<el-button size="mini">报价模板</el-button>
+								<el-button v-on:click="exportCilck" size="mini">导出</el-button>
+								<el-button size="mini">打印</el-button>
+								<el-button icon="el-icon-minus" :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
+							</el-button-group>
+						</nav>
+						<el-table :data="table.data" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" v-loading="loadingDetailInfo" :row-class-name="rowStatusClassName">
+							<el-table-column type="selection"></el-table-column>
+							<el-table-column  v-for="item in table.header" v-if="item.enable" align="center" :type="item.type" :sortable="item.sortable" :width="item.width" :key="item.prop" :prop="item.prop" :label="item.label">
+								<template slot-scope="scope">
+									<div v-if="item.prop == 'action'" >
+										<el-button-group v-if="scope.row.status === 0">
+											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
+											<el-button size="mini" v-on:click="addContractDialogVisible = true">新增报价</el-button>
+										</el-button-group>
+										<el-button-group v-else-if="scope.row.status === 1">
+											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
+											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">维修报价</el-button>
+											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)" v-if="!scope.row.hasContract">新增合同</el-button>	
+											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)" v-else>维修合同</el-button>
+										</el-button-group>
+										<el-button-group v-else>
+											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
+										</el-button-group>
+									</div>
+									<div v-else-if="item.type == 'index'">{{scope.$index+1}}</div>
+									<div v-else-if="item.prop == 'status'">
+										{{ scope.row[item.prop] | statusFilter }}
+									</div>
+									<div v-else-if="item.prop == 'image'">
+										<i class="el-icon-picture jgb-table-icon" v-on:click="viewImage(scope.row)"></i>
+									</div>
+	                  				<div v-else>{{scope.row[item.prop]}}</div>
+								</template>
+							</el-table-column>
+						</el-table>
+					</div>
+				</el-main>
+			</el-container>
+		</el-container>
+		<div class="wrap_footer">
+			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
+		</div>
+		<transition name="slide-fade">
+			<div class="details-wrap" v-show="isUnfold">
+				<div class="details-inner" v-loading="loadingDetailInfo">
+					<el-row class="row-border">
+						<div class="title text-center">
+							<h3>工单详细信息</h3>
+						</div>
+						<el-col v-for="item in detailInfo" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.name">
+							<div>{{ item.name }}</div>
+							<div>{{ item.value }}</div>
+						</el-col>
+					</el-row>
+					<div class="toggle-button-wrap" v-on:click="toggleInfo">
+						<span class="jgbvue_arrow_icon" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -9px -85px;position: absolute;top: 50%;right: 0;transform: translateY(-50%);"></span>
+						<span class="jgbvue_arrow_line" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -123px -2px;margin-left: 16px;"></span>
+					</div>
+				</div>
+			</div>
+		</transition>
+		<!-- 新增客户 -->
+		<el-dialog :visible.sync="addContractDialogVisible" title="新增报价">
+			<el-form ref="addForm" label-position="right" label-width="120px" :model="addForm" :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item label="公司名称" prop="companyName">
+							<el-input v-model="addForm.companyName" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="标题" prop="title">
+							<el-input v-model="addForm.title" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="客户名称" prop="clientName">
+							<el-input v-model="addForm.clientName" disabled></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="报价日期" prop="date">
+							<el-date-picker v-model="addForm.date" type="date" placeholder="选择日期"></el-date-picker>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="报价人" prop="offerer">
+							<el-input v-model="addForm.offerer"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="审核人" prop="equipmentNumber">
+							<el-input v-model="addForm.equipmentNumber" disabled></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="货币单位" prop="monetaryUnit">
+							<el-input v-model="addForm.monetaryUnit" disabled></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="报价是否含税" prop="specificationModel">
+							<el-input v-model="addForm.specificationModel"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="选择报价单模板" prop="equipmentBrand">
+							<el-select v-model="addForm.equipmentBrand" allow-create filterable v-on:focus="focusEquipmentBrandSelect">
+								<el-option v-for="eb in equipmentBrandOption" :key="eb.label" :label="eb.label" :value="eb.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="税率" prop="equipmentCategory">
+							<el-select v-model="addForm.equipmentCategory" allow-create filterable v-on:focus="focusEquipmentCategorySelect">
+								<el-option v-for="ec in equipmentCategoryOption" :key="ec.label" :label="ec.label" :value="ec.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<h3>设备基本信息</h3>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="设备名称" prop="equipmentSerialNumber">
+							<el-input v-model="addForm.equipmentSerialNumber" v-on:blur="generateSerialNumber"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="规格型号" prop="qualityGuaranteeDate">
+							<el-date-picker v-model="addForm.qualityGuaranteeDate" type="date" placeholder="选择日期"></el-date-picker>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="品牌" prop="warning_warranty_time">
+							<el-input v-model="addForm.warning_warranty_time"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="单位" prop="source_equipment">
+							<el-input v-model="addForm.source_equipment"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="序列号" prop="unitMeasurement">
+							<el-select v-model="addForm.unitMeasurement" allow-create filterable v-on:focus="focusUnitMeasurementSelect">
+								<el-option v-for="um in unitMeasurementOption" :key="um.label" :label="um.label" :value="um.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item prop="remark" label="故障描述">
+							<el-input type="textarea" v-model="addForm.remark" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-table ref="addFormTable" border>
+					<el-table-column label="费用项"></el-table-column>
+					<el-table-column label="配件"></el-table-column>
+					<el-table-column label="单位"></el-table-column>
+					<el-table-column label="数量"></el-table-column>
+					<el-table-column label="金额"></el-table-column>
+				</el-table>
+			</el-form>
+			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd('addForm')" v-on:close="closeAdd"></jgb-form-footer>
+		</el-dialog>
+		<!-- 导出 -->
+		<el-dialog :visible.sync="exportVisible" title="导出">
+			<p>
+				<small>注：请选择需要导出的字段</small>
+			</p>
+			<el-checkbox v-for="item in exportForm" label="item.value" border v-model="item.checked" :key="item.value">{{item.name}}</el-checkbox>
+			<div slot="footer">
+				<el-button>导出</el-button>
+				<el-button v-on:click="exportVisible = false">关闭</el-button>
+			</div>
+		</el-dialog>
+		<transition name="fade">
+			<div class="slideshow-wrap" v-if="showSlideshow">
+				<div class="slideshow-mask" v-on:click="showSlideshow = false"></div>
+				<div class="slideshow-inner">
+					<div class="slideshow-inner-nav">
+						<a class="index-text">{{ currentImgIndex+1 + '/' +  slideshowArr.length}}</a>
+						<i class="el-icon-close" v-on:click="showSlideshow = false"></i>
+					</div>
+					<div class="slideshow-inner-wrap" :style="{width: currentImgWidth + 'px', height: currentImgHeight + 'px'}">
+						<!-- <img v-for="(item, index) in slideshowArr" :src="item.src" :style="{width:item.width+'px',height:item.height+'px', display: currentImgIndex === index ? 'block' : 'none'}"></img> -->
+						<img :src="currentImgSrc" :style="{width:currentImgWidth+'px',height:currentImgHeight+'px'}"/>
+						<i class="el-icon-arrow-right arrow-right arrow"  v-on:click="nextImg"></i>
+						<i class="el-icon-arrow-left arrow-left arrow" v-on:click="prevImg"></i>
+					</div>
+				</div>
+			</div>
+		</transition>
+		<el-dialog :visible.sync="showColumnSetting">
+	        <div class="title" slot="title">列设置</div>
+	        <jgb-column-setting v-if="table.header.length" v-model="table.header"></jgb-column-setting>
+	        <div slot="footer">
+	            <el-button v-on:click="btnColumnSettingReset">恢复默认设置</el-button>
+	          	<el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
+	        </div>
+	     </el-dialog>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/workOrderManagement/offerAndContract.js"></script>
+<script type="text/javascript">
+	/**
+	 * 初始信息/搜索
+	 * 获取快速查询option
+	 * 切换状态
+	 * 删除
+	 * 查看
+	 * 保存增加
+	 * 获取编辑数据
+	 * 保存编辑数据
+	 * 上传路径
+	 * 获取导出选项
+	 * 获取幻灯片
+	 * 下拉获取客户信息
+	 * 获取设备名option
+	 * 获取设备品牌option
+	 * 获取设备类别option
+	 * 获取计量单位option
+	 * 验证并声称唯一码
+	 * 获取打印数据
+	 */
+	JGBVue.module.offerAndContract().init('/offerAndContract/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/data_add_save', '/equipmentManagement/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory', '/equipmentManagement/getUnitMeasurement', '/equipmentManagement/getuniqueCode', '/equipmentManagement/getAuxiliaryAttributesClassify', '/equipmentManagement/search');
+</script>
+</html>

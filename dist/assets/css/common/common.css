@@ -255,6 +255,8 @@ table {
     background: #f8f8f8; }
   .el-table .forbidden-row {
     color: #f56c6c; }
+  .el-table .scrap-row {
+    color: #F4C9AD; }
   .el-table th.is-leaf {
     background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#efefef));
     background: -o-linear-gradient(#f8f8f8, #efefef);
@@ -696,6 +698,9 @@ table {
   cursor: pointer; }
   .jgb-table-icon:hover {
     opacity: .8; }
+
+.offerAndContract .el-form .exclusive {
+  width: 590px; }
 
 .userManagement .w-main-header {
   display: flex;
