@@ -287,6 +287,9 @@ table{
 	.forbidden-row{
 		color: #f56c6c;
 	}
+	.scrap-row{
+		color: #F4C9AD;
+	}
 	th.is-leaf{
 		background: linear-gradient(#f8f8f8, #efefef);
 	}
@@ -740,6 +743,16 @@ table{
 	cursor: pointer;
 	&:hover{
 		opacity: .8;
+	}
+}
+
+//报价与合同
+.offerAndContract{
+	$exclusive: 590px;
+	.el-form {
+		.exclusive {
+			width: $exclusive;
+		}
 	}
 }
 

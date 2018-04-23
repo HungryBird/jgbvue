@@ -1,0 +1,177 @@
+{
+  "header": [{
+      "label": "序号",
+      "prop": "index",
+      "width": 50,
+      "sortable": false,
+      "type": "index",
+      "enable": true
+    },
+    {
+      "label": "操作",
+      "prop": "action",
+      "width": 250,
+      "sortable": false,
+      "enable": true
+    },
+    {
+      "label": "状态",
+      "prop": "status",
+      "width": 80,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "工单日期",
+      "prop": "date",
+      "width": 120,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "工单编号",
+      "prop": "order_id",
+      "width": 120,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "业务人员",
+      "prop": "business_name",
+      "width": 120,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "客户名称",
+      "prop": "customer_name",
+      "width": 120,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "设备名称",
+      "prop": "equipment_name",
+      "width": 140,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "图片",
+      "prop": "image",
+      "width": 80,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "类别",
+      "prop": "category_name",
+      "width": 80,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "品牌",
+      "prop": "brand",
+      "width": 120,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "问题描述",
+      "prop": "describe",
+      "width": 120,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "紧急程度",
+      "prop": "urgency",
+      "width": 80,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "报修方式",
+      "prop": "price",
+      "width": 80,
+      "sortable": "custom",
+      "enable": true
+    },
+    {
+      "label": "备注",
+      "prop": "remark",
+      "width": 120,
+      "sortable": false,
+      "enable": true
+    }
+  ],
+  "data": [{
+      "status": 0,
+      "date": "2018-12-12 03-03",
+      "order_id": "0000",
+      "hasOffer": false,
+      "hasContract": false,
+      "image": [{
+          "width": 500,
+          "height": 400,
+          "src": "../../img/slideshow/1.jpg"
+        },
+        {
+          "width": 640,
+          "height": 480,
+          "src": "../../img/slideshow/2.jpg"
+        },
+        {
+          "width": 500,
+          "height": 375,
+          "src": "../../img/slideshow/3.jpg"
+        }
+      ]
+    },
+    {
+      "status": 1,
+      "date": "2019-12-12 03-13",
+      "order_id": "0001",
+      "hasOffer": true,
+      "hasContract": true,
+      "image": [{
+          "width": 500,
+          "height": 400,
+          "src": "../../img/slideshow/1.jpg"
+        },
+        {
+          "width": 640,
+          "height": 480,
+          "src": "../../img/slideshow/2.jpg"
+        },
+        {
+          "width": 500,
+          "height": 375,
+          "src": "../../img/slideshow/3.jpg"
+        }
+      ]
+    },
+    {
+      "status": -1,
+      "date": "2019-12-12 03-13",
+      "order_id": "0002",
+      "image": [{
+          "width": 500,
+          "height": 400,
+          "src": "../../img/slideshow/1.jpg"
+        },
+        {
+          "width": 640,
+          "height": 480,
+          "src": "../../img/slideshow/2.jpg"
+        },
+        {
+          "width": 500,
+          "height": 375,
+          "src": "../../img/slideshow/3.jpg"
+        }
+      ]
+    }
+  ]
+}
