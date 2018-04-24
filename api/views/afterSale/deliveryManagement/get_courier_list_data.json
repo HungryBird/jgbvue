@@ -1,0 +1,31 @@
+{
+  "order_id": "123456",
+  "data": [
+    {
+      "order_id": "123456",
+      "uid": "快递单标识1",
+      "courier_id": "123456",
+      "courier_company": 1,
+      "courier_company_name": "张三",
+      "date": "2018-4-21",
+      "cost": "100",
+      "person": "快递联系人：",
+      "phone": "15977785678",
+      "remark": "备注：",
+      "status": "运输中"
+    },
+    {
+      "order_id": "123456",
+      "uid": "快递单标识2",
+      "courier_id": "654321",
+      "courier_company": 2,
+      "courier_company_name": "李四",
+      "date": "2018-4-21",
+      "cost": "100",
+      "person": "快递联系人：",
+      "phone": "15977785678",
+      "remark": "备注：",
+      "status": "已签收"
+    }
+  ]
+}

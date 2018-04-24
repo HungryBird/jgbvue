@@ -9,14 +9,15 @@ JGBVue = {
 JGBVue.module.courierList = () => {
   let _this = {}, that = {}
   _this.init = (
-    deliveryListGetUrl, //获取维修报告数据
-    deliveryOrderUrl, //交付工单接口
+    courierListGetUrl, //获取快递单数据
     reportInvalidUrl, //作废
     dataExportRequestUrl, //导出申请地址
     deliveryAddDataGetUrl, //获取新增交付单的信息 接收方、交付方等
     submitAddDeliveryFormUrl, //提交申新增交付单信息接口
     submitAddCourierFormUrl, //提交快递单数据
-    courierCompanyDataGetUrl //获取快递公司列表
+    courierCompanyDataGetUrl, //获取快递公司列表
+    courierInfoGetUrl, //获取物流信息
+    signCourierUrl //签收
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -82,6 +83,7 @@ JGBVue.module.courierList = () => {
           addCourierForm: {}, //快递单表单
           addCourierFormDefault: { //快递单表单默认数据
             courier_company: "",
+            courier_company_name: "",
             courier_id: "",
             date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`,
             cost: "",
@@ -89,13 +91,17 @@ JGBVue.module.courierList = () => {
             phone: "",
             remark: ""
           },
-          addCourierFormRules: {
+          addCourierFormRules: { //快递单验证规则
             courier_company: { required: true, message: '请选择快递公司', trigger: 'blur,change' },
             courier_id: { required: true, message: '请填写快递单号', trigger: 'blur,change' },
             cost: { validator: validateCost, trigger: 'blur,change' },
             person: { required: true, message: '请填写快递联系人', trigger: 'blur,change' },
             phone: { validator: validatePhone, trigger: 'blur,change' },
           },
+
+          showCourierInfo: false, //快递信息 窗
+          loadingCourierInfo: false, //正在获取快递信息
+          courierInfo: [], //快递信息
         }
       },
       computed: {
@@ -112,14 +118,14 @@ JGBVue.module.courierList = () => {
          * @param {Object} row 快递单数据 为空时新增
          */
         btnAdd: function(row) {
-          // let courier_uid = row ? row.courier_uid : ''  //快递单标识
           this.courierFormTitle = row ? '修改快递单' : '新增快递单'
 
           this.getCourierCompanyList()
           this.showAddCourierForm = true
           this.$refs.addCourierForm && this.$refs.addCourierForm.resetFields()
           this.addCourierForm = this.$deepCopy(this.addCourierFormDefault)
-          Object.assign(this.addCourierForm, row)
+          //修改快递单 从行数据获取 包含uid
+          row && Object.assign(this.addCourierForm, row)
         },
         //作废
         btnInvalid: function() {
@@ -146,7 +152,6 @@ JGBVue.module.courierList = () => {
                       type: 'success',
                       message: res.data.message
                     })
-                    this.getDeliveryData()
                   }
                   else {
                     this.$message({
@@ -174,28 +179,23 @@ JGBVue.module.courierList = () => {
             }
           }).then(() => {
             //如需更新工单信息请在此
-            // this.getDeliveryData()
+            this.getCourierData()
           }).catch()
         },
         /**
-         * 查看
+         * 查询物流信息
          * @param {Object} row 行数据
          * @param {Number} index 行
          */
         btnView: function(row, index) {
-          this.showDelivery = true
-          this.deliveryDetailsUrl = `./printDeliveryInfo.html?menu_id=printDeliveryInfo&&order_id=${this.c_orderId}&&delivery_id=${row.delivery_id}&&show_print_button=0`
+          this.showCourierInfo = true
+          this.getCourierInfo(row.courier_id)
         },
         /**
          * 打印
          */
         btnPrint: function() {
-          //调用父级框架打开标签页
-          this.$selectTab(
-            'printDeliveryInfo', 
-            '打印交付单', 
-            './views/deliveryManagement/printDeliveryInfo.html', 
-            `order_id=${this.c_orderId}&&delivery_id=${this.selectedRows[0].delivery_id}&&show_print_button=1`)
+          //调用打印快递单功能
         },
         //导出
         btnExport: function() {
@@ -238,6 +238,30 @@ JGBVue.module.courierList = () => {
         closeAddCourierForm: function() {
           this.showAddCourierForm = false
         },
+        //获取快递单数据
+        getCourierData: function() {
+          axios.post(courierListGetUrl, {
+            order_id: this.c_orderId
+          }).then(res=> {
+            if(res.data.status) {
+              this.orderList = JSON.parse(res.data.data).data
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            console.error(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
         //获取快递公司数据
         getCourierCompanyList: function() {
           axios.post(courierCompanyDataGetUrl).then(res=> {
@@ -258,6 +282,36 @@ JGBVue.module.courierList = () => {
               message: err,
               center: true
             })
+          })
+        },
+        /**
+         * 获取物流信息
+         * @param {String, Number} id 快递单号
+         */
+        getCourierInfo: function(id) {
+          this.loadingCourierInfo = true
+          axios.post(courierInfoGetUrl, {
+            courier_id: id
+          }).then(res=> {
+            if(res.data.status) {
+              this.courierInfo = JSON.parse(res.data.data)
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+            this.loadingCourierInfo = false
+          }).catch(err=> {
+            console.error(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+            this.loadingCourierInfo = false
           })
         },
         //工单 选择项发生变化时触发  val 选中的row数据
@@ -294,31 +348,55 @@ JGBVue.module.courierList = () => {
             }
           });
         },
+        /**
+         * 签收
+         * @param {String, Number} id 快递单号
+         */
+        signCourier: function(id) {
+          axios.post(signCourierUrl, {
+            uid: id
+          }).then(res=> {
+            this.$message({
+              type: res.data.status ? 'success': 'error',
+              message: res.data.message,
+              center: true
+            })
+          }).catch(err=> {
+            console.error(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
       },
       created: function () {
-        this.getDeliveryData()
+        this.getCourierData()
       }
     })
   }
   that.init = (
-    deliveryListGetUrl,
-    deliveryOrderUrl, 
+    courierListGetUrl,
     reportInvalidUrl,
     dataExportRequestUrl,
     deliveryAddDataGetUrl,
     submitAddDeliveryFormUrl,
     submitAddCourierFormUrl,
-    courierCompanyDataGetUrl
+    courierCompanyDataGetUrl,
+    courierInfoGetUrl,
+    signCourierUrl
   ) => {
     _this.init(
-      deliveryListGetUrl,
-      deliveryOrderUrl, 
+      courierListGetUrl,
       reportInvalidUrl,
       dataExportRequestUrl,
       deliveryAddDataGetUrl,
       submitAddDeliveryFormUrl,
       submitAddCourierFormUrl,
-      courierCompanyDataGetUrl
+      courierCompanyDataGetUrl,
+      courierInfoGetUrl,
+      signCourierUrl
     )
   }
   return that

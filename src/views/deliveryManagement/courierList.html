@@ -42,13 +42,13 @@
                   <div class="order-button" style="justify-content: center;">
                     <el-button size="mini" v-on:click="btnView(scope.row, scope.$index)">查询物流信息</el-button>
                     <el-button size="mini" v-on:click="btnAdd(scope.row)">修改</el-button>
-                    <el-button v-if="scope.status != '已签收'" size="mini" v-on:click="">签收</el-button>
+                    <el-button v-if="scope.status != '已签收'" size="mini" v-on:click="signCourier(scope.row.uid)">签收</el-button>
                   </div>
                 </template>
               </el-table-column>
               <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
               <el-table-column align="center" width="120px" label="快递公司"
-                key="courier_company" prop="courier_company">
+                key="courier_company_name" prop="courier_company_name">
               </el-table-column>
               <el-table-column align="center" width="120px" label="快递单号"
                 key="courier_id" prop="courier_id">
@@ -75,13 +75,16 @@
           </div>
         </div>
       </el-main>
-      <!-- 查看交付单 -->
+      <!-- 查询物流信息 -->
       <transition name="slide-fade">
-        <jgb-slide-details v-show="showDelivery" v-on:close="showDelivery = false" class="for-html-import">
-          <object :data="deliveryDetailsUrl" 
-            width="100%" type="text/html">
-            您的浏览器不支持object标签
-          </object>
+        <jgb-slide-details v-show="showCourierInfo" v-on:close="showCourierInfo = false" class="for-courier-info">
+          <div class="order-details">
+            <div class="details-title">物流信息</div>
+            <div class="details-container" v-loading="loadingCourierInfo">
+              <p v-for="item in courierInfo">{{item.date}}&nbsp;&nbsp;{{item.content}}</p>
+              <p v-if="!loadingCourierInfo && !courierInfo.length">暂无物流消息</p>
+            </div>
+          </div>
         </jgb-slide-details>
       </transition>
       <!-- 导出 -->
@@ -178,14 +181,15 @@
 <script type="text/javascript" src="../../assets/js/views/deliveryManagement/courierList.js"></script>
 <script type="text/javascript">
 	JGBVue.module.courierList().init(
-    '/deliveryManagement/get_delivery_list_data', //获取交付单数据
-    '/common/data_add_save', //交付工单接口
+    '/deliveryManagement/get_courier_list_data', //获取快递单数据
     '/common/data_add_save', //作废
     '/common/data_add_save', //导出申请地址
     '/deliveryManagement/add_delivery_form_get', //获取新增、修改交付单的信息
     '/common/data_add_save', //提交申新增交付单信息接口
     '/common/data_add_save', //提交快递单数据
-    '/orderManagement/get_business_data' //获取快递公司列表
+    '/orderManagement/get_business_data', //获取快递公司列表
+    '/deliveryManagement/get_courier_info', //获取物流信息
+    '/common/data_add_save' //签收
   );
 </script>
 
