@@ -301,7 +301,7 @@ router.get('/getRepo', (req, res)=> {
 	})
 })
 
-router.get('/getQuickQueryOption', (req, res)=> {
+router.use('/getQuickQueryOption', (req, res)=> {
 	let jdata = '';
 	fs.readFile('api/common/getOption/quickQueryOption.json', 'utf-8', (err, data)=> {
 		if(err) {

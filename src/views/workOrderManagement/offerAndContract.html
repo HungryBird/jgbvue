@@ -52,8 +52,8 @@
 							<el-button-group class="pull-right">
 								<el-button size="mini">报价模板</el-button>
 								<el-button v-on:click="exportCilck" size="mini">导出</el-button>
-								<el-button size="mini">打印</el-button>
-								<el-button icon="el-icon-minus" :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
+								<el-button size="mini" :disabled="selectedRows.length !== 1" v-on:click="btnPrintList">打印</el-button>
+								<el-button :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
 							</el-button-group>
 						</nav>
 						<el-table :data="table.data" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" v-loading="loadingDetailInfo" :row-class-name="rowStatusClassName">
@@ -68,8 +68,12 @@
 										<el-button-group v-else-if="scope.row.status === 1">
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
 											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">维修报价</el-button>
-											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)" v-if="!scope.row.hasContract">新增合同</el-button>	
-											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)" v-else>维修合同</el-button>
+											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">新增合同</el-button>	
+										</el-button-group>
+										<el-button-group v-else-if="scope.row.status === 2">
+											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
+											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">维修报价</el-button>
+											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">维修合同</el-button>
 										</el-button-group>
 										<el-button-group v-else>
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
@@ -130,7 +134,9 @@
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="客户名称" prop="clientName">
-							<el-input v-model="addForm.clientName" disabled></el-input>
+							<el-select v-model="addForm.clientName" placeholder="请选择客户" clearable remote filterable placeholder="请选择" :remote-method="remoteClient" :loading="loading">
+								<el-option v-for="co in clientOption" :key="co.value" :value="co.value" :label="co.label"></el-option>
+							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -222,13 +228,90 @@
 						</el-form-item>
 					</el-col>
 				</el-row>
-				<el-table ref="addFormTable" border>
-					<el-table-column label="费用项"></el-table-column>
-					<el-table-column label="配件"></el-table-column>
-					<el-table-column label="单位"></el-table-column>
-					<el-table-column label="数量"></el-table-column>
-					<el-table-column label="金额"></el-table-column>
+				<el-table ref="addFormTable" border :data="addForm.table" v-on:row-click="addFormTableRowClick" style="margin: 0;">
+					<el-table-column label="费用项" prop="costItem" width="148px">
+						<template slot-scope="scope">
+							<div v-if="scope.row.prop === 'accessoriesFee'">
+								{{ scope.row.costItem + (scope.$index + 1) }}
+							</div>
+							<div v-else>
+								{{ scope.row.costItem }}
+							</div>
+							<el-button-group>
+								<el-button size="mini" icon="el-icon-plus"></el-button>
+								<el-button size="mini" icon="el-icon-delete" type="danger"></el-button>
+							</el-button-group>
+						</template>
+					</el-table-column>
+					<el-table-column label="配件" prop="accessories" width="148px">
+						<template slot-scope="scope">
+							<el-select v-if="scope.row.prop === 'accessoriesFee'" v-model="scope.row.accessoriesValue">
+								<el-option v-for="acs in accessoriesOption" :key="acs.label" :value="acs.value" :label="acs.label"></el-option>
+							</el-select>
+							<div v-else-if="!scope.row.editFlag">{{ scope.row.accessories }}</div>
+							<div v-else>
+								<el-input v-model="scope.row.accessories"></el-input>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="单位" prop="unit" width="148px">
+						<template slot-scope="scope">
+							<div v-if="!scope.row.editFlag">{{ scope.row.unit }}</div>
+							<div v-else>
+								<el-input v-model="scope.row.unit"></el-input>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="数量" prop="quantity" width="148px">
+						<template slot-scope="scope">
+							<div v-if="!scope.row.editFlag">{{ scope.row.quantity }}</div>
+							<div v-else>
+								<el-input v-model="scope.row.quantity" type="number" mini="0"></el-input>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="金额" prop="money" width="148px">
+						<template slot-scope="scope">
+							<div v-if="scope.row.total">
+								小写{{}}
+							</div>
+							<div v-else>
+								{{ (scope.row.accessoriesValue | 0)*scope.row.quantity }}
+							</div>
+						</template>
+					</el-table-column>
 				</el-table>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<table class="table-style" style="border-top: 0;">
+							<thead>
+								<th>费用项</th>
+								<th>配件</th>
+								<th>单位</th>
+								<th>数量</th>
+								<th>金额</th>
+							</thead>
+							<tbody>
+								<tr v-for="(tt, index) in addForm.tempTable" :key="index">
+									<th>{{ tt.costItem }}</th>
+									<td colspan="3">
+										<jgb-empty-cell />
+									</td>
+									<td>
+										<el-input v-model="tt.money" type="number" mini="0"></el-input>
+									</td>
+								</tr>
+								<tr>
+									<th>合计费用</th>
+									<td>大写</td>
+									<td>{{ countTotalUpper }}</td>
+									<td>小写</td>
+									<td>{{ countTotal.toFixed(2) }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</el-col>
+				</el-row>
 			</el-form>
 			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd('addForm')" v-on:close="closeAdd"></jgb-form-footer>
 		</el-dialog>
@@ -296,6 +379,6 @@
 	 * 验证并声称唯一码
 	 * 获取打印数据
 	 */
-	JGBVue.module.offerAndContract().init('/offerAndContract/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/data_add_save', '/equipmentManagement/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory', '/equipmentManagement/getUnitMeasurement', '/equipmentManagement/getuniqueCode', '/equipmentManagement/getAuxiliaryAttributesClassify', '/equipmentManagement/search');
+	JGBVue.module.offerAndContract().init('/offerAndContract/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/data_add_save', '/equipmentManagement/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory', '/equipmentManagement/getUnitMeasurement', '/equipmentManagement/getuniqueCode', '/equipmentManagement/getAuxiliaryAttributesClassify', '/offerAndContract/search');
 </script>
 </html>
