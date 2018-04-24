@@ -238,7 +238,7 @@ JGBVue.module.commodityInfo = ()=> {
 						]
 					},
 					showColumnSetting: false,
-					addNewMultipleDialogVisible: true,
+					addNewMultipleDialogVisible: false,
 					newUnit: {
 						jibendanwei: '',
 						fudanwei: []
@@ -1680,18 +1680,37 @@ JGBVue.module.commodityInfo = ()=> {
 					this.$toggleRowEditable(this.editForm.multipleTable, row);
 				},
 				saveMultiple(formName) {
+					let _self = this;
 					this.$refs[formName].validate((valid)=> {
 						if(valid) {
-							/*for (var i = 0; i < this.newUnit.fudanwei.length; i++) {
-								if(this.newUnit.fudanwei[i].value.length === 0||this.newUnit.fudanwei[i].beishu.length||this.newUnit.fudanwei[i].beishu <= 0) {
+							for (var i = 0; i < this.newUnit.fudanwei.length; i++) {
+								if(this.newUnit.fudanwei[i].value === undefined ||this.newUnit.fudanwei[i].beishu === undefined) {
 									this.$message({
 										type: 'warning',
 										message: '副单位的值不能为空且倍数不能小于0'
 									})
 									return false;
 								}
-							}*/
-							console.log('this.newUnit.fudanwei[i].value: ', this.newUnit.fudanwei[0].value)
+							}
+							this.multipleOption.push(this.newUnit)
+							this.multipleTotalOption = [];
+							this.multipleOption.forEach((item)=> {
+								let obj = {}
+								,label = ''
+								,value = ''
+								,labelArr = []
+								,beishuArr = [];
+								labelArr.push(item.jibendanwei);
+								beishuArr.push(1);
+								item.fudanwei.forEach((fdw)=> {
+									labelArr.push(fdw.value);
+									beishuArr.push(fdw.beishu);
+								})
+								obj.label = labelArr.join(',') + '(' +beishuArr.join(',') + ')';
+								obj.value = item.jibendanwei;
+								_self.multipleTotalOption.push(obj);
+							})
+							this.addNewMultipleDialogVisible = false;
 						}else{
 							return false;
 						}
