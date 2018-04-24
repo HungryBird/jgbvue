@@ -754,6 +754,16 @@ table{
 			width: $exclusive;
 		}
 	}
+	.table-style{
+		border-top: 1px solid #ebeef5;
+		border-right: 1px solid #ebeef5;
+		th,td{
+			position: relative;
+			width: 147px;
+			border-left: 1px solid #ebeef5;
+			border-bottom: 1px solid #ebeef5;
+		}
+	}
 }
 
 //用户管理

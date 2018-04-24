@@ -6,7 +6,7 @@ JGBVue.module.offerAndContract = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
+	_this.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -70,21 +70,62 @@ JGBVue.module.offerAndContract = ()=> {
 					currentPage: 1,
 					isUnfold: false,
 					examinCurRow: null,
-					addContractDialogVisible: true,
+					addContractDialogVisible: false,
 					editVisible: false,
 					loadingSaveAdd: false,
 					loadingDetailInfo: false,
+					accessoriesOption: [],
 					addForm: {
 						uniqueCode: null,
 						warningWarrantyMethod: [],
 						addAuxiliaryAttributesClassify: [],
-						addAuxiliaryAttributesClassifyOption: []
-					},
-					editForm: {
-						uniqueCode: null,
-						warningWarrantyMethod: [],
-						addAuxiliaryAttributesClassify: [],
-						addAuxiliaryAttributesClassifyOption: []
+						addAuxiliaryAttributesClassifyOption: [],
+						table: [
+							{
+								editFlag: false,
+								costItem: '配件',
+								accessoriesValue: 0,
+								prop: 'accessoriesFee',
+								unit: '',
+								quantity: 0,
+								money: 0
+							},
+							{
+								editFlag: false,
+								costItem: '配件',
+								accessoriesValue: 0,
+								prop: 'accessoriesFee',
+								unit: '',
+								quantity: 0,
+								money: 0
+							}
+						],
+						tempTable: [
+							{
+								costItem: '人工服务维修费',
+								unit: '',
+								quantity: 0,
+								money: 0
+							},
+							{
+								costItem: '安装费',
+								unit: '',
+								quantity: 0,
+								money: 0
+							},
+							{
+								costItem: '配送费',
+								unit: '',
+								quantity: 0,
+								money: 0
+							},
+							{
+								costItem: '其他费用',
+								unit: '',
+								quantity: 0,
+								money: 0
+							}
+						]
 					},
 					addSetMemberVisible: false,
 					addSetSalesVisible: false,
@@ -119,26 +160,20 @@ JGBVue.module.offerAndContract = ()=> {
 					unitMeasurementOption: [],
 					equipmentSerialNumberValid: true,
 					equipmentSerialNumberError: '',
-					auxiliaryAttributesClassify: []
+					auxiliaryAttributesClassify: [],
+					loading: false
 				}
 			},
 			mounted() {
 				this.search();
-				this.getQuickQuery();
-				this.getAuxiliaryAttributesClassify()
+				this.getOption();
 			},
 			methods: {
-				getAuxiliaryAttributesClassify() {
-					let _self = this;
-					axios.get(getAuxiliaryAttributesClassifyUrl).then((res)=> {
+				getOption() {
+					axios.get(getOptionUrl).then((res)=> {
 						if(res.data.status) {
-							this.auxiliaryAttributesClassify = JSON.parse(res.data.data);
-							this.auxiliaryAttributesClassify.forEach((item)=> {
-								let obj = {};
-								obj.value = '';
-								_self.addForm.addAuxiliaryAttributesClassifyOption.push(obj);
-								_self.editForm.addAuxiliaryAttributesClassifyOption.push(obj);
-							})
+							this.accessoriesOption = JSON.parse(res.data.data).concat();
+							this.clientOption = JSON.parse(res.data.data).concat();
 						}
 					})
 				},
@@ -155,15 +190,6 @@ JGBVue.module.offerAndContract = ()=> {
 					}).catch((err)=> {
 						console.log('axios err: ', err);
 					});
-				},
-				getQuickQuery() {
-					axios.get(getQuickQueryUrl).then((res)=> {
-						if(res.data.status) {
-							let jdata = JSON.parse(res.data.data).concat();
-							this.businessPersonnelQuickOption = jdata.concat();
-							this.servicemanQuickOption = jdata.concat();
-						}
-					})
 				},
 				handleFormCheckStatusChange(value) { 
 					let checkedCount = value.length;
@@ -326,14 +352,28 @@ JGBVue.module.offerAndContract = ()=> {
 				handleCurrentChange() {
 					//翻页时
 				},
+				remoteClient(val) {
+					this.loading = true;
+					axios.post(getOptionUrl).then((res)=> {
+						if(res.data.status) {
+							this.clientOption = [];
+							this.clientOption = JSON.parse(res.data.data);
+							this.loading = false;
+						}
+					})
+				},
 				saveAdd(formName) {
-					console.log(formName)
 					this.$refs[formName].validate((valid)=> {
 						if(valid) {
 							axios.post(saveAddUrl, this.addForm).then((res)=> {
 								if(res.data.status) {
 									this.$refs[formName].resetFields();
-									this.addVisible = false;
+									this.addContractDialogVisible = false;
+									for (var i = this.table.data.length - 1; i >= 0; i--) {
+										if(this.table.data[i] === this.selectedRows[0]) {
+											this.table.data[i].status = 1;
+										}
+									}
 									this.$message({
 										type: 'success',
 										message: res.data.message
@@ -341,7 +381,6 @@ JGBVue.module.offerAndContract = ()=> {
 								}
 							})
 						}else{
-							console.log(false)
 							return false;
 						}
 					})
@@ -641,14 +680,18 @@ JGBVue.module.offerAndContract = ()=> {
 						}
 					})
 				},
-				preview() {
+				addFormTableRowClick(row) {
+					this.$toggleRowEditable(this.addForm.table, row)
+				},
+				btnPrintList() {
+					let filter = this.$deepCopy(Object.assign(this.searchData, this.statusForm));
 					this.$selectTab(
-						'equipmentManagementPrint', 
-						'打印设备管理', 
-						'./views/equipmentManagement/equipmentManagementPrint.html', 
-						`url=${printListUrl}`)
-					}
-					//console.log(printListUrl)
+			            'printOfferAndContract', 
+			            '打印报价与合同', 
+			            './views/workOrderManagement/printOfferAndContract.html', 
+			            `filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}&&mid=${this.c_menuId}&&hurl=${defaultColumnSettingUrl}`
+		            )
+				}
 			},
 			watch: {
 				addCheckedSalesMember(newVal) {
@@ -670,18 +713,36 @@ JGBVue.module.offerAndContract = ()=> {
 				statusFilter(val) {
 					if(val === 0) {
 						return '待报价'
-					}else if(val === 1) {
+					}else if(val !== 0&&val !== -1) {
 						return '报价中'
-					}else{
+					}else if(val === -1){
 						return '作废'
 					}
+				}
+			},
+			computed: {
+				countTotal() {
+					let _self = this;
+					let total = 0;
+					this.addForm.tempTable.forEach((item)=> {
+			            total += Number(item.money)
+			        })
+			        return Number(total);
+				},
+				countTotalUpper() {
+					let _self = this;
+					let total = 0;
+					this.addForm.tempTable.forEach((item)=> {
+			            total += Number(item.money)
+			        })
+			        return this.$convertCurrency(total);
 				}
 			}
 		})
 	}
 
-	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
-		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl);
+	that.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
+		_this.init(searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl);
 	}
 
 	return that;

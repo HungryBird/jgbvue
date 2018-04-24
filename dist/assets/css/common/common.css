@@ -702,6 +702,15 @@ table {
 .offerAndContract .el-form .exclusive {
   width: 590px; }
 
+.offerAndContract .table-style {
+  border-top: 1px solid #ebeef5;
+  border-right: 1px solid #ebeef5; }
+  .offerAndContract .table-style th, .offerAndContract .table-style td {
+    position: relative;
+    width: 147px;
+    border-left: 1px solid #ebeef5;
+    border-bottom: 1px solid #ebeef5; }
+
 .userManagement .w-main-header {
   display: flex;
   flex-flow: row nowrap;

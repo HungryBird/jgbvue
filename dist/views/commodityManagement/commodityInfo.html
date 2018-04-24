@@ -91,7 +91,7 @@
 			<el-row :gutter="4">
 				<el-col :span="12">
 					<el-form-item prop="number" label="商品编号">
-						<el-input v-model="addForm.number"></el-input>
+						<el-input v-model="addForm.number" v-on:blur="addCheckNumberIsRepeat"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
@@ -579,7 +579,7 @@
 			<el-row :gutter="4">
 				<el-col :span="12">
 					<el-form-item prop="number" label="商品编号">
-						<el-input v-model="editForm.number"></el-input>
+						<el-input v-model="editForm.number" v-on:blur="editCheckNumberIsRepeat"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
@@ -642,6 +642,10 @@
 					<el-form-item prop="multipleTotalOption" label="多单位选择">
 						<el-select v-model="editForm.multipleTotalOption" clearable v-on:change="editChangeMultipleTotalSelect">
 							<el-option v-for="mo in multipleTotalOption" :key="mo.value" :value="mo.value" :label="mo.label"></el-option>
+							<div v-on:click="addNewMultipleDialogVisible = true" class="el-select-dropdown__item">
+								<span style="float: left" class="el-icon-plus"></span>
+								<span style="float: left; color: #8492a6; font-size: 13px">新增单位</span>
+							</div>
 						</el-select>
 					</el-form-item>
 				</el-col>
@@ -711,7 +715,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<el-row :gutter="4" v-if="!addForm.multiple&&!addForm.setCommodityAuxiliaryAttributes">
+			<el-row :gutter="4" v-if="!editForm.multiple&&!editForm.setCommodityAuxiliaryAttributes">
 				<el-col :span="12">
 					<el-form-item prop="retailPrice" label="零售价">
 						<el-input v-model="editForm.retailPrice"></el-input>
@@ -1046,7 +1050,7 @@
 			</el-row>
 		</el-form>
 		<div slot="footer">
-			<jgb-form-footer :loading="loading" v-on:save="saveEdit('editForm')" v-on:close="addVisible = false"></jgb-form-footer>
+			<jgb-form-footer :loading="loading" v-on:save="saveEdit('editForm')" v-on:close="editVisible = false"></jgb-form-footer>
 		</div>
 	</el-dialog>
 	<!-- 添加-序列号录入 -->
@@ -1255,7 +1259,7 @@
 	     			基本单位应为最小度量单位
 	     		</el-form-item>
      		</div>
-     		<div v-for="(fdw, index) in newUnit.fudanwei" :key="fdw.value" style="margin-bottom: 6px;">
+     		<div v-for="(fdw, index) in newUnit.fudanwei" :key="index" style="margin-bottom: 6px;">
      			<i class="el-icon-delete" style="color: #ff0000;cursor: pointer;" v-on:click="removeFdw(fdw)"></i>
      			<span>副单位 {{ index + 1 }}</span>
      			<el-input v-model="fdw.value" style="display: inline-block;width: 170px;"></el-input>
@@ -1296,7 +1300,8 @@
 	 * 添加辅助属性分类
 	 * 获取默认列设置
 	 * 列设置完成
+	 * 检查编号是否重复
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete');
+	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete', '/commodityInfo/checkNumber');
 </script>
 </html>

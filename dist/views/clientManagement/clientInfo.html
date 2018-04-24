@@ -48,7 +48,7 @@
 				<el-main>
 					<div class="jgb-wrap">
 						<nav class="jgb-nav">
-							<el-button class="pull-left">
+							<el-button class="pull-left" v-on:click="showColumnSetting = true">
 								列设置
 							</el-button>
 							<el-button-group class="pull-right">
@@ -60,36 +60,28 @@
 								<el-button v-on:click="exportCilck">导出</el-button>
 							</el-button-group>
 						</nav>
-						<el-table :data="table" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" :row-class-name="rowStatusClassName" v-loading="loadingDetailInfo">
+						<el-table :data="table.data" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" :row-class-name="rowStatusClassName" v-loading="loadingDetailInfo">
 							<el-table-column type="selection"></el-table-column>
-							<el-table-column type="index" label="序号" width="50px"></el-table-column>
-							<el-table-column label="操作">
+							<el-table-column  v-for="item in table.header" v-if="item.enable" align="center" :type="item.type" :sortable="item.sortable" :width="item.width" :key="item.prop" :prop="item.prop" :label="item.label">
 								<template slot-scope="scope">
-									<el-button-group>
-										<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)" type="primary">查看</el-button>
-										<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-										<el-button size="mini" type="danger" v-on:click="handleDelete(scope.$index, scope.row)">删除</el-button>
-									</el-button-group>
-								</template>
-							</el-table-column>
-							<el-table-column label="客户等级" prop="clientLevel"></el-table-column>
-							<el-table-column label="客户编号" prop="clientNumber"></el-table-column>
-							<el-table-column label="客户名称" prop="clientName"></el-table-column>
-							<el-table-column label="销售人员" prop="saleman"></el-table-column>
-							<el-table-column label="联系人" prop="linkman"></el-table-column>
-							<el-table-column label="手机" prop="phone"></el-table-column>
-							<el-table-column label="座机" prop="tel"></el-table-column>
-							<el-table-column label="QQ/微信/邮箱" prop="QQOrWechat"></el-table-column>
-							<el-table-column label="应收款余额" prop="balance"></el-table-column>
-							<el-table-column label="地址" prop="address"></el-table-column>
-							<el-table-column label="协助人员" prop="assistant"></el-table-column>
-							<el-table-column label="状态" prop="status">
-								<template slot-scope="scope">
-									<el-button-group>
+									<div v-if="item.prop == 'action'" >
+										<el-button-group>
+											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)" type="primary">查看</el-button>
+											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+											<el-button size="mini" type="danger" v-on:click="handleDelete(scope.$index, scope.row)">删除</el-button>
+										</el-button-group>
+									</div>
+									<div v-else-if="item.type == 'index'">{{scope.$index+1}}</div>
+									<div v-else-if="item.prop == 'status'">
 										<el-switch v-model="scope.row.status" v-on:change="handleStatus(scope.$index, scope.row)"></el-switch>
-									</el-button-group>
+									</div>
+									<div v-else-if="item.prop == 'image'">
+										<i class="el-icon-picture jgb-table-icon" v-on:click="viewImage(scope.row.img, scope.row)"></i>
+									</div>
+	                  				<div v-else>{{scope.row[item.prop]}}</div>
 								</template>
 							</el-table-column>
+						</el-table>
 						</el-table>
 					</div>
 				</el-main>
@@ -586,6 +578,14 @@
 				<el-button v-on:click="exportVisible = false">关闭</el-button>
 			</div>
 		</el-dialog>
+		<el-dialog :visible.sync="showColumnSetting">
+	        <div class="title" slot="title">列设置</div>
+	        <jgb-column-setting v-if="table.header.length" v-model="table.header"></jgb-column-setting>
+	        <div slot="footer">
+	            <el-button v-on:click="btnColumnSettingReset">恢复默认设置</el-button>
+	          	<el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
+	        </div>
+	    </el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -610,7 +610,9 @@
 	 * 保存编辑数据
 	 * 上传路径
 	 * 获取导出选项
+	 * 恢复默认
+	 * 完成列设置
 	 */
-	JGBVue.module.clientInfo().init('/clientInfo/data_init', '/common/switch', '/common/data_delete', '/clientInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm');
+	JGBVue.module.clientInfo().init('/equipmentManagement/search', '/common/switch', '/common/data_delete', '/clientInfo/examine', '/common/get_provinces', '/common/get_cities', '/common/get_district', '/common/get_block', '/common/getCompany', '/common/getDepartment', '/roleManagement/department_member_get', '/common/data_add_save', '/clientInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete');
 </script>
 </html>
