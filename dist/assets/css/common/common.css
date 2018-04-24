@@ -1114,6 +1114,18 @@ table {
       border-left: none; }
     .order-details .details-table.delivery td:last-child {
       border-right: none; }
+    .order-details .details-table.print-delivery-info th, .order-details .details-table.print-delivery-info td {
+      text-align: center; }
+    .order-details .details-table.print-delivery-info th {
+      width: 15%; }
+    .order-details .details-table.print-delivery-info td {
+      width: 35%; }
+    .order-details .details-table.print-delivery-content th, .order-details .details-table.print-delivery-content td {
+      text-align: center; }
+    .order-details .details-table.print-delivery-content .index {
+      width: 20%; }
+    .order-details .details-table.print-delivery-content .count, .order-details .details-table.print-delivery-content .unit {
+      width: 10%; }
     .order-details .details-table th {
       border: 1px solid #ddd;
       width: 100px;
@@ -1395,3 +1407,27 @@ table {
   left: 0;
   right: 0;
   bottom: 0; }
+
+.w-common-form-table {
+  width: 100%;
+  border-collapse: collapse; }
+  .w-common-form-table th, .w-common-form-table td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: center;
+    position: relative; }
+    .w-common-form-table th .el-form-item.cost, .w-common-form-table td .el-form-item.cost {
+      width: 100px;
+      margin: 0 auto; }
+      .w-common-form-table th .el-form-item.cost .el-input, .w-common-form-table td .el-form-item.cost .el-input {
+        width: 100%; }
+    .w-common-form-table th .show-on-focus .el-input__inner,
+    .w-common-form-table th .show-on-focus .el-textarea__inner, .w-common-form-table td .show-on-focus .el-input__inner,
+    .w-common-form-table td .show-on-focus .el-textarea__inner {
+      border: none;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box; }
+      .w-common-form-table th .show-on-focus .el-input__inner:focus,
+      .w-common-form-table th .show-on-focus .el-textarea__inner:focus, .w-common-form-table td .show-on-focus .el-input__inner:focus,
+      .w-common-form-table td .show-on-focus .el-textarea__inner:focus {
+        border: 1px solid #409EFF; }

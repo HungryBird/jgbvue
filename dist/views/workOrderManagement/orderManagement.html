@@ -237,6 +237,9 @@
       <!-- 导出 -->
       <el-dialog :visible.sync="showExport" width="600px">
         <div class="title" slot="title">导出</div>
+        <el-alert title="注：请选择需要导出的字段。" style="margin-bottom:10px;"
+          type="warning" :closable="false">
+        </el-alert>
         <el-checkbox-group v-model="exportChecked" class="w-export">
           <el-checkbox v-if="item.prop != 'action'"
             v-for="item in tableHeader" border checked

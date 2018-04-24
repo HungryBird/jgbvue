@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>交付单</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body>
+	<div id="app" v-cloak class="workOrderManagement">
+		<el-container>
+			<el-main>
+        <div class="jgb-wrap">
+          <div style="margin:10px;">
+            <el-button v-if="showDeliveryButton" type="primary" size="mini" v-on:click="btnDelivery">确认交付</el-button>
+          </div>
+          <div class="w-main-table">
+            <div class="w-main-title">
+              <span>工单号：{{c_orderId}}</span>
+              <el-button-group>
+                <el-button type="primary" size="mini" v-on:click="btnAdd()">新增</el-button>
+                <el-button type="primary" size="mini" v-on:click="btnExport">导出</el-button>
+                <el-button type="primary" size="mini" 
+                  :disabled="selectedRows.length != 1"
+                  v-on:click="btnPrint">
+                  打印
+              </el-button>
+                <el-button type="primary" size="mini" 
+                  :disabled="!selectedRows.length"
+                  v-on:click="btnInvalid">
+                  作废
+                </el-button>
+              </el-button-group>
+            </div>
+            <el-table ref="reportTable"
+              border highlight-current-row
+              :data="orderList"
+              v-on:selection-change="handleOrderSelectionChange">
+              <el-table-column type="selection" align="center" width="40" key="selection"></el-table-column>
+              <el-table-column align="center" label="操作" width="100">
+                <template slot-scope="scope">
+                  <div class="order-button" style="justify-content: center;">
+                    <el-button size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                    <el-button size="mini" v-on:click="btnAdd(scope.row)">修改</el-button>
+                    <!-- <el-button size="mini" v-on:click="">上传扫描件</el-button> -->
+                    <el-upload class="upload-demo"
+                      :show-file-list="false"
+                      :action="uploadReportUrl"
+                      :on-success="handleUploadReportSuccess"
+                      :on-error="handleUploadReportError">
+                      <el-button size="mini" type="">上传扫描件</el-button>
+                    </el-upload>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+              <el-table-column align="center" width="120px" label="标题"
+                key="title" prop="title">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="单据编号"
+                key="delivery_id" prop="delivery_id">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="交付日期"
+                key="date" prop="date">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="交付方"
+                key="delivery" prop="delivery">
+              </el-table-column>
+              <el-table-column align="center" label="接收方"
+                key="receive" prop="receive">
+              </el-table-column>
+              <el-table-column align="center" label="交付内容"
+                key="content" prop="content">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="交付单扫描件"
+                key="file" prop="file">
+                <template slot-scope="scope">
+                  <a v-if="scope.row.file" class="el-icon-document table-img-icon"
+                    :href="scope.row.file" download>
+                  </a>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="备注"
+                key="remark" prop="remark">
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+      </el-main>
+      <!-- 查看交付单 -->
+      <transition name="slide-fade">
+        <jgb-slide-details v-show="showDelivery" v-on:close="showDelivery = false" class="for-html-import">
+          <object :data="deliveryDetailsUrl" 
+            width="100%" type="text/html">
+            您的浏览器不支持object标签
+          </object>
+        </jgb-slide-details>
+      </transition>
+      <!-- 导出 -->
+      <el-dialog :visible.sync="showExport" width="600px">
+        <div class="title" slot="title">导出</div>
+        <el-alert title="注：请选择需要导出的字段。" style="margin-bottom:10px;"
+          type="warning" :closable="false">
+        </el-alert>
+        <el-checkbox-group v-model="exportChecked" class="w-export">
+          <el-checkbox v-if="item.prop != 'action'"
+            v-for="item in tableHeader" border checked
+            :key="item.label" :label="item.prop" >
+            {{item.label}}
+          </el-checkbox>
+        </el-checkbox-group>
+        <jgb-form-footer slot="footer"
+          save-text="导出" close-text="关闭"
+          :loading="isLoadingExportRequest"
+          v-on:save="btnExportSave" v-on:close="btnExportClose">
+        </jgb-form-footer>
+      </el-dialog>
+      <!-- 新增交付单 -->
+      <el-dialog :visible.sync="showAddDeliveryForm">
+        <div class="title" slot="title">{{deliveryFormTitle}}</div>
+        <el-form ref="addDeliveryForm" class="w-common-form" label-width="100px" 
+          v-loading="loadingAddDeliveryFormData"
+          :model="addDeliveryForm" :rules="addDeliveryFormRules">
+          <el-form-item label="标题：" prop="title">
+            <el-input v-model="addDeliveryForm.title" placeholder="请输入标题"/>
+          </el-form-item>
+          <el-row :gutter="5">
+            <el-col :span="8">
+              <el-form-item label="单据编号：">
+                <el-input v-model="addDeliveryForm.delivery_id" readonly />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="交付日期：" prop="date">
+                <el-date-picker v-model="addDeliveryForm.date"
+                  type="date" value-format="yyyy-MM-dd"
+                  placeholder="选择日期">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="质保期：" prop="quality">
+                <el-input-number v-model="addDeliveryForm.quality" style="width:120px;"
+                  controls-position="right"
+                  :min="0">
+                </el-input-number>
+                天
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="5">
+            <el-col :span="8">
+              <el-form-item label="交付方：" prop="delivery">
+                <el-input class="show-on-focus" v-model="addDeliveryForm.delivery" readonly />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="接收方：" prop="receive">
+                <el-input class="show-on-focus" v-model="addDeliveryForm.receive" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="交付内容："></el-form-item>
+          <table class="w-common-form-table">
+            <thead>
+              <th style="width:130px;">操作</th>
+              <th style="width:50px;">序号</th>
+              <th>名称</th>
+              <th>单位</th>
+              <th>数量</th>
+              <th>备注</th>
+            </thead>
+            <tbody>
+              <tr v-for="(item,index) in addDeliveryForm.delivery_list">
+                <td>
+                  <el-button-group>
+                    <el-button type="" size="mini" v-on:click="btnAddDeliveryFormAddOneRow">增加行</el-button>
+                    <el-button type="danger" size="mini" v-on:click="btnAddDeliveryFormDelOneRow(index)">删除</el-button>
+                  </el-button-group>
+                </td>
+                <td>{{index+1}}</td>
+                <td>
+                  <el-input class="show-on-focus" v-model="addDeliveryForm.delivery_list[index].name" />
+                </td>
+                <td>
+                  <el-input class="show-on-focus" v-model="addDeliveryForm.delivery_list[index].unit" />
+                </td>
+                <td>
+                  <el-input class="show-on-focus" v-model="addDeliveryForm.delivery_list[index].count" />
+                </td>
+                <td>
+                  <el-input class="show-on-focus" v-model="addDeliveryForm.delivery_list[index].remark" />
+                </td>
+              </tr>
+              <tr>
+                <th>备注：</th>
+                <td colspan="5">
+                  <el-input class="show-on-focus" type="textarea" v-model="addDeliveryForm.remark"
+                    :autosize="{minRows: 2, maxRows: 4}" />
+                </td>
+              </tr>
+              <tr>
+                <th>接收方签字：</th>
+                <td colspan="5"></td>
+              </tr>
+              <tr>
+                <th>接收日期：</th>
+                <td colspan="5"></td>
+              </tr>
+            </tbody>
+          </table>
+        </el-form>
+        <jgb-form-footer slot="footer"
+          save-text="确认" close-text="取消"
+          :loading="loadingAddDeliveryForm"
+          v-on:save="saveAddDeliveryForm" v-on:close="closeAddDeliveryForm">
+        </jgb-form-footer>
+      </el-dialog>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/deliveryManagement/deliveryList.js"></script>
+<script type="text/javascript">
+	JGBVue.module.deliveryList().init(
+    '/deliveryManagement/get_delivery_list_data', //获取交付单数据
+    '/common/data_add_save', //交付工单接口
+    '/common/data_add_save', //作废
+    '/common/data_add_save', //导出申请地址
+    '/common/data_add_save', //上传报告扫描件
+    '/deliveryManagement/add_delivery_form_get', //获取新增、修改交付单的信息
+    '/common/data_add_save' //提交申新增交付单信息接口
+  );
+</script>
+
+</html>

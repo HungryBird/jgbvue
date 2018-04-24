@@ -1221,6 +1221,28 @@ table{
 				}
 			}
 		}
+		&.print-delivery-info { //打印 交付单
+			th, td {
+				text-align: center;
+			}
+			th {
+				width:15%;
+			}
+			td {
+				width:35%;
+			}
+		}
+		&.print-delivery-content { //打印 交付单-交付内容
+			th, td {
+				text-align: center;
+			}
+			.index {
+				width:20%;
+			}
+			.count, .unit {
+				width: 10%;
+			}
+		}
 		th {
 			@include common-border;
 			width:100px;
@@ -1529,11 +1551,43 @@ table{
 		}
 	}
 }
-
+//空数据单元格
 .w-empty-cell {
 	position:absolute;
 	top:0;
 	left:0;
 	right:0;
 	bottom:0;
+}
+
+//公共表单表格
+.w-common-form-table {
+	width:100%;
+	border-collapse:collapse;
+	th, td {
+		@include common-border;
+		padding:5px;
+		text-align: center;
+		position:relative;
+		.el-form-item {
+			&.cost {
+				width: 100px;
+				margin:0 auto;
+				.el-input {
+					width: 100%;
+				}
+			}
+		}
+		//表格式表单中点击出现输入框
+		.show-on-focus {
+			.el-input__inner,
+			.el-textarea__inner {
+				border:none;
+				box-sizing:border-box;
+				&:focus {
+					border: 1px solid #409EFF;
+				}
+			}
+		}
+	}
 }

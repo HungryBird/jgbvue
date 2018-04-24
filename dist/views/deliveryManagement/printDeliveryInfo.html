@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>打印交付单</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body style="background:#fff;">
+	<div id="app" v-cloak ref="mainContent" class="workOrderManagement">
+		<el-container>
+			<el-main>
+        <div class="jgb-wrap" ref="printContent" style="border:none;">
+          <div class="w-print-page" >
+            <div v-if="c_showPrintButton == 1" class="print-title">交付单</div>
+            <div class="order-details">
+              <div v-if="c_showPrintButton == 0" class="details-title">查看交付单</div>
+              <div class="details-container">
+                <table class="details-table print-delivery-info">
+                  <tbody>
+                    <tr>
+                      <th>单据编号：</th>
+                      <td>{{deliveryInfo.delivery_id}}</td>
+                      <th>交付日期</th>
+                      <td>{{deliveryInfo.date}}</td>
+                    </tr>
+                    <tr>
+                      <th>交付方：</th>
+                      <td>{{deliveryInfo.delivery}}</td>
+                      <th>接收方：</th>
+                      <td>{{deliveryInfo.receive}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="block-title">交付内容：</div>
+                <table class="details-table print-delivery-content">
+                  <thead>
+                    <th class="index">序号</th>
+                    <th>名称</th>
+                    <th class="unit">单位</th>
+                    <th class="count">数量</th>
+                    <th>备注</th>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in deliveryInfo.delivery_list">
+                      <td>{{index+1}}</td>
+                      <td>{{item.name}}</td>
+                      <td>{{item.unit}}</td>
+                      <td>{{item.count}}</td>
+                      <td>{{item.remark}}</td>
+                    </tr>
+                    <tr>
+                      <th>备注：</th>
+                      <td colspan="4">{{deliveryInfo.remark}}</td>
+                    </tr>
+                    <tr>
+                      <th>接收方签字：</th>
+                      <td colspan="4"></td>
+                    </tr>
+                    <tr>
+                      <th>接收日期：</th>
+                      <td colspan="4"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-print-footer-btn" v-if="c_showPrintButton == 1">
+          <el-button type="primary" v-on:click="btnPrint">打印</el-button>
+        </div>
+			</el-main>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/deliveryManagement/printDeliveryInfo.js"></script>
+<script type="text/javascript">
+	JGBVue.module.printDeliveryInfo().init(
+    '/deliveryManagement/add_delivery_form_get' //获取交付单信息
+	);
+</script>
+
+</html>
