@@ -91,7 +91,7 @@
 			<el-row :gutter="4">
 				<el-col :span="12">
 					<el-form-item prop="number" label="商品编号">
-						<el-input v-model="addForm.number"></el-input>
+						<el-input v-model="addForm.number" v-on:blur="addCheckNumberIsRepeat"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
@@ -579,7 +579,7 @@
 			<el-row :gutter="4">
 				<el-col :span="12">
 					<el-form-item prop="number" label="商品编号">
-						<el-input v-model="editForm.number"></el-input>
+						<el-input v-model="editForm.number" v-on:blur="editCheckNumberIsRepeat"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :span="12">
@@ -1300,7 +1300,8 @@
 	 * 添加辅助属性分类
 	 * 获取默认列设置
 	 * 列设置完成
+	 * 检查编号是否重复
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete');
+	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete', '/commodityInfo/checkNumber');
 </script>
 </html>

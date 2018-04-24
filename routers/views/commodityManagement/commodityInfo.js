@@ -162,4 +162,10 @@ router.get('/duodanwei', (req, res)=> {
 	})
 })
 
+router.get('/checkNumber', (req, res)=> {
+	res.send({
+		status: true
+	}).end()
+})
+
 module.exports = router;

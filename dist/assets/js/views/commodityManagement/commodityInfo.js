@@ -6,7 +6,7 @@ JGBVue.module.commodityInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+	_this.init = (searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -1726,6 +1726,28 @@ JGBVue.module.commodityInfo = ()=> {
 				addFwd() {
 					let obj = {};
 					this.newUnit.fudanwei.push(obj);
+				},
+				addCheckNumberIsRepeat() {
+					axios.post(addCheckNumberIsRepeatUrl, this.addForm.number).then((res)=> {
+						if(!res.data.status) {
+							this.$message({
+								type: 'error',
+								message: '商品编号重复！'
+							})
+							this.addForm.number = null;
+						}
+					})
+				},
+				editCheckNumberIsRepeat() {
+					axios.post(addCheckNumberIsRepeatUrl, this.editForm.number).then((res)=> {
+						if(!res.data.status) {
+							this.$message({
+								type: 'error',
+								message: '商品编号重复！'
+							})
+							this.editForm.number = null;
+						}
+					})
 				}
 			},
 			watch: {
@@ -1756,8 +1778,8 @@ JGBVue.module.commodityInfo = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
-		_this.init(searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl);
+	that.init = (searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl)=> {
+		_this.init(searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl);
 	}
 
 	return that;
