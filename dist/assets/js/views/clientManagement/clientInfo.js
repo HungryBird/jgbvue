@@ -6,12 +6,16 @@ JGBVue.module.clientInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
+	_this.init = (searchUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
 				return {
-					table: [],
+					table: {
+						header: [],
+						data: []
+					},
+					showColumnSetting: false,
 					tempTable: [],
 					search: {
 						input: ''
@@ -174,33 +178,35 @@ JGBVue.module.clientInfo = ()=> {
 			},
 			mounted() {
 				let _self = this;
-				axios.get(initDataUrl).then((res)=> {
-					if(res.data.status) {
-						let jdata = JSON.parse(res.data.data);
-						this.category = jdata.category;
-						this.level = jdata.level;
-						this.sale = jdata.sale;
-						//this.companyList = jdata.companyList;
-						this.tempTable = jdata.table;
-						this.tempTable.forEach((item)=> {
-							if(!_self.isShowForbiddenClients) {
-								if(item.status) {
-									_self.table.push(item);
-								}
-							}else{
-								_self.table.push(item);
-							}
-						});
-					}
-				}).catch((err)=> {
-					console.log('axios err: ', err);
-				})
+				this.searchVal();
 				this.getCompanyList();
 				let addVisibleValue = this.$getQuery(window.location.search).addVisible ? true : false;
 				this.addVisible = addVisibleValue;
-				console.log('this.$timeStampFormat: ', this.$timeStampFormat)
 			},
 			methods: {
+				searchVal(val) {
+					let _self = this;
+					axios.get(searchUrl, val).then((res)=> {
+						if(res.data.status) {
+							let jdata = JSON.parse(res.data.data);
+							this.table.header = [];
+							this.table.data = [];
+							this.table.header = jdata.header.concat();
+							this.tempTable = jdata.data.concat();
+							this.tempTable.forEach((item)=> {
+								if(!_self.isShowForbiddenEquipment) {
+									if(item.status) {
+										_self.table.data.push(item);
+									}
+								}else{
+									_self.table.data.push(item);
+								}
+							});
+						}
+					}).catch((err)=> {
+						console.log('axios err: ', err);
+					});
+				},
 				getCompanyList() {
 					axios.get(getCompanyUrl).then((res)=> {
 						this.companyList = JSON.parse(res.data.data);
@@ -776,6 +782,56 @@ JGBVue.module.clientInfo = ()=> {
 						_self.addForm.sales.push(item);
 					})
 					this.addSetSalesVisible = false;
+				},
+				btnColumnSettingReset() {
+					axios.post(defaultColumnSettingUrl).then(res=> {
+						if(res.data.status) {
+							this.table.header= [];
+							this.table.header = JSON.parse(res.data.data)
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				btnColumnSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.table.header).then(res=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							});
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
 				}
 			},
 			watch: {
@@ -789,8 +845,8 @@ JGBVue.module.clientInfo = ()=> {
 		})
 	}
 
-	that.init = (initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl)=> {
-		_this.init(initDataUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl);
+	that.init = (searchUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+		_this.init(searchUrl, startUsingUrl, deleteUrl, examineUrl, getProvincesUrl, getCitiesUrl, getDistrictsUrl, getBlocksUrl, getCompanyUrl, getDepartmentUrl, departmentMemberGetUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, defaultColumnSettingUrl, columnSettingCompleteUrl);
 	}
 
 	return that;
