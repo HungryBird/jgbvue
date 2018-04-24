@@ -29,6 +29,7 @@ JGBVue.module.faultDiagnosis = () => {
       data: function () {
         let validateCost = (rule, value, callback) => { 
           let reg = /^[1-9]\d*(\.\d{1,2})?|0\.\d{1,2}|0$/g
+          value = value.toString()
           if (value != value.match(reg)) {
             callback(new Error('请输入正确的金额'));
           } 
@@ -108,10 +109,10 @@ JGBVue.module.faultDiagnosis = () => {
             diagnosis: { required: true, message: '请选择诊断人员', trigger: 'blur' },
             result: { required: true, message: '请填写故障原因', trigger: 'blur' },
             measures: { required: true, message: '请填写维修措施', trigger: 'blur' },
-            rengong: { validator: validateCost, trigger: 'blur' },
-            peisong: { validator: validateCost, trigger: 'blur' },
-            anzhuang: { validator: validateCost, trigger: 'blur' },
-            qita: { validator: validateCost, trigger: 'blur' },
+            rengong: { validator: validateCost, trigger: 'blur,change' },
+            peisong: { validator: validateCost, trigger: 'blur,change' },
+            anzhuang: { validator: validateCost, trigger: 'blur,change' },
+            qita: { validator: validateCost, trigger: 'blur,change' },
           },
           loadingTempStorage: false, //正在提交诊断结果
 

@@ -1,0 +1,36 @@
+[
+	{
+		"jibendanwei": "毫克",
+		"fudanwei": [
+			{
+				"value": "克",
+				"beishu": 1000
+			},
+			{
+				"value": "千克",
+				"beishu": 1000000
+			},
+			{
+				"value": "吨",
+				"beishu": 1000000000
+			}
+		]
+	},
+	{
+		"jibendanwei": "毫米",
+		"fudanwei": [
+			{
+				"value": "厘米",
+				"beishu": 10
+			},
+			{
+				"value": "米",
+				"beishu": 1000
+			},
+			{
+				"value": "千米",
+				"beishu": 1000000
+			}
+		]
+	}
+]
