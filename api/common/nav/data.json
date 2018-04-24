@@ -131,13 +131,14 @@
 						"url": "./views/maintenanceManagement/reportAndCost.html" }
 				] 
 			},
-			{ "code": "201804090954", "name": "交付与回访", "isMenu": false, "url": "",
-				"items": [
-					{ "code": "201804090955", "name": "交付单", "isMenu": true, 
-						"url": "./views/201804090954/201804090955.html" },
-					{ "code": "201804090956", "name": "快递单", "isMenu": true, 
-						"url": "./views/201804090954/201804090956.html" }
-				] 
+			{ "code": "deliveryManagement", "name": "交付", "isMenu": true, "url": "./views/deliveryManagement/deliveryManagement.html",
+				"items": [] 
+			},
+			{ "code": "clientVisit", "name": "客户回访", "isMenu": true, "url": "./views/clientVisit/clientVisit.html",
+				"items": [] 
+			},
+			{ "code": "maintenanceStatistical", "name": "维修统计报表", "isMenu": true, "url": "./views/maintenanceStatistical/maintenanceStatistical.html",
+				"items": [] 
 			}
 		]
 	}
