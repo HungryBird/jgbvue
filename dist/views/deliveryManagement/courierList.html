@@ -42,7 +42,7 @@
                   <div class="order-button" style="justify-content: center;">
                     <el-button size="mini" v-on:click="btnView(scope.row, scope.$index)">查询物流信息</el-button>
                     <el-button size="mini" v-on:click="btnAdd(scope.row)">修改</el-button>
-                    <el-button v-if="scope.status != '已签收'" size="mini" v-on:click="signCourier(scope.row.uid)">签收</el-button>
+                    <el-button v-if="scope.row.status != '已签收'" size="mini" v-on:click="signCourier(scope.row.uid)">签收</el-button>
                   </div>
                 </template>
               </el-table-column>
