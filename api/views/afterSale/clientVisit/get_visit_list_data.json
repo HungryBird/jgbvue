@@ -1,0 +1,38 @@
+[
+  {
+    "visit_id": "123456",
+    "visit_date": "2018-4-21",
+    "visit_person": 3,
+    "visit_person_name": "王五",
+    "client_id": "客户id",
+    "client_contact": 10002,
+    "client_contact_name": "张三",
+    "visit_method": "tel",
+    "visit_method_name": "电话",
+    "visit_reason": "回访事由：回访事由：回访事由：回访事由：",
+    "visit_result": "回访结果：回访结果：回访结果：回访结果：回访结果：",
+    "remark": "备注：备注：备注：",
+    "next_date": "2018-5-21",
+    "remind_on": true,
+    "remind_method": ["msg", "web"],
+    "remind_method_name": ["短信", "站内信息"]
+  },
+  {
+    "visit_id": "654321",
+    "visit_date": "2018-4-21",
+    "visit_person": 2,
+    "visit_person_name": "李四",
+    "client_id": "客户id",
+    "client_contact": 10002,
+    "client_contact_name": "张三",
+    "visit_method": "tel",
+    "visit_method_name": "电话",
+    "visit_reason": "回访事由：回访事由：回访事由：回访事由：",
+    "visit_result": "回访结果：回访结果：回访结果：回访结果：回访结果：",
+    "remark": "备注：备注：备注：",
+    "next_date": "2018-5-21",
+    "remind_on": true,
+    "remind_method": ["msg", "web"],
+    "remind_method_name": ["短信", "站内信息"]
+  }
+]

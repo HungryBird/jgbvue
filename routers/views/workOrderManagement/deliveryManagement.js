@@ -1,6 +1,6 @@
 /**
- * created by lanw 2018-4-19
- * 维修管理
+ * created by lanw 2018-4-24
+ * 交付管理
  */
 const express = require('express');
 const fs = require('fs');
@@ -131,7 +131,7 @@ router.post('/is_delivery_list_exist', (req, res)=> {
 router.post('/is_courier_list_exist', (req, res)=> {
   res.send({
     status: true,
-    data: true //Math.round(Math.random()) ? true : false
+    data: Math.round(Math.random()) ? true : false
   }).end();
 })
 

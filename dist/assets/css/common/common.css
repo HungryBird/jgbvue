@@ -1446,3 +1446,10 @@ table {
       .w-common-form-table th .show-on-focus .el-textarea__inner:focus, .w-common-form-table td .show-on-focus .el-input__inner:focus,
       .w-common-form-table td .show-on-focus .el-textarea__inner:focus {
         border: 1px solid #409EFF; }
+
+.w-common-line-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis; }
