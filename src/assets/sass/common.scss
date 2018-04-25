@@ -537,9 +537,20 @@ table{
 			}
 		}
 		.details-inner{
+			position: relative;
 			height: 100%;
 			overflow-x: auto;
 			overflow-y: auto;
+			.waterMark-wrap{
+				position: fixed;
+				bottom: 120px;
+				right: 60px;
+				.waterMark{
+					font-size: 60px;
+					font-weight: 900;
+					opacity: .3;
+				}
+			}
 		}
 		.toggle-button-wrap{
 			// edit by lanw 2018-4-24 修复关闭按钮没有上下居中 start 
@@ -776,6 +787,8 @@ table{
 		th,td{
 			position: relative;
 			width: 147px;
+			line-height: 36px;
+			text-align: center;
 			border-left: 1px solid #ebeef5;
 			border-bottom: 1px solid #ebeef5;
 		}

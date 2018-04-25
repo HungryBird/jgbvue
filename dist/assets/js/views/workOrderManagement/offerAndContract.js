@@ -6,7 +6,7 @@ JGBVue.module.offerAndContract = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
+	_this.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -161,19 +161,27 @@ JGBVue.module.offerAndContract = ()=> {
 					equipmentSerialNumberValid: true,
 					equipmentSerialNumberError: '',
 					auxiliaryAttributesClassify: [],
-					loading: false
+					loading: false,
+					infoForm: {}
 				}
 			},
 			mounted() {
 				this.search();
 				this.getOption();
+				this.getAccessoriesOption();
 			},
 			methods: {
 				getOption() {
 					axios.get(getOptionUrl).then((res)=> {
 						if(res.data.status) {
-							this.accessoriesOption = JSON.parse(res.data.data).concat();
 							this.clientOption = JSON.parse(res.data.data).concat();
+						}
+					})
+				},
+				getAccessoriesOption() {
+					axios.get(getAccessoriesOptionUrl).then((res)=> {
+						if(res.data.status) {
+							this.accessoriesOption = JSON.parse(res.data.data).concat();
 						}
 					})
 				},
@@ -208,31 +216,12 @@ JGBVue.module.offerAndContract = ()=> {
 					}
 				},
 				rowClick(row, event, column) {
-					let _self = this;
-					this.$refs['table'].toggleRowSelection(row);
-					if(_self.selectedRows.indexOf(row) == -1) {
-						_self.selectedRows.push(row)
-					}else{
-						_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
-					}
+					this.$selectItem('table', row, this)
 				},
 				selectAll(selection) {
-					let _self = this;
-                    if(selection.length == 0) {
-                        _self.selectedRows.splice(0, _self.selectedRows.length);
-                    }else{
-                        _self.selectedRows.splice(0, _self.selectedRows.length);
-                        selection.forEach((item)=> {
-                            _self.selectedRows.push(item);
-                        })
-                    }
+                    this.$selectAll(selection, this)
 				},
 				selectItem(selection, row) {
-					/*let _self = this;
-                    this.selectedRows.splice(0, _self.selectedRows.length);
-                    for(let i = 0; i < selection.length; i++) {
-                        _self.selectedRows.push(selection[i]);
-                    }*/
                     this.$selectItem(selection, row, this)
 				},
 				handleExamine(index, row) {
@@ -252,7 +241,7 @@ JGBVue.module.offerAndContract = ()=> {
 					axios.post(examineUrl, row).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							this.detailInfo = jdata;
+							this.infoForm = jdata;
 							this.isUnfold = true;
 							this.loadingDetailInfo = false;
 						}
@@ -762,7 +751,8 @@ JGBVue.module.offerAndContract = ()=> {
 					this.addForm.tempTable.forEach((item)=> {
 			            total += Number(item.money)
 			        })
-			        return Number(total);
+			        this.addForm.countTotal = Number(total);
+			        return this.addForm.countTotal;
 				},
 				countTotalUpper() {
 					let _self = this;
@@ -770,14 +760,15 @@ JGBVue.module.offerAndContract = ()=> {
 					this.addForm.tempTable.forEach((item)=> {
 			            total += Number(item.money)
 			        })
-			        return this.$convertCurrency(total);
+			        this.addForm.countTotalUpper = this.$convertCurrency(total);
+			        return this.addForm.countTotalUpper;
 				}
 			}
 		})
 	}
 
-	that.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
-		_this.init(searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl);
+	that.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl)=> {
+		_this.init(searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl);
 	}
 
 	return that;

@@ -6,7 +6,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl)=> {
+	_this.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -31,7 +31,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 						]
 					},
 					loadingDetailInfo: false,
-					addContractDialogVisible: true,
+					addContractDialogVisible: false,
 					addForm: {
 						uniqueCode: null,
 						warningWarrantyMethod: [],
@@ -84,6 +84,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 							}
 						]
 					},
+					infoForm: {},
 					loading: false,
 					clientOption: [{}],
 					linkmanOption: [],
@@ -92,6 +93,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 					equipmentCategoryOption: [],
 					unitMeasurementOption: [],
 					accessoriesOption: [],
+					examinCurRow: null,
+					isUnfold: false,
 				}
 			},
 			mounted() {
@@ -99,6 +102,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 				this.order_id = info.order_id;
 				this.search();
 				this.getOption();
+				this.getAccessoriesOption();
 			},
 			methods: {
 				search() {
@@ -111,8 +115,14 @@ JGBVue.module.maintenanceOffer = ()=> {
 				getOption() {
 					axios.get(getOptionUrl).then((res)=> {
 						if(res.data.status) {
-							this.accessoriesOption = JSON.parse(res.data.data).concat();
 							this.clientOption = JSON.parse(res.data.data).concat();
+						}
+					})
+				},
+				getAccessoriesOption() {
+					axios.get(getAccessoriesOptionUrl).then((res)=> {
+						if(res.data.status) {
+							this.accessoriesOption = JSON.parse(res.data.data).concat();
 						}
 					})
 				},
@@ -140,9 +150,9 @@ JGBVue.module.maintenanceOffer = ()=> {
                             axios.post(deleteUrl, this.selectedRows).then((res)=> {
                                 if(res.data.status) {
                                 	this.selectedRows.forEach((item)=> {
-                                		for (let i = _self.table.data.length - 1; i >= 0; i--) {
-                                			if(_self.table.data[i] === item) {
-                                				_self.table.data[i].status = -1;
+                                		for (let i = _self.table.length - 1; i >= 0; i--) {
+                                			if(_self.table[i] === item) {
+                                				_self.table[i].status = -1;
                                 			}
                                 		}
                                 	})
@@ -172,33 +182,12 @@ JGBVue.module.maintenanceOffer = ()=> {
 					//
 				},
 				rowClick(row, event, column) {
-					/*let _self = this;
-					this.$refs['table'].toggleRowSelection(row);
-					if(_self.selectedRows.indexOf(row) == -1) {
-						_self.selectedRows.push(row)
-					}else{
-						_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
-					}*/
 					this.$rowClick('table', row, this);
 				},
 				selectAll(selection) {
-					/*let _self = this;
-                    if(selection.length == 0) {
-                        _self.selectedRows.splice(0, _self.selectedRows.length);
-                    }else{
-                        _self.selectedRows.splice(0, _self.selectedRows.length);
-                        selection.forEach((item)=> {
-                            _self.selectedRows.push(item);
-                        })
-                    }*/
                     this.$selectAll(selection, this);
 				},
 				selectItem(selection, row) {
-					/*let _self = this;
-                    this.selectedRows.splice(0, _self.selectedRows.length);
-                    for(let i = 0; i < selection.length; i++) {
-                        _self.selectedRows.push(selection[i]);
-                    }*/
                     this.$selectItem(selection, row, this);
 				},
 				remoteClient(val) {
@@ -218,9 +207,9 @@ JGBVue.module.maintenanceOffer = ()=> {
 								if(res.data.status) {
 									this.$refs[formName].resetFields();
 									this.addContractDialogVisible = false;
-									for (var i = this.table.data.length - 1; i >= 0; i--) {
-										if(this.table.data[i] === this.selectedRows[0]) {
-											this.table.data[i].status = 1;
+									for (var i = this.table.length - 1; i >= 0; i--) {
+										if(this.table[i] === this.selectedRows[0]) {
+											this.table[i].status = 1;
 										}
 									}
 									this.$message({
@@ -241,9 +230,9 @@ JGBVue.module.maintenanceOffer = ()=> {
 								if(res.data.status) {
 									this.$refs[formName].resetFields();
 									this.addContractDialogVisible = false;
-									for (var i = this.table.data.length - 1; i >= 0; i--) {
-										if(this.table.data[i] === this.selectedRows[0]) {
-											this.table.data[i].status = 1;
+									for (var i = this.table.length - 1; i >= 0; i--) {
+										if(this.table[i] === this.selectedRows[0]) {
+											this.table[i].status = 1;
 										}
 									}
 									this.$message({
@@ -285,6 +274,36 @@ JGBVue.module.maintenanceOffer = ()=> {
 				addFormTableRowClick(row) {
 					this.$toggleRowEditable(this.addForm.table, row)
 				},
+				handleExamine(index, row) {
+					let _self = this;
+					if(this.examinCurRow === row) {
+						if(this.isUnfold) {
+							this.isUnfold = false;
+						}else{
+							this.toggleInfo();
+							this.isUnfold = true;
+						}
+						return;
+					}
+					this.examinCurRow = row;
+					this.$refs['table'].clearSelection();
+					this.loadingDetailInfo = true;
+					axios.post(examineUrl, row).then((res)=> {
+						if(res.data.status) {
+							this.infoForm = res.data.data;
+							this.isUnfold = true;
+							this.loadingDetailInfo = false;
+
+						}
+					}).catch((err)=> {
+						console.log(err)
+					});
+				},
+				toggleInfo() {
+					this.$refs['table'].clearSelection();
+					this.selectedRows = [];
+					this.isUnfold = false;
+				},
 			},
 			watch: {
 				//
@@ -296,7 +315,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 					this.addForm.tempTable.forEach((item)=> {
 			            total += Number(item.money)
 			        })
-			        return Number(total);
+			        this.addForm.countTotal = Number(total);
+			        return this.addForm.countTotal;
 				},
 				countTotalUpper() {
 					let _self = this;
@@ -304,7 +324,17 @@ JGBVue.module.maintenanceOffer = ()=> {
 					this.addForm.tempTable.forEach((item)=> {
 			            total += Number(item.money)
 			        })
-			        return this.$convertCurrency(total);
+			        this.addForm.countTotalUpper = this.$convertCurrency(total);
+			        return this.addForm.countTotalUpper;
+				},
+				infoFormCountTotal() {
+					let _self = this;
+					let total = 0;
+					console.log('this.infoForm: ', this.infoForm)
+					this.infoForm.tempTable.forEach((item)=> {
+			            total += Number(item.money)
+			        })
+			        return Number(total).toFixed(2);
 				}
 			},
 			filters: {
@@ -321,8 +351,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl)=> {
-		_this.init(searchUrl, getOptionUrl, getEquipmentBrandOptionUrl)
+	that.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl)=> {
+		_this.init(searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl)
 	}
 
 	return that;

@@ -1,0 +1,86 @@
+{
+	"info1": [
+		{
+			"name": "客户编号",
+			"value": "4asd46"
+		},
+		{
+			"name": "客户名称",
+			"value": "2as546zcx"
+		},
+		{
+			"name": "客户类别",
+			"value": "3qwe6z4cx56"
+		},
+		{
+			"name": "客户等级",
+			"value": "4zxc213ad"
+		}
+	],
+	"info2": [
+		{
+			"name": "客户编号",
+			"value": "1876a4sd"
+		},
+		{
+			"name": "客户名称",
+			"value": "28a64d"
+		},
+		{
+			"name": "客户类别",
+			"value": "3987zxc"
+		},
+		{
+			"name": "客户等级",
+			"value": "489a7sf"
+		}
+	],
+	"table": [
+		{
+			"editFlag": false,
+			"costItem": "配件1",
+			"accessoriesValue": 0,
+			"prop": "accessoriesFee",
+			"unit": "台",
+			"quantity": 0,
+			"money": 0
+		},
+		{
+			"editFlag": false,
+			"costItem": "配件2",
+			"accessoriesValue": 0,
+			"prop": "accessoriesFee",
+			"unit": "台",
+			"quantity": 0,
+			"money": 0
+		}
+	],
+	"tempTable": [
+		{
+			"costItem": "人工服务维修费",
+			"unit": "辆",
+			"quantity": 0,
+			"money": 10000000000
+		},
+		{
+			"costItem": "安装费",
+			"unit": "辆",
+			"quantity": 0,
+			"money": 999999
+		},
+		{
+			"costItem": "配送费",
+			"unit": "辆",
+			"quantity": 0,
+			"money": 0.33
+		},
+		{
+			"costItem": "其他费用",
+			"unit": "辆",
+			"quantity": 0,
+			"money": 5
+		}
+	],
+	"lower": 46456546,
+	"upper": "个十百千万"
+}
