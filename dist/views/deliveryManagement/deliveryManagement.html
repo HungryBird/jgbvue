@@ -65,7 +65,7 @@
                 <el-checkbox-group v-model="selectForm.checkedStatus" @change="handleFormCheckStatusChange">
                   <el-checkbox v-for="item in formOrderStatus" :label="item" :key="item.value">{{item.label}}</el-checkbox>
                 </el-checkbox-group>
-                <el-button-group>
+                <el-button-group style="margin:0;">
                   <el-button type="primary" size="mini" v-on:click="btnColumnSetting">列设置</el-button>
                   <el-button type="primary" size="mini" v-on:click="btnAdd">新增</el-button>
                   <el-button type="primary" size="mini" v-on:click="btnExport">导出</el-button>
@@ -104,30 +104,18 @@
 								<template slot-scope="scope">
                   <!-- 操作 -->
                   <div v-if="item.prop == 'action'" >
-                      <!-- 待维修 -->
-                      <div v-if="scope.row.status_value == 6" class="order-button">
-                        <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                        <el-button type="" size="mini" v-on:click="">设备定位</el-button>
-                        <el-button type="" size="mini" v-on:click="btnMaintenanceStart(scope.row, scope.$index)">开始维修</el-button>
-                        <el-button type="" size="mini" v-on:click="">开票申请</el-button>
-                      </div>
-                      <!-- 维修中 -->
-                      <div v-else-if="scope.row.status_value == 7" class="order-button">
-                        <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                        <el-button type="" size="mini" v-on:click="btnReport(scope.row, scope.$index)">测试报告</el-button>
-                        <el-button type="" size="mini" v-on:click="btnChangePerson(scope.row, scope.$index)">换人修</el-button>
-                        <el-button type="" size="mini" v-on:click="btnOutside(scope.row, scope.$index)">送外修</el-button>
-                        <el-button type="" size="mini" v-on:click="btnDiagnosis(scope.row, scope.$index)">再次诊断</el-button>
-                        <el-button type="" size="mini" v-on:click="">开票申请</el-button>
-                      </div>
-                      <!-- 完成维修 -->
-                      <div v-else-if="scope.row.status_value == 8" class="order-button">
-                        <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                        <el-button type="" v-if="scope.row.hasReport && scope.row.hasCost" size="mini" v-on:click="btnDelivery(scope.row, scope.$index)">交付</el-button>
-                        <el-button type="" size="mini" v-on:click="btnReport(scope.row, scope.$index)">维修报告</el-button>
-                        <el-button type="" size="mini" v-on:click="btnFinalCost(scope.row, scope.$index)">最终成本</el-button>
-                        <el-button type="" size="mini" v-on:click="">开票申请</el-button>
-                      </div>
+                    <!-- 待交付 -->
+                    <div v-if="scope.row.status_value == 9" class="order-button">
+                      <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                      <el-button type="" size="mini" v-on:click="btnDeliveryList(scope.row, scope.$index)">交付单</el-button>
+                    </div>
+                    <!-- 交付中 -->
+                    <div v-else-if="scope.row.status_value == 10" class="order-button">
+                      <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                      <el-button type="" size="mini" v-on:click="btnDeliveryList(scope.row, scope.$index)">交付单</el-button>
+                      <el-button type="" size="mini" v-on:click="btnCourierList(scope.row, scope.$index)">快递单</el-button>
+                      <el-button type="" size="mini" v-on:click="">开票申请</el-button>
+                    </div>
                   </div>
                   <!-- 时效 -->
                   <div v-else-if="item.prop == 'aging'" 
@@ -213,579 +201,170 @@
             </el-button>
         </div>
       </el-dialog>
-      <!-- 重新故障诊断 -->
-      <el-dialog :visible.sync="showDiagnosis">
-        <div class="title" slot="title">工单{{diagnosisData.order_id || ''}}重新故障诊断</div>
-        <el-form ref="diagnosisForm" class="diagnosis-form" label-width="120px" 
-          :model="diagnosisData"
-          :rules="diagnosisRules">
-          <el-row>
-            <el-col :span="10">
-              <el-form-item label="诊断时间：" prop="date">
-                <el-input v-model="diagnosisData.date" readonly></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="14">
-              <el-form-item label="诊断人员：" prop="diagnosis">
-                <el-select v-model="diagnosisData.diagnosis" filterable remote placeholder="请选择"
-                  value-key="value"  
-                  :remote-method="remoteDiagnosis">
-                  <el-option v-for="item in formDiagnosisList"
-                    :key="item.number"
-                    :label="item.label"
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="故障原因：" prop="result">
-                <el-input type="textarea" v-model="diagnosisData.result" 
-                  :autosize="{minRows: 4, maxRows: 4}">
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="维修措施：" prop="measures">
-                <el-input type="textarea" v-model="diagnosisData.measures" 
-                  :autosize="{minRows: 4, maxRows: 4}">
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-form-item label="成本估算：" class="cost"></el-form-item>
-          </el-row>
-          <el-row>
-            <el-form-item label="人工维修费用：" prop="rengong">
-              <el-input v-model="diagnosisData.rengong" v-on:change=""></el-input>
-            </el-form-item>
-            <el-form-item v-for="(accessories, index) in diagnosisData.peijian"
-              label="配件费：" 
-              :key="'key'+index">
-              <div slot="label" class="accessories-label">
-                配件费用：
-                <div class="label-action">
-                  <i class="circle el-icon-circle-close" v-on:click="removeOneDiagnosis(index)"></i>
-                  <i class="circle el-icon-circle-plus" v-on:click="addOneDiagnosis"></i>
-                </div>
-              </div>
-              <div class="accessories-content">
-                <!-- 直接判断diagnosisData.peijian[index].data == formAccessoriesList[对应项] 是false？ -->
-                <el-select v-model="diagnosisData.peijian[index].data.commodityNumber" filterable remote 
-                  placeholder="请选择" value-key="value" size="small"
-                  :remote-method="remoteAccessories"
-                  v-on:change="handleDiagnosisChange(index)">
-                  <el-option v-for="item in formAccessoriesList"
-                    :key="item.commodityNumber"
-                    :label="'商品'+item.commodityName+',型号'+item.specifications+',编号'+item.commodityNumber"
-                    :value="item.commodityNumber">
-                  </el-option>
-                </el-select>
-                <div class="accessories-subtotal">
-                  数量：
-                  <el-input-number v-model="accessories.count" size="small" controls-position="right" 
-                    :min="1" :step="1"
-                    :disabled="!diagnosisData.peijian[index].data.commodityNumber"
-                    v-on:change="handleDiagnosisCountChange(index)" >
-                  </el-input-number>
-                  小计：
-                  <el-input class="subtotal" size="small" readonly v-model="accessories.subTotal"></el-input>
-                </div>
-              </div>
-            </el-form-item>
-            <el-form-item label="配送费用：" prop="peisong">
-              <el-input v-model="diagnosisData.peisong" v-on:change=""></el-input>
-            </el-form-item>
-            <el-form-item label="安装费：" prop="anzhuang">
-              <el-input v-model="diagnosisData.anzhuang" v-on:change=""></el-input>
-            </el-form-item>
-            <el-form-item label="其他费用：" prop="qita">
-              <el-input v-model="diagnosisData.qita" v-on:change=""></el-input>
-            </el-form-item>
-            <el-form-item label="合计：">
-              <el-input v-model="diagnosisData.heji" readonly></el-input>
-            </el-form-item>
-          </el-row>
-        </el-form>
-        <div class="diagnosis-form-footer">
-          <el-button type="primary"
-            :loading="loadingTempStorage"
-            :disabled="loadingTempStorage"
-            v-on:click="btnTempStorage('temp')">暂存</el-button>
-          <div>
-              <el-button type="primary"
-                :loading="loadingTempStorage"
-                :disabled="loadingTempStorage"
-                v-on:click="btnTempStorage('submit')">提交诊断结果</el-button>
-            <el-button v-on:click="showDiagnosis = false">取消</el-button>
-          </div>
-        </div>
-      </el-dialog>
-      <!-- 测试报告 -->
-      <el-dialog :visible.sync="showTestReport">
-        <div class="title" slot="title">测试报告</div>
-        <el-form ref="testReportForm" label-width="100px" class="w-common-form"
-          :model="reportFormData" :rules="reportFormRule">
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="测试人员：" prop="testPerson">
-                <el-select v-model="reportFormData.testPerson" filterable remote placeholder="请选择"
-                  value-key="value"  
-                  :remote-method="remoteTestPerson">
-                  <el-option v-for="item in formTestPersonList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="测试时间：" prop="testDate">
-                <el-date-picker value-format="yyyy-MM-dd HH:mm:ss"
-                  v-model="reportFormData.testDate"
-                  type="date"
-                  placeholder="请选择日期">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="测试环境：" prop="testEnvironment">
-                <el-input v-model="reportFormData.testEnvironment"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="测试工具：" prop="testTool">
-                <el-input v-model="reportFormData.testTool"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="测试步骤：" prop="testStep">
-            <el-input type="textarea" v-model="reportFormData.testStep"
-              :autosize="{minRows: 4, maxRows: 4}">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="测试结果：" prop="testResult">
-            <el-input type="textarea" v-model="reportFormData.testResult"
-              :autosize="{minRows: 4, maxRows: 4}">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="备注：" prop="testRemark">
-            <el-input type="textarea" v-model="reportFormData.testRemark"
-              :autosize="{minRows: 4, maxRows: 4}">
-            </el-input>
-          </el-form-item>
-        </el-form>
-        <jgb-form-footer slot="footer"
-          save-text="确认" close-test="取消"
-          :loading="loadingSaveTestReport"
-          v-on:save="saveTestReport"
-          v-on:close="closeTestReport">
-        </jgb-form-footer>
-      </el-dialog>
-      <!-- 送外修 -->
-      <el-dialog :visible.sync="showOutside">
-        <div class="title" slot="title">送外修</div>
-        <el-form ref="outsideForm" label-width="100px" class="w-common-form"
-          :model="outsideFormData" :rules="outsideFormRule">
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="送修公司：" prop="company">
-                <el-input v-model="outsideFormData.company"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="送修时间：" prop="date">
-                <el-date-picker value-format="yyyy-MM-dd HH:mm:ss"
-                  v-model="outsideFormData.date"
-                  type="date"
-                  placeholder="请选择日期">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="送修方式：" prop="method">
-                <el-input v-model="outsideFormData.method"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="费用预估：" prop="cost">
-                <el-input v-model="outsideFormData.cost"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="送修原因：" prop="reason">
-            <el-input type="textarea" v-model="outsideFormData.reason"
-              :autosize="{minRows: 4, maxRows: 4}">
-            </el-input>
-          </el-form-item>
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="预修时长：" prop="howLong">
-                <el-input v-model="outsideFormData.howLong"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="联系人：" prop="contract">
-                <el-input v-model="outsideFormData.contract"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="手机号码：" prop="phone">
-                <el-input v-model="outsideFormData.phone"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="微信：" prop="wx">
-                <el-input v-model="outsideFormData.wx"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="备注：" prop="remark">
-            <el-input type="textarea" v-model="outsideFormData.remark"
-              :autosize="{minRows: 4, maxRows: 4}">
-            </el-input>
-          </el-form-item>
-        </el-form>
-        <jgb-form-footer slot="footer"
-          save-text="确认" close-test="取消"
-          :loading="loadingSaveOutside"
-          v-on:save="saveOutside"
-          v-on:close="closeOutside">
-        </jgb-form-footer>
-      </el-dialog>
-      <!-- 换人修 -->
-      <el-dialog :visible.sync="showChangePerson">
-        <div class="title" slot="title">换人修</div>
-        <el-form ref="changePersonForm" label-width="100px" class="w-common-form"
-          :model="changePersonFormData" :rules="changePersonFormRule">
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="换修人员：" prop="person">
-                <el-select v-model="changePersonFormData.person" filterable remote placeholder="请选择"
-                  value-key="value"  
-                  :remote-method="remoteDiagnosis">
-                  <el-option v-for="item in formDiagnosisList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="换修时间：" prop="date">
-                <el-date-picker value-format="yyyy-MM-dd HH:mm:ss"
-                  v-model="changePersonFormData.date"
-                  type="date"
-                  placeholder="请选择日期">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="换修原因：" prop="reason">
-            <el-input type="textarea" v-model="changePersonFormData.reason"
-              :autosize="{minRows: 4, maxRows: 4}">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="备注：" prop="remark">
-            <el-input type="textarea" v-model="changePersonFormData.remark"
-              :autosize="{minRows: 4, maxRows: 4}">
-            </el-input>
-          </el-form-item>
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-form-item label="费用：" prop="cost">
-                <el-input v-model="changePersonFormData.cost"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <jgb-form-footer slot="footer"
-          save-text="确认" close-test="取消"
-          :loading="loadingSaveChangePerson"
-          v-on:save="saveChangePerson"
-          v-on:close="closeChangePerson">
-        </jgb-form-footer>
-      </el-dialog>
-      <!-- 新增维修报告 -->
-      <el-dialog :visible.sync="showReportAddForm">
-        <div class="title" slot="title">新增维修报告</div>
-        <el-form ref="reportAddForm" label-width="100px" class="w-common-form"
-          :model="reportAddForm" :rules="reportAddFormRules">
+      <!-- 新增交付单 -->
+      <el-dialog :visible.sync="showAddDeliveryForm">
+        <div class="title" slot="title">新增交付单</div>
+        <el-form ref="addDeliveryForm" class="w-common-form" label-width="100px" 
+          v-loading="loadingAddDeliveryFormData"
+          :model="addDeliveryForm" :rules="addDeliveryFormRules">
           <el-form-item label="标题：" prop="title">
-            <el-input v-model="reportAddForm.title"></el-input>
+            <el-input v-model="addDeliveryForm.title" placeholder="请输入标题"/>
           </el-form-item>
           <el-row :gutter="5">
-            <el-col :span="12">
-              <el-form-item label="工单编号：" prop="order_id">
-                <el-input v-model="reportAddForm.order_id" readonly></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="编写日期：" prop="date">
-                <el-input v-model="reportAddForm.date" readonly></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="基本信息："></el-form-item>
-          <el-row :gutter="5">
             <el-col :span="8">
-              <el-form-item label="工单日期：" prop="order_date">
-                <el-input v-model="reportAddForm.order_date" readonly></el-input>
+              <el-form-item label="单据编号：">
+                <el-input v-model="addDeliveryForm.delivery_id" readonly />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="客户名称：" prop="client_name">
-                <el-input v-model="reportAddForm.client_name" readonly></el-input>
+              <el-form-item label="交付日期：" prop="date">
+                <el-date-picker v-model="addDeliveryForm.date"
+                  type="date" value-format="yyyy-MM-dd"
+                  placeholder="选择日期">
+                </el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="维修公司：" prop="maintenance_company">
-                <el-input v-model="reportAddForm.maintenance_company" readonly></el-input>
+              <el-form-item label="质保期：" prop="quality">
+                <el-input-number v-model="addDeliveryForm.quality" style="width:120px;"
+                  controls-position="right"
+                  :min="0">
+                </el-input-number>
+                天
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="5">
             <el-col :span="8">
-              <el-form-item label="设备名称：" prop="equipment_name">
-                <el-input v-model="reportAddForm.equipment_name" readonly></el-input>
+              <el-form-item label="交付方：" prop="delivery">
+                <el-input class="show-on-focus" v-model="addDeliveryForm.delivery" readonly />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="设备类别：" prop="equipment_category">
-                <el-input v-model="reportAddForm.equipment_category" readonly></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="设备品牌：" prop="equipment_brand">
-                <el-input v-model="reportAddForm.equipment_brand" readonly></el-input>
+              <el-form-item label="接收方：" prop="receive">
+                <el-input class="show-on-focus" v-model="addDeliveryForm.receive" />
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="5">
-            <el-col :span="8">
-              <el-form-item label="设备来源：" prop="equipment_source">
-                <el-input v-model="reportAddForm.equipment_source" readonly></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="报修方式：" prop="equipment_method">
-                <el-input v-model="reportAddForm.equipment_method" readonly></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="紧急程度：" prop="level">
-                <el-input v-model="reportAddForm.level" readonly></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="5">
-            <el-col :span="8">
-              <el-form-item label="维修人员：" prop="maintenance_person">
-                <el-input v-model="reportAddForm.maintenance_person" readonly></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="联系方式：" prop="maintenance_phone">
-                <el-input v-model="reportAddForm.maintenance_phone" readonly></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="完成时间：" prop="fin">
-                <el-input v-model="reportAddForm.order_fin" readonly></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="维修信息："></el-form-item>
-          <el-form-item label="故障描述：" prop="fault_info">
-            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"
-              v-model="reportAddForm.fault_info">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="故障原因：" prop="fault_reason">
-            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"
-              v-model="reportAddForm.fault_reason">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="维修措施：" prop="maintenance_way">
-            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"
-              v-model="reportAddForm.maintenance_way">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="完成情况：" prop="maintenance_fin">
-            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}"
-              v-model="reportAddForm.maintenance_fin">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="维修费用："></el-form-item>
-          <el-row :gutter="5">
-            <el-col :span="8">
-              <el-form-item label="人工维修费用：" prop="rengong" label-width="120px">
-                <el-input v-model="reportAddForm.rengong"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="配件费用：" prop="peijian">
-                <el-input v-model="reportAddForm.peijian" ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="配送费用：" prop="peisong">
-                <el-input v-model="reportAddForm.peisong"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="5">
-            <el-col :span="8">
-              <el-form-item label="安装费用：" prop="anzhuang">
-                <el-input v-model="reportAddForm.anzhuang"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="其他费用：" prop="qita">
-                <el-input v-model="reportAddForm.qita"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="合计（元）" prop="total_price">
-            <el-input v-model="reportAddForm.total_price" readonly></el-input>
-          </el-form-item>
-          <el-form-item label="备注：" prop="remark">
-            <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}" v-model="reportAddForm.remark"></el-input>
-          </el-form-item>
-          <el-form-item label="客户意见："></el-form-item>
-            <el-form-item label="客户意见：" prop="opinion">
-              <el-input type="textarea" :autosize="{minRows: 4, maxRows: 4}" v-model="reportAddForm.opinion"></el-input>
-            </el-form-item>
-            <el-row :gutter="5">
-              <el-col :span="12">
-                <el-form-item label="客户签字：" prop="sign">
-                  <el-input v-model="reportAddForm.sign" readonly></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="签字日期：" prop="sign_date">
-                  <el-input v-model="reportAddForm.sign_date" readonly></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form-item>
-        </el-form>
-        <div class="diagnosis-form-footer">
-          <el-button type="primary"
-            :loading="loadingReportTempStorage"
-            :disabled="loadingReportTempStorage"
-            v-on:click="btnReportTempStorage('temp')">暂存</el-button>
-          <div>
-              <el-button type="primary"
-                :loading="loadingReportTempStorage"
-                :disabled="loadingReportTempStorage"
-                v-on:click="btnReportTempStorage('submit')">确认</el-button>
-            <el-button v-on:click="showReportAddForm = false">取消</el-button>
-          </div>
-        </div>
-      </el-dialog>
-      <!-- 最终成本 -->
-      <el-dialog :visible.sync="showFinalCost">
-        <div class="title" slot="title">最终成本</div>
-        <el-form class="w-common-form" ref="finalCostForm"
-          :model="finalCostForm" :rules="finalCostFormRules">
-          <table class="final-cost">
+          <el-form-item label="交付内容："></el-form-item>
+          <table class="w-common-form-table">
             <thead>
-              <th>费用项</th>
-              <th>配件名称</th>
-              <th>规格型号</th>
+              <th style="width:130px;">操作</th>
+              <th style="width:50px;">序号</th>
+              <th>名称</th>
               <th>单位</th>
               <th>数量</th>
-              <th>金额</th>
+              <th>备注</th>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in finalCostForm.peijian">
-                <th>配件费用{{index+1}}</th>
-                <td>{{item.data.commodityName}}</td>
-                <td>{{item.data.specifications}}</td>
-                <td>{{item.data.unit}}</td>
-                <td>{{item.count}}</td>
+              <tr v-for="(item,index) in addDeliveryForm.delivery_list">
                 <td>
-                  <el-form-item class="cost"
-                    :key="`peijian${index}`"
-                    :prop="`peijian[${index}].subTotal`"
-                    :rules="{validator: validateCost, trigger: 'blur,change'}">
-                    <el-input v-model="finalCostForm.peijian[index].subTotal">
-                    </el-input>
-                  </el-form-item>
+                  <el-button-group>
+                    <el-button type="" size="mini" v-on:click="btnAddDeliveryFormAddOneRow">增加行</el-button>
+                    <el-button type="danger" size="mini" v-on:click="btnAddDeliveryFormDelOneRow(index)">删除</el-button>
+                  </el-button-group>
                 </td>
-              </tr>
-              <tr v-for="(item,index) in finalCostForm.rengong">
-                <th>
-                  <div>人工维修费用：</div>
-                  <div>(维修人员：{{item.person_name}})</div>
-                </th>
-                <td colspan="4"><jgb-empty-cell /></td>
+                <td>{{index+1}}</td>
                 <td>
-                  <el-form-item class="cost"
-                    :key="`rengong${index}`"
-                    :prop="`rengong[${index}].price`"
-                    :rules="{validator: validateCost, trigger: 'blur,change'}">
-                    <el-input v-model="finalCostForm.rengong[index].price">
-                    </el-input>
-                  </el-form-item>
+                  <el-input class="show-on-focus" v-model="addDeliveryForm.delivery_list[index].name" />
+                </td>
+                <td>
+                  <el-input class="show-on-focus" v-model="addDeliveryForm.delivery_list[index].unit" />
+                </td>
+                <td>
+                  <el-input class="show-on-focus" v-model="addDeliveryForm.delivery_list[index].count" />
+                </td>
+                <td>
+                  <el-input class="show-on-focus" v-model="addDeliveryForm.delivery_list[index].remark" />
                 </td>
               </tr>
               <tr>
-                <th>安装费用：</th>
-                <td colspan="4"><jgb-empty-cell /></td>
-                <td>
-                  <el-form-item class="cost" prop="anzhuang">
-                    <el-input v-model="finalCostForm.anzhuang">
-                    </el-input>
-                  </el-form-item>
+                <th>备注：</th>
+                <td colspan="5">
+                  <el-input class="show-on-focus" type="textarea" v-model="addDeliveryForm.remark"
+                    :autosize="{minRows: 2, maxRows: 4}" />
                 </td>
               </tr>
               <tr>
-                <th>配送费用：</th>
-                <td colspan="4"><jgb-empty-cell /></td>
-                <td>
-                  <el-form-item class="cost" prop="peisong">
-                    <el-input v-model="finalCostForm.peisong">
-                    </el-input>
-                  </el-form-item>
-                </td>
+                <th>接收方签字：</th>
+                <td colspan="5"></td>
               </tr>
               <tr>
-                <th>其他费用：</th>
-                <td colspan="4"><jgb-empty-cell /></td>
-                <td>
-                  <el-form-item class="cost" prop="qita">
-                    <el-input v-model="finalCostForm.qita">
-                    </el-input>
-                  </el-form-item>
-                </td>
-              </tr>
-              <tr>
-                <th>大写：</th>
-                <td colspan="3">{{finalCostForm.total_price && $convertCurrency(finalCostForm.total_price)}}</td>
-                <th>小写：</th>
-                <td>{{finalCostForm.total_price && finalCostForm.total_price.toFixed(2)}}</td>
+                <th>接收日期：</th>
+                <td colspan="5"></td>
               </tr>
             </tbody>
           </table>
         </el-form>
         <jgb-form-footer slot="footer"
           save-text="确认" close-text="取消"
-          v-on:save="btnFinalCostSubmit" v-on:close="showFinalCost = false;">
+          :loading="loadingAddDeliveryForm"
+          v-on:save="saveAddDeliveryForm" v-on:close="closeAddDeliveryForm">
+        </jgb-form-footer>
+      </el-dialog>
+      <!-- 新增快递单 -->
+      <el-dialog :visible.sync="showAddCourierForm">
+        <div class="title" slot="title">新增快递单</div>
+        <el-form ref="addCourierForm" class="w-common-form" label-width="120px" 
+          v-loading="loadingAddCourierFormData"
+          :model="addCourierForm" :rules="addCourierFormRules">
+          <el-row :gutter="5">
+            <el-col :span="12">
+              <el-form-item label="快递公司：" prop="courier_company">
+                <el-select v-model="addCourierForm.courier_company" 
+                  clearable  placeholder="请选择快递公司">
+                  <el-option
+                    v-for="item in formCourierCompanyList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="快递单号：" prop="courier_id">
+                <el-input v-model="addCourierForm.courier_id"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="5">
+            <el-col :span="12">
+              <el-form-item label="预达时间：" prop="date">
+                <el-date-picker v-model="addCourierForm.date"
+                  type="date" value-format="yyyy-MM-dd"
+                  placeholder="选择日期">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="快递费用：" prop="cost">
+                <el-input v-model="addCourierForm.cost"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="5">
+            <el-col :span="12">
+              <el-form-item label="快递联系人：" prop="person">
+                <el-input v-model="addCourierForm.person"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="联系手机：" prop="phone">
+                <el-input v-model="addCourierForm.phone"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="备注：" prop="remark">
+            <el-input type="textarea" v-model="addCourierForm.remark"
+              :autosize="{minRows: 2, maxRows: 4}">
+            </el-input>
+          </el-form-item>
+        </el-form>
+        <jgb-form-footer slot="footer"
+          save-text="确认" close-text="取消"
+          :loading="loadingAddCourierForm"
+          v-on:save="saveAddCourierForm" v-on:close="closeAddCourierForm">
         </jgb-form-footer>
       </el-dialog>
 		</el-container>
@@ -800,29 +379,20 @@
 	JGBVue.module.deliveryManagement().init(
     '/orderManagement/get_business_data', //获取业务人员数据
     '/orderManagement/get_maintenance_data', //获取维修人员数据
-    '/maintenanceManagement/get_maintenance_order_data', //获取工单数据
+    '/deliveryManagement/get_delivery_order_data', //获取工单数据
     '/orderManagement/order_invalid', //作废工单
     '/orderManagement/get_order_details', //获取工单详情
     '/common/data_add_save', //导出申请地址
-    '/maintenanceManagement/get_maintenance_order_data', //打印列表接口
+    '/deliveryManagement/get_delivery_order_data', //打印列表接口
     '/orderManagement/get_header', //获取表头 列设置
     '/orderManagement/get_header', //获取表头 列设置默认数据
-    '/orderManagement/get_diagnosis_data', //获取诊断人员数据
     '/common/getUser', //获取当前用户信息
-    '/orderManagement/get_order_fault_details', //获取工单故障诊断数据
-    '/orderManagement/get_accessories_list', //查询配件信息
-    '/common/data_add_save', //故障诊断单暂存、提交诊断结果接口
-    '/common/data_add_save', //测试报告提交接口
-    '/common/data_add_save', //送外修提交接口
-    '/common/data_add_save', //换人修提交接口
-    '/common/data_add_save', //开始维修接口
-    '/orderManagement/get_diagnosis_data', //获取测试人员数据
-    '/common/data_add_save', //交付工单接口
-    '/maintenanceManagement/is_report_exist', //工单是否已有维修报告
-    '/maintenanceManagement/is_cost_exist', //工单是否已有最终成本
-    '/common/data_add_save', //暂存、确认新增维修报告
-    '/common/data_add_save' //提交最终成本
-
+    '/deliveryManagement/is_delivery_list_exist', //获取当前工单是否有交付单数据
+    '/deliveryManagement/add_delivery_form_get', //获取新增交付单的信息 接收方、交付方等
+    '/common/data_add_save', //提交申新增交付单信息接口
+    '/deliveryManagement/is_courier_list_exist', //获取当前工单是否有快递单数据
+    '/common/data_add_save', //提交快递单数据
+    '/orderManagement/get_business_data' //获取快递公司列表
 	);
 </script>
 

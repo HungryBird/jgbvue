@@ -1,0 +1,10 @@
+{
+  "order_id": "123456",
+  "delivery_id": "654321",
+  "delivery": "自动填入注册公司",
+  "receive": "自动填入工单客户名称",
+  "delivery_list": [
+    { "name": "", "unit": "", "count": "", "remark": ""}
+  ],
+  "date": "2018-4-12"
+}

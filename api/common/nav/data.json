@@ -131,7 +131,7 @@
 						"url": "./views/maintenanceManagement/reportAndCost.html" }
 				] 
 			},
-			{ "code": "deliveryManagement", "name": "交付", "isMenu": true, "url": "./views/deliveryManagement/deliveryManagement.html",
+			{ "code": "deliveryManagement", "name": "交付管理", "isMenu": true, "url": "./views/deliveryManagement/deliveryManagement.html",
 				"items": [] 
 			},
 			{ "code": "clientVisit", "name": "客户回访", "isMenu": true, "url": "./views/clientVisit/clientVisit.html",

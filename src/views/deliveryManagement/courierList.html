@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>快递单</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body>
+	<div id="app" v-cloak class="workOrderManagement">
+		<el-container>
+			<el-main>
+        <div class="jgb-wrap">
+          <div class="w-main-table">
+            <div class="w-main-title">
+              <span>工单号：{{c_orderId}}</span>
+              <el-button-group>
+                <el-button type="primary" size="mini" v-on:click="btnAdd()">新增</el-button>
+                <el-button type="primary" size="mini" v-on:click="btnExport">导出</el-button>
+                <el-button type="primary" size="mini" 
+                  :disabled="selectedRows.length != 1"
+                  v-on:click="btnPrint">
+                  打印
+              </el-button>
+                <el-button type="primary" size="mini" 
+                  :disabled="!selectedRows.length"
+                  v-on:click="btnInvalid">
+                  作废
+                </el-button>
+              </el-button-group>
+            </div>
+            <el-table ref="reportTable"
+              border highlight-current-row
+              :data="orderList"
+              v-on:selection-change="handleOrderSelectionChange">
+              <el-table-column type="selection" align="center" width="40" key="selection"></el-table-column>
+              <el-table-column align="center" label="操作" width="100">
+                <template slot-scope="scope">
+                  <div class="order-button" style="justify-content: center;">
+                    <el-button size="mini" v-on:click="btnView(scope.row, scope.$index)">查询物流信息</el-button>
+                    <el-button size="mini" v-on:click="btnAdd(scope.row)">修改</el-button>
+                    <el-button v-if="scope.status != '已签收'" size="mini" v-on:click="signCourier(scope.row.uid)">签收</el-button>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+              <el-table-column align="center" width="120px" label="快递公司"
+                key="courier_company_name" prop="courier_company_name">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="快递单号"
+                key="courier_id" prop="courier_id">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="预达时间"
+                key="date" prop="date">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="快递费用"
+                key="cost" prop="cost">
+              </el-table-column>
+              <el-table-column align="center" label="快递联系人"
+                key="person" prop="person">
+              </el-table-column>
+              <el-table-column align="center" label="联系手机"
+                key="phone" prop="phone">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="备注"
+                key="remark" prop="remark">
+              </el-table-column>
+              <el-table-column align="center" width="120px" label="状态"
+                key="status" prop="status">
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+      </el-main>
+      <!-- 查询物流信息 -->
+      <transition name="slide-fade">
+        <jgb-slide-details v-show="showCourierInfo" v-on:close="showCourierInfo = false" class="for-courier-info">
+          <div class="order-details">
+            <div class="details-title">物流信息</div>
+            <div class="details-container" v-loading="loadingCourierInfo">
+              <p v-for="item in courierInfo">{{item.date}}&nbsp;&nbsp;{{item.content}}</p>
+              <p v-if="!loadingCourierInfo && !courierInfo.length">暂无物流消息</p>
+            </div>
+          </div>
+        </jgb-slide-details>
+      </transition>
+      <!-- 导出 -->
+      <el-dialog :visible.sync="showExport" width="600px">
+        <div class="title" slot="title">导出</div>
+        <el-alert title="注：请选择需要导出的字段。" style="margin-bottom:10px;"
+          type="warning" :closable="false">
+        </el-alert>
+        <el-checkbox-group v-model="exportChecked" class="w-export">
+          <el-checkbox v-if="item.prop != 'action'"
+            v-for="item in tableHeader" border checked
+            :key="item.label" :label="item.prop" >
+            {{item.label}}
+          </el-checkbox>
+        </el-checkbox-group>
+        <jgb-form-footer slot="footer"
+          save-text="导出" close-text="关闭"
+          :loading="isLoadingExportRequest"
+          v-on:save="btnExportSave" v-on:close="btnExportClose">
+        </jgb-form-footer>
+      </el-dialog>
+      <!-- 新增快递单 -->
+      <el-dialog :visible.sync="showAddCourierForm">
+        <div class="title" slot="title">{{courierFormTitle}}</div>
+        <el-form ref="addCourierForm" class="w-common-form" label-width="120px" 
+          v-loading="loadingAddCourierFormData"
+          :model="addCourierForm" :rules="addCourierFormRules">
+          <el-row :gutter="5">
+            <el-col :span="12">
+              <el-form-item label="快递公司：" prop="courier_company">
+                <el-select v-model="addCourierForm.courier_company" 
+                  clearable  placeholder="请选择快递公司">
+                  <el-option
+                    v-for="item in formCourierCompanyList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="快递单号：" prop="courier_id">
+                <el-input v-model="addCourierForm.courier_id"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="5">
+            <el-col :span="12">
+              <el-form-item label="预达时间：" prop="date">
+                <el-date-picker v-model="addCourierForm.date"
+                  type="date" value-format="yyyy-MM-dd"
+                  placeholder="选择日期">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="快递费用：" prop="cost">
+                <el-input v-model="addCourierForm.cost"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="5">
+            <el-col :span="12">
+              <el-form-item label="快递联系人：" prop="person">
+                <el-input v-model="addCourierForm.person"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="联系手机：" prop="phone">
+                <el-input v-model="addCourierForm.phone"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="备注：" prop="remark">
+            <el-input type="textarea" v-model="addCourierForm.remark"
+              :autosize="{minRows: 2, maxRows: 4}">
+            </el-input>
+          </el-form-item>
+        </el-form>
+        <jgb-form-footer slot="footer"
+          save-text="确认" close-text="取消"
+          :loading="loadingAddCourierForm"
+          v-on:save="saveAddCourierForm" v-on:close="closeAddCourierForm">
+        </jgb-form-footer>
+      </el-dialog>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/deliveryManagement/courierList.js"></script>
+<script type="text/javascript">
+	JGBVue.module.courierList().init(
+    '/deliveryManagement/get_courier_list_data', //获取快递单数据
+    '/common/data_add_save', //作废
+    '/common/data_add_save', //导出申请地址
+    '/deliveryManagement/add_delivery_form_get', //获取新增、修改交付单的信息
+    '/common/data_add_save', //提交申新增交付单信息接口
+    '/common/data_add_save', //提交快递单数据
+    '/orderManagement/get_business_data', //获取快递公司列表
+    '/deliveryManagement/get_courier_info', //获取物流信息
+    '/common/data_add_save' //签收
+  );
+</script>
+
+</html>

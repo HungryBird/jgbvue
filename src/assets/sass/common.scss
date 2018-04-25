@@ -521,11 +521,19 @@ table{
 		padding: 4px;
 		background: none repeat scroll 0 0 #fff;
 		border-left: 1px solid #e1e1e1;
-		bottom: 0;
+		// bottom: 0;
 		box-shadow: -3px 0 11px rgba(0,0,0,0.2);
-		&.for-html-import {//edit by lanw 2018-4-22 适配在元素内引入html
+		&.for-html-import {//add by lanw 2018-4-22 适配在元素内引入html
 			.details-inner {
 				@include w-flex(row, nowrap, flex-start, stretch);
+			}
+		}
+		&.for-courier-info {//add by lanw 2018-4-24 物流信息
+			top:50%;
+			bottom:5%;
+			.details-container {
+				height: 90%;
+				overflow:auto;
 			}
 		}
 		.details-inner{
@@ -534,12 +542,17 @@ table{
 			overflow-y: auto;
 		}
 		.toggle-button-wrap{
+			// edit by lanw 2018-4-24 修复关闭按钮没有上下居中 start 
+			$height: 92px;
+			height:$height;
+			margin-top: -$height/2;
+			// edit by lanw 2018-4-24 修复关闭按钮没有上下居中 end 
 			position: absolute;
 			z-index: 10000;
 			top: 50%;
 			left: -18px;
 			width: 16px;
-			height: 92px;
+			// height: 92px;
 			display: inline-block;
 			background: #f00;
 		    background-color: #fff;
@@ -1231,6 +1244,28 @@ table{
 				}
 			}
 		}
+		&.print-delivery-info { //打印 交付单
+			th, td {
+				text-align: center;
+			}
+			th {
+				width:15%;
+			}
+			td {
+				width:35%;
+			}
+		}
+		&.print-delivery-content { //打印 交付单-交付内容
+			th, td {
+				text-align: center;
+			}
+			.index {
+				width:20%;
+			}
+			.count, .unit {
+				width: 10%;
+			}
+		}
 		th {
 			@include common-border;
 			width:100px;
@@ -1539,11 +1574,43 @@ table{
 		}
 	}
 }
-
+//空数据单元格
 .w-empty-cell {
 	position:absolute;
 	top:0;
 	left:0;
 	right:0;
 	bottom:0;
+}
+
+//公共表单表格
+.w-common-form-table {
+	width:100%;
+	border-collapse:collapse;
+	th, td {
+		@include common-border;
+		padding:5px;
+		text-align: center;
+		position:relative;
+		.el-form-item {
+			&.cost {
+				width: 100px;
+				margin:0 auto;
+				.el-input {
+					width: 100%;
+				}
+			}
+		}
+		//表格式表单中点击出现输入框
+		.show-on-focus {
+			.el-input__inner,
+			.el-textarea__inner {
+				border:none;
+				box-sizing:border-box;
+				&:focus {
+					border: 1px solid #409EFF;
+				}
+			}
+		}
+	}
 }

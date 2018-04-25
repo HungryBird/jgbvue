@@ -1,0 +1,25 @@
+{
+  "delivery": true,
+  "order_id": "123456",
+  "data": [
+    {
+      "order_id": "123456",
+      "delivery_id": "123456",
+      "title": "交付单交付单",
+      "date": "2018-4-21",
+      "delivery": "交付方交付方",
+      "receive": "接收方接收方",
+      "file": "http://p3.wmpic.me/article/2016/01/02/1451705414_FCsmpfEP.jpg",
+      "remark": "暂存"
+    },{
+      "order_id": "123456",
+      "delivery_id": "456789",
+      "title": "交付单交付单",
+      "date": "2018-4-21",
+      "delivery": "交付方",
+      "receive": "接收方",
+      "file": "",
+      "remark": "作废"
+    }
+  ]
+}
