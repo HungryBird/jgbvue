@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>客户回访</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body>
+	<div id="app" v-cloak class="workOrderManagement">
+		<el-container>
+			<el-main>
+				<div class="jgb-wrap">
+          <div class="w-main-header">
+            <el-form inline label-width="80px" :model="selectForm">
+              <el-form-item label="日期:">
+                <el-date-picker
+                  v-model="selectForm.dateRange"
+                  value-format="yyyy-MM-dd"
+                  type="datetimerange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  :default-time="formTimeRangeDefault">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="业务人员:">
+                <el-select v-model="selectForm.businessCurrent" 
+                  clearable remote filterable placeholder="请选择"
+                  :remote-method="remoteBusiness">
+                  <el-option
+                    v-for="item in formBusinessList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="维修人员:">
+                <el-select v-model="selectForm.maintenanceCurrent" 
+                  clearable remote filterable placeholder="请选择"
+                  :remote-method="remoteMaintenance">
+                  <el-option
+                    v-for="item in formMaintenanceList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-input v-model="selectForm.keyword" placeholder="工单编号、客户名称、设备名称、维修日志" style="width:300px;">
+                  <template slot="append">
+                    <el-button v-on:click="search">查询</el-button>
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="工单状态:" class="order-status">
+                <div style="width:650px;">已交付</div>
+                <el-button-group style="margin:0;">
+                  <el-button type="primary" size="mini" v-on:click="btnColumnSetting">列设置</el-button>
+                  <el-button type="primary" size="mini" v-on:click="btnAdd">新增</el-button>
+                  <el-button type="primary" size="mini" v-on:click="btnExport">导出</el-button>
+                  <el-button type="primary" size="mini"
+                    :disabled="selectedRows.length != 1"
+                    v-on:click="btnPrint()">
+                    打印
+                  </el-button>
+                  <el-button type="primary" size="mini" v-on:click="btnPrintList()">打印工单列表</el-button>
+                  <el-button type="primary" size="mini"
+                    :disabled="selectedRows.length == 0"
+                    v-on:click="btnInvalid">
+                    作废
+                  </el-button>
+                </el-button-group>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div class="w-main-table">
+            <el-table ref="orderManagementTable"
+              border highlight-current-row style="width: 100%"
+              :default-sort = "selectForm.sort"
+              :data="orderList"
+              v-on:sort-change="handleOrderSort"
+              v-on:selection-change="handleOrderSelectionChange">
+							<el-table-column type="selection" align="center" width="40" key="selection"></el-table-column>
+							<!-- <el-table-column type="index" label="序号" width="50" align="center"></el-table-column> -->
+              <el-table-column v-for="item in tableHeader" v-if="item.enable"
+                align="center"
+                :type="item.type"
+                :sortable="item.sortable"
+                :width="item.width"
+                :key="item.prop"
+                :prop="item.prop"
+                :label="item.label">
+								<template slot-scope="scope">
+                  <!-- 操作 -->
+                  <div v-if="item.prop == 'action'" >
+                    <!-- 已交付 -->
+                    <div v-if="scope.row.status_value == 11" class="order-button">
+                      <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
+                      <el-button type="" size="mini" v-on:click="btnClientVisit(scope.row)">客户回访</el-button>
+                    </div>
+                  </div>
+                  <!-- 时效 -->
+                  <div v-else-if="item.prop == 'aging'" 
+                    :style="{color:scope.row[item.prop] == '超时' ? '#F56C6C' : '#67C23A'}">
+                    {{scope.row[item.prop]}}
+                  </div>
+                  <!-- 序号 -->
+                  <div v-else-if="item.type == 'index'">{{scope.$index+1}}</div>
+                  <!-- 图片 -->
+                  <i v-else-if="item.prop == 'image'" class="el-icon-picture table-img-icon" v-on:click="openPictureDialog(scope.row.image)"></i>
+                  <div v-else>{{scope.row[item.prop]}}</div>
+								</template>
+              </el-table-column>
+            </el-table>
+            <el-pagination v-if="orderPage.page_total > 1" class="w-table-pagination"
+              layout="prev, pager, total, next, jumper"
+              prev-text="上一页" next-text="下一页"
+              :current-page="orderPage.page_current"
+              :page-size="orderPage.page_size"
+              :total="orderPage.page_total"
+              v-on:current-change="handleOrderCurrentChange">
+          </el-pagination>
+          </div>
+				</div>
+			</el-main>
+      <!-- 工单详情 -->
+      <transition name="slide-fade">
+        <jgb-slide-details v-show="showOrderDetails" :loading="isLoadingDetails" v-on:close="closeDetails">
+          <jgb-order-details v-if="detailsData.base_info"
+            :details-data="detailsData"
+            v-on:call-pictures="callPictures"
+            v-on:call-download="callDownload">
+          </jgb-order-details>
+        </jgb-slide-details>
+      </transition>
+      <!-- 查看设备图片 -->
+      <el-dialog :visible.sync="showPictures">
+        <div slot="title" class="title">查看图片</div>
+        <el-carousel class="w-pictures" ref="equipmentPic"
+          trigger="click" height="500px" arrow="always"
+          :autoplay="false" >
+          <el-carousel-item v-for="(item, index) in pictureList" :key="index">
+              <jgb-thumbnail
+                :src="item" alt="设备图片" v-on:img-click="" />
+          </el-carousel-item>
+        </el-carousel>
+      </el-dialog>
+      <!-- 导出 -->
+      <el-dialog :visible.sync="showExport" width="600px">
+        <div class="title" slot="title">导出</div>
+        <el-alert title="注：请选择需要导出的字段。" style="margin-bottom:10px;"
+          type="warning" :closable="false">
+        </el-alert>
+        <el-checkbox-group v-model="exportChecked" class="w-export">
+          <el-checkbox v-if="item.prop != 'action'"
+            v-for="item in tableHeader" border checked
+            :key="item.label" :label="item.prop" >
+            {{item.label}}
+          </el-checkbox>
+        </el-checkbox-group>
+        <jgb-form-footer slot="footer"
+          save-text="导出" close-text="关闭"
+          :loading="isLoadingExportRequest"
+          v-on:save="btnExportSave" v-on:close="btnExportClose">
+        </jgb-form-footer>
+      </el-dialog>
+      <!-- 列设置 -->
+      <el-dialog :visible.sync="showColumnSetting">
+        <div class="title" slot="title">列设置</div>
+        <jgb-column-setting v-if="tableHeader.length" v-model="tableHeader"></jgb-column-setting>
+        <div slot="footer">
+            <el-button 
+              :loading="loadingColumnSettingReset" 
+              :disabled="loadingColumnSettingReset"
+              v-on:click="btnColumnSettingReset">
+              恢复默认设置
+            </el-button>
+            <el-button type="primary"
+              :loading="loadingColumnSettingComplete" 
+              :disabled="loadingColumnSettingComplete"
+              v-on:click="btnColumnSettingComplete">
+              完成
+            </el-button>
+        </div>
+      </el-dialog>
+      <!-- 新增回访记录 -->
+      <el-dialog :visible.sync="showAddVisitRecord">
+        <div class="title" slot="title">新增回访记录</div>
+        <el-form ref="addVisitRecord" class="w-common-form" label-width="120px" 
+          v-loading="loadingAddVisitRecordData"
+          :model="addVisitRecordForm" :rules="addDeliveryFormRules">
+          <el-row :gutter="5">
+            <el-col :span="12">
+              <el-form-item label="回访日期：" prop="visit_date">
+                <el-date-picker v-model="addVisitRecordForm.visit_date"
+                  type="date" value-format="yyyy-MM-dd" :editable="false"
+                  placeholder="选择日期"
+                  :picker-options="pickerOptions_visit"
+                  v-on:change="handleVisitDateChange">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="回访人员：" prop="visit_person">
+                <el-select v-model="addVisitRecordForm.visit_person" 
+                  clearable remote filterable placeholder="请选择"
+                  :remote-method="remoteBusiness">
+                  <el-option
+                    v-for="item in formBusinessList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="5">
+            <el-col :span="12">
+              <el-form-item label="受访人员：" prop="client_contact">
+                <el-select v-model="addVisitRecordForm.client_contact" 
+                  clearable filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in formClientContactList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="回访方式：" prop="visit_method">
+                <el-select v-model="addVisitRecordForm.visit_method" 
+                  clearable placeholder="请选择">
+                  <el-option label="电话" value="tel"></el-option>
+                  <el-option label="面谈" value="face"></el-option>
+                  <el-option label="邮件" value="mail"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="回访事由：" prop="visit_reason">
+            <el-input type="textarea" v-model="addVisitRecordForm.visit_reason"
+              :autosize="{ minRows: 2, maxRows: 4}">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="回访结果：" prop="visit_result">
+            <el-input type="textarea" v-model="addVisitRecordForm.visit_result"
+              :autosize="{ minRows: 2, maxRows: 4}">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="备注：" prop="remark">
+            <el-input type="textarea" v-model="addVisitRecordForm.remark"
+              :autosize="{ minRows: 2, maxRows: 4}">
+            </el-input>
+          </el-form-item>
+          <el-row :gutter="5">
+            <el-col :span="10">
+              <el-form-item label="预计下次回访时间：" prop="next_date" label-width="150px">
+                <el-date-picker v-model="addVisitRecordForm.next_date" placeholder="选择日期"
+                  type="date" value-format="yyyy-MM-dd" 
+                  :editable="false"
+                  :picker-options="pickerOptions_next"
+                  v-on:change="handleNextDateChange">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="7">
+              <el-form-item label-width="0" style="text-align: center;">
+                <el-checkbox v-model="addVisitRecordForm.remind_on">启用回访提醒</el-checkbox>
+              </el-form-item>
+            </el-col>
+            <el-col :span="7">
+              <el-form-item label-width="0">
+                <el-select v-if="addVisitRecordForm.remind_on" v-model="addVisitRecordForm.remind_method" 
+                  clearable multiple placeholder="请选择">
+                  <el-option label="短信" value="msg"></el-option>
+                  <el-option label="站内信息" value="web"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <jgb-form-footer slot="footer"
+          save-text="确认" close-text="取消"
+          :loading="loadingAddVisitRecord"
+          v-on:save="saveAddVisitRecord" v-on:close="closeAddVisitRecord">
+        </jgb-form-footer>
+      </el-dialog>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/clientVisit/clientVisit.js"></script>
+<script type="text/javascript">
+	JGBVue.module.clientVisit().init(
+    '/orderManagement/get_business_data', //获取业务人员数据
+    '/orderManagement/get_maintenance_data', //获取维修人员数据
+    '/clientVisit/get_visit_order_data', //获取工单数据
+    '/orderManagement/order_invalid', //作废工单
+    '/orderManagement/get_order_details', //获取工单详情
+    '/common/data_add_save', //导出申请地址
+    '/deliveryManagement/get_delivery_order_data', //打印列表接口
+    '/orderManagement/get_header', //获取表头 列设置
+    '/orderManagement/get_header', //获取表头 列设置默认数据
+    '/common/getUser', //获取当前用户信息
+    '/clientVisit/is_visit_list_exist', //获取当前工单是否有回访记录数据
+    '/orderManagement/get_business_data', //获取受访客户人员数据
+    '/common/data_add_save' //提交回访记录
+	);
+</script>
+
+</html>

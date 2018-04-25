@@ -88,14 +88,22 @@ const equipmentManagementRouter = require('./routers/views/equipmentManagement/e
 const maintenanceManagement = require('./routers/views/workOrderManagement/maintenanceManagement');
 const offerAndContractRouter = require('./routers/views/workOrderManagement/offerAndContract');
 const deliveryManagementRouter = require('./routers/views/workOrderManagement/deliveryManagement');
+<<<<<<< HEAD
+const clientVisitRouter = require('./routers/views/workOrderManagement/clientVisit');
+=======
 const maintenanceOfferRouter = require('./routers/views/workOrderManagement/maintenanceOffer');
+>>>>>>> f97ed476bf53206d09de03e27cf0906d925b84e2
 
 app.use('/orderManagement', orderManagementRouter);
 app.use('/equipmentManagement', equipmentManagementRouter);
 app.use('/maintenanceManagement', maintenanceManagement);
 app.use('/offerAndContract', offerAndContractRouter);
 app.use('/deliveryManagement', deliveryManagementRouter);
+<<<<<<< HEAD
+app.use('/clientVisit', clientVisitRouter);
+=======
 app.use('/maintenanceOffer', maintenanceOfferRouter);
+>>>>>>> f97ed476bf53206d09de03e27cf0906d925b84e2
 
 /**
  * server running at port 3333

@@ -1598,6 +1598,7 @@ table{
 		}
 	}
 }
+
 //空数据单元格
 .w-empty-cell {
 	position:absolute;
@@ -1637,4 +1638,9 @@ table{
 			}
 		}
 	}
+}
+
+//公共只显示两行内容类
+.w-common-line-2 {
+	@include line-clamp (vertical, 2, ellipsis)
 }
