@@ -762,6 +762,9 @@ table{
 //报价与合同
 .offerAndContract{
 	$exclusive: 590px;
+	.el-main{
+		padding-left: 0;
+	}
 	.el-form {
 		.exclusive {
 			width: $exclusive;
@@ -776,6 +779,14 @@ table{
 			border-left: 1px solid #ebeef5;
 			border-bottom: 1px solid #ebeef5;
 		}
+	}
+}
+
+//维修报价
+.maintenanceOffer{
+	$navLineHeight: 28px;
+	.nav-title{
+		line-height: $navLineHeight;
 	}
 }
 

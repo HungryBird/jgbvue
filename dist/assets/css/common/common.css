@@ -705,6 +705,9 @@ table {
   .jgb-table-icon:hover {
     opacity: .8; }
 
+.offerAndContract .el-main {
+  padding-left: 0; }
+
 .offerAndContract .el-form .exclusive {
   width: 590px; }
 
@@ -716,6 +719,9 @@ table {
     width: 147px;
     border-left: 1px solid #ebeef5;
     border-bottom: 1px solid #ebeef5; }
+
+.maintenanceOffer .nav-title {
+  line-height: 28px; }
 
 .userManagement .w-main-header {
   display: flex;
