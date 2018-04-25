@@ -55,7 +55,7 @@ JGBVue.module.printOfferAndContract = ()=> {
             if(res.data.status) {
               let _data = JSON.parse(res.data.data)
               this.orderHeader = _data.header
-              this.orderInfo = _data.data
+              this.orderInfo = _data.data;
             }
             else {
               this.$message({

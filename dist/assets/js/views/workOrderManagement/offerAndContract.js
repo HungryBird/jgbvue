@@ -228,11 +228,12 @@ JGBVue.module.offerAndContract = ()=> {
                     }
 				},
 				selectItem(selection, row) {
-					let _self = this;
+					/*let _self = this;
                     this.selectedRows.splice(0, _self.selectedRows.length);
                     for(let i = 0; i < selection.length; i++) {
                         _self.selectedRows.push(selection[i]);
-                    }
+                    }*/
+                    this.$selectItem(selection, row, this)
 				},
 				handleExamine(index, row) {
 					let _self = this;
@@ -362,7 +363,30 @@ JGBVue.module.offerAndContract = ()=> {
 						}
 					})
 				},
-				saveAdd(formName) {
+				saveAddOffer(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveAddUrl, this.addForm).then((res)=> {
+								if(res.data.status) {
+									this.$refs[formName].resetFields();
+									this.addContractDialogVisible = false;
+									for (var i = this.table.data.length - 1; i >= 0; i--) {
+										if(this.table.data[i] === this.selectedRows[0]) {
+											this.table.data[i].status = 1;
+										}
+									}
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+								}
+							})
+						}else{
+							return false;
+						}
+					})
+				},
+				zanCunOffer(formName) {
 					this.$refs[formName].validate((valid)=> {
 						if(valid) {
 							axios.post(saveAddUrl, this.addForm).then((res)=> {
@@ -668,7 +692,7 @@ JGBVue.module.offerAndContract = ()=> {
 						}
 					})
 				},
-				generateSerialNumber(e) {
+				generateSerialNumber() {
 					if(!this.addForm.equipmentSerialNumber) return;
 					axios.post(getUniqueCodeUrl, {serialNumber:this.addForm.equipmentSerialNumber}).then((res)=> {
 						if(res.data.status) {
@@ -676,7 +700,6 @@ JGBVue.module.offerAndContract = ()=> {
 						}else{
 							this.equipmentSerialNumberError = res.data.message;
 							this.equipmentSerialNumberValid = false;
-							console.log(this.equipmentSerialNumberValid)
 						}
 					})
 				},
@@ -691,6 +714,18 @@ JGBVue.module.offerAndContract = ()=> {
 			            './views/workOrderManagement/printOfferAndContract.html', 
 			            `filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}&&mid=${this.c_menuId}&&hurl=${defaultColumnSettingUrl}`
 		            )
+				},
+				handleOffer(index, row) {
+					let info = this.$deepCopy(row);
+					this.$selectTab(
+						'maintenanceOffer', 
+			            '维修报价', 
+			            './views/workOrderManagement/maintenanceOffer.html',
+			            `info=${encodeURI(JSON.stringify(info))}`
+					)
+				},
+				handleContract() {
+					//
 				}
 			},
 			watch: {

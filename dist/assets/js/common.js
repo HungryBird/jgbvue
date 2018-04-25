@@ -53,6 +53,59 @@ let timeStampFormat = function(stamp, format) {
 Vue.prototype.$timeStampFormat = timeStampFormat
 
 /**
+ * 点击表格的行
+ * created by 何俊洁 2018-4-25
+ * @param  {[type]} tableName [description]
+ * @param  {[type]} row       [description]
+ * @param  {[type]} _self     [description]
+ * @return {[type]}           [description]
+ */
+let rowClick = (tableName, row, _self)=> {
+  _self.$refs[tableName].toggleRowSelection(row);
+  if(_self.selectedRows.indexOf(row) == -1) {
+    _self.selectedRows.push(row)
+  }else{
+    _self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
+  }
+}
+Vue.prototype.$rowClick = rowClick;
+
+/**
+ * 点击表格全选checkbox
+ * created by 何俊洁 2018-4-25
+ * @param  {[type]} selection [description]
+ * @param  {[type]} _self     [description]
+ * @return {[type]}           [description]
+ */
+let selectAll = (selection, _self)=> {
+  if(selection.length == 0) {
+      _self.selectedRows.splice(0, _self.selectedRows.length);
+  }else{
+      _self.selectedRows.splice(0, _self.selectedRows.length);
+      selection.forEach((item)=> {
+          _self.selectedRows.push(item);
+      })
+  }
+}
+Vue.prototype.$selectAll = selectAll;
+
+/**
+ * 点击表格单元格
+ * created by 何俊洁 2018-4-25
+ * @param  {[type]} selection [description]
+ * @param  {[type]} row       [description]
+ * @param  {[type]} _self     [description]
+ * @return {[type]}           [description]
+ */
+let selectItem = (selection, row, _self)=> {
+  _self.selectedRows.splice(0, _self.selectedRows.length);
+  for(let i = 0; i < selection.length; i++) {
+      _self.selectedRows.push(selection[i]);
+  }
+}
+Vue.prototype.$selectItem = selectItem;
+
+/**
  *  数字保留两位小数
  *  created by 何俊洁 2018-4-20
  *  @param {Number, string} value

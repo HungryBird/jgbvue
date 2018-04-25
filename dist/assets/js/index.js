@@ -175,6 +175,8 @@ JGBVue.module.index = ()=> {
         },
         selectTab: function(tabId, tabName, tabUrl) {
           _self = this;
+          console.log('arguments[3]: ', arguments[3]);
+          /*-start- 打开tab上显示的页面*/
           for (let i = 0; i < _self.tabs.length; i++) {
             if (_self.tabs[i].name == 'tab' + tabId) {
               _self.activeTab = 'tab' + tabId;
@@ -182,15 +184,17 @@ JGBVue.module.index = ()=> {
               this.dropdownIsActive = false;
               //规定参数以外的传参当做query处理
                 _self.tabs[i].link = `${tabUrl}?menu_id=${tabId}${arguments[3] ? '&&'+arguments[3] : ''}`
-                // console.log('arguments[3]: ', arguments[3]);
+                /*console.log('_self.tabs[i].link: ', _self.tabs[i].link);*/
               return;
             }
           }
+          /*-end- 打开tab上显示的页面*/
           let obj = {};
           obj.name = 'tab' + tabId;
           obj.label = tabName;
           obj.link = `${tabUrl}?menu_id=${tabId}${arguments[3] ? '&&'+arguments[3] : ''}`
           this.tabs.push(obj);
+          console.log('obj: ', obj);
           this.activeTab = obj.name;
           sessionStorage.activeTab = obj.name;
           this.dropdownIsActive = false;

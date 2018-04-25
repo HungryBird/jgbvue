@@ -67,13 +67,13 @@
 										</el-button-group>
 										<el-button-group v-else-if="scope.row.status === 1">
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
-											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">维修报价</el-button>
-											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">新增合同</el-button>	
+											<el-button size="mini" v-on:click="handleOffer(scope.$index, scope.row)">维修报价</el-button>
+											<el-button size="mini" v-on:click="handleContract(scope.$index, scope.row)">新增合同</el-button>	
 										</el-button-group>
 										<el-button-group v-else-if="scope.row.status === 2">
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
-											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">维修报价</el-button>
-											<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">维修合同</el-button>
+											<el-button size="mini" v-on:click="handleOffer(scope.$index, scope.row)">维修报价</el-button>
+											<el-button size="mini" v-on:click="handleContract(scope.$index, scope.row)">维修合同</el-button>
 										</el-button-group>
 										<el-button-group v-else>
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
@@ -116,7 +116,7 @@
 				</div>
 			</div>
 		</transition>
-		<!-- 新增客户 -->
+		<!-- 新增报价 -->
 		<el-dialog :visible.sync="addContractDialogVisible" title="新增报价">
 			<el-form ref="addForm" label-position="right" label-width="120px" :model="addForm" :rules="formRules">
 				<el-row :gutter="4">
@@ -172,7 +172,7 @@
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="选择报价单模板" prop="equipmentBrand">
-							<el-select v-model="addForm.equipmentBrand" allow-create filterable v-on:focus="focusEquipmentBrandSelect">
+							<el-select v-model="addForm.equipmentBrand" v-on:focus="focusEquipmentBrandSelect">
 								<el-option v-for="eb in equipmentBrandOption" :key="eb.label" :label="eb.label" :value="eb.value"></el-option>
 							</el-select>
 						</el-form-item>
@@ -313,7 +313,12 @@
 					</el-col>
 				</el-row>
 			</el-form>
-			<jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd('addForm')" v-on:close="closeAdd"></jgb-form-footer>
+			<!-- <jgb-form-footer slot="footer" :loading="loadingSaveAdd" v-on:save="saveAdd('addForm')" v-on:close="closeAdd"></jgb-form-footer> -->
+			<div slot="footer">
+				<el-button v-on:click="zanCunOffer('addForm')">暂存</el-button>
+				<el-button v-on:save="saveAddOffer('addForm')">提交审核</el-button>
+				<el-button v-on:click="addContractDialogVisible = false">取消</el-button>
+			</div>
 		</el-dialog>
 		<!-- 导出 -->
 		<el-dialog :visible.sync="exportVisible" title="导出">
@@ -361,7 +366,7 @@
 <script type="text/javascript">
 	/**
 	 * 初始信息/搜索
-	 * 获取快速查询option
+	 * 获取option
 	 * 切换状态
 	 * 删除
 	 * 查看
