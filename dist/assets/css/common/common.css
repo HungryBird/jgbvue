@@ -509,7 +509,6 @@ table {
         height: 90%;
         overflow: auto; }
     #app .details-wrap .details-inner {
-      position: relative;
       height: 100%;
       overflow-x: auto;
       overflow-y: auto; }
@@ -519,8 +518,14 @@ table {
         right: 60px; }
         #app .details-wrap .details-inner .waterMark-wrap .waterMark {
           font-size: 60px;
-          font-weight: 900;
-          opacity: .3; }
+          font-weight: 900; }
+        #app .details-wrap .details-inner .waterMark-wrap .no-pass {
+          color: rgba(137, 137, 137, 0.3); }
+          #app .details-wrap .details-inner .waterMark-wrap .no-pass .note {
+            font-size: 14px;
+            font-weight: normal; }
+        #app .details-wrap .details-inner .waterMark-wrap .pass {
+          color: rgba(127, 245, 9, 0.3); }
     #app .details-wrap .toggle-button-wrap {
       height: 92px;
       margin-top: -46px;

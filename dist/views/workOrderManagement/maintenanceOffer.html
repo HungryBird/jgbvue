@@ -23,7 +23,7 @@
 							<el-button :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
 						</el-button-group>
 					</nav>
-					<el-table border :data="table" ref="table" sortable v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem" v-loading="loadingDetailInfo">
+					<el-table border :data="table" ref="table" sortable v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem" v-loading="loadingDetailInfo" :row-class-name="rowStatusClassName">
 						<el-table-column type="selection"></el-table-column>
 						<el-table-column label="序号" width="50px" type="index"></el-table-column>
 						<el-table-column label="操作" width="80px">
@@ -89,8 +89,8 @@
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
-						<el-form-item label="报价人" prop="offerer">
-							<el-input v-model="addForm.offerer"></el-input>
+						<el-form-item label="报价人" prop="personnel">
+							<el-input v-model="addForm.personnel"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
@@ -171,7 +171,7 @@
 					</el-col>
 				</el-row>
 				<el-table ref="addFormTable" border :data="addForm.table" v-on:row-click="addFormTableRowClick" style="margin: 0;">
-					<el-table-column label="费用项" prop="costItem" width="148px">
+					<el-table-column label="费用项" prop="costItem" width="122px">
 						<template slot-scope="scope">
 							<div v-if="scope.row.prop === 'accessoriesFee'">
 								{{ scope.row.costItem + (scope.$index + 1) }}
@@ -310,11 +310,11 @@
 							<div>{{ item.value }}</div>
 						</el-col>
 						<el-table ref="addFormTable" border :data="infoForm.table" v-on:row-click="addFormTableRowClick" style="margin: 0;">
-							<el-table-column label="费用项" prop="costItem" width="148px"></el-table-column>
-							<el-table-column label="配件" prop="accessories" width="148px"></el-table-column>
-							<el-table-column label="单位" prop="unit" width="148px"></el-table-column>
-							<el-table-column label="数量" prop="quantity" width="148px"></el-table-column>
-							<el-table-column label="金额" prop="money" width="148px">
+							<el-table-column label="费用项" prop="costItem" width="128px"></el-table-column>
+							<el-table-column label="配件" prop="accessories" width="128px"></el-table-column>
+							<el-table-column label="单位" prop="unit" width="128px"></el-table-column>
+							<el-table-column label="数量" prop="quantity" width="128px"></el-table-column>
+							<el-table-column label="金额" prop="money" width="128px">
 								<template slot-scope="scope">
 									<div v-if="scope.row.total">
 										小写{{}}
@@ -366,12 +366,29 @@
 						<span class="jgbvue_arrow_line" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -123px -2px;margin-left: 16px;"></span>
 					</div>
 					<div class="waterMark-wrap">
-						<div class="no-pass waterMark" v-if="infoForm.status === 0">不通过</div>
+						<div class="no-pass waterMark" v-if="infoForm.status === 0">
+							不通过
+							<div class="note required red">
+								不通过原因: {{ infoForm.note === undefined ? '没有原因' :  infoForm.note }}
+							</div>
+						</div>
 						<div class="pass waterMark" v-else-if="infoForm.status === 1">通过</div>
 					</div>
 				</div>
 			</div>
 		</transition>
+		<!-- 导出 -->
+		<el-dialog :visible.sync="exportVisible" title="导出">
+			<p>
+				<small>注：请选择需要导出的字段</small>
+			</p>
+			<el-checkbox v-for="item in exportForm" label="item.value" border v-model="item.checked" :key="item.value">{{item.name}}</el-checkbox>
+			<div slot="footer">
+				<el-button>导出</el-button>
+				<el-button v-on:click="exportVisible = false">关闭</el-button>
+			</div>
+		</el-dialog>
+		<!-- 报价单模板 -->
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -385,7 +402,8 @@
 	 * 获取option
 	 * 获取option
 	 * 保存/提交
+	 * 作废
 	 */
-	JGBVue.module.maintenanceOffer().init('/maintenanceOffer/search', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo');
+	JGBVue.module.maintenanceOffer().init('/maintenanceOffer/search', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo', '/common/data_give_out', '/clientInfo/exportForm');
 </script>
 </html>

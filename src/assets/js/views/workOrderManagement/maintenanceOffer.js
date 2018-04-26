@@ -6,7 +6,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl)=> {
+	_this.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -26,7 +26,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 						equipmentName: [
 							{required: true, message: '请输入设备名称'}
 						],
-						offerer: [
+						personnel: [
 							{required: true, message: '请输入报价人'}
 						]
 					},
@@ -95,6 +95,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 					accessoriesOption: [],
 					examinCurRow: null,
 					isUnfold: false,
+					exportVisible: false,
+					exportForm: []
 				}
 			},
 			mounted() {
@@ -147,7 +149,7 @@ JGBVue.module.maintenanceOffer = ()=> {
                         }
                     }).then((action)=> {
                         if(action == 'confirm') {
-                            axios.post(deleteUrl, this.selectedRows).then((res)=> {
+                            axios.post(giveOutUrl, this.selectedRows).then((res)=> {
                                 if(res.data.status) {
                                 	this.selectedRows.forEach((item)=> {
                                 		for (let i = _self.table.length - 1; i >= 0; i--) {
@@ -174,6 +176,11 @@ JGBVue.module.maintenanceOffer = ()=> {
                             message: '已取消'
                         });
                     });
+				},
+				rowStatusClassName({row, rowIndex}) {
+					if(row.status === -1) {
+						return 'scrap-row';
+					}
 				},
 				handleSizeChange() {
 					//
@@ -205,17 +212,16 @@ JGBVue.module.maintenanceOffer = ()=> {
 						if(valid) {
 							axios.post(saveAddUrl, this.addForm).then((res)=> {
 								if(res.data.status) {
-									this.$refs[formName].resetFields();
 									this.addContractDialogVisible = false;
-									for (var i = this.table.length - 1; i >= 0; i--) {
-										if(this.table[i] === this.selectedRows[0]) {
-											this.table[i].status = 1;
-										}
-									}
+									/**
+									 * 清空table之后再插入数据
+									 * @type {String}
+									 */
 									this.$message({
 										type: 'success',
 										message: res.data.message
 									})
+									this.$refs[formName].resetFields();
 								}
 							})
 						}else{
@@ -228,17 +234,16 @@ JGBVue.module.maintenanceOffer = ()=> {
 						if(valid) {
 							axios.post(saveAddUrl, this.addForm).then((res)=> {
 								if(res.data.status) {
-									this.$refs[formName].resetFields();
 									this.addContractDialogVisible = false;
-									for (var i = this.table.length - 1; i >= 0; i--) {
-										if(this.table[i] === this.selectedRows[0]) {
-											this.table[i].status = 1;
-										}
-									}
+									/**
+									 * 清空table之后再插入数据
+									 * @type {String}
+									 */
 									this.$message({
 										type: 'success',
 										message: res.data.message
 									})
+									this.$refs[formName].resetFields();
 								}
 							})
 						}else{
@@ -351,8 +356,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl)=> {
-		_this.init(searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl)
+	that.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl)=> {
+		_this.init(searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl)
 	}
 
 	return that;

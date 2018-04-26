@@ -537,7 +537,6 @@ table{
 			}
 		}
 		.details-inner{
-			position: relative;
 			height: 100%;
 			overflow-x: auto;
 			overflow-y: auto;
@@ -548,7 +547,16 @@ table{
 				.waterMark{
 					font-size: 60px;
 					font-weight: 900;
-					opacity: .3;
+				}
+				.no-pass{
+					color: rgba(137, 137, 137, .3);
+					.note{
+						font-size: 14px;
+						font-weight: normal;
+					}
+				}
+				.pass{
+					color: rgba(127, 245, 9, .3);
 				}
 			}
 		}
@@ -722,10 +730,10 @@ table{
 	opacity: 0;
 }
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+	transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+	opacity: 0;
 }
 .row-border{
 	line-height: 1.5;
