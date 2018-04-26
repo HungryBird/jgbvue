@@ -6,7 +6,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)=> {
+	_this.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -105,32 +105,11 @@ JGBVue.module.maintenanceOffer = ()=> {
 					templateTable: [],
 					editTemplateForm: {},
 					addTemplateForm: {
-						tableHeader: [
-							{
-								label: '配置项'
-							},
-							{
-								label: '设备名称'
-							},
-							{
-								label: '规格型号'
-							},
-							{
-								label: '品牌'
-							},
-							{
-								label: '类别'
-							},
-							{
-								label: '单位'
-							},
-							{
-								label: '数量'
-							}
-						],
+						header: [],
 						data: []
 					},
-					addTemplateFormVisible: true
+					addTemplateFormVisible: true,
+					showColumnSetting: false
 				}
 			},
 			mounted() {
@@ -140,12 +119,20 @@ JGBVue.module.maintenanceOffer = ()=> {
 				this.getOption();
 				this.getAccessoriesOption();
 				this.getTemplate();
+				this.getTable();
 			},
 			methods: {
 				search() {
 					axios.post(searchUrl, this.order_id).then((res)=> {
 						if(res.data.status) {
 							this.table = JSON.parse(res.data.data);
+						}
+					})
+				},
+				getTable() {
+					axios.get(tableUrl).then((res)=> {
+						if(res.data.status) {
+							this.addTemplateForm = JSON.parse(res.data.data);
 						}
 					})
 				},
@@ -374,6 +361,56 @@ JGBVue.module.maintenanceOffer = ()=> {
 				},
 				saveAddTemplateForm() {
 					//
+				},
+				btnColumnSettingReset() {
+					axios.post(defaultColumnSettingUrl).then(res=> {
+						if(res.data.status) {
+							this.table.header= [];
+							this.table.header = JSON.parse(res.data.data)
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				btnColumnSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.table.header).then(res=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							});
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
 				}
 			},
 			watch: {
@@ -401,11 +438,20 @@ JGBVue.module.maintenanceOffer = ()=> {
 				infoFormCountTotal() {
 					let _self = this;
 					let total = 0;
-					console.log('this.infoForm: ', this.infoForm)
 					this.infoForm.tempTable.forEach((item)=> {
 			            total += Number(item.money)
 			        })
 			        return Number(total).toFixed(2);
+				},
+				colspan() {
+					let _self = this
+					,num = 0;
+					this.addTemplateForm.header.forEach((item)=> {
+						if(item.enable) {
+							num++;
+						}
+					})
+					return num - 1;
 				}
 			},
 			filters: {
@@ -422,8 +468,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)=> {
-		_this.init(searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)
+	that.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+		_this.init(searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)
 	}
 
 	return that;
