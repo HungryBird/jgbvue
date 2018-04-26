@@ -216,13 +216,13 @@ JGBVue.module.offerAndContract = ()=> {
 					}
 				},
 				rowClick(row, event, column) {
-					this.$selectItem('table', row, this)
+					this.$rowClick('table', row, this.selectedRows, this)
 				},
 				selectAll(selection) {
-                    this.$selectAll(selection, this)
+                    this.selectedRows = this.$selectAll(selection, this.selectedRows)
 				},
 				selectItem(selection, row) {
-                    this.$selectItem(selection, row, this)
+                    this.selectedRows = this.$selectItem(selection, row, this.selectedRows);
 				},
 				handleExamine(index, row) {
 					let _self = this;
@@ -730,7 +730,9 @@ JGBVue.module.offerAndContract = ()=> {
 					}else{
 						this.formStatusCheckAll = true;
 					}
-
+				},
+				selectedRows(val) {
+					console.log('watch selectedRows: ', val)
 				}
 			},
 			filters: {

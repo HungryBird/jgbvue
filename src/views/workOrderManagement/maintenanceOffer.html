@@ -17,7 +17,7 @@
 						</div>
 						<el-button-group class="pull-right">
 							<el-button icon="el-icon-plus" v-on:click="addContractDialogVisible = true" size="mini">新增</el-button>
-							<el-button size="mini">报价模板</el-button>
+							<el-button size="mini" v-on:click="templateVisible = true">报价模板</el-button>
 							<el-button v-on:click="exportCilck" size="mini">导出</el-button>
 							<el-button size="mini" :disabled="selectedRows.length !== 1">打印</el-button>
 							<el-button :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
@@ -389,6 +389,28 @@
 			</div>
 		</el-dialog>
 		<!-- 报价单模板 -->
+		<el-dialog :visible.sync="templateVisible">
+			<el-table border ref="templateTable" :data="templateTable" v-on:row-click="rowClickTemplateTable" v-on:select-all="selectAllTemplateTable" v-on:select="selectItemTemplateTable">
+				<el-table-column type="selection"></el-table-column>
+				<el-table-column label="操作">
+					<template slot-scope="scope">
+						<el-button-group>
+							<el-button size="mini" v-on:click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+							<el-button size="mini" type="danger" v-on:click="handleDelete(scope.$index, scope.row)">删除</el-button>
+						</el-button-group>
+					</template>
+				</el-table-column>
+				<el-table-column type="index"></el-table-column>
+				<el-table-column label="模板名称" prop=""></el-table-column>
+				<el-table-column label="模板名称" prop=""></el-table-column>
+				<el-table-column label="状态" prop="status">
+					<template slot-scope="scope">
+						<el-switch v-model="scope.row.status" v-on:change="(value) => changeTemplateTableStatus(value, scope.row)"></el-switch>
+					</template>
+				</el-table-column>
+				<el-table-column label="模板名称" prop=""></el-table-column>
+			</el-table>
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -404,6 +426,6 @@
 	 * 保存/提交
 	 * 作废
 	 */
-	JGBVue.module.maintenanceOffer().init('/maintenanceOffer/search', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo', '/common/data_give_out', '/clientInfo/exportForm');
+	JGBVue.module.maintenanceOffer().init('/maintenanceOffer/search', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo', '/common/data_give_out', '/clientInfo/exportForm', '/common/data_delete');
 </script>
 </html>

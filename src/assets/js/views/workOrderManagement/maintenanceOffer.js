@@ -6,13 +6,14 @@ JGBVue.module.maintenanceOffer = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl)=> {
+	_this.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
 				return {
 					order_id: '',
 					selectedRows: [],
+					selectTempleRows: [],
 					currentPage: 1,
 					pageSize: 20,
 					table: [],
@@ -96,7 +97,9 @@ JGBVue.module.maintenanceOffer = ()=> {
 					examinCurRow: null,
 					isUnfold: false,
 					exportVisible: false,
-					exportForm: []
+					exportForm: [],
+					templateVisible: false,
+					templateTable: []
 				}
 			},
 			mounted() {
@@ -189,13 +192,13 @@ JGBVue.module.maintenanceOffer = ()=> {
 					//
 				},
 				rowClick(row, event, column) {
-					this.$rowClick('table', row, this);
+					this.$rowClick('table', row, this.selectedRows, this)
 				},
 				selectAll(selection) {
-                    this.$selectAll(selection, this);
+                    this.selectedRows = this.$selectAll(selection, this.selectedRows)
 				},
 				selectItem(selection, row) {
-                    this.$selectItem(selection, row, this);
+                    this.selectedRows = this.$selectItem(selection, row, this.selectedRows);
 				},
 				remoteClient(val) {
 					this.loading = true;
@@ -276,7 +279,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 						}
 					})
 				},
-				addFormTableRowClick(row) {
+				addFormTableRowClick(row, data) {
 					this.$toggleRowEditable(this.addForm.table, row)
 				},
 				handleExamine(index, row) {
@@ -309,6 +312,25 @@ JGBVue.module.maintenanceOffer = ()=> {
 					this.selectedRows = [];
 					this.isUnfold = false;
 				},
+				rowClickTemplateTable(row) {
+					this.$rowClick('templateTable', row, this.selectTempleRows, this);
+				},
+				selectAllTemplateTable(selection) {
+                    this.selectedRows = this.$selectAll(selection, this.selectTempleRows);
+				},
+				selectItemTemplateTable(selection, row) {
+                    this.selectedRows = this.$selectItem(selection, row, this.selectTempleRows);
+				},
+				handleDelete() {
+					let _self = this;
+                    this.selectTempleRows = [];
+                    this.$refs.templateTable.clearSelection();
+                    this.$remove(deleteUrl, this.selectTempleRows, this);
+				},
+				changeTemplateTableStatus(val, row) {
+					//axios.post(switchStatusUrl, val)
+					console.log('row: ', row);
+				}
 			},
 			watch: {
 				//
@@ -356,8 +378,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl)=> {
-		_this.init(searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl)
+	that.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)=> {
+		_this.init(searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)
 	}
 
 	return that;

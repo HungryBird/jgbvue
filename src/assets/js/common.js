@@ -60,12 +60,12 @@ Vue.prototype.$timeStampFormat = timeStampFormat
  * @param  {[type]} _self     [description]
  * @return {[type]}           [description]
  */
-let rowClick = (tableName, row, _self)=> {
+let rowClick = (tableName, row, selectedRows, _self)=> {
   _self.$refs[tableName].toggleRowSelection(row);
-  if(_self.selectedRows.indexOf(row) == -1) {
-    _self.selectedRows.push(row)
+  if(selectedRows.indexOf(row) == -1) {
+    selectedRows.push(row)
   }else{
-    _self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
+    selectedRows.splice(selectedRows.indexOf(row), 1);
   }
 }
 Vue.prototype.$rowClick = rowClick;
@@ -77,15 +77,16 @@ Vue.prototype.$rowClick = rowClick;
  * @param  {[type]} _self     [description]
  * @return {[type]}           [description]
  */
-let selectAll = (selection, _self)=> {
+let selectAll = (selection, selectedRows)=> {
   if(selection.length == 0) {
-      _self.selectedRows.splice(0, _self.selectedRows.length);
+      selectedRows = [];
   }else{
-      _self.selectedRows.splice(0, _self.selectedRows.length);
+      selectedRows = [];
       selection.forEach((item)=> {
-          _self.selectedRows.push(item);
+          selectedRows.push(item);
       })
   }
+  return selectedRows;
 }
 Vue.prototype.$selectAll = selectAll;
 
@@ -97,11 +98,12 @@ Vue.prototype.$selectAll = selectAll;
  * @param  {[type]} _self     [description]
  * @return {[type]}           [description]
  */
-let selectItem = (selection, row, _self)=> {
-  _self.selectedRows.splice(0, _self.selectedRows.length);
+let selectItem = (selection, row, selectedRows)=> {
+  selectedRows = [];
   for(let i = 0; i < selection.length; i++) {
-      _self.selectedRows.push(selection[i]);
+      selectedRows.push(selection[i]);
   }
+  return selectedRows;
 }
 Vue.prototype.$selectItem = selectItem;
 
@@ -146,6 +148,47 @@ let checkSerialNumberIsRepeat = (data, obj)=> {
   return obj;
 }
 Vue.prototype.$checkSerialNumberIsRepeat = checkSerialNumberIsRepeat;
+
+/**
+ * 删除表单数据
+ * create by 何俊洁 2018-4-26
+ * @param  {[type]} deleteUrl    [description]
+ * @param  {[type]} selectedRows [description]
+ * @param  {[type]} _self        [description]
+ * @return {[type]}              [description]
+ */
+let remove = (deleteUrl, selectedRows, _self)=> {
+  _self.$confirm('确定删除?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      beforeClose: function(action, instance, done) {
+          done(action);
+      }
+  }).then((action)=> {
+      if(action == 'confirm') {
+          axios.post(deleteUrl, _self.selectedRows).then((res)=> {
+              if(res.data.status) {
+                  _self.$message({
+                      type: 'success',
+                      message: res.data.message
+                  });
+              }
+          }).catch(function(err) {
+              _self.$message({
+                  type: 'error',
+                  message: res.data.message || err
+              });
+          })
+      }
+  }).catch(() => {
+     _self.$message({
+          type: 'info',
+          message: '已取消'
+      });
+  });
+}
+Vue.prototype.$remove = remove;
 
 /**
  * 删除行
