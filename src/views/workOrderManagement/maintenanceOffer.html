@@ -392,8 +392,8 @@
 		<el-dialog :visible.sync="templateVisible" title="报价模板">
 			<nav>
 				<el-button-group class="pull-right">
-					<el-button icon="el-icon-plus" size="mini">新增</el-button>
-					<el-button icon="el-icon-delete" type="danger" size="mini">删除</el-button>
+					<el-button icon="el-icon-plus" size="mini" v-on:click="">新增</el-button>
+					<el-button icon="el-icon-delete" type="danger" size="mini" :disabled="selectTempleRows.length === 0">删除</el-button>
 				</el-button-group>
 			</nav>
 			<el-table border ref="templateTable" :data="templateTable" v-on:row-click="rowClickTemplateTable" v-on:select-all="selectAllTemplateTable" v-on:select="selectItemTemplateTable">
@@ -411,7 +411,7 @@
 				<el-table-column label="模板字段" prop="field"></el-table-column>
 				<el-table-column label="状态" prop="status">
 					<template slot-scope="scope">
-						<el-switch v-model="scope.row.status" v-on:change="(value) => changeTemplateTableStatus(value, scope.row)"></el-switch>
+						<el-switch v-model="scope.row.status" v-on:change="(value) => changeTemplateTableStatus(value, scope.row)" disabled></el-switch>
 					</template>
 				</el-table-column>
 				<el-table-column label="首选模板" prop="isPreferred">

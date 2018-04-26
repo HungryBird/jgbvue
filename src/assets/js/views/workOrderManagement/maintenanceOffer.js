@@ -324,10 +324,10 @@ JGBVue.module.maintenanceOffer = ()=> {
 					this.$rowClick('templateTable', row, this.selectTempleRows, this);
 				},
 				selectAllTemplateTable(selection) {
-                    this.selectedRows = this.$selectAll(selection, this.selectTempleRows);
+                    this.selectTempleRows = this.$selectAll(selection, this.selectTempleRows);
 				},
 				selectItemTemplateTable(selection, row) {
-                    this.selectedRows = this.$selectItem(selection, row, this.selectTempleRows);
+                    this.selectTempleRows = this.$selectItem(selection, row, this.selectTempleRows);
 				},
 				handleDelete() {
 					let _self = this;
