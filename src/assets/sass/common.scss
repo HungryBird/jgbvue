@@ -1562,6 +1562,9 @@ table{
 		.el-input, .el-select {
 			width: 100%;
 		}
+		.el-date-editor {
+			width:100%;
+		}
 	}
 }
 
@@ -1630,4 +1633,39 @@ table{
 //公共只显示两行内容类
 .w-common-line-2 {
 	@include line-clamp (vertical, 2, ellipsis)
+}
+
+//维修统计报表
+.maintenanceStatistical {
+	.jgb-wrap + .jgb-wrap {
+		margin-top: 10px;
+	}
+	.w-main-header {
+		padding:0 10px 10px;
+	}
+	.w-main-block {
+		padding:10px;
+		color:$fc-normal;
+		.block-title {
+			@include common-border-bottom;
+			padding: 5px 0;
+			font-size: $fs-big;
+			color: $fc-import;
+			font-weight: bold;
+			line-height: 25px;
+		}
+		.block-content {
+			$padding:10px;
+			padding: $padding 0;
+			position:relative;
+			.print-btn {
+				position:absolute;
+				top: $padding;
+				right:$padding;
+			}
+			.content-title {
+				padding: $padding $padding $padding*2;
+			}
+		}
+	}
 }

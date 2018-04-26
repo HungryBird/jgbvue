@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>维修统计报表</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body>
+	<div id="app" v-cloak class="maintenanceStatistical">
+		<el-container>
+			<el-main>
+				<div class="jgb-wrap">
+          <div class="w-main-header">
+            <el-form ref="selectForm" class="w-common-form" :model="selectForm" label-width="90px">
+              <el-row :gutter="5">
+                <el-col :span="10">
+                  <el-form-item label="汇总日期：">
+                      <el-date-picker
+                        v-model="selectForm.dateRange" :clearable="false"
+                        value-format="yyyy-MM-dd"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                      </el-date-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="汇总分类：">
+                      <el-select v-model="selectForm.type" placeholder="请选择">
+                        <el-option key="brand" label="品牌" value="brand"></el-option>
+                        <el-option key="type" label="类型" value="type"></el-option>
+                        <el-option key="maintenance" label="维修人员" value="maintenance"></el-option>
+                      </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="图像类型：">
+                    <el-radio-group v-model="chartsType">
+                      <el-radio-button label="pie">饼图</el-radio-button>
+                      <el-radio-button label="histogram">柱状图</el-radio-button>
+                      <el-radio-button label="bar">条形图</el-radio-button>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-row type="flex" justify="end">
+                    <el-button type="" size="mini">打印</el-button>
+                    <el-button type="" size="mini">导出</el-button>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-form>
+          </div>
+				</div>
+				<div class="jgb-wrap">
+          <div class="w-main-block">
+            <div class="block-title">{{selectForm.type | summaryInfo}}汇总信息：</div>
+            <div class="block-content">
+              <el-button class="print-btn" size="mini">打印此类汇总图标</el-button>
+              <div class="content-title">
+                {{selectForm.dateRange[0] | dateChinese}}至{{selectForm.dateRange[1] | dateChinese}}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                总工单数：{{dataInfo.total_count}}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                总金额：{{dataInfo.total_amount}}元
+              </div>
+              <el-row :gutter="5">
+                <el-col :span="12">
+                  <el-table width="100%" height="350" :stripe="true" :data="dataInfo.list" v-scroll-more="getInfo">
+                    <el-table-column v-for="(item, index) in tableHeader[selectForm.type].info" 
+                      align="left" sortable="custom"
+                      :key="index" :label="item.label" :prop="item.prop">
+                    </el-table-column>
+                    <div v-if="showloadingInfoMore" slot="append" style="height:48px;line-height:48px;text-align:center;">
+                      <i class="el-icon-loading" style="margin-right:5px;"></i>加载中...
+                    </div>
+                  </el-table>
+                </el-col>
+                <el-col :span="12">
+                  Echarts
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+				</div>
+				<div class="jgb-wrap">
+          <div class="w-main-block">
+            <div class="block-title">{{selectForm.type | summaryInfo}}详细汇总信息：</div>
+            <div class="block-content">
+              <el-button class="print-btn" size="mini">打印此类汇总图标</el-button>
+            </div>
+          </div>
+				</div>
+			</el-main>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/maintenanceStatistical/maintenanceStatistical.js"></script>
+<script type="text/javascript">
+	JGBVue.module.maintenanceStatistical().init(
+    '/maintenanceStatistical/get_data_info' //获取汇总信息-数据 接口
+	);
+</script>
+
+</html>

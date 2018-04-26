@@ -551,6 +551,16 @@ dd {
   opacity: 1;
   z-index: 999; */
 }
+/* add by lanw 2018-4-26 售后菜单flex竖向布局*/
+.base-nav-dropdown-apps.w-nav.after-sale {
+  -webkit-box-orient:vertical;
+  -webkit-box-direction:normal;
+      -ms-flex-flow:column wrap;
+          flex-flow:column wrap;
+  width: 840px;
+  height:200px;
+  overflow:hidden;
+}
 .base-nav-dropdown-apps.w-nav .w-nav-fitems {
   display:-webkit-box;
   display:-ms-flexbox;

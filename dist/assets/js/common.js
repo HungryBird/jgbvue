@@ -1282,3 +1282,22 @@ let svgEmptyCell = Vue.extend({
              </svg>`,
 })
 Vue.component('jgb-empty-cell', svgEmptyCell)
+
+/**
+ * 自定义指令 针对el-table滚动刷新
+ * created by lanw 2018-4-26
+ */
+Vue.directive('scroll-more', {
+  bind(el, binding) {
+    const HEIGHT = 48 //与表格slot = append的 加载中提示dom高度相同
+    const DOM = el.querySelector('.el-table__body-wrapper');
+    DOM.addEventListener('scroll',function() {
+      if(DOM.scrollTop + DOM.clientHeight >= DOM.scrollHeight - HEIGHT) {
+        let scrollTop = DOM.scrollTop
+        setTimeout(()=> {
+          scrollTop == DOM.scrollTop && binding.value() 
+        }, 200)
+      }
+    })
+  }
+})

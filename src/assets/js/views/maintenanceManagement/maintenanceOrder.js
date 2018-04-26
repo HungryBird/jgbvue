@@ -515,7 +515,7 @@ JGBVue.module.maintenanceOrder = () => {
          * @param {Object} row 行数据
          * @param {Number} index 所在行
          */
-        btnReport: function(row, index) {
+        btnTestReport: function(row, index) {
           this.getTestPersonData()
           this.showTestReport = true
           this.currentOrder = row.order_id

@@ -1,0 +1,17 @@
+{
+  "total_count": 10000,
+  "total_amount": 2200202020,
+  "list": [
+    { "brand": "品牌1", "count": "300", "percent": "30%", "amount": "100" },
+    { "brand": "品牌2", "count": "200", "percent": "20%", "amount": "100" },
+    { "brand": "品牌3", "count": "250", "percent": "30%", "amount": "100" },
+    { "brand": "品牌4", "count": "200", "percent": "15%", "amount": "100" },
+    { "brand": "品牌5", "count": "300", "percent": "30%", "amount": "100" },
+    { "brand": "品牌6", "count": "50", "percent": "5%", "amount": "100" },
+    { "brand": "品牌7", "count": "300", "percent": "30%", "amount": "100" }
+  ],
+  "page": {
+    "total_page": 10,
+    "now_page":2
+  }
+}

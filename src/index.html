@@ -100,7 +100,8 @@
 									<i v-if="navItem.cls" :class="navItem.cls"></i>
 									<span v-if="navItem.name != undefined">{{ navItem.name }}</span>
 								</a>
-								<ul class="base-nav-dropdown-apps w-nav" v-if="dropdownIsActive">
+								<ul class="base-nav-dropdown-apps w-nav" v-if="dropdownIsActive"
+									:class="navItem.name == '售后' && 'after-sale'">
 									<li v-if="navItem.fItems && navItem.fItems.length"
 										class="w-nav-fitems" :style="{
 											width: navItem.name == '系统设置' ? 180*Math.ceil(navItem.fItems.length/7)+'px' : '',

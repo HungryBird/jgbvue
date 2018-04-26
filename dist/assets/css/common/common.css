@@ -1408,6 +1408,9 @@ table {
 .w-common-form .el-form-item .el-input, .w-common-form .el-form-item .el-select {
   width: 100%; }
 
+.w-common-form .el-form-item .el-date-editor {
+  width: 100%; }
+
 .final-cost {
   width: 100%;
   border-collapse: collapse; }
@@ -1459,3 +1462,29 @@ table {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   text-overflow: ellipsis; }
+
+.maintenanceStatistical .jgb-wrap + .jgb-wrap {
+  margin-top: 10px; }
+
+.maintenanceStatistical .w-main-header {
+  padding: 0 10px 10px; }
+
+.maintenanceStatistical .w-main-block {
+  padding: 10px;
+  color: #666; }
+  .maintenanceStatistical .w-main-block .block-title {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+    line-height: 25px; }
+  .maintenanceStatistical .w-main-block .block-content {
+    padding: 10px 0;
+    position: relative; }
+    .maintenanceStatistical .w-main-block .block-content .print-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px; }
+    .maintenanceStatistical .w-main-block .block-content .content-title {
+      padding: 10px 10px 20px; }
