@@ -1,0 +1,71 @@
+{
+	"header": [
+		{
+			"label": "配置项",
+			"prop": "config",
+			"enable": true
+		},
+		{
+			"label": "设备名称",
+			"prop": "name",
+			"enable": true
+		},
+		{
+			"label": "规格型号",
+			"prop": "model",
+			"enable": true
+		},
+		{
+			"label": "品牌",
+			"prop": "brand",
+			"enable": true
+		},
+		{
+			"label": "类别",
+			"prop": "category",
+			"enable": true
+		},
+		{
+			"label": "单位",
+			"prop": "unit",
+			"enable": true
+		},
+		{
+			"label": "数量",
+			"prop": "quantity",
+			"enable": true
+		}
+	],
+	"data": [
+		{
+			"type": "input",
+			"config": "列宽",
+			"name": 60,
+			"model": 60,
+			"brand": 60,
+			"category": 60,
+			"unit": 60,
+			"quantity": 60
+		},
+		{
+			"type": "switch",
+			"config": "是否可编辑",
+			"name": true,
+			"model": true,
+			"brand": true,
+			"category": true,
+			"unit": true,
+			"quantity": true
+		},
+		{
+			"type": "input",
+			"config": "位置排序",
+			"name": 1,
+			"model": 2,
+			"brand": 3,
+			"category": 4,
+			"unit": 5,
+			"quantity": 6
+		}
+	]
+}

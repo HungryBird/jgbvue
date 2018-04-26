@@ -6,17 +6,21 @@ JGBVue.module.maintenanceOffer = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl)=> {
+	_this.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
 				return {
 					order_id: '',
 					selectedRows: [],
+					selectTempleRows: [],
 					currentPage: 1,
 					pageSize: 20,
 					table: [],
 					formRules: {
+						name: [
+							{required: true, message: '请输入名称'}
+						],
 						title: [
 							{required: true, message: '请输入标题'}
 						],
@@ -26,12 +30,12 @@ JGBVue.module.maintenanceOffer = ()=> {
 						equipmentName: [
 							{required: true, message: '请输入设备名称'}
 						],
-						offerer: [
+						personnel: [
 							{required: true, message: '请输入报价人'}
 						]
 					},
 					loadingDetailInfo: false,
-					addContractDialogVisible: true,
+					addContractDialogVisible: false,
 					addForm: {
 						uniqueCode: null,
 						warningWarrantyMethod: [],
@@ -84,6 +88,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 							}
 						]
 					},
+					infoForm: {},
 					loading: false,
 					clientOption: [{}],
 					linkmanOption: [],
@@ -92,6 +97,19 @@ JGBVue.module.maintenanceOffer = ()=> {
 					equipmentCategoryOption: [],
 					unitMeasurementOption: [],
 					accessoriesOption: [],
+					examinCurRow: null,
+					isUnfold: false,
+					exportVisible: false,
+					exportForm: [],
+					templateVisible: false,
+					templateTable: [],
+					editTemplateForm: {},
+					addTemplateForm: {
+						header: [],
+						data: []
+					},
+					addTemplateFormVisible: true,
+					showColumnSetting: false
 				}
 			},
 			mounted() {
@@ -99,6 +117,9 @@ JGBVue.module.maintenanceOffer = ()=> {
 				this.order_id = info.order_id;
 				this.search();
 				this.getOption();
+				this.getAccessoriesOption();
+				this.getTemplate();
+				this.getTable();
 			},
 			methods: {
 				search() {
@@ -108,11 +129,31 @@ JGBVue.module.maintenanceOffer = ()=> {
 						}
 					})
 				},
+				getTable() {
+					axios.get(tableUrl).then((res)=> {
+						if(res.data.status) {
+							this.addTemplateForm = JSON.parse(res.data.data);
+						}
+					})
+				},
 				getOption() {
 					axios.get(getOptionUrl).then((res)=> {
 						if(res.data.status) {
-							this.accessoriesOption = JSON.parse(res.data.data).concat();
 							this.clientOption = JSON.parse(res.data.data).concat();
+						}
+					})
+				},
+				getTemplate() {
+					axios.get(getTemplateUrl).then((res)=> {
+						if(res.data.status) {
+							this.templateTable = JSON.parse(res.data.data).concat();
+						}
+					})
+				},
+				getAccessoriesOption() {
+					axios.get(getAccessoriesOptionUrl).then((res)=> {
+						if(res.data.status) {
+							this.accessoriesOption = JSON.parse(res.data.data).concat();
 						}
 					})
 				},
@@ -137,12 +178,12 @@ JGBVue.module.maintenanceOffer = ()=> {
                         }
                     }).then((action)=> {
                         if(action == 'confirm') {
-                            axios.post(deleteUrl, this.selectedRows).then((res)=> {
+                            axios.post(giveOutUrl, this.selectedRows).then((res)=> {
                                 if(res.data.status) {
                                 	this.selectedRows.forEach((item)=> {
-                                		for (let i = _self.table.data.length - 1; i >= 0; i--) {
-                                			if(_self.table.data[i] === item) {
-                                				_self.table.data[i].status = -1;
+                                		for (let i = _self.table.length - 1; i >= 0; i--) {
+                                			if(_self.table[i] === item) {
+                                				_self.table[i].status = -1;
                                 			}
                                 		}
                                 	})
@@ -165,6 +206,11 @@ JGBVue.module.maintenanceOffer = ()=> {
                         });
                     });
 				},
+				rowStatusClassName({row, rowIndex}) {
+					if(row.status === -1) {
+						return 'scrap-row';
+					}
+				},
 				handleSizeChange() {
 					//
 				},
@@ -172,34 +218,13 @@ JGBVue.module.maintenanceOffer = ()=> {
 					//
 				},
 				rowClick(row, event, column) {
-					/*let _self = this;
-					this.$refs['table'].toggleRowSelection(row);
-					if(_self.selectedRows.indexOf(row) == -1) {
-						_self.selectedRows.push(row)
-					}else{
-						_self.selectedRows.splice(_self.selectedRows.indexOf(row), 1);
-					}*/
-					this.$rowClick('table', row, this);
+					this.$rowClick('table', row, this.selectedRows, this)
 				},
 				selectAll(selection) {
-					/*let _self = this;
-                    if(selection.length == 0) {
-                        _self.selectedRows.splice(0, _self.selectedRows.length);
-                    }else{
-                        _self.selectedRows.splice(0, _self.selectedRows.length);
-                        selection.forEach((item)=> {
-                            _self.selectedRows.push(item);
-                        })
-                    }*/
-                    this.$selectAll(selection, this);
+                    this.selectedRows = this.$selectAll(selection, this.selectedRows)
 				},
 				selectItem(selection, row) {
-					/*let _self = this;
-                    this.selectedRows.splice(0, _self.selectedRows.length);
-                    for(let i = 0; i < selection.length; i++) {
-                        _self.selectedRows.push(selection[i]);
-                    }*/
-                    this.$selectItem(selection, row, this);
+                    this.selectedRows = this.$selectItem(selection, row, this.selectedRows);
 				},
 				remoteClient(val) {
 					this.loading = true;
@@ -216,17 +241,16 @@ JGBVue.module.maintenanceOffer = ()=> {
 						if(valid) {
 							axios.post(saveAddUrl, this.addForm).then((res)=> {
 								if(res.data.status) {
-									this.$refs[formName].resetFields();
 									this.addContractDialogVisible = false;
-									for (var i = this.table.data.length - 1; i >= 0; i--) {
-										if(this.table.data[i] === this.selectedRows[0]) {
-											this.table.data[i].status = 1;
-										}
-									}
+									/**
+									 * 清空table之后再插入数据
+									 * @type {String}
+									 */
 									this.$message({
 										type: 'success',
 										message: res.data.message
 									})
+									this.$refs[formName].resetFields();
 								}
 							})
 						}else{
@@ -239,17 +263,16 @@ JGBVue.module.maintenanceOffer = ()=> {
 						if(valid) {
 							axios.post(saveAddUrl, this.addForm).then((res)=> {
 								if(res.data.status) {
-									this.$refs[formName].resetFields();
 									this.addContractDialogVisible = false;
-									for (var i = this.table.data.length - 1; i >= 0; i--) {
-										if(this.table.data[i] === this.selectedRows[0]) {
-											this.table.data[i].status = 1;
-										}
-									}
+									/**
+									 * 清空table之后再插入数据
+									 * @type {String}
+									 */
 									this.$message({
 										type: 'success',
 										message: res.data.message
 									})
+									this.$refs[formName].resetFields();
 								}
 							})
 						}else{
@@ -282,9 +305,113 @@ JGBVue.module.maintenanceOffer = ()=> {
 						}
 					})
 				},
-				addFormTableRowClick(row) {
+				addFormTableRowClick(row, data) {
 					this.$toggleRowEditable(this.addForm.table, row)
 				},
+				handleExamine(index, row) {
+					let _self = this;
+					if(this.examinCurRow === row) {
+						if(this.isUnfold) {
+							this.isUnfold = false;
+						}else{
+							this.toggleInfo();
+							this.isUnfold = true;
+						}
+						return;
+					}
+					this.examinCurRow = row;
+					this.$refs['table'].clearSelection();
+					this.loadingDetailInfo = true;
+					axios.post(examineUrl, row).then((res)=> {
+						if(res.data.status) {
+							this.infoForm = res.data.data;
+							this.isUnfold = true;
+							this.loadingDetailInfo = false;
+
+						}
+					}).catch((err)=> {
+						console.log(err)
+					});
+				},
+				toggleInfo() {
+					this.$refs['table'].clearSelection();
+					this.selectedRows = [];
+					this.isUnfold = false;
+				},
+				rowClickTemplateTable(row) {
+					this.$rowClick('templateTable', row, this.selectTempleRows, this);
+				},
+				selectAllTemplateTable(selection) {
+                    this.selectTempleRows = this.$selectAll(selection, this.selectTempleRows);
+				},
+				selectItemTemplateTable(selection, row) {
+                    this.selectTempleRows = this.$selectItem(selection, row, this.selectTempleRows);
+				},
+				handleDeleteTemplate() {
+					let _self = this;
+                    this.selectTempleRows = [];
+                    this.$refs.templateTable.clearSelection();
+                    this.$remove(deleteUrl, this.selectTempleRows, this);
+				},
+				removeTemplateTable() {
+					this.$remove(deleteUrl, this.selectTempleRows, this);
+				},
+				handleEditTemplate() {
+					//
+				},
+				saveAddTemplateForm() {
+					//
+				},
+				btnColumnSettingReset() {
+					axios.post(defaultColumnSettingUrl).then(res=> {
+						if(res.data.status) {
+							this.table.header= [];
+							this.table.header = JSON.parse(res.data.data)
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				btnColumnSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.table.header).then(res=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							});
+							this.showColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				}
 			},
 			watch: {
 				//
@@ -296,7 +423,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 					this.addForm.tempTable.forEach((item)=> {
 			            total += Number(item.money)
 			        })
-			        return Number(total);
+			        this.addForm.countTotal = Number(total);
+			        return this.addForm.countTotal;
 				},
 				countTotalUpper() {
 					let _self = this;
@@ -304,7 +432,26 @@ JGBVue.module.maintenanceOffer = ()=> {
 					this.addForm.tempTable.forEach((item)=> {
 			            total += Number(item.money)
 			        })
-			        return this.$convertCurrency(total);
+			        this.addForm.countTotalUpper = this.$convertCurrency(total);
+			        return this.addForm.countTotalUpper;
+				},
+				infoFormCountTotal() {
+					let _self = this;
+					let total = 0;
+					this.infoForm.tempTable.forEach((item)=> {
+			            total += Number(item.money)
+			        })
+			        return Number(total).toFixed(2);
+				},
+				colspan() {
+					let _self = this
+					,num = 0;
+					this.addTemplateForm.header.forEach((item)=> {
+						if(item.enable) {
+							num++;
+						}
+					})
+					return num - 1;
 				}
 			},
 			filters: {
@@ -321,8 +468,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl)=> {
-		_this.init(searchUrl, getOptionUrl, getEquipmentBrandOptionUrl)
+	that.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+		_this.init(searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)
 	}
 
 	return that;

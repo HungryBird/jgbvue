@@ -24,6 +24,13 @@ router.post('/data_delete', (req, res)=> {
 	})
 });
 
+router.post('/data_give_out', (req, res)=> {
+	res.send({
+		status: true,
+		message: '作废成功'
+	})
+});
+
 router.post('/switch', (req, res)=> {
 	res.send({
 		status: true,

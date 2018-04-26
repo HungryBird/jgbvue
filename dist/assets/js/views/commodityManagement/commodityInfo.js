@@ -1019,6 +1019,7 @@ JGBVue.module.commodityInfo = ()=> {
 		    		 * 
 		    		 * @type {[type]}
 		    		 */
+		    		console.log(111)
 		    		let _self = this;
 		    		this.quickGenerateOption = [];
 		    		/**

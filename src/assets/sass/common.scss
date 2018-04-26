@@ -540,6 +540,25 @@ table{
 			height: 100%;
 			overflow-x: auto;
 			overflow-y: auto;
+			.waterMark-wrap{
+				position: fixed;
+				bottom: 120px;
+				right: 60px;
+				.waterMark{
+					font-size: 60px;
+					font-weight: 900;
+				}
+				.no-pass{
+					color: rgba(137, 137, 137, .3);
+					.note{
+						font-size: 14px;
+						font-weight: normal;
+					}
+				}
+				.pass{
+					color: rgba(127, 245, 9, .3);
+				}
+			}
 		}
 		.toggle-button-wrap{
 			// edit by lanw 2018-4-24 修复关闭按钮没有上下居中 start 
@@ -711,10 +730,10 @@ table{
 	opacity: 0;
 }
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+	transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+	opacity: 0;
 }
 .row-border{
 	line-height: 1.5;
@@ -776,6 +795,8 @@ table{
 		th,td{
 			position: relative;
 			width: 147px;
+			line-height: 36px;
+			text-align: center;
 			border-left: 1px solid #ebeef5;
 			border-bottom: 1px solid #ebeef5;
 		}

@@ -356,7 +356,7 @@
 					<div style="clear: both;"></div>
 					<div style="padding: 5px;border-top: 1px solid #ddd;margin-top: 5px;" v-for="item in addSelectedAxiliaryAttributesClassify" :key="item.label">
 						<h5 class="pull-left" style="padding-right: 10px;">{{ item.parentName }}</h5>
-						<el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren" v-on:change="addChangeAuxiliaryAttributesClassifyChildren">
+						<el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren">
 							<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value">{{ c.label }}</el-checkbox>
 						</el-checkbox-group>
 						<div style="clear: both;"></div>
