@@ -240,8 +240,7 @@ JGBVue.module.offerAndContract = ()=> {
 					this.loadingDetailInfo = true;
 					axios.post(examineUrl, row).then((res)=> {
 						if(res.data.status) {
-							let jdata = JSON.parse(res.data.data);
-							this.infoForm = jdata;
+							this.infoForm = res.data.data;
 							this.isUnfold = true;
 							this.loadingDetailInfo = false;
 						}

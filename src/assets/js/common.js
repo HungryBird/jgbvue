@@ -167,7 +167,9 @@ let remove = (deleteUrl, selectedRows, _self)=> {
       }
   }).then((action)=> {
       if(action == 'confirm') {
-          axios.post(deleteUrl, _self.selectedRows).then((res)=> {
+        console.log('confirm')
+          axios.post(deleteUrl, selectedRows).then((res)=> {
+            console.log('res: ', res)
               if(res.data.status) {
                   _self.$message({
                       type: 'success',

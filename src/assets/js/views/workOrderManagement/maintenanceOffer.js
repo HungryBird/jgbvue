@@ -18,6 +18,9 @@ JGBVue.module.maintenanceOffer = ()=> {
 					pageSize: 20,
 					table: [],
 					formRules: {
+						name: [
+							{required: true, message: '请输入名称'}
+						],
 						title: [
 							{required: true, message: '请输入标题'}
 						],
@@ -99,7 +102,35 @@ JGBVue.module.maintenanceOffer = ()=> {
 					exportVisible: false,
 					exportForm: [],
 					templateVisible: false,
-					templateTable: []
+					templateTable: [],
+					editTemplateForm: {},
+					addTemplateForm: {
+						tableHeader: [
+							{
+								label: '配置项'
+							},
+							{
+								label: '设备名称'
+							},
+							{
+								label: '规格型号'
+							},
+							{
+								label: '品牌'
+							},
+							{
+								label: '类别'
+							},
+							{
+								label: '单位'
+							},
+							{
+								label: '数量'
+							}
+						],
+						data: []
+					},
+					addTemplateFormVisible: true
 				}
 			},
 			mounted() {
@@ -329,20 +360,19 @@ JGBVue.module.maintenanceOffer = ()=> {
 				selectItemTemplateTable(selection, row) {
                     this.selectTempleRows = this.$selectItem(selection, row, this.selectTempleRows);
 				},
-				handleDelete() {
+				handleDeleteTemplate() {
 					let _self = this;
                     this.selectTempleRows = [];
                     this.$refs.templateTable.clearSelection();
                     this.$remove(deleteUrl, this.selectTempleRows, this);
 				},
-				changeTemplateTableStatus(val, row) {
-					//axios.post(switchStatusUrl, val)
-					console.log('row: ', row);
+				removeTemplateTable() {
+					this.$remove(deleteUrl, this.selectTempleRows, this);
 				},
 				handleEditTemplate() {
 					//
 				},
-				handleDeleteTemplate() {
+				saveAddTemplateForm() {
 					//
 				}
 			},

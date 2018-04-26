@@ -392,8 +392,8 @@
 		<el-dialog :visible.sync="templateVisible" title="报价模板">
 			<nav>
 				<el-button-group class="pull-right">
-					<el-button icon="el-icon-plus" size="mini" v-on:click="">新增</el-button>
-					<el-button icon="el-icon-delete" type="danger" size="mini" :disabled="selectTempleRows.length === 0">删除</el-button>
+					<el-button icon="el-icon-plus" size="mini" v-on:click="addTemplateFormVisible = true">新增</el-button>
+					<el-button icon="el-icon-delete" type="danger" size="mini" :disabled="selectTempleRows.length === 0" v-on:click="removeTemplateTable">删除</el-button>
 				</el-button-group>
 			</nav>
 			<el-table border ref="templateTable" :data="templateTable" v-on:row-click="rowClickTemplateTable" v-on:select-all="selectAllTemplateTable" v-on:select="selectItemTemplateTable">
@@ -406,12 +406,12 @@
 						</el-button-group>
 					</template>
 				</el-table-column>
-				<el-table-column type="index" label="序号"></el-table-column>
+				<el-table-column type="index" label="序号" width="50px"></el-table-column>
 				<el-table-column label="模板名称" prop="name"></el-table-column>
 				<el-table-column label="模板字段" prop="field"></el-table-column>
 				<el-table-column label="状态" prop="status">
 					<template slot-scope="scope">
-						<el-switch v-model="scope.row.status" v-on:change="(value) => changeTemplateTableStatus(value, scope.row)" disabled></el-switch>
+						<el-switch v-model="scope.row.status" disabled></el-switch>
 					</template>
 				</el-table-column>
 				<el-table-column label="首选模板" prop="isPreferred">
@@ -420,6 +420,66 @@
 					</template>
 				</el-table-column>
 			</el-table>
+		</el-dialog>
+		<!-- 新增报价表单模板 -->
+		<el-dialog :visible.sync="addTemplateFormVisible" title="新增报价表单模板">
+			<el-form :model="addTemplateForm" :rules="formRules" ref="addTemplateForm">
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item prop="name" label="模板名称">
+							<el-input v-model="addTemplateForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="选择表单字段">
+							<el-button icon="el-icon-plus"></el-button>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item prop="name" label="是否启用">
+							<el-switch v-model="addTemplateForm.status"></el-switch>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="首选模板">
+							<el-switch v-model="addTemplateForm.isPreferred"></el-switch>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<h3>表单字段配置</h3>
+				<table class="table-style">
+					<thead>
+						<th v-for="(th, index) in addTemplateForm.tableHeader" >
+							{{ th.label }}
+						</th>
+					</thead>
+					<tbody>
+						<th v-for="(td, index) in addTemplateForm.data" >
+							<td v-if="td.prop === 'name'">
+								{{ td.name }}
+							</td>
+						</th>
+						<!-- <tr v-for="(tt, index) in infoForm.tempTable" :key="index">
+							<th>{{ tt.costItem }}</th>
+							<td>
+								{{ tt.money }}
+							</td>
+						</tr>
+						<tr>
+							<th>合计费用</th>
+							<td>大写</td>
+							<td>{{ infoForm.upper }}</td>
+							<td>小写</td>
+							<td>{{ infoForm.lower }}</td>
+						</tr> -->
+					</tbody>
+				</table>
+			</el-form>
+			<div slot="footer">
+				<jgb-form-footer v-loading="loading" v-on:save="saveAddTemplateForm" v-on:close="addTemplateFormVisible = false"></jgb-form-footer>
+			</div>
 		</el-dialog>
 	</div>
 </body>
