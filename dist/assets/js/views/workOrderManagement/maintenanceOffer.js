@@ -6,7 +6,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)=> {
+	_this.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -108,6 +108,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 				this.search();
 				this.getOption();
 				this.getAccessoriesOption();
+				this.getTemplate();
 			},
 			methods: {
 				search() {
@@ -121,6 +122,13 @@ JGBVue.module.maintenanceOffer = ()=> {
 					axios.get(getOptionUrl).then((res)=> {
 						if(res.data.status) {
 							this.clientOption = JSON.parse(res.data.data).concat();
+						}
+					})
+				},
+				getTemplate() {
+					axios.get(getTemplateUrl).then((res)=> {
+						if(res.data.status) {
+							this.templateTable = JSON.parse(res.data.data).concat();
 						}
 					})
 				},
@@ -330,6 +338,12 @@ JGBVue.module.maintenanceOffer = ()=> {
 				changeTemplateTableStatus(val, row) {
 					//axios.post(switchStatusUrl, val)
 					console.log('row: ', row);
+				},
+				handleEditTemplate() {
+					
+				},
+				handleDeleteTemplate() {
+					//
 				}
 			},
 			watch: {
@@ -378,8 +392,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)=> {
-		_this.init(searchUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)
+	that.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)=> {
+		_this.init(searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl)
 	}
 
 	return that;

@@ -35,4 +35,19 @@ router.use('/getDetailInfo', (req, res)=> {
 	});
 })
 
+router.use('/template', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/offerAndContract/maintenanceOffer/template.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end();
+	});
+})
+
 module.exports = router;

@@ -1,0 +1,14 @@
+[
+	{
+		"name": "大型设备报价单",
+		"field": "设备名称，设备编号，规格型号，品牌，单位，数量，价格",
+		"status": true,
+		"isPreferred": true
+	},
+	{
+		"name": "精密设备报价单",
+		"field": "设备名称，设备编号，规格型号，品牌，单位，数量，价格",
+		"status": false,
+		"isPreferred": false
+	}
+]
