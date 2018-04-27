@@ -1,0 +1,13 @@
+[
+  { "name": "品牌1", "value": "20", "percent": "30%", "amount": "100" },
+  { "name": "品牌2", "value": "10", "percent": "20%", "amount": "100" },
+  { "name": "品牌3", "value": "250", "percent": "30%", "amount": "100" },
+  { "name": "品牌4", "value": "200", "percent": "15%", "amount": "100" },
+  { "name": "品牌5", "value": "300", "percent": "30%", "amount": "100" },
+  { "name": "品牌6", "value": "50", "percent": "5%", "amount": "100" },
+  { "name": "品牌7", "value": "300", "percent": "30%", "amount": "100" },
+  { "name": "品牌8", "value": "300", "percent": "30%", "amount": "100" },
+  { "name": "品牌9", "value": "300", "percent": "30%", "amount": "100" },
+  { "name": "品牌10", "value": "300", "percent": "30%", "amount": "100" },
+  { "name": "其他", "value": "300", "percent": "30%", "amount": "100" }
+]

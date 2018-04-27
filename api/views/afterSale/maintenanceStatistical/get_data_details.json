@@ -1,0 +1,17 @@
+{
+  "total_count": 500,
+  "total_amount": 12000,
+  "list": [
+    { "type": "型号1", "count": "300", "percent": "30%", "amount": "100" },
+    { "type": "型号2", "count": "200", "percent": "20%", "amount": "100" },
+    { "type": "型号3", "count": "250", "percent": "30%", "amount": "100" },
+    { "type": "型号4", "count": "200", "percent": "15%", "amount": "100" },
+    { "type": "型号5", "count": "300", "percent": "30%", "amount": "100" },
+    { "type": "型号6", "count": "50", "percent": "5%", "amount": "100" },
+    { "type": "型号7", "count": "300", "percent": "30%", "amount": "100" }
+  ],
+  "page": {
+    "total_page": 10,
+    "now_page":1
+  }
+}

@@ -59,7 +59,7 @@
           <div class="w-main-block">
             <div class="block-title">{{selectForm.type | summaryInfo}}汇总信息：</div>
             <div class="block-content">
-              <el-button class="print-btn" size="mini">打印此类汇总图标</el-button>
+              <el-button class="print-btn" size="mini">打印此类汇总图表</el-button>
               <div class="content-title">
                 {{selectForm.dateRange[0] | dateChinese}}至{{selectForm.dateRange[1] | dateChinese}}
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -67,14 +67,61 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 总金额：{{dataInfo.total_amount}}元
               </div>
-              <el-row :gutter="5">
+              <el-row :gutter="0">
                 <el-col :span="12">
-                  <el-table width="100%" height="350" :stripe="true" :data="dataInfo.list" v-scroll-more="getInfo">
+                  <el-table width="100%" height="350" v-scroll-more="getInfo"
+                    :stripe="true" :data="dataInfo.list"
+                    :default-sort = "infoSort"
+                    v-on:sort-change="handleInfoSortChange">
                     <el-table-column v-for="(item, index) in tableHeader[selectForm.type].info" 
                       align="left" sortable="custom"
                       :key="index" :label="item.label" :prop="item.prop">
                     </el-table-column>
                     <div v-if="showloadingInfoMore" slot="append" style="height:48px;line-height:48px;text-align:center;">
+                      <i class="el-icon-loading" style="margin-right:5px;"></i>加载中...
+                    </div>
+                  </el-table>
+                </el-col>
+                <el-col :span="12">
+                  <div ref="infoChart" style="height:350px;"></div>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+				</div>
+				<div class="jgb-wrap">
+          <div class="w-main-block">
+            <div class="block-title">{{selectForm.type | summaryInfo}}详细汇总信息：</div>
+            <div class="block-content">
+              <el-button class="print-btn" size="mini">打印此类汇总图表</el-button>
+              <div class="content-title">
+                <el-select v-model="detailsSelectCurrent" 
+                  remote filterable placeholder="请选择"
+                  value-key="label"
+                  :remote-method="getDetailsSelect">
+                  <el-option v-for="item in detailsSelectOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item">
+                  </el-option>
+                </el-select>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {{detailsSelectCurrent.label}}工单总数：{{dataDetails.total_count}}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {{detailsSelectCurrent.label}}{{selectForm.type == 'maintenance' ? '工单' : ''}}总金额：{{dataDetails.total_amount}}元
+                {{selectForm.type == 'type' ? '，按照品牌分类信息如下：' : ''}}
+              </div>
+              <el-row :gutter="5">
+                <el-col :span="12">
+                  <el-table width="100%" height="350" 
+                    :stripe="true" :data="dataDetails.list" v-scroll-more="getDetails"
+                    :default-sort = "detailsSort"
+                    v-on:sort-change="handleDetailsSortChange">>
+                    <el-table-column v-for="(item, index) in tableHeader[selectForm.type].details" 
+                      align="left" sortable="custom"
+                      :key="index" :label="item.label" :prop="item.prop">
+                    </el-table-column>
+                    <div v-if="showloadingDetailsMore" slot="append" style="height:48px;line-height:48px;text-align:center;">
                       <i class="el-icon-loading" style="margin-right:5px;"></i>加载中...
                     </div>
                   </el-table>
@@ -86,14 +133,6 @@
             </div>
           </div>
 				</div>
-				<div class="jgb-wrap">
-          <div class="w-main-block">
-            <div class="block-title">{{selectForm.type | summaryInfo}}详细汇总信息：</div>
-            <div class="block-content">
-              <el-button class="print-btn" size="mini">打印此类汇总图标</el-button>
-            </div>
-          </div>
-				</div>
 			</el-main>
 		</el-container>
 	</div>
@@ -101,11 +140,15 @@
 <script type="text/javascript" src="../../vue/vue.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/maintenanceStatistical/maintenanceStatistical.js"></script>
 <script type="text/javascript">
 	JGBVue.module.maintenanceStatistical().init(
-    '/maintenanceStatistical/get_data_info' //获取汇总信息-数据 接口
+    '/maintenanceStatistical/get_data_info', //获取汇总信息-数据 接口
+    '/maintenanceStatistical/get_details_select', //获取详细汇总信息 下拉菜单项
+    '/maintenanceStatistical/get_data_details', //获取详细汇总信息-数据 接口
+    '/maintenanceStatistical/get_chart_info', //获取汇总信息-图表 接口
 	);
 </script>
 
