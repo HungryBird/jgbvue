@@ -1,16 +1,15 @@
 /**
  * created by lanw 2018-04-26
- * 维修统计报表
+ * 打印维修统计报表
  */
 JGBVue = {
   module: {}
 }
 
-JGBVue.module.maintenanceStatistical = () => {
+JGBVue.module.printData = () => {
   let _this = {}, that = {}
   _this.init = (
     dataInfoGetUrl, //获取汇总信息-数据 接口
-    detailsSelectGetUrl, //获取详细汇总信息 下拉菜单项
     dataDetailsGetUrl, //获取详细汇总信息-数据 接口
     chartInfoGetUrl, //获取汇总信息-图表 接口
     chartDetailsGetUrl //获取详细汇总信息-图表 接口
@@ -18,51 +17,20 @@ JGBVue.module.maintenanceStatistical = () => {
     that.vm = new Vue({
       el: '#app',
       data: function () {
-        let now = new Date()
-        let firstDay = `${now.getFullYear()}-${now.getMonth()+1}-1`
-        let today = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`
         return {
-          selectForm: { //表单
-            dateRange: [firstDay, today], //日期范围 *默认当月1日至今
-            type: "brand", //汇总分类
-          },
-          chartsType: "histogram", //图像类型
-
           dataInfo: { //汇总信息-数据
             total_count:0,
             total_amount:0,
             list: [],
-            page: {
-              total_page: 1,
-              now_page:0
-            }
           },
-          infoSort: { //汇总表格默认排序
-            prop: 'count', 
-            order: 'descending'
-          },
-          loadingInfo: false, //正在加载汇总信息数据表格
-          showloadingInfoMore: true, //表格底部加载状态提示
-
-          detailsSelectOptions: [], //详细汇总下拉选择项
-          detailsSelectCurrent: '', // 当前下拉项
 
           dataDetails: { //详细汇总信息-数据
             total_count:0,
             total_amount:0,
             list: [],
-            page: {
-              total_page: 1,
-              now_page:0
-            }
           },
-          detailsSort: { //详情汇总表格默认排序
-            prop: 'count', 
-            order: 'descending'
-          },
-          showloadingDetailsMore: true, //表格底部加载状态提示
 
-          tableHeader: { //表头 *与selectForm.type关联 修改tableHeader[key]请同步
+          tableHeader: { //表头 
             brand: { //品牌
               info: [
                 {prop: 'brand', label: '品牌'},
@@ -128,53 +96,40 @@ JGBVue.module.maintenanceStatistical = () => {
         c_menuId: function() {
           return this.$getQuery(window.location.search).menu_id
         },
+        c_filter: function() {
+          return JSON.parse(this.$getQuery(window.location.search).filter)
+        },
+        c_print: function() {
+          return this.$getQuery(window.location.search).print
+        },
+        c_select: function() {
+          return JSON.parse(this.$getQuery(window.location.search).select)
+        },
+        c_chart: function() {
+          return this.$getQuery(window.location.search).chart
+        },
       },
       methods: {
         /**
-         * 导出
-         */
-        btnExport: function() {
-          //to do
-        },
-        /**
          * 打印
-         * @param {String} type 打印类型
          */
-        btnPrint: function(type) {
-          /**
-           * print=打印类型
-           * filter=筛选条件
-           * chart=图表类型
-           * select=下拉菜单选择
-           */
-          this.$selectTab(
-            'printMaintenanceReport', 
-            '打印维修统计报表', 
-            './views/maintenanceStatistical/printData.html', 
-            `print=${type}&&filter=${JSON.stringify(this.selectForm)}&&chart=${this.chartsType}&&select=${JSON.stringify(this.detailsSelectCurrent)}`)
-
+        btnPrint: function() {
+          this.$refs.btnPrint.style.display = 'none'
+          window.print()
+          this.$refs.btnPrint.style.display = 'flex'
         },
         /**
          * 获取详细汇总信息 表格数据
          */
         getDetails: function() {
-          let page = this.dataDetails.page
-          page.total_page > page.now_page && axios.post(dataDetailsGetUrl, {
-            filter: this.selectForm,
-            type: this.detailsSelectCurrent,
-            sort: this.detailsSort,
-            page: page.now_page+1
+          axios.post(dataDetailsGetUrl, {
+            filter: this.c_filter,
+            type: this.c_select,
+            all: true //不分页
           }).then(res=> {
             if(res.data.status) {
               let _data = JSON.parse(res.data.data)
-              this.dataDetails.total_amount = _data.total_amount
-              this.dataDetails.total_count = _data.total_count
-              this.dataDetails.list = _data.page.now_page == 1 
-                ? _data.list.concat() 
-                : this.dataDetails.list.concat(_data.list)
-              this.dataDetails.page = this.$deepCopy(_data.page)
-              //最后一页 关闭加载中 显示
-              this.showloadingDetailsMore = _data.page.now_page < _data.page.total_page
+              this.dataDetails = _data
             }
             else {
               this.$message({
@@ -197,8 +152,8 @@ JGBVue.module.maintenanceStatistical = () => {
          */
         getDetailsChart: function() {
           axios.post(chartDetailsGetUrl, {
-            filter: this.selectForm,
-            type: this.detailsSelectCurrent,
+            filter: this.c_filter,
+            type: this.c_select,
           }).then(res=> {
             if(res.data.status) {
               let _data = JSON.parse(res.data.data)
@@ -222,60 +177,16 @@ JGBVue.module.maintenanceStatistical = () => {
           })
         },
         /**
-         * 获取详细汇总信息 下拉菜单项
-         * @param {String} query 输入框远程搜索查询
-         * @param {Boolean} autoPickUp 获取数据后自动选中第一项
-         */
-        getDetailsSelect: function(query, autoPickUp) {
-          if(arguments.length == 1 && typeof arguments[0] == 'boolean') {
-            autoPickUp = query
-            query = ''
-          }
-          axios.post(detailsSelectGetUrl, {
-            keyword: query || ''
-          }).then(res=> {
-            if(res.data.status) {
-              this.detailsSelectOptions = JSON.parse(res.data.data)
-              if(autoPickUp) {
-                this.detailsSelectCurrent = this.detailsSelectOptions[0]
-              }
-            }
-            else {
-              this.$message({
-                type: 'error',
-                message: res.data.message,
-                center: true
-              })
-            };
-          }).catch(err=> {
-            console.error(err)
-            this.$message({
-              type: 'error',
-              message: err,
-              center: true
-            })
-          })
-        },
-        /**
          * 获取汇总信息 表格数据
          */
         getInfo: function() {
-          let page = this.dataInfo.page
-          page.total_page > page.now_page && axios.post(dataInfoGetUrl, {
-            filter: this.selectForm,
-            sort: this.infoSort,
-            page: page.now_page+1
+          axios.post(dataInfoGetUrl, {
+            filter: this.c_filter,
+            all: true  //不分页 全部
           }).then(res=> {
             if(res.data.status) {
               let _data = JSON.parse(res.data.data)
-              this.dataInfo.total_amount = _data.total_amount
-              this.dataInfo.total_count = _data.total_count
-              this.dataInfo.list = _data.page.now_page == 1 
-                ? _data.list.concat() 
-                : this.dataInfo.list.concat(_data.list)
-              this.dataInfo.page = this.$deepCopy(_data.page)
-              //最后一页 关闭加载中 显示
-              this.showloadingInfoMore = _data.page.now_page < _data.page.total_page
+              this.dataInfo = _data
             }
             else {
               this.$message({
@@ -435,47 +346,6 @@ JGBVue.module.maintenanceStatistical = () => {
           }
           return option
         },
-        /**
-         * 汇总信息 表格排序变化
-         * @param {Object} obj {column列数据, prop排序字段, order排序方式}
-         */
-        handleInfoSortChange: function(obj) {
-          this.infoSort.prop = obj.prop
-          this.infoSort.order =  obj.order
-          this.dataInfo.page.now_page = 0
-          this.getInfo()
-        },
-        /**
-         * 汇总信息 表格排序变化
-         * @param {Object} obj {column列数据, prop排序字段, order排序方式}
-         */
-        handleDetailsSortChange: function(obj) {
-          this.detailsSort.prop = obj.prop
-          this.detailsSort.order =  obj.order
-          this.dataDetails.page.now_page = 0
-          this.detailsSelectCurrent
-            ? this.getDetails()
-            : this.getDetailsSelect(true)
-        },
-      },
-      watch: {
-        selectForm: {
-          handler: function() {
-            this.dataInfo.page.now_page = 0
-            this.getInfo()
-            this.getDetailsSelect(true)
-            this.getInfoChart()
-          },
-          deep: true
-        },
-        detailsSelectCurrent: function() {
-          this.dataDetails.page.now_page = 0
-          this.getDetails()
-        },
-        chartsType: function(n, o) {
-          this.chartInfo_chart.setOption(this.getOption(n, this.chartInfo), true)
-          this.chartDetails_chart.setOption(this.getOption(n, this.chartDetails), true)
-        }
       },
       filters: {
         summaryInfo: function(val) {
@@ -501,25 +371,33 @@ JGBVue.module.maintenanceStatistical = () => {
         },
       },
       created: function () {
-        this.getInfoChart()
-        this.getDetailsChart()
+        if(this.c_print == 'all' || this.c_print == 'info') {
+          this.getInfo()
+          this.getInfoChart()
+        }
+        if(this.c_print == 'all' || this.c_print == 'details') {
+          this.getDetails()
+          this.getDetailsChart()
+        }
       },
       mounted: function() {
-        this.chartInfo_chart = echarts.init(this.$refs.infoChart)
-        this.chartDetails_chart = echarts.init(this.$refs.detailsChart)
+        if(this.c_print == 'all' || this.c_print == 'info') {
+          this.chartInfo_chart = echarts.init(this.$refs.infoChart)
+        }
+        if(this.c_print == 'all' || this.c_print == 'details') {
+          this.chartDetails_chart = echarts.init(this.$refs.detailsChart)
+        }
       },
     })
   }
   that.init = (
     dataInfoGetUrl,
-    detailsSelectGetUrl,
     dataDetailsGetUrl,
     chartInfoGetUrl,
     chartDetailsGetUrl
   ) => {
     _this.init(
       dataInfoGetUrl,
-      detailsSelectGetUrl,
       dataDetailsGetUrl,
       chartInfoGetUrl,
       chartDetailsGetUrl

@@ -47,8 +47,8 @@
                     </el-radio-group>
                   </el-form-item>
                   <el-row type="flex" justify="end">
-                    <el-button type="" size="mini" v-on:click="btnPrint('all')">打印</el-button>
-                    <el-button type="" size="mini" v-on:click="btnExport">导出</el-button>
+                    <el-button type="" size="mini">打印</el-button>
+                    <el-button type="" size="mini">导出</el-button>
                   </el-row>
                 </el-col>
               </el-row>
@@ -59,7 +59,7 @@
           <div class="w-main-block">
             <div class="block-title">{{selectForm.type | summaryInfo}}汇总信息：</div>
             <div class="block-content">
-              <el-button class="print-btn" size="mini" v-on:click="btnPrint('info')">打印此类汇总图表</el-button>
+              <el-button class="print-btn" size="mini">打印此类汇总图表</el-button>
               <div class="content-title">
                 {{selectForm.dateRange[0] | dateChinese}}至{{selectForm.dateRange[1] | dateChinese}}
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -93,7 +93,7 @@
           <div class="w-main-block">
             <div class="block-title">{{selectForm.type | summaryInfo}}详细汇总信息：</div>
             <div class="block-content">
-              <el-button class="print-btn" size="mini" v-on:click="btnPrint('details')">打印此类汇总图表</el-button>
+              <el-button class="print-btn" size="mini">打印此类汇总图表</el-button>
               <div class="content-title">
                 <el-select v-model="detailsSelectCurrent" 
                   remote filterable placeholder="请选择"

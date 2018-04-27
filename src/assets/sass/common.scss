@@ -1658,6 +1658,18 @@ table{
 
 //维修统计报表
 .maintenanceStatistical {
+	$print-height: 50px;
+	position:relative;
+	.btn-print {
+		@include w-flex(row, nowrap, flex-end, center);
+		height:$print-height;
+		background:rgba(0,0,0,.5);
+		position:absolute;
+		top:0;
+		left:0;
+		right:0;
+		z-index:900;
+	}
 	.jgb-wrap + .jgb-wrap {
 		margin-top: 10px;
 	}

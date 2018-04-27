@@ -72,6 +72,21 @@ router.post('/get_chart_info', (req, res)=> {
 	});
 })
 
+router.post('/get_chart_details', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/maintenanceStatistical/get_chart_details.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+    jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		}).end();
+	});
+})
+
 router.post('/is_visit_list_exist', (req, res)=> {
   res.send({
     status: true,

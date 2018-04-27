@@ -13,6 +13,7 @@ JGBVue.module.maintenanceStatistical = () => {
     detailsSelectGetUrl, //获取详细汇总信息 下拉菜单项
     dataDetailsGetUrl, //获取详细汇总信息-数据 接口
     chartInfoGetUrl, //获取汇总信息-图表 接口
+    chartDetailsGetUrl //获取详细汇总信息-图表 接口
   ) => {
     that.vm = new Vue({
       el: '#app',
@@ -109,6 +110,18 @@ JGBVue.module.maintenanceStatistical = () => {
           chartInfo: {}, //汇总信息 -图表
           chartInfo_chart: {}, //echarts实例
           chartInfo_option: {}, //配置数据
+
+          chartDetails: {}, //汇总信息 -图表
+          chartDetails_chart: {}, //echarts实例
+          chartDetails_option: {}, //配置数据
+
+          barColor: [ //图表颜色
+            '#c23531','#2f4554', '#61a0a8', 
+            '#d48265', '#91c7ae','#749f83',  
+            '#ca8622', '#bda29a','#6e7074', 
+            '#546570', '#c4ccd3'
+          ],
+
         }
       },
       computed: {
@@ -117,6 +130,30 @@ JGBVue.module.maintenanceStatistical = () => {
         },
       },
       methods: {
+        /**
+         * 导出
+         */
+        btnExport: function() {
+          //to do
+        },
+        /**
+         * 打印
+         * @param {String} type 打印类型
+         */
+        btnPrint: function(type) {
+          /**
+           * print=打印类型
+           * filter=筛选条件
+           * chart=图表类型
+           * select=下拉菜单选择
+           */
+          this.$selectTab(
+            'printMaintenanceReport', 
+            '打印维修统计报表', 
+            './views/maintenanceStatistical/printData.html', 
+            `print=${type}&&filter=${JSON.stringify(this.selectForm)}&&chart=${this.chartsType}&&select=${JSON.stringify(this.detailsSelectCurrent)}`)
+
+        },
         /**
          * 获取详细汇总信息 表格数据
          */
@@ -138,6 +175,35 @@ JGBVue.module.maintenanceStatistical = () => {
               this.dataDetails.page = this.$deepCopy(_data.page)
               //最后一页 关闭加载中 显示
               this.showloadingDetailsMore = _data.page.now_page < _data.page.total_page
+            }
+            else {
+              this.$message({
+                type: 'error',
+                message: res.data.message,
+                center: true
+              })
+            };
+          }).catch(err=> {
+            console.error(err)
+            this.$message({
+              type: 'error',
+              message: err,
+              center: true
+            })
+          })
+        },
+        /**
+         * 获取详细汇总信息 图表
+         */
+        getDetailsChart: function() {
+          axios.post(chartDetailsGetUrl, {
+            filter: this.selectForm,
+            type: this.detailsSelectCurrent,
+          }).then(res=> {
+            if(res.data.status) {
+              let _data = JSON.parse(res.data.data)
+              this.chartDetails = _data
+              this.chartDetails_chart.setOption(this.getOption(this.chartsType, _data), true)
             }
             else {
               this.$message({
@@ -280,13 +346,6 @@ JGBVue.module.maintenanceStatistical = () => {
                     radius : '55%',
                     center: ['50%', '60%'],
                     data:[],
-                    itemStyle: {
-                      emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                      }
-                    }
                   }
                 ]
               }
@@ -297,7 +356,6 @@ JGBVue.module.maintenanceStatistical = () => {
                 }
                 option.series[0].data.push(item)
               })
-              return option
               break
             case 'histogram':
               option = {
@@ -322,43 +380,21 @@ JGBVue.module.maintenanceStatistical = () => {
                   name: '数量',
                   type: 'value'
                 },
-                // series: [{
-                //   data: [],
-                //   type: 'bar',
-                //   // itemStyle: {
-                //   //   normal: {
-                //   //     color: new echarts.graphic.LinearGradient(
-                //   //       0, 0, 0, 1,
-                //   //       [
-                //   //         {offset: 0, color: '#83bff6'},
-                //   //         {offset: 0.5, color: '#188df0'},
-                //   //         {offset: 1, color: '#188df0'}
-                //   //       ]
-                //   //     )
-                //   //   },
-                //   // }
-                // }]
-                series: []
+                series: [{
+                  data: [],
+                  type: 'bar',
+                }]
               }
               data.forEach((item, index)=> {
                 option.xAxis.data.push(item.name)
-                option.legend.data.push(item.name)
-                // item.tooltip = { 
-                //   formatter: `${item.name}单数：${item.value}，占比${item.percent}，金额${item.amount}元` 
-                // }
-                // option.series[0].data.push(item)
-                let opt = {}
-                opt.type = 'bar'
-                opt.data = item.value
-                opt.name = item.name
-                opt.tooltip = { 
+                item.tooltip = { 
                   formatter: `${item.name}单数：${item.value}，占比${item.percent}，金额${item.amount}元` 
                 }
-                opt.barWidth = '100%'
-                // opt.barGap = `${index*10}%`
-                option.series.push(opt)          
+                item.itemStyle = {
+                  color : this.barColor[index]
+                }
+                option.series[0].data.push(item)     
               })
-              return option
               break
             case 'bar':
               option = {
@@ -382,30 +418,22 @@ JGBVue.module.maintenanceStatistical = () => {
                 series: [{
                   data: [],
                   type: 'bar',
-                  itemStyle: {
-                    normal: {
-                      color: new echarts.graphic.LinearGradient(
-                        0, 0, 0, 1,
-                        [
-                          {offset: 0, color: '#83bff6'},
-                          {offset: 0.5, color: '#188df0'},
-                          {offset: 1, color: '#188df0'}
-                        ]
-                      )
-                    },
-                  }
                 }]
               }
-              data.forEach(item=> {
-                option.yAxis.data.push(item.name)
+              for(let i = data.length-1; i >= 0; i--) {
+                let item = data[i]
+                option.yAxis.data.push(data[i].name)
                 item.tooltip = { 
                   formatter: `${item.name}单数：${item.value}，占比${item.percent}，金额${item.amount}元` 
                 }
+                item.itemStyle = {
+                  color : this.barColor[i]
+                }
                 option.series[0].data.push(item)
-              })
-              return option
+              }
               break
           }
+          return option
         },
         /**
          * 汇总信息 表格排序变化
@@ -446,6 +474,7 @@ JGBVue.module.maintenanceStatistical = () => {
         },
         chartsType: function(n, o) {
           this.chartInfo_chart.setOption(this.getOption(n, this.chartInfo), true)
+          this.chartDetails_chart.setOption(this.getOption(n, this.chartDetails), true)
         }
       },
       filters: {
@@ -472,11 +501,12 @@ JGBVue.module.maintenanceStatistical = () => {
         },
       },
       created: function () {
-        //to do
         this.getInfoChart()
+        this.getDetailsChart()
       },
       mounted: function() {
         this.chartInfo_chart = echarts.init(this.$refs.infoChart)
+        this.chartDetails_chart = echarts.init(this.$refs.detailsChart)
       },
     })
   }
@@ -484,13 +514,15 @@ JGBVue.module.maintenanceStatistical = () => {
     dataInfoGetUrl,
     detailsSelectGetUrl,
     dataDetailsGetUrl,
-    chartInfoGetUrl
+    chartInfoGetUrl,
+    chartDetailsGetUrl
   ) => {
     _this.init(
       dataInfoGetUrl,
       detailsSelectGetUrl,
       dataDetailsGetUrl,
-      chartInfoGetUrl
+      chartInfoGetUrl,
+      chartDetailsGetUrl
     )
   }
   return that
