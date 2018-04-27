@@ -4,6 +4,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>维修合同</title>
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" href="../../wangEditor-3.1.1/wangEditor.css">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
 </head>
 <body>
@@ -14,38 +15,40 @@
 					<nav class="jgb-nav">
 						<div class="pull-left nav-title">
 							工单号：{{ order_id }}
+							<el-button size="mini">转维修</el-button>
 						</div>
 						<el-button-group class="pull-right">
-							<el-button icon="el-icon-plus" v-on:click="addContractDialogVisible = true" size="mini">新增</el-button>
-							<el-button size="mini" v-on:click="templateVisible = true">报价模板</el-button>
+							<el-button icon="el-icon-plus" v-on:click="addDialogVisible = true" size="mini">新增</el-button>
 							<el-button v-on:click="exportCilck" size="mini">导出</el-button>
 							<el-button size="mini" :disabled="selectedRows.length !== 1">打印</el-button>
 							<el-button :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
+							<!-- <el-button size="mini" v-on:click="templateVisible = true">合作模板</el-button> -->
 						</el-button-group>
 					</nav>
 					<el-table border :data="table" ref="table" sortable v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem" v-loading="loadingDetailInfo" :row-class-name="rowStatusClassName">
 						<el-table-column type="selection"></el-table-column>
 						<el-table-column label="序号" width="50px" type="index"></el-table-column>
-						<el-table-column label="操作" width="80px">
+						<el-table-column label="操作">
 							<template slot-scope="scope">
 								<el-button-group>
 									<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
+									<el-button size="mini" v-if="scope.row.status !== 0">上传盖章合同</el-button>
 								</el-button-group>
 							</template>
 						</el-table-column>
 						<el-table-column label="审核" width="150px">
 							<template slot-scope="scope">
 								<el-button-group>
-									<el-button size="mini" v-on:click="btnPass(scope.row)">通过</el-button>
-									<el-button size="mini" v-on:click="btnRefuse(scope.row)">不通过</el-button>
+									<el-button size="mini" v-on:click="btnPass(scope.row)" :disabled="scope.row.status !== 0">通过</el-button>
+									<el-button size="mini" v-on:click="btnRefuse(scope.row)" :disabled="scope.row.status !== 0">不通过</el-button>
 								</el-button-group>
 							</template>
 						</el-table-column>
-						<el-table-column label="报价日期" prop="date"></el-table-column>
-						<el-table-column label="报价人" prop="personnel"></el-table-column>
-						<el-table-column label="标题" prop="title"></el-table-column>
-						<el-table-column label="客户名称" prop="clientName"></el-table-column>
-						<el-table-column label="设备名称" prop="equipmentName"></el-table-column>
+						<el-table-column label="合同标题" prop="title"></el-table-column>
+						<el-table-column label="合同编号" prop="number"></el-table-column>
+						<el-table-column label="甲方名称" prop="partyAName"></el-table-column>
+						<el-table-column label="乙方名称" prop="partyBName"></el-table-column>
+						<el-table-column label="盖章合同文件" prop="file"></el-table-column>
 						<el-table-column label="状态" prop="status">
 							<template slot-scope="scope">
 								{{ scope.row.status | statusFilter }}
@@ -58,325 +61,6 @@
 		<div class="wrap_footer">
 			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
 		</div>
-		<!-- 新增报价 -->
-		<el-dialog :visible.sync="addContractDialogVisible" title="新增报价">
-			<el-form ref="addForm" label-position="right" label-width="120px" :model="addForm" :rules="formRules">
-				<el-row :gutter="4">
-					<el-col :span="24">
-						<el-form-item label="公司名称" prop="companyName">
-							<el-input v-model="addForm.companyName" class="exclusive"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="24">
-						<el-form-item label="标题" prop="title">
-							<el-input v-model="addForm.title" class="exclusive"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="客户名称" prop="clientName">
-							<el-select v-model="addForm.clientName" placeholder="请选择客户" clearable remote filterable placeholder="请选择" :remote-method="remoteClient" :loading="loading">
-								<el-option v-for="co in clientOption" :key="co.value" :value="co.value" :label="co.label"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="报价日期" prop="date">
-							<el-date-picker v-model="addForm.date" type="date" placeholder="选择日期"></el-date-picker>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="报价人" prop="personnel">
-							<el-input v-model="addForm.personnel"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="审核人" prop="equipmentNumber">
-							<el-input v-model="addForm.equipmentNumber" disabled></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="货币单位" prop="monetaryUnit">
-							<el-input v-model="addForm.monetaryUnit" disabled></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="报价是否含税" prop="specificationModel">
-							<el-input v-model="addForm.specificationModel"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="选择报价单模板" prop="equipmentBrand">
-							<el-select v-model="addForm.equipmentBrand" v-on:focus="focusEquipmentBrandSelect">
-								<el-option v-for="eb in equipmentBrandOption" :key="eb.label" :label="eb.label" :value="eb.value"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="税率" prop="税率">
-							<el-input v-model="addForm.税率">
-								<template slot="append">
-									%
-								</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<h3>设备基本信息</h3>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="设备名称" prop="设备名称">
-							<el-input v-model="addForm.设备名称"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="规格型号" prop="规格型号">
-							<el-input v-model="addForm.规格型号"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="品牌" prop="brand">
-							<el-input v-model="addForm.brand"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="单位" prop="unit">
-							<el-input v-model="addForm.unit"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="序列号" prop="serialNumber">
-							<el-select v-model="addForm.serialNumber" allow-create filterable v-on:focus="focusUnitMeasurementSelect">
-								<el-option v-for="um in unitMeasurementOption" :key="um.label" :label="um.label" :value="um.value"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="24">
-						<el-form-item prop="remark" label="故障描述">
-							<el-input type="textarea" v-model="addForm.remark" class="exclusive"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-table ref="addFormTable" border :data="addForm.table" v-on:row-click="addFormTableRowClick" style="margin: 0;">
-					<el-table-column label="费用项" prop="costItem" width="122px">
-						<template slot-scope="scope">
-							<div v-if="scope.row.prop === 'accessoriesFee'">
-								{{ scope.row.costItem + (scope.$index + 1) }}
-							</div>
-							<div v-else>
-								{{ scope.row.costItem }}
-							</div>
-							<el-button-group>
-								<el-button size="mini" icon="el-icon-plus"></el-button>
-								<el-button size="mini" icon="el-icon-delete" type="danger"></el-button>
-							</el-button-group>
-						</template>
-					</el-table-column>
-					<el-table-column label="配件" prop="accessories" width="148px">
-						<template slot-scope="scope">
-							<el-select v-if="scope.row.prop === 'accessoriesFee'" v-model="scope.row.accessoriesValue">
-								<el-option v-for="acs in accessoriesOption" :key="acs.label" :value="acs.value" :label="acs.label"></el-option>
-							</el-select>
-							<div v-else-if="!scope.row.editFlag">{{ scope.row.accessories }}</div>
-							<div v-else>
-								<el-input v-model="scope.row.accessories"></el-input>
-							</div>
-						</template>
-					</el-table-column>
-					<el-table-column label="单位" prop="unit" width="148px">
-						<template slot-scope="scope">
-							<div v-if="!scope.row.editFlag">{{ scope.row.unit }}</div>
-							<div v-else>
-								<el-input v-model="scope.row.unit"></el-input>
-							</div>
-						</template>
-					</el-table-column>
-					<el-table-column label="数量" prop="quantity" width="148px">
-						<template slot-scope="scope">
-							<div v-if="!scope.row.editFlag">{{ scope.row.quantity }}</div>
-							<div v-else>
-								<el-input v-model="scope.row.quantity" type="number" min="0"></el-input>
-							</div>
-						</template>
-					</el-table-column>
-					<el-table-column label="金额" prop="money" width="148px">
-						<template slot-scope="scope">
-							<div v-if="scope.row.total">
-								小写{{}}
-							</div>
-							<div v-else>
-								{{ (scope.row.accessoriesValue | 0)*scope.row.quantity }}
-							</div>
-						</template>
-					</el-table-column>
-				</el-table>
-				<el-row :gutter="4">
-					<el-col :span="24">
-						<table class="table-style" style="border-top: 0;">
-							<thead>
-								<th>费用项</th>
-								<th>配件</th>
-								<th>单位</th>
-								<th>数量</th>
-								<th>金额</th>
-							</thead>
-							<tbody>
-								<tr v-for="(tt, index) in addForm.tempTable" :key="index">
-									<th>{{ tt.costItem }}</th>
-									<td colspan="3">
-										<jgb-empty-cell />
-									</td>
-									<td>
-										<el-input v-model="tt.money" type="number" min="0"></el-input>
-									</td>
-								</tr>
-								<tr>
-									<th>合计费用</th>
-									<td>大写</td>
-									<td>{{ countTotalUpper }}</td>
-									<td>小写</td>
-									<td>{{ countTotal.toFixed(2) }}</td>
-								</tr>
-							</tbody>
-						</table>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="客户方联系人" prop="clientLinkman">
-							<el-input v-model="addForm.clientLinkman"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="我方联系人" prop="我方联系人">
-							<el-input v-model="addForm.我方联系人"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="手机号码" prop="手机号码">
-							<el-input v-model="addForm.手机号码"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="座机号码" prop="座机号码">
-							<el-input v-model="addForm.座机号码"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-				<el-row :gutter="4">
-					<el-col :span="12">
-						<el-form-item label="联系地址" prop="联系地址">
-							<el-input v-model="addForm.联系地址"></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :span="12">
-						<el-form-item label="邮编" prop="邮编">
-							<el-input v-model="addForm.邮编"></el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
-			</el-form>
-			<div slot="footer">
-				<el-button v-on:click="zanCunOffer('addForm')">暂存</el-button>
-				<el-button v-on:click="saveAddOffer('addForm')">提交审核</el-button>
-				<el-button v-on:click="addContractDialogVisible = false">取消</el-button>
-			</div>
-		</el-dialog>
-		<!-- 工单详细信息 -->
-		<transition name="slide-fade">
-			<div class="details-wrap" v-show="isUnfold">
-				<div class="details-inner" v-loading="loadingDetailInfo">
-					<el-row class="row-border">
-						<div class="title text-center">
-							<h3>工单详细信息</h3>
-						</div>
-						<el-col v-for="item in infoForm.info1" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.value">
-							<div>{{ item.name }}</div>
-							<div>{{ item.value }}</div>
-						</el-col>
-						<el-table ref="addFormTable" border :data="infoForm.table" v-on:row-click="addFormTableRowClick" style="margin: 0;">
-							<el-table-column label="费用项" prop="costItem" width="128px"></el-table-column>
-							<el-table-column label="配件" prop="accessories" width="128px"></el-table-column>
-							<el-table-column label="单位" prop="unit" width="128px"></el-table-column>
-							<el-table-column label="数量" prop="quantity" width="128px"></el-table-column>
-							<el-table-column label="金额" prop="money" width="128px">
-								<template slot-scope="scope">
-									<div v-if="scope.row.total">
-										小写{{}}
-									</div>
-									<div v-else>
-										{{ (scope.row.accessoriesValue | 0)*scope.row.quantity }}
-									</div>
-								</template>
-							</el-table-column>
-						</el-table>
-						<el-row :gutter="4">
-							<el-col :span="24">
-								<table class="table-style" style="border-top: 0;">
-									<thead>
-										<th>费用项</th>
-										<th>配件</th>
-										<th>单位</th>
-										<th>数量</th>
-										<th>金额</th>
-									</thead>
-									<tbody>
-										<tr v-for="(tt, index) in infoForm.tempTable" :key="index">
-											<th>{{ tt.costItem }}</th>
-											<td colspan="3">
-												<jgb-empty-cell />
-											</td>
-											<td>
-												{{ tt.money }}
-											</td>
-										</tr>
-										<tr>
-											<th>合计费用</th>
-											<td>大写</td>
-											<td>{{ infoForm.upper }}</td>
-											<td>小写</td>
-											<td>{{ infoForm.lower }}</td>
-										</tr>
-									</tbody>
-								</table>
-							</el-col>
-						</el-row>
-						<el-col v-for="item in infoForm.info2" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.value">
-							<div>{{ item.name }}</div>
-							<div>{{ item.value }}</div>
-						</el-col>
-					</el-row>
-					<div class="toggle-button-wrap" v-on:click="toggleInfo">
-						<span class="jgbvue_arrow_icon" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -9px -85px;position: absolute;top: 50%;right: 0;transform: translateY(-50%);"></span>
-						<span class="jgbvue_arrow_line" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -123px -2px;margin-left: 16px;"></span>
-					</div>
-					<div class="waterMark-wrap">
-						<div class="no-pass waterMark" v-if="infoForm.status === 0">
-							不通过
-							<div class="note required red">
-								不通过原因: {{ infoForm.note === undefined ? '没有原因' :  infoForm.note }}
-							</div>
-						</div>
-						<div class="pass waterMark" v-else-if="infoForm.status === 1">通过</div>
-					</div>
-				</div>
-			</div>
-		</transition>
 		<!-- 导出 -->
 		<el-dialog :visible.sync="exportVisible" title="导出">
 			<p>
@@ -388,60 +72,96 @@
 				<el-button v-on:click="exportVisible = false">关闭</el-button>
 			</div>
 		</el-dialog>
-		<!-- 报价单模板 -->
-		<el-dialog :visible.sync="templateVisible" title="报价模板">
-			<nav>
-				<el-button-group class="pull-right">
-					<el-button icon="el-icon-plus" size="mini" v-on:click="addTemplateFormVisible = true">新增</el-button>
-					<el-button icon="el-icon-delete" type="danger" size="mini" :disabled="selectTempleRows.length === 0" v-on:click="removeTemplateTable">删除</el-button>
-				</el-button-group>
-			</nav>
-			<el-table border ref="templateTable" :data="templateTable" v-on:row-click="rowClickTemplateTable" v-on:select-all="selectAllTemplateTable" v-on:select="selectItemTemplateTable">
-				<el-table-column type="selection"></el-table-column>
-				<el-table-column label="操作">
-					<template slot-scope="scope">
-						<el-button-group>
-							<el-button size="mini" v-on:click="handleEditTemplate(scope.$index, scope.row)">编辑</el-button>
-							<el-button size="mini" type="danger" v-on:click="handleDeleteTemplate(scope.$index, scope.row)">删除</el-button>
-						</el-button-group>
-					</template>
-				</el-table-column>
-				<el-table-column type="index" label="序号" width="50px"></el-table-column>
-				<el-table-column label="模板名称" prop="name"></el-table-column>
-				<el-table-column label="模板字段" prop="field"></el-table-column>
-				<el-table-column label="状态" prop="status">
-					<template slot-scope="scope">
-						<el-switch v-model="scope.row.status" disabled></el-switch>
-					</template>
-				</el-table-column>
-				<el-table-column label="首选模板" prop="isPreferred">
-					<template slot-scope="scope">
-						{{ scope.row.isPreferred ? '是' : '否' }}
-					</template>
-				</el-table-column>
-			</el-table>
+		<!-- 新建 -->
+		<el-dialog :visible.sync="addDialogVisible" title="新增维修合同">
+			<el-form ref="addForm" label-position="right" label-width="120px" :model="addForm" :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item label="合同标题" prop="title">
+							<el-input v-model="addForm.title" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="合同编号" prop="title">
+							<el-input v-model="addForm.title" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方名称" prop="partyAName">
+							<el-input v-model="addForm.partyAName"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方名称" prop="partyBName">
+							<el-input v-model="addForm.partyBName"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方地址" prop="partyAAddress">
+							<el-input v-model="addForm.partyAAddress"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方地址" prop="partyBAddress">
+							<el-input v-model="addForm.partyBAddress"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方联系人" prop="partyALinkman">
+							<el-input v-model="addForm.partyALinkman"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方联系人" prop="partyBLinkman">
+							<el-input v-model="addForm.partyBLinkman"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方联系电话" prop="partyAPhone">
+							<el-input v-model="addForm.partyAPhone"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方联系电话" prop="partyBPhone">
+							<el-input v-model="addForm.partyBPhone"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方传真" prop="partyAFax">
+							<el-input v-model="addForm.partyAFax"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方传真" prop="partyBFax">
+							<el-input v-model="addForm.partyBFax"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<div id="addEditor"></div>
+			</el-form>
 		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../wangEditor-3.1.1/wangEditor.js"></script>
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/workOrderManagement/maintenanceContract.js"></script>
 <script type="text/javascript">
 	/**
 	 * 搜索
-	 * 获取option
-	 * 获取option
-	 * 保存/提交
-	 * 作废
-	 * 获取导出
-	 * 删除
-	 * 获取table
-	 * 默认列设置
-	 * 列设置完成
-	 * 通过/不通过
 	 */
-	JGBVue.module.maintenanceContract().init('/maintenanceOffer/search', '/maintenanceOffer/template', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo', '/common/data_give_out', '/clientInfo/exportForm', '/common/data_delete', '/maintenanceOffer/getTable', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/common/btn');
+	JGBVue.module.maintenanceContract().init('/maintenanceContract/search', '/common/data_give_out', '/clientInfo/exportForm', '/common/btn');
 </script>
 </html>

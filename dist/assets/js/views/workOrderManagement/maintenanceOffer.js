@@ -563,11 +563,16 @@ JGBVue.module.maintenanceOffer = ()=> {
 					this.loadingDetailInfo = true;
 					axios.post(btnUrl, row).then((res)=> {
 						if(res.data.status) {
+							for(let i = 0; i < this.table.length; i++ ) {
+								if(row === this.table[i]) {
+									this.table[i].status = 1
+								}
+							}
+							this.loadingDetailInfo = false;
 							this.$message({
 								type: 'success',
 								message: res.data.message
 							})
-							this.loadingDetailInfo = false;
 						}
 					})
 				},
@@ -581,6 +586,11 @@ JGBVue.module.maintenanceOffer = ()=> {
 					}).then(({ value })=> {
 						axios.post(btnUrl, { row: row, value: value }).then((res)=> {
 							if(res.data.status) {
+								for(let i = 0; i < this.table.length; i++ ) {
+									if(row === this.table[i]) {
+										this.table[i].status = 2
+									}
+								}
 								_self.$message({
 									type: 'success',
 									message: res.data.message
@@ -644,10 +654,12 @@ JGBVue.module.maintenanceOffer = ()=> {
 			filters: {
 				statusFilter(val) {
 					if(val === 0) {
-						return '待报价'
-					}else if(val !== 0&&val !== -1) {
-						return '报价中'
-					}else if(val === -1){
+						return '待审核'
+					}else if(val === 1) {
+						return '审核通过'
+					}else if(val === 2){
+						return '审核不通过'
+					}else{
 						return '作废'
 					}
 				}

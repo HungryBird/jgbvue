@@ -36,8 +36,8 @@
 						<el-table-column label="审核" width="150px">
 							<template slot-scope="scope">
 								<el-button-group>
-									<el-button size="mini" v-on:click="btnPass(scope.row)">通过</el-button>
-									<el-button size="mini" v-on:click="btnRefuse(scope.row)">不通过</el-button>
+									<el-button size="mini" v-on:click="btnPass(scope.row)" :disabled="scope.row.status !== 0">通过</el-button>
+									<el-button size="mini" v-on:click="btnRefuse(scope.row)" :disabled="scope.row.status !== 0">不通过</el-button>
 								</el-button-group>
 							</template>
 						</el-table-column>
@@ -630,9 +630,12 @@
 <script type="text/javascript">
 	/**
 	 * 搜索
-	 * 获取option
-	 * 获取option
+	 * 获得template的table数据
+	 * 获取客户option
+	 * 获取brand的option
+	 * 获取Accessories的option
 	 * 保存/提交
+	 * 获取详细信息页面
 	 * 作废
 	 * 获取导出
 	 * 删除

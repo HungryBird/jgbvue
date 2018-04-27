@@ -712,8 +712,14 @@ JGBVue.module.offerAndContract = ()=> {
 			            `info=${encodeURI(JSON.stringify(info))}`
 					)
 				},
-				handleContract() {
-					//
+				handleContract(index, row) {
+					let info = this.$deepCopy(row);
+					this.$selectTab(
+						'maintenanceContract', 
+			            '维修合同', 
+			            './views/workOrderManagement/maintenanceContract.html',
+			            `info=${encodeURI(JSON.stringify(info))}`
+					)
 				}
 			},
 			watch: {
