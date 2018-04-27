@@ -6,7 +6,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+	_this.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, btnUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -557,6 +557,48 @@ JGBVue.module.maintenanceOffer = ()=> {
 						})
 					})
 				},
+				btnPass(row) {
+					this.$refs.table.clearSelection();
+					this.selectedRows = [];
+					this.loadingDetailInfo = true;
+					axios.post(btnUrl, row).then((res)=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							this.loadingDetailInfo = false;
+						}
+					})
+				},
+				btnRefuse(row) {
+					let _self = this;
+					this.$refs.table.clearSelection();
+					this.selectedRows = [];
+					_self.$prompt('不通过原因?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消'
+					}).then(({ value })=> {
+						axios.post(btnUrl, { row: row, value: value }).then((res)=> {
+							if(res.data.status) {
+								_self.$message({
+									type: 'success',
+									message: res.data.message
+								});
+							}
+						}).catch(function(err) {
+							_self.$message({
+							  type: 'error',
+							  message: res.data.message || err
+							});
+						})
+					}).catch(() => {
+						_self.$message({
+							type: 'info',
+							message: '已取消'
+						});
+					});
+				}
 			},
 			watch: {
 				//
@@ -613,8 +655,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
-		_this.init(searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)
+	that.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, btnUrl)=> {
+		_this.init(searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, btnUrl)
 	}
 
 	return that;

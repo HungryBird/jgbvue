@@ -36,8 +36,8 @@
 						<el-table-column label="审核" width="150px">
 							<template slot-scope="scope">
 								<el-button-group>
-									<el-button size="mini">通过</el-button>
-									<el-button size="mini">不通过</el-button>
+									<el-button size="mini" v-on:click="btnPass(scope.row)">通过</el-button>
+									<el-button size="mini" v-on:click="btnRefuse(scope.row)">不通过</el-button>
 								</el-button-group>
 							</template>
 						</el-table-column>
@@ -640,6 +640,6 @@
 	 * 默认列设置
 	 * 列设置完成
 	 */
-	JGBVue.module.maintenanceOffer().init('/maintenanceOffer/search', '/maintenanceOffer/template', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo', '/common/data_give_out', '/clientInfo/exportForm', '/common/data_delete', '/maintenanceOffer/getTable', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete');
+	JGBVue.module.maintenanceOffer().init('/maintenanceOffer/search', '/maintenanceOffer/template', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo', '/common/data_give_out', '/clientInfo/exportForm', '/common/data_delete', '/maintenanceOffer/getTable', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/common/btn');
 </script>
 </html>

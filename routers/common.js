@@ -39,11 +39,18 @@ router.post('/switch', (req, res)=> {
 });
 
 router.post('/search', (req, res)=> {
-	res.sedn({
+	res.send({
 		status: true,
 		message: 'success'
 	})
 });
+
+router.post('/btn', (req, res)=> {
+	res.send({
+		status: true,
+		message: 'success'
+	})
+})
 
 router.post('/getEmployee', (req, res)=> {
 	console.log(req.body.value)
