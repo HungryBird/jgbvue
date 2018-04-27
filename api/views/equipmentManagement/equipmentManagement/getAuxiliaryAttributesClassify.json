@@ -1,5 +1,6 @@
 [
 	{
+		"label": "颜色",
 		"value": "color",
 		"option": [
 			{
@@ -17,6 +18,7 @@
 		]
 	},
 	{
+		"label": "尺寸",
 		"value": "size",
 		"option": [
 			{

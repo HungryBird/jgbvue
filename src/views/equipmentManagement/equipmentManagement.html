@@ -290,8 +290,9 @@
 							<dl>
 								<dd v-for="(aa, index) in auxiliaryAttributesClassify" :key="aa.value">
 									<label>
-										<el-checkbox :label="aa.value" v-model="addForm.addAuxiliaryAttributesClassify">{{  }}</el-checkbox>
-										<el-select v-model="addForm.addAuxiliaryAttributesClassifyOption[index].value" style="padding-top: 5px;">
+										<!-- <el-checkbox :label="aa.value" v-model="addForm.auxiliaryAttributesClassify[aa.value]" >{{  }}</el-checkbox> -->
+										<span>{{ aa.label }}</span>
+										<el-select v-model="addForm.auxiliaryAttributesClassify[aa.value]" style="padding-top: 5px;" v-on:change="test" clearable>
 											<el-option v-for="op in aa.option" :key="op.value" :label="op.label" :value="op.value"></el-option>
 										</el-select>
 									</label>

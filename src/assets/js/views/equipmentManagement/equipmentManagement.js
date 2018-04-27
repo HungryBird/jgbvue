@@ -70,14 +70,12 @@ JGBVue.module.equipmentManagement = ()=> {
 					addForm: {
 						uniqueCode: null,
 						warningWarrantyMethod: [],
-						addAuxiliaryAttributesClassify: [],
-						addAuxiliaryAttributesClassifyOption: []
+						auxiliaryAttributesClassify: {},
 					},
 					editForm: {
 						uniqueCode: null,
 						warningWarrantyMethod: [],
-						addAuxiliaryAttributesClassify: [],
-						addAuxiliaryAttributesClassifyOption: []
+						auxiliaryAttributesClassify: {},
 					},
 					addSetMemberVisible: false,
 					addSetSalesVisible: false,
@@ -127,12 +125,12 @@ JGBVue.module.equipmentManagement = ()=> {
 					axios.get(getAuxiliaryAttributesClassifyUrl).then((res)=> {
 						if(res.data.status) {
 							this.auxiliaryAttributesClassify = JSON.parse(res.data.data);
-							this.auxiliaryAttributesClassify.forEach((item)=> {
+							/*this.auxiliaryAttributesClassify.forEach((item)=> {
 								let obj = {};
 								obj.value = '';
 								_self.addForm.addAuxiliaryAttributesClassifyOption.push(obj);
 								_self.editForm.addAuxiliaryAttributesClassifyOption.push(obj);
-							})
+							})*/
 						}
 					})
 				},
@@ -802,9 +800,16 @@ JGBVue.module.equipmentManagement = ()=> {
 						'equipmentManagementPrint', 
 						'打印设备管理', 
 						'./views/equipmentManagement/equipmentManagementPrint.html', 
-						`url=${printListUrl}`)
+						`url=${printListUrl}`
+					)
+				},
+				test() {
+					console.log('addForm: ', this.addForm)
+					for(key in this.addForm.auxiliaryAttributesClassify) {
+						console.log('key: ', key)
+						console.log('keyIsNull: ', this.addForm.auxiliaryAttributesClassify[key]=='')
 					}
-					//console.log(printListUrl)
+				}
 			},
 			watch: {
 				addCheckedSalesMember(newVal) {
