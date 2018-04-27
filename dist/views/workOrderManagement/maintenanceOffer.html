@@ -36,8 +36,8 @@
 						<el-table-column label="审核" width="150px">
 							<template slot-scope="scope">
 								<el-button-group>
-									<el-button size="mini">通过</el-button>
-									<el-button size="mini">不通过</el-button>
+									<el-button size="mini" v-on:click="btnPass(scope.row)" :disabled="scope.row.status !== 0">通过</el-button>
+									<el-button size="mini" v-on:click="btnRefuse(scope.row)" :disabled="scope.row.status !== 0">不通过</el-button>
 								</el-button-group>
 							</template>
 						</el-table-column>
@@ -422,7 +422,7 @@
 			</el-table>
 		</el-dialog>
 		<!-- 新增报价表单模板 -->
-		<el-dialog :visible.sync="addTemplateFormVisible" title="新增报价表单模板">
+		<el-dialog :visible.sync="addTemplateFormVisible" title="新增报价表单模板" ref="addTemplateForm">
 			<el-form :model="addTemplateForm" :rules="formRules" ref="addTemplateForm">
 				<el-row :gutter="4">
 					<el-col :span="12">
@@ -433,15 +433,15 @@
 					<el-col :span="12">
 						<el-form-item label="选择表单字段">
 							<el-button-group>
-								<el-button v-on:click="showColumnSetting = true">列设置</el-button>
-								<el-button>行设置</el-button>
+								<el-button v-on:click="addShowColumnSetting = true">列设置</el-button>
+								<el-button v-on:click="addShowRowSetting = true">行设置</el-button>
 							</el-button-group>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
-						<el-form-item prop="name" label="是否启用">
+						<el-form-item prop="status" label="是否启用">
 							<el-switch v-model="addTemplateForm.status"></el-switch>
 						</el-form-item>
 					</el-col>
@@ -473,7 +473,7 @@
 								<th style="border-right: 1px solid #ebeef5;">金额</th>
 							</thead>
 							<tbody>
-								<tr v-for="(tt, index) in addForm.tempTable" :key="index">
+								<tr v-for="(tt, index) in addForm.tempTable" :key="index" v-if="tt.enable">
 									<th>{{ tt.costItem }}</th>
 									<td :colspan="colspan">
 										<jgb-empty-cell />
@@ -493,17 +493,132 @@
 				</el-row>
 			</el-form>
 			<div slot="footer">
-				<jgb-form-footer v-loading="loading" v-on:save="saveAddTemplateForm" v-on:close="addTemplateFormVisible = false"></jgb-form-footer>
+				<jgb-form-footer v-loading="loading" v-on:save="saveAddTemplateForm('addTemplateForm')" v-on:close="addTemplateFormVisible = false"></jgb-form-footer>
 			</div>
 		</el-dialog>
-		<!-- 列设置 -->
-		<el-dialog :visible.sync="showColumnSetting">
-	        <div class="title" slot="title">列设置</div>
+		<!-- 新增模板-列设置 -->
+		<el-dialog :visible.sync="addShowColumnSetting">
+	        <div class="title" slot="title">新增列设置</div>
 	        <jgb-column-setting v-if="addTemplateForm.header.length" v-model="addTemplateForm.header"></jgb-column-setting>
 	        <div slot="footer">
-	            <el-button v-on:click="btnColumnSettingReset">恢复默认设置</el-button>
-	          	<el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
+	            <el-button v-on:click="addBtnColumnSettingReset">恢复默认设置</el-button>
+	          	<el-button type="primary" v-on:click="addBtnColumnSettingComplete">完成</el-button>
 	        </div>
+	    </el-dialog>
+	    <!-- 新增模板-行设置 -->
+	    <el-dialog :visible.sync="addShowRowSetting" title="报价单模板行设置">
+	    	<el-table border ref="addRowSettingTable" :data="addForm.tempTable" :show-header="false">
+	    		<el-table-column prop="costItem"></el-table-column>
+	    		<el-table-column prop="enable">
+	    			<template slot-scope="scope">
+	    				<el-switch v-model="scope.row.enable"></el-switch>
+	    			</template>
+	    		</el-table-column>
+	    	</el-table>
+	    	<div slot="footer">
+	    		<el-button v-on:click="addBtnRowSettingComplete">确定</el-button>
+	    		<el-button v-on:click="addShowColumnSetting = false">取消</el-button>
+	    	</div>
+	    </el-dialog>
+
+	    <!-- 编辑报价表单模板 -->
+		<el-dialog :visible.sync="editTemplateFormVisible" title="编辑报价表单模板" ref="editTemplateForm">
+			<el-form :model="editTemplateForm" :rules="formRules" ref="editTemplateForm">
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item prop="name" label="模板名称">
+							<el-input v-model="editTemplateForm.name"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="选择表单字段">
+							<el-button-group>
+								<el-button v-on:click="editShowColumnSetting = true">列设置</el-button>
+								<el-button v-on:click="editShowRowSetting = true">行设置</el-button>
+							</el-button-group>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item prop="status" label="是否启用">
+							<el-switch v-model="editTemplateForm.status"></el-switch>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="首选模板">
+							<el-switch v-model="editTemplateForm.isPreferred"></el-switch>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<h3>表单字段配置</h3>
+				<el-table :data="editTemplateForm.data" border ref="editTemplateFormTable" style="margin-bottom: 0;">
+					<el-table-column v-for="(hd, index) in editTemplateForm.header" :key="index" prop="hd.prop" :label="hd.label">
+						<template slot-scope="scope">
+							<div v-if="index === 0">
+								{{ scope.row[hd.prop] }}
+							</div>
+							<el-switch v-else-if="scope.row.type === 'switch'" v-model="scope.row[hd.prop]"></el-switch>
+							<el-input v-else v-model="scope.row[hd.prop]"></el-input>
+						</template>
+					</el-table-column>
+				</el-table>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<table class="table-style" style="border-top: 0;">
+							<thead>
+								<th v-for="(hd, index) in editTemplateForm.header" v-if="hd.enable">
+									{{ hd.label }}
+								</th>
+								<th style="border-right: 1px solid #ebeef5;">金额</th>
+							</thead>
+							<tbody>
+								<tr v-for="(tt, index) in addForm.tempTable" :key="index" v-if="tt.enable">
+									<th>{{ tt.costItem }}</th>
+									<td :colspan="colspan">
+										<jgb-empty-cell />
+									</td>
+									<td style="border-right: 1px solid #ebeef5;"></td>
+								</tr>
+								<tr>
+									<td>合计费用</td>
+									<td>大写</td>
+									<td :colspan="colspan - 2"></td>
+									<td>小写</td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</el-col>
+				</el-row>
+			</el-form>
+			<div slot="footer">
+				<jgb-form-footer v-loading="loading" v-on:save="saveEditTemplateForm('editTemplateForm')" v-on:close="editTemplateFormVisible = false"></jgb-form-footer>
+			</div>
+		</el-dialog>
+		
+		<el-dialog :visible.sync="editShowColumnSetting">
+	        <div class="title" slot="title">编辑列设置</div>
+	        <jgb-column-setting v-if="editTemplateForm.header.length" v-model="editTemplateForm.header"></jgb-column-setting>
+	        <div slot="footer">
+	            <el-button v-on:click="editBtnColumnSettingReset">恢复默认设置</el-button>
+	          	<el-button type="primary" v-on:click="editBtnColumnSettingComplete">完成</el-button>
+	        </div>
+	    </el-dialog>
+	    
+	    <el-dialog :visible.sync="editShowRowSetting" title="编辑报价单模板行设置">
+	    	<el-table border ref="editRowSettingTable" :data="addForm.tempTable" :show-header="false">
+	    		<el-table-column prop="costItem"></el-table-column>
+	    		<el-table-column prop="enable">
+	    			<template slot-scope="scope">
+	    				<el-switch v-model="scope.row.enable"></el-switch>
+	    			</template>
+	    		</el-table-column>
+	    	</el-table>
+	    	<div slot="footer">
+	    		<el-button v-on:click="addBtnRowSettingComplete">确定</el-button>
+	    		<el-button v-on:click="addShowColumnSetting = false">取消</el-button>
+	    	</div>
 	    </el-dialog>
 	</div>
 </body>
@@ -515,11 +630,19 @@
 <script type="text/javascript">
 	/**
 	 * 搜索
-	 * 获取option
-	 * 获取option
+	 * 获得template的table数据
+	 * 获取客户option
+	 * 获取brand的option
+	 * 获取Accessories的option
 	 * 保存/提交
+	 * 获取详细信息页面
 	 * 作废
+	 * 获取导出
+	 * 删除
+	 * 获取table
+	 * 默认列设置
+	 * 列设置完成
 	 */
-	JGBVue.module.maintenanceOffer().init('/maintenanceOffer/search', '/maintenanceOffer/template', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo', '/common/data_give_out', '/clientInfo/exportForm', '/common/data_delete', '/maintenanceOffer/getTable', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete');
+	JGBVue.module.maintenanceOffer().init('/maintenanceOffer/search', '/maintenanceOffer/template', '/common/getQuickQueryOption', '/equipmentManagement/getEquipmentBrand', '/offerAndContract/getOption', '/common/data_add_save', '/maintenanceOffer/getDetailInfo', '/common/data_give_out', '/clientInfo/exportForm', '/common/data_delete', '/maintenanceOffer/getTable', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/common/btn');
 </script>
 </html>

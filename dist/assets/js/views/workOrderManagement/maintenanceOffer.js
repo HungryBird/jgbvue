@@ -6,7 +6,7 @@ JGBVue.module.maintenanceOffer = ()=> {
 	let _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
+	_this.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, btnUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -66,25 +66,29 @@ JGBVue.module.maintenanceOffer = ()=> {
 								costItem: '人工服务维修费',
 								unit: '',
 								quantity: 0,
-								money: 0
+								money: 0,
+								enable: true
 							},
 							{
 								costItem: '安装费',
 								unit: '',
 								quantity: 0,
-								money: 0
+								money: 0,
+								enable: true
 							},
 							{
 								costItem: '配送费',
 								unit: '',
 								quantity: 0,
-								money: 0
+								money: 0,
+								enable: true
 							},
 							{
 								costItem: '其他费用',
 								unit: '',
 								quantity: 0,
-								money: 0
+								money: 0,
+								enable: true
 							}
 						]
 					},
@@ -103,13 +107,20 @@ JGBVue.module.maintenanceOffer = ()=> {
 					exportForm: [],
 					templateVisible: false,
 					templateTable: [],
-					editTemplateForm: {},
 					addTemplateForm: {
 						header: [],
 						data: []
 					},
-					addTemplateFormVisible: true,
-					showColumnSetting: false
+					addTemplateFormVisible: false,
+					addShowColumnSetting: false,
+					addShowRowSetting: false,
+					editTemplateForm: {
+						header: [],
+						data: []
+					},
+					editTemplateFormVisible: false,
+					editShowColumnSetting: false,
+					editShowRowSetting: false,
 				}
 			},
 			mounted() {
@@ -356,22 +367,58 @@ JGBVue.module.maintenanceOffer = ()=> {
 				removeTemplateTable() {
 					this.$remove(deleteUrl, this.selectTempleRows, this);
 				},
-				handleEditTemplate() {
-					//
+				handleEditTemplate(index, row) {
+					this.$refs.templateTable.clearSelection();
+					this.selectTempleRows = [];
+					this.editTemplateForm = row;
+					this.editTemplateFormVisible = true;
 				},
-				saveAddTemplateForm() {
-					//
+				saveAddTemplateForm(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveAddUrl, this.addTemplateForm).then((res)=> {
+								if(res.data.status) {
+									this.$refs[formName].resetFields();
+									this.addTemplateFormVisible = false;
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+								}
+							})
+						}else{
+							return false;
+						}
+					})
 				},
-				btnColumnSettingReset() {
+				saveEditTemplateForm(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveAddUrl, this.editTemplateForm).then((res)=> {
+								if(res.data.status) {
+									this.$refs[formName].resetFields();
+									this.editTemplateFormVisible = false;
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+								}
+							})
+						}else{
+							return false;
+						}
+					})
+				},
+				addBtnColumnSettingReset() {
 					axios.post(defaultColumnSettingUrl).then(res=> {
 						if(res.data.status) {
-							this.table.header= [];
-							this.table.header = JSON.parse(res.data.data)
+							this.addTemplateForm.header= [];
+							this.addTemplateForm.header = JSON.parse(res.data.data)
 							this.$message({
 								type: 'success',
 								message: res.data.message
 							})
-							this.showColumnSetting = false;
+							this.addShowColumnSetting = false;
 						} else {
 							this.$message({
 								type: 'error',
@@ -388,14 +435,40 @@ JGBVue.module.maintenanceOffer = ()=> {
 						})
 					})
 				},
-				btnColumnSettingComplete() {
-					axios.post(columnSettingCompleteUrl, this.table.header).then(res=> {
+				editBtnColumnSettingReset() {
+					axios.post(defaultColumnSettingUrl).then(res=> {
+						if(res.data.status) {
+							this.editTemplateForm.header= [];
+							this.editTemplateForm.header = JSON.parse(res.data.data)
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+							this.editShowColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				addBtnColumnSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.addTemplateForm.header).then(res=> {
 						if(res.data.status) {
 							this.$message({
 								type: 'success',
 								message: res.data.message
 							});
-							this.showColumnSetting = false;
+							this.addShowColumnSetting = false;
 						} else {
 							this.$message({
 								type: 'error',
@@ -411,6 +484,130 @@ JGBVue.module.maintenanceOffer = ()=> {
 							center: true
 						})
 					})
+				},
+				editBtnColumnSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.editTemplateForm.header).then(res=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							});
+							this.editShowColumnSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				addBtnRowSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.addForm.tempTable).then(res=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							});
+							this.showRowSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				editBtnRowSettingComplete() {
+					axios.post(columnSettingCompleteUrl, this.addForm.tempTable).then(res=> {
+						if(res.data.status) {
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							});
+							this.showRowSetting = false;
+						} else {
+							this.$message({
+								type: 'error',
+								message: res.data.status,
+								center: true
+							})
+						};
+					}).catch((err)=> {
+						console.log(err)
+						this.$message({
+							type: 'error',
+							message: err,
+							center: true
+						})
+					})
+				},
+				btnPass(row) {
+					this.$refs.table.clearSelection();
+					this.selectedRows = [];
+					this.loadingDetailInfo = true;
+					axios.post(btnUrl, row).then((res)=> {
+						if(res.data.status) {
+							for(let i = 0; i < this.table.length; i++ ) {
+								if(row === this.table[i]) {
+									this.table[i].status = 1
+								}
+							}
+							this.loadingDetailInfo = false;
+							this.$message({
+								type: 'success',
+								message: res.data.message
+							})
+						}
+					})
+				},
+				btnRefuse(row) {
+					let _self = this;
+					this.$refs.table.clearSelection();
+					this.selectedRows = [];
+					_self.$prompt('不通过原因?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消'
+					}).then(({ value })=> {
+						axios.post(btnUrl, { row: row, value: value }).then((res)=> {
+							if(res.data.status) {
+								for(let i = 0; i < this.table.length; i++ ) {
+									if(row === this.table[i]) {
+										this.table[i].status = 2
+									}
+								}
+								_self.$message({
+									type: 'success',
+									message: res.data.message
+								});
+							}
+						}).catch(function(err) {
+							_self.$message({
+							  type: 'error',
+							  message: res.data.message || err
+							});
+						})
+					}).catch(() => {
+						_self.$message({
+							type: 'info',
+							message: '已取消'
+						});
+					});
 				}
 			},
 			watch: {
@@ -457,10 +654,12 @@ JGBVue.module.maintenanceOffer = ()=> {
 			filters: {
 				statusFilter(val) {
 					if(val === 0) {
-						return '待报价'
-					}else if(val !== 0&&val !== -1) {
-						return '报价中'
-					}else if(val === -1){
+						return '待审核'
+					}else if(val === 1) {
+						return '审核通过'
+					}else if(val === 2){
+						return '审核不通过'
+					}else{
 						return '作废'
 					}
 				}
@@ -468,8 +667,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)=> {
-		_this.init(searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl)
+	that.init = (searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, btnUrl)=> {
+		_this.init(searchUrl, getTemplateUrl, getOptionUrl, getEquipmentBrandOptionUrl, getAccessoriesOptionUrl, saveAddUrl, examineUrl, giveOutUrl, getExportFormUrl, deleteUrl, tableUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, btnUrl)
 	}
 
 	return that;

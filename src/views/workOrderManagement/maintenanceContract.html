@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>维修合同</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" href="../../wangEditor-3.1.1/wangEditor.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+<body>
+	<div id="app" class="offerAndContract" v-cloak>
+		<div class="jgb-wrap">
+			<el-container>
+				<el-main>
+					<nav class="jgb-nav">
+						<div class="pull-left nav-title">
+							工单号：{{ order_id }}
+							<el-button size="mini">转维修</el-button>
+						</div>
+						<el-button-group class="pull-right">
+							<el-button icon="el-icon-plus" v-on:click="addDialogVisible = true" size="mini">新增</el-button>
+							<el-button v-on:click="exportCilck" size="mini">导出</el-button>
+							<el-button size="mini" :disabled="selectedRows.length !== 1">打印</el-button>
+							<el-button :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
+							<!-- <el-button size="mini" v-on:click="templateVisible = true">合作模板</el-button> -->
+						</el-button-group>
+					</nav>
+					<el-table border :data="table" ref="table" sortable v-on:row-click="rowClick" v-on:select-all="selectAll" v-on:select="selectItem" v-loading="loadingDetailInfo" :row-class-name="rowStatusClassName">
+						<el-table-column type="selection"></el-table-column>
+						<el-table-column label="序号" width="50px" type="index"></el-table-column>
+						<el-table-column label="操作">
+							<template slot-scope="scope">
+								<el-button-group>
+									<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
+									<el-button size="mini" v-if="scope.row.status !== 0">上传盖章合同</el-button>
+								</el-button-group>
+							</template>
+						</el-table-column>
+						<el-table-column label="审核" width="150px">
+							<template slot-scope="scope">
+								<el-button-group>
+									<el-button size="mini" v-on:click="btnPass(scope.row)" :disabled="scope.row.status !== 0">通过</el-button>
+									<el-button size="mini" v-on:click="btnRefuse(scope.row)" :disabled="scope.row.status !== 0">不通过</el-button>
+								</el-button-group>
+							</template>
+						</el-table-column>
+						<el-table-column label="合同标题" prop="title"></el-table-column>
+						<el-table-column label="合同编号" prop="number"></el-table-column>
+						<el-table-column label="甲方名称" prop="partyAName"></el-table-column>
+						<el-table-column label="乙方名称" prop="partyBName"></el-table-column>
+						<el-table-column label="盖章合同文件" prop="file"></el-table-column>
+						<el-table-column label="状态" prop="status">
+							<template slot-scope="scope">
+								{{ scope.row.status | statusFilter }}
+							</template>
+						</el-table-column>
+					</el-table>
+				</el-main>
+			</el-container>
+		</div>
+		<div class="wrap_footer">
+			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
+		</div>
+		<!-- 导出 -->
+		<el-dialog :visible.sync="exportVisible" title="导出">
+			<p>
+				<small>注：请选择需要导出的字段</small>
+			</p>
+			<el-checkbox v-for="item in exportForm" label="item.value" border v-model="item.checked" :key="item.value">{{item.name}}</el-checkbox>
+			<div slot="footer">
+				<el-button>导出</el-button>
+				<el-button v-on:click="exportVisible = false">关闭</el-button>
+			</div>
+		</el-dialog>
+		<!-- 新建 -->
+		<el-dialog :visible.sync="addDialogVisible" title="新增维修合同">
+			<el-form ref="addForm" label-position="right" label-width="120px" :model="addForm" :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item label="合同标题" prop="title">
+							<el-input v-model="addForm.title" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="合同编号" prop="title">
+							<el-input v-model="addForm.title" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方名称" prop="partyAName">
+							<el-input v-model="addForm.partyAName"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方名称" prop="partyBName">
+							<el-input v-model="addForm.partyBName"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方地址" prop="partyAAddress">
+							<el-input v-model="addForm.partyAAddress"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方地址" prop="partyBAddress">
+							<el-input v-model="addForm.partyBAddress"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方联系人" prop="partyALinkman">
+							<el-input v-model="addForm.partyALinkman"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方联系人" prop="partyBLinkman">
+							<el-input v-model="addForm.partyBLinkman"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方联系电话" prop="partyAPhone">
+							<el-input v-model="addForm.partyAPhone"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方联系电话" prop="partyBPhone">
+							<el-input v-model="addForm.partyBPhone"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方传真" prop="partyAFax">
+							<el-input v-model="addForm.partyAFax"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方传真" prop="partyBFax">
+							<el-input v-model="addForm.partyBFax"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<div id="addEditor"></div>
+			</el-form>
+		</el-dialog>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../wangEditor-3.1.1/wangEditor.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/workOrderManagement/maintenanceContract.js"></script>
+<script type="text/javascript">
+	/**
+	 * 搜索
+	 */
+	JGBVue.module.maintenanceContract().init('/maintenanceContract/search', '/common/data_give_out', '/clientInfo/exportForm', '/common/btn');
+</script>
+</html>
