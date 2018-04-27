@@ -473,7 +473,7 @@
 								<th style="border-right: 1px solid #ebeef5;">金额</th>
 							</thead>
 							<tbody>
-								<tr v-for="(tt, index) in addForm.tempTable" :key="index">
+								<tr v-for="(tt, index) in addForm.tempTable" :key="index" v-if="tt.enable">
 									<th>{{ tt.costItem }}</th>
 									<td :colspan="colspan">
 										<jgb-empty-cell />
@@ -504,6 +504,10 @@
 	            <el-button v-on:click="btnColumnSettingReset">恢复默认设置</el-button>
 	          	<el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
 	        </div>
+	    </el-dialog>
+	    <!-- 行设置 -->
+	    <el-dialog :visible.sync="showRowSetting" title="行设置">
+	    	
 	    </el-dialog>
 	</div>
 </body>

@@ -109,7 +109,8 @@ JGBVue.module.maintenanceOffer = ()=> {
 						data: []
 					},
 					addTemplateFormVisible: true,
-					showColumnSetting: false
+					showColumnSetting: false,
+					showRowSetting: false
 				}
 			},
 			mounted() {
