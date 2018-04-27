@@ -934,9 +934,16 @@ JGBVue.module.commodityInfo = ()=> {
 					this[formName].quickGenerateTable.data.push(initFormRow);
 			    },
 			    quickGenerateTable_delete_btn(row, formName) {
-			    	for(let i = 0; i < this.formName.quickGenerateTable.data.length; i++ ) {
-						if(row === this[formName].quickGenerateTable.data[i]) {
-							this[formName].quickGenerateTable.data.splice(i, 1);
+			    	if(this.addForm.quickGenerateTable.data.length === 1) {
+			    		this.$message({
+			    			type: 'warning',
+			    			message: '请至少保留一行'
+			    		})
+			    		return;
+			    	}
+			    	for(let i = 0; i < this.addForm.quickGenerateTable.data.length; i++ ) {
+						if(row === this.addForm.quickGenerateTable.data[i]) {
+							this.addForm.quickGenerateTable.data.splice(i, 1);
 						}
 					}
 			    },
@@ -1070,8 +1077,10 @@ JGBVue.module.commodityInfo = ()=> {
 		    			item.shelfLife = _self.addForm.shelfLife;
 		    		});
 		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
-		    			let formatDate = new Date((this.addForm.initSetTable[i].productionDate || 0) + Number.parseInt(this.addForm.initSetTable[i].shelfLife + 1)*24*60*60*1000 || 0);
+		    			
+		    			let formatDate = new Date((this.addForm.initSetTable[i].productionDate || 0) + (Number.parseInt(this.addForm.initSetTable[i].shelfLife + 1)*24*60*60*1000 || 0));
     					this.addForm.initSetTable[i].validUntil = this.formatDate(formatDate);
+    					//this.addForm.initSetTable[i].validUntil = 111;
 	    			}
 		    	},
 		    	editChangeShelfLife() {
