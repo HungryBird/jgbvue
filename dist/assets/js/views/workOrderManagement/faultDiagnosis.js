@@ -307,6 +307,7 @@ JGBVue.module.faultDiagnosis = () => {
         },
         //故障诊断 @param {row 行数, index 行数}
         btnDiagnosis: function(row, index) {
+          this.$refs.diagnosisForm && this.$refs.diagnosisForm.resetFields()
           this.showDiagnosis = true
           this.getDiagnosisData(row.order_id)
           this.getDiagnosisList()
@@ -325,9 +326,7 @@ JGBVue.module.faultDiagnosis = () => {
           this.diagnosisData.peijian = arr.concat()
           //处理提交时间
           if(type == 'submit') {
-            this.diagnosisData.date = this.$timeStampFormat(
-              new Date().getTime/1000, 
-              'yyyy-mm-dd hh:mm:ss')
+            this.diagnosisData.date = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}`
           }
           this.loadingTempStorage = true
           axios.post(submitDiagnosisUrl, {
@@ -561,6 +560,7 @@ JGBVue.module.faultDiagnosis = () => {
             order_id: id
           }).then(res=> {
             if(res.data.status) {
+              console.log(res.data.data)
               this.diagnosisData = this.$deepCopy(JSON.parse(res.data.data))
               //诊断时间为提交结果时间，当前只显示打开页面的时间, 表单提交时更改诊断时间为提交时间戳
               this.diagnosisData.date = this.$timeStampFormat(

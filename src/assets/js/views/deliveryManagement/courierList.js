@@ -39,7 +39,7 @@ JGBVue.module.courierList = () => {
         }
         //验证手机号
         let validatePhone = (rule, value, callback) => {
-          let reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/g
+          let reg = /^1[3|4|5|7|8][0-9]{9}$/g
           if(!value) {
             callback(new Error('请输入联系人手机号'));
           }

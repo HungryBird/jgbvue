@@ -54,7 +54,7 @@ JGBVue.module.maintenanceOrder = () => {
         }
         //验证手机号
         let validatePhone = (rule, value, callback) => {
-          let reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/g
+          let reg = /^1[3|4|5|7|8][0-9]{9}$/g
           if(!value) {
             callback(new Error('请输入联系人手机号'));
           }
@@ -457,6 +457,7 @@ JGBVue.module.maintenanceOrder = () => {
         },
         //故障诊断 @param {row 行数, index 行数}
         btnDiagnosis: function(row, index) {
+          this.$refs.diagnosisForm && this.$refs.diagnosisForm.resetFields()
           this.showDiagnosis = true
           this.getDiagnosisData(row.order_id)
           this.getDiagnosisList()
@@ -531,6 +532,7 @@ JGBVue.module.maintenanceOrder = () => {
          * @param {Number} index 所在行
          */
         btnOutside: function(row, index) {
+          this.$refs.outsideForm && this.$refs.outsideForm.resetFields()
           this.showOutside = true
           this.currentOrder = row.order_id
         },
@@ -632,6 +634,7 @@ JGBVue.module.maintenanceOrder = () => {
             }
             else {
               //打开新增维修报告弹窗
+              this.$refs.reportAddForm && this.$refs.reportAddForm.resetFields()
               this.showReportAddForm = true
               this.reportAddForm = this.$deepCopy(this.defaultReportAddForm)
               this.reportAddForm = this.$deepCopy(row.reportInfo)
@@ -775,7 +778,7 @@ JGBVue.module.maintenanceOrder = () => {
         },
         //关闭 换人修
         closeChangePerson: function() {
-          this.showcloseChangePerson = false
+          this.showChangePerson = false
           this.currentOrder = ""
         },
         //获取业务人员数据
