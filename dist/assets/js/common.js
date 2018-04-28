@@ -138,9 +138,9 @@ Vue.prototype.$doubleDecimals = doubleDecimals;
  */
 
 let checkSerialNumberIsRepeat = (data, obj)=> {
-  for(let o = 0; o < data.length; o++ ) {
+  for(let o = 1; o < data.length + 1; o++ ) {
     if(obj.serialNumber === data[o].serialNumber) {
-      obj.remark = '与第' + Number.parseInt(o + 1) + '行序列号重复';
+      obj.remark = '与第' + o + '行序列号重复';
       obj.isRepeat = true;
       break;
     }
@@ -150,7 +150,7 @@ let checkSerialNumberIsRepeat = (data, obj)=> {
 Vue.prototype.$checkSerialNumberIsRepeat = checkSerialNumberIsRepeat;
 
 /**
- * 删除表单数据
+ * 删除表格数据
  * create by 何俊洁 2018-4-26
  * @param  {[type]} deleteUrl    [description]
  * @param  {[type]} selectedRows [description]
@@ -167,9 +167,7 @@ let remove = (deleteUrl, selectedRows, _self)=> {
       }
   }).then((action)=> {
       if(action == 'confirm') {
-        console.log('confirm')
           axios.post(deleteUrl, selectedRows).then((res)=> {
-            console.log('res: ', res)
               if(res.data.status) {
                   _self.$message({
                       type: 'success',

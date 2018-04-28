@@ -3,10 +3,13 @@ JGBVue = {
 };
 
 JGBVue.module.offerAndContract = ()=> {
-	const _this = {}
-	,that = {};
+	let _this = {}
+	,that = {}
+	,E
+	,addEditor
+	,editEditor;
 
-	_this.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl)=> {
+	_this.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl, getTagsUrl, getContractInfoUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -36,6 +39,9 @@ JGBVue.module.offerAndContract = ()=> {
 							{required: true, message: '请输入报价人'},
 							/*{validator: equipmentSerialNumber}*/
 						],
+						number: [
+							{required: true, message: '请输入合同编号'}
+						]
 						/*costEquipment: [
 							{validator: checkNumber}
 						],
@@ -43,6 +49,8 @@ JGBVue.module.offerAndContract = ()=> {
 							{validator: checkNumber}
 						]*/
 					},
+					addDialogVisible: false,
+					otherTags: [],
 					table: {
 						header: [],
 						data: []
@@ -127,6 +135,9 @@ JGBVue.module.offerAndContract = ()=> {
 							}
 						]
 					},
+					addContractForm: {
+						fileList: []
+					},
 					addSetMemberVisible: false,
 					addSetSalesVisible: false,
 					editSetMemberVisible: false,
@@ -168,9 +179,34 @@ JGBVue.module.offerAndContract = ()=> {
 			mounted() {
 				this.search();
 				this.getOption();
+				this.getTags();
 				this.getAccessoriesOption();
+				this.getContractInfo();
 			},
 			methods: {
+				getContractInfo() {
+					axios.get(getContractInfoUrl).then((res)=> {
+						if(res.data.status) {
+							this.addContractForm = JSON.parse(res.data.data);
+							this.addDialogVisible = false;
+						}
+					})
+				},
+				getTags() {
+					axios.get(getTagsUrl).then((res)=> {
+						if(res.data.status) {
+							this.otherTags = JSON.parse(res.data.data);
+						}
+					})
+				},
+				handleAddContract() {
+					this.addDialogVisible = true;
+					setTimeout(function() {
+						E = window.wangEditor;
+						addEditor = new E('#addEditor');
+						addEditor.create();	
+					}, 0)
+				},
 				getOption() {
 					axios.get(getOptionUrl).then((res)=> {
 						if(res.data.status) {
@@ -537,19 +573,7 @@ JGBVue.module.offerAndContract = ()=> {
 				},
 				openSlideshow(row) {
 					let _self = this;
-					/*axios.post(getImageUrl, item).then((res)=> {
-						if(res.data.status) {
-							this.slideshowArr = [];
-							this.currentImgIndex = 0;
-							res.data.data.forEach((item)=> {
-								_self.slideshowArr.push(item);
-							});
-							this.currentImgSrc = this.slideshowArr[0].src;
-							this.currentImgWidth = this.slideshowArr[0].width;
-							this.currentImgHeight = this.slideshowArr[0].height;
-							this.showSlideshow = true;
-						}
-					});*/
+					
 					this.slideshowArr = [];
 					this.currentImgIndex = 0;
 					row.image.forEach((item)=> {
@@ -774,8 +798,8 @@ JGBVue.module.offerAndContract = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl)=> {
-		_this.init(searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl);
+	that.init = (searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl, getTagsUrl, getContractInfoUrl)=> {
+		_this.init(searchUrl, getOptionUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, getAccessoriesOptionUrl, getTagsUrl, getContractInfoUrl);
 	}
 
 	return that;

@@ -67,7 +67,7 @@
 										<el-button-group v-else-if="scope.row.status === 1">
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
 											<el-button size="mini" v-on:click="handleOffer(scope.$index, scope.row)">维修报价</el-button>
-											<el-button size="mini" v-on:click="handleContract(scope.$index, scope.row)">新增合同</el-button>	
+											<el-button size="mini" v-on:click="handleAddContract(scope.$index, scope.row)">新增合同</el-button>	
 										</el-button-group>
 										<el-button-group v-else-if="scope.row.status === 2">
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
@@ -443,11 +443,110 @@
 	          	<el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
 	        </div>
 	     </el-dialog>
+	     <!-- 新建合同 -->
+		<el-dialog :visible.sync="addDialogVisible" title="新增维修合同">
+			<el-form ref="addContractForm" label-position="right" label-width="120px" :model="addContractForm" :rules="formRules">
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-form-item label="合同标题" prop="title">
+							<el-input v-model="addContractForm.title" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="24">
+						<el-form-item label="合同编号" prop="number">
+							<el-input v-model="addContractForm.number" class="exclusive"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方名称" prop="partyAName">
+							<el-input v-model="addContractForm.partyAName" disabled></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方名称" prop="partyBName">
+							<el-input v-model="addContractForm.partyBName" disabled></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方地址" prop="partyAAddress">
+							<el-input v-model="addContractForm.partyAAddress" disabled></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方地址" prop="partyBAddress">
+							<el-input v-model="addContractForm.partyBAddress" disabled></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方联系人" prop="partyALinkman">
+							<el-input v-model="addContractForm.partyALinkman" disabled></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方联系人" prop="partyBLinkman">
+							<el-input v-model="addContractForm.partyBLinkman" disabled></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方联系电话" prop="partyAPhone">
+							<el-input v-model="addContractForm.partyAPhone" disabled></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方联系电话" prop="partyBPhone">
+							<el-input v-model="addContractForm.partyBPhone" disabled></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="4">
+					<el-col :span="12">
+						<el-form-item label="甲方传真" prop="partyAFax">
+							<el-input v-model="addContractForm.partyAFax" disabled></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="12">
+						<el-form-item label="乙方传真" prop="partyBFax">
+							<el-input v-model="addContractForm.partyBFax" disabled></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<div id="addEditor"></div>
+				<h4>其他标签</h4>
+				<el-row :gutter="4">
+					<el-col :span="24">
+						<el-button v-for="tag in otherTags" :key="tag.label" v-on:click="addCreateTags(tag)" size="mini" :title="tag.label">
+							{{ tag.label }}
+						</el-button>
+					</el-col>
+				</el-row>
+				<span>
+					<h4>盖章合同文件</h4>
+				</span>
+				<el-upload class="upload-demo" ref="upload" action="/common/upload" :file-list="addContractForm.fileList" :auto-upload="false">
+					<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+					<div slot="tip" class="el-upload__tip">上传盖章合同文件</div>
+				</el-upload>
+			</el-form>
+			<div slot="footer">
+				<el-button v-on:click="zancunAdd('addForm')">暂存</el-button>
+				<el-button v-on:click="saveAdd('addForm')">提交</el-button>
+				<el-button v-on:click="addDialogVisible = false">取消</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../wangEditor-3.1.1/wangEditor.js"></script>
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/workOrderManagement/offerAndContract.js"></script>
 <script type="text/javascript">
@@ -471,7 +570,9 @@
 	 * 验证并声称唯一码
 	 * 获取打印数据
 	 * 获取配件option
+	 * 获取标签
+	 * 获取合同信息
 	 */
-	JGBVue.module.offerAndContract().init('/offerAndContract/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/maintenanceOffer/getDetailInfo', '/common/data_add_save', '/equipmentManagement/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory', '/equipmentManagement/getUnitMeasurement', '/equipmentManagement/getuniqueCode', '/equipmentManagement/getAuxiliaryAttributesClassify', '/offerAndContract/search', '/offerAndContract/getOption');
+	JGBVue.module.offerAndContract().init('/offerAndContract/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/maintenanceOffer/getDetailInfo', '/common/data_add_save', '/equipmentManagement/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory', '/equipmentManagement/getUnitMeasurement', '/equipmentManagement/getuniqueCode', '/equipmentManagement/getAuxiliaryAttributesClassify', '/offerAndContract/search', '/offerAndContract/getOption', '/common/getTags', '/maintenanceContract/getContractInfo');
 </script>
 </html>

@@ -8,22 +8,13 @@ JGBVue.module.maintenanceContract = ()=> {
 	,E
 	,addEditor;
 
-	_this.createEditor = ()=> {
-		E = window.wangEditor;
-		addEditor = new E('#addEditor');
-		addEditor.customConfig.onblur = (html)=> {
-			console.log('html: ', html)
-		}
-		addEditor.create();
-		console.log('getRange: ', addEditor)
-	}
-	_this.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl)=> {
+	_this.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl, saveAddUrl, getContractInfoUrl, examineUrl, getImageUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
 				return {
 					table: [],
-					addDialogVisible: true,
+					addDialogVisible: false,
 					order_id: '',
 					exportVisible: false,
 					selectedRows: [],
@@ -34,8 +25,9 @@ JGBVue.module.maintenanceContract = ()=> {
 					examinCurRow: null,
 					templateVisible: false,
 					addForm: {
-						tags: []
+						fileList: []
 					},
+					contractInfo: [],
 					formRules: {
 						name: [
 							{required: true, message: '请输入名称'}
@@ -51,10 +43,20 @@ JGBVue.module.maintenanceContract = ()=> {
 						],
 						personnel: [
 							{required: true, message: '请输入报价人'}
+						],
+						number: [
+							{required: true, message: '请输入合同编号'}
 						]
 					},
 					otherTags: [],
-					testArr: []
+					isUnfold: false,
+					examinCurRow: null,
+					showSlideshow: false,
+					slideshowArr: [],
+					currentImgWidth: 0,
+					currentImgHeight: 0,
+					currentImgIndex: 0,
+					currentImgSrc: '',
 				}
 			},
 			mounted() {
@@ -62,14 +64,69 @@ JGBVue.module.maintenanceContract = ()=> {
 				this.order_id = info.order_id;
 				this.search();
 				this.getTags();
+				this.getContractInfo();
 			},
 			methods: {
-				addCreateTags() {
+				handleExamine(index, row) {
 					let _self = this;
-					this.addForm.tags.forEach((item)=> {
-						//addEditor.txt.append('<p>' + item + '</p>')
-						addEditor.cmd.do('insertHTML', '<p>' + item + '</p>')
+					if(this.examinCurRow === row) {
+						if(this.isUnfold) {
+							this.isUnfold = false;
+						}else{
+							this.toggleInfo();
+							this.isUnfold = true;
+						}
+						return;
+					}
+					this.examinCurRow = row;
+					this.$refs['table'].clearSelection();
+					this.loadingDetailInfo = true;
+					axios.post(examineUrl, row).then((res)=> {
+						if(res.data.status) {
+							let jdata = JSON.parse(res.data.data);
+							this.contractInfo = jdata;
+							this.isUnfold = true;
+							this.loadingDetailInfo = false;
+						}
+					}).catch((err)=> {
+						console.log(err)
+					});
+				},
+				toggleInfo() {
+					this.$refs['table'].clearSelection();
+					this.selectedRows = [];
+					this.isUnfold = false;
+				},
+				addContract() {
+					this.addDialogVisible = true;
+					setTimeout(function() {
+						E = window.wangEditor;
+						addEditor = new E('#addEditor');
+						addEditor.create();	
+					}, 0)						
+				},
+				handleUploadReportSuccess: function(response, file, fileList) {
+					console.log(response)
+				},
+				handleUploadReportError: function(response, file, fileList) {
+				console.log(response)
+				},
+				getContractInfo() {
+					axios.get(getContractInfoUrl).then((res)=> {
+						if(res.data.status) {
+							this.addForm = JSON.parse(res.data.data);
+							this.addDialogVisible = false;
+						}
 					})
+				},
+				createEditor() {
+					E = window.wangEditor;
+					addEditor = new E('#addEditor');
+					addEditor.create();
+				},
+				addCreateTags(item) {
+					let _self = this;
+					addEditor.cmd.do('insertHTML', '<span>' + item.label + '</span>')
 				},
 				search() {
 					axios.post(searchUrl, this.order_id).then((res)=> {
@@ -154,31 +211,6 @@ JGBVue.module.maintenanceContract = ()=> {
 						return 'scrap-row';
 					}
 				},
-				handleExamine(index, row) {
-					let _self = this;
-					if(this.examinCurRow === row) {
-						if(this.isUnfold) {
-							this.isUnfold = false;
-						}else{
-							this.toggleInfo();
-							this.isUnfold = true;
-						}
-						return;
-					}
-					this.examinCurRow = row;
-					this.$refs['table'].clearSelection();
-					this.loadingDetailInfo = true;
-					axios.post(examineUrl, row).then((res)=> {
-						if(res.data.status) {
-							this.infoForm = res.data.data;
-							this.isUnfold = true;
-							this.loadingDetailInfo = false;
-
-						}
-					}).catch((err)=> {
-						console.log(err)
-					});
-				},
 				btnPass(row) {
 					this.$refs.table.clearSelection();
 					this.selectedRows = [];
@@ -230,7 +262,86 @@ JGBVue.module.maintenanceContract = ()=> {
 							message: '已取消'
 						});
 					});
-				}
+				},
+				zancunAdd(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveAddUrl, this.addForm).then((res)=> {
+								if(res.data.status) {
+									this.$refs[formName].resetFields();
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+									this.addCheckedAssistantsMember = [];
+									this.addVisible = false;
+								}
+							})
+						}else{
+							return false;
+						}
+					})
+				},
+				saveAdd(formName) {
+					this.$refs[formName].validate((valid)=> {
+						if(valid) {
+							axios.post(saveAddUrl, this.addForm).then((res)=> {
+								if(res.data.status) {
+									this.$refs[formName].resetFields();
+									this.$message({
+										type: 'success',
+										message: res.data.message
+									})
+									this.addCheckedAssistantsMember = [];
+									this.addVisible = false;
+								}
+							})
+						}else{
+							return false;
+						}
+					})
+				},
+				viewImage(item, row) {
+					this.selectedRows = [];
+					this.$refs['table'].clearSelection();
+					this.openSlideshow(item);
+				},
+				openSlideshow(item) {
+					let _self = this;
+					axios.post(getImageUrl, item).then((res)=> {
+						if(res.data.status) {
+							this.slideshowArr = [];
+							this.currentImgIndex = 0;
+							res.data.data.forEach((item)=> {
+								_self.slideshowArr.push(item);
+							});
+							this.currentImgSrc = this.slideshowArr[0].src;
+							this.currentImgWidth = this.slideshowArr[0].width;
+							this.currentImgHeight = this.slideshowArr[0].height;
+							this.showSlideshow = true;
+						}
+					});
+				},
+				nextImg() {
+					if(this.currentImgIndex === this.slideshowArr.length - 1) {
+						this.currentImgIndex = 0;
+					}else{
+						this.currentImgIndex++;
+					}
+					this.currentImgSrc = this.slideshowArr[this.currentImgIndex].src;
+					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
+					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
+				},
+				prevImg() {
+					if(this.currentImgIndex === 0) {
+						this.currentImgIndex = this.slideshowArr.length - 1;
+					}else{
+						this.currentImgIndex--;
+					}
+					this.currentImgSrc = this.slideshowArr[this.currentImgIndex].src;
+					this.currentImgWidth = this.slideshowArr[this.currentImgIndex].width;
+					this.currentImgHeight = this.slideshowArr[this.currentImgIndex].height;
+				},
 			},
 			watch: {
 				//
@@ -254,11 +365,8 @@ JGBVue.module.maintenanceContract = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl)=> {
-		_this.init(searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl);
-		setTimeout(function() {
-			_this.createEditor();
-		}, 0);
+	that.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl, saveAddUrl, getContractInfoUrl, examineUrl, getImageUrl)=> {
+		_this.init(searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl, saveAddUrl, getContractInfoUrl, examineUrl, getImageUrl);
 	}
 
 	return that;

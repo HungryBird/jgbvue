@@ -18,7 +18,7 @@
 							<el-button size="mini">转维修</el-button>
 						</div>
 						<el-button-group class="pull-right">
-							<el-button icon="el-icon-plus" v-on:click="addDialogVisible = true" size="mini">新增</el-button>
+							<el-button icon="el-icon-plus" v-on:click="addContract" size="mini">新增</el-button>
 							<el-button v-on:click="exportCilck" size="mini">导出</el-button>
 							<el-button size="mini" :disabled="selectedRows.length !== 1">打印</el-button>
 							<el-button :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
@@ -32,7 +32,9 @@
 							<template slot-scope="scope">
 								<el-button-group>
 									<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
-									<el-button size="mini" v-if="scope.row.status !== 0">上传盖章合同</el-button>
+									<el-upload class="upload-demo" :show-file-list="false" :action="'/common/upload&&id=' + scope.row.number" v-if="scope.row.status !== -1">
+										<el-button size="mini" type="">上传报告扫描件</el-button>
+									</el-upload>
 								</el-button-group>
 							</template>
 						</el-table-column>
@@ -72,7 +74,7 @@
 				<el-button v-on:click="exportVisible = false">关闭</el-button>
 			</div>
 		</el-dialog>
-		<!-- 新建 -->
+		<!-- 新建合同 -->
 		<el-dialog :visible.sync="addDialogVisible" title="新增维修合同">
 			<el-form ref="addForm" label-position="right" label-width="120px" :model="addForm" :rules="formRules">
 				<el-row :gutter="4">
@@ -82,68 +84,68 @@
 						</el-form-item>
 					</el-col>
 					<el-col :span="24">
-						<el-form-item label="合同编号" prop="title">
-							<el-input v-model="addForm.title" class="exclusive"></el-input>
+						<el-form-item label="合同编号" prop="number">
+							<el-input v-model="addForm.number" class="exclusive"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="甲方名称" prop="partyAName">
-							<el-input v-model="addForm.partyAName"></el-input>
+							<el-input v-model="addForm.partyAName" disabled></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="乙方名称" prop="partyBName">
-							<el-input v-model="addForm.partyBName"></el-input>
+							<el-input v-model="addForm.partyBName" disabled></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="甲方地址" prop="partyAAddress">
-							<el-input v-model="addForm.partyAAddress"></el-input>
+							<el-input v-model="addForm.partyAAddress" disabled></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="乙方地址" prop="partyBAddress">
-							<el-input v-model="addForm.partyBAddress"></el-input>
+							<el-input v-model="addForm.partyBAddress" disabled></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="甲方联系人" prop="partyALinkman">
-							<el-input v-model="addForm.partyALinkman"></el-input>
+							<el-input v-model="addForm.partyALinkman" disabled></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="乙方联系人" prop="partyBLinkman">
-							<el-input v-model="addForm.partyBLinkman"></el-input>
+							<el-input v-model="addForm.partyBLinkman" disabled></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="甲方联系电话" prop="partyAPhone">
-							<el-input v-model="addForm.partyAPhone"></el-input>
+							<el-input v-model="addForm.partyAPhone" disabled></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="乙方联系电话" prop="partyBPhone">
-							<el-input v-model="addForm.partyBPhone"></el-input>
+							<el-input v-model="addForm.partyBPhone" disabled></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 				<el-row :gutter="4">
 					<el-col :span="12">
 						<el-form-item label="甲方传真" prop="partyAFax">
-							<el-input v-model="addForm.partyAFax"></el-input>
+							<el-input v-model="addForm.partyAFax" disabled></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="12">
 						<el-form-item label="乙方传真" prop="partyBFax">
-							<el-input v-model="addForm.partyBFax"></el-input>
+							<el-input v-model="addForm.partyBFax" disabled></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -151,26 +153,90 @@
 				<h4>其他标签</h4>
 				<el-row :gutter="4">
 					<el-col :span="24">
-						<!-- <el-checkbox-group v-model="addForm.tags">
-							<el-checkbox v-for="tag in otherTags" :key="tag.vaue" :label="tag.label" :value="tag" border v-on:change="addCreateTags"></el-checkbox>
-						</el-checkbox-group> -->
+						<el-button v-for="tag in otherTags" :key="tag.label" v-on:click="addCreateTags(tag)" size="mini" :title="tag.label">
+							{{ tag.label }}
+						</el-button>
 					</el-col>
 				</el-row>
+				<span>
+					<h4>盖章合同文件</h4>
+				</span>
+				<el-upload class="upload-demo" ref="upload" action="/common/upload" :file-list="addForm.fileList" :auto-upload="false">
+					<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+					<div slot="tip" class="el-upload__tip">上传盖章合同文件</div>
+				</el-upload>
 			</el-form>
+			<div slot="footer">
+				<el-button v-on:click="zancunAdd('addForm')">暂存</el-button>
+				<el-button v-on:click="saveAdd('addForm')">提交</el-button>
+				<el-button v-on:click="addDialogVisible = false">取消</el-button>
+			</div>
 		</el-dialog>
+		<!-- 展开 -->
+		<transition name="slide-fade">
+			<div class="details-wrap" v-show="isUnfold">
+				<div class="details-inner" v-loading="loadingDetailInfo">
+					<el-row class="row-border">
+						<div class="title text-center">
+							<h3>合同信息详情页</h3>
+						</div>
+						<el-col v-for="item in contractInfo" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.name">
+							<div>{{ item.name }}</div>
+							<div v-if="item.isImages" v-on:click="viewImage(item)"><i class="el-icon-picture"></i></div>
+							<div v-else>{{ item.value }}</div>
+						</el-col>
+					</el-row>
+					<div class="toggle-button-wrap" v-on:click="toggleInfo">
+						<span class="jgbvue_arrow_icon" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -9px -85px;position: absolute;top: 50%;right: 0;transform: translateY(-50%);"></span>
+						<span class="jgbvue_arrow_line" style="background: transparent url(../../assets/img/common/ats-icon_5.png) no-repeat scroll -123px -2px;margin-left: 16px;"></span>
+					</div>
+					<div class="waterMark-wrap">
+						<div class="no-pass waterMark" v-if="contractInfo.status === 0">
+							不通过
+							<div class="note required red">
+								不通过原因: {{ contractInfo.note === undefined ? '没有原因' :  infoForm.note }}
+							</div>
+						</div>
+						<div class="pass waterMark" v-else-if="contractInfo.status === 1">通过</div>
+					</div>
+				</div>
+			</div>
+		</transition>
+		<!-- 展示图片 -->
+		<transition name="fade">
+			<div class="slideshow-wrap" v-if="showSlideshow">
+				<div class="slideshow-mask" v-on:click="showSlideshow = false"></div>
+				<div class="slideshow-inner">
+					<div class="slideshow-inner-nav">
+						<a class="index-text">{{ currentImgIndex+1 + '/' +  slideshowArr.length}}</a>
+						<i class="el-icon-close" v-on:click="showSlideshow = false"></i>
+					</div>
+					<div class="slideshow-inner-wrap" :style="{width: currentImgWidth + 'px', height: currentImgHeight + 'px'}">
+						<img :src="currentImgSrc" :style="{width:currentImgWidth+'px',height:currentImgHeight+'px'}"/>
+						<i class="el-icon-arrow-right arrow-right arrow"  v-on:click="nextImg"></i>
+						<i class="el-icon-arrow-left arrow-left arrow" v-on:click="prevImg"></i>
+					</div>
+				</div>
+			</div>
+		</transition>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
-<script type="text/javascript" src="../../jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../../wangEditor-3.1.1/wangEditor.js"></script>
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/workOrderManagement/maintenanceContract.js"></script>
 <script type="text/javascript">
 	/**
 	 * 搜索
+	 * 作废
+	 * 导出
+	 * 通过/不通过
+	 * 获取标签
+	 * 保存
+	 * 获取合同信息
 	 */
-	JGBVue.module.maintenanceContract().init('/maintenanceContract/search', '/common/data_give_out', '/clientInfo/exportForm', '/common/btn', '/common/getTags');
+	JGBVue.module.maintenanceContract().init('/maintenanceContract/search', '/common/data_give_out', '/clientInfo/exportForm', '/common/btn', '/common/getTags', '/common/data_add_save', '/maintenanceContract/getContractInfo', '/commodityInfo/examine', '/common/slideshow');
 </script>
 </html>
