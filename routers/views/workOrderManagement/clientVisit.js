@@ -55,7 +55,7 @@ router.post('/get_header', (req, res)=> {
 router.post('/is_visit_list_exist', (req, res)=> {
   res.send({
     status: true,
-    data: true //Math.round(Math.random()) ? true : false
+    data: false //Math.round(Math.random()) ? true : false
   }).end();
 })
 

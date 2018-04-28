@@ -46,7 +46,7 @@ JGBVue.module.deliveryManagement = () => {
         }
         //验证手机号
         let validatePhone = (rule, value, callback) => {
-          let reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/g
+          let reg = /^1[3|4|5|7|8][0-9]{9}$/g
           if(!value) {
             callback(new Error('请输入联系人手机号'));
           }
@@ -162,7 +162,7 @@ JGBVue.module.deliveryManagement = () => {
             courier_company: "",
             courier_id: "",
             date: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`,
-            cost: "",
+            cost: 0,
             person: "",
             phone: "",
             remark: ""
@@ -172,7 +172,7 @@ JGBVue.module.deliveryManagement = () => {
             courier_id: { required: true, message: '请填写快递单号', trigger: 'blur,change' },
             cost: { validator: validateCost, trigger: 'blur,change' },
             person: { required: true, message: '请填写快递联系人', trigger: 'blur,change' },
-            phone: { validator: validatePhone, trigger: 'blur,change' },
+            phone: [{ validator: validatePhone, trigger: 'blur,change' }, {required: true, trigger:'blur,change'}],
           },
         }
       },
