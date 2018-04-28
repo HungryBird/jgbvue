@@ -5,8 +5,18 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>打印维修统计报表</title>
-	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
-	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css" />
+  <link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css" />
+   
+  <style type="text/css">  
+    #app{  
+      padding-top:50px; 
+    }
+    .w-common-form-table th,
+    .w-common-form-table td {
+      text-align: left;
+    }
+  </style> 
 </head>
 
 <body>
@@ -14,90 +24,110 @@
     <div ref="btnPrint" class="btn-print">
       <el-button type="primary" v-on:click="btnPrint">打印</el-button>
     </div>
-		<el-container>
-			<el-main>
-				<div class="jgb-wrap" v-if="c_print == 'all' || c_print == 'info'">
-          <div class="w-main-block">
-            <h2 style="text-align:center">{{c_filter.type | summaryInfo}}汇总图表</h2>
-            <div class="block-content">
-              <el-row :gutter="5" style="background:#f5f5f5;">
-                <el-col :span="12" style="padding:80px;color:#333;">
-                  <p>
-                    日期：
-                  </p>
-                  <p>
-                    {{c_filter.dateRange[0] | dateChinese}}至{{c_filter.dateRange[1] | dateChinese}}
-                  </p>
-                  <p>
-                    总工单数：{{dataInfo.total_count}}
-                  </p>
-                  <p>
-                    总金额：{{dataInfo.total_amount}}元
-                  </p>
-                </el-col>
+      <div class="jgb-wrap" v-if="c_print == 'all' || c_print == 'info'">
+        <div class="w-main-block">
+          <h2 style="text-align:center">{{c_filter.type | summaryInfo}}汇总图表</h2>
+          <div class="block-content">
+            <el-row :gutter="5" style="background:#f5f5f5;">
+              <el-col :span="12" style="padding:80px;color:#333;">
+                <p>
+                  日期：
+                </p>
+                <p>
+                  {{c_filter.dateRange[0] | dateChinese}}至{{c_filter.dateRange[1] | dateChinese}}
+                </p>
+                <p>
+                  总工单数：{{dataInfo.total_count}}
+                </p>
+                <p>
+                  总金额：{{dataInfo.total_amount}}元
+                </p>
+              </el-col>
+              <el-col :span="12">
+                <div ref="infoChart" style="height:350px;"></div>
+              </el-col>
+            </el-row>
+            <el-row :gutter="5" style="margin-top:20px;">
                 <el-col :span="12">
-                  <div ref="infoChart" style="height:350px;"></div>
+                    <!-- <el-table border
+                      :stripe="true" :data="dataInfo.list">
+                      <el-table-column v-for="(item, index) in tableHeader[c_filter.type].info" 
+                        align="left" 
+                        :key="index" :label="item.label" :prop="item.prop">
+                      </el-table-column>
+                    </el-table> -->
+                  <table class="w-common-form-table">
+                    <thead>
+                      <tr>
+                        <th v-for="(head, index) in tableHeader[c_filter.type].info">{{head.label}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item, index) in dataInfo.list">
+                        <td v-for="(head, index) in tableHeader[c_filter.type].info">{{item[head.prop]}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </el-col>
-              </el-row>
-              <el-row :gutter="5" style="margin-top:20px;">
-                  <el-col :span="12">
-                      <el-table width="100%" border
-                        :stripe="true" :data="dataInfo.list">
-                        <el-table-column v-for="(item, index) in tableHeader[c_filter.type].info" 
-                          align="left" 
-                          :key="index" :label="item.label" :prop="item.prop">
-                        </el-table-column>
-                      </el-table>
-                  </el-col>
-              </el-row>
-            </div>
+            </el-row>
           </div>
-				</div>
-				<div class="jgb-wrap" v-if="c_print == 'all' || c_print == 'details'">
-          <div class="w-main-block">
-            <h2 style="text-align:center">{{c_select.label}}详细汇总图表</h2>
-            <div class="block-content">
-              <el-row :gutter="5" style="background:#f5f5f5;">
-                <el-col :span="12"  style="padding:80px;color:#333;">
-                  <p>
-                    日期：
-                  </p>
-                  <p>
-                    {{c_filter.dateRange[0] | dateChinese}}至{{c_filter.dateRange[1] | dateChinese}}
-                  </p>
-                  <p>
-                    {{c_select.label}}工单总数：{{dataDetails.total_count}}
-                  </p>
-                  <p>
-                    总金额：{{dataDetails.total_amount}}元
-                  </p>
-                </el-col>
-                <el-col :span="12">
-                  <div ref="detailsChart" style="height:350px;"></div>
-                </el-col>
-              </el-row>
-              <el-row :gutter="5">
-                <el-col :span="12" style="margin-top:20px;">
-                  <el-table width="100%" border
-                    :stripe="true" :data="dataDetails.list">
-                    <el-table-column v-for="(item, index) in tableHeader[c_filter.type].details" 
-                      align="left" 
-                      :key="index" :label="item.label" :prop="item.prop">
-                    </el-table-column>
-                  </el-table>
-                </el-col>
-              </el-row>
-            </div>
+        </div>
+      </div>
+      <div class="jgb-wrap" v-if="c_print == 'all' || c_print == 'details'">
+        <div class="w-main-block">
+          <h2 style="text-align:center">{{c_select.label}}详细汇总图表</h2>
+          <div class="block-content">
+            <el-row :gutter="5" style="background:#f5f5f5;">
+              <el-col :span="12"  style="padding:80px;color:#333;">
+                <p>
+                  日期：
+                </p>
+                <p>
+                  {{c_filter.dateRange[0] | dateChinese}}至{{c_filter.dateRange[1] | dateChinese}}
+                </p>
+                <p>
+                  {{c_select.label}}工单总数：{{dataDetails.total_count}}
+                </p>
+                <p>
+                  总金额：{{dataDetails.total_amount}}元
+                </p>
+              </el-col>
+              <el-col :span="12">
+                <div ref="detailsChart" style="height:350px;"></div>
+              </el-col>
+            </el-row>
+            <el-row :gutter="5">
+              <el-col :span="12" style="margin-top:20px;">
+                <!-- <el-table border
+                  :stripe="true" :data="dataDetails.list">
+                  <el-table-column v-for="(item, index) in tableHeader[c_filter.type].details" 
+                    align="left" 
+                    :key="index" :label="item.label" :prop="item.prop">
+                  </el-table-column>
+                </el-table> -->
+                <table class="w-common-form-table">
+                  <thead>
+                    <tr>
+                      <th v-for="(head, index) in tableHeader[c_filter.type].details">{{head.label}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in dataDetails.list">
+                      <td v-for="(head, index) in tableHeader[c_filter.type].details">{{item[head.prop]}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </el-col>
+            </el-row>
           </div>
-				</div>
-			</el-main>
-		</el-container>
+        </div>
+      </div>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
 <script type="text/javascript" src="../../axios/axios.min.js"></script>
 <script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="../../echarts/echarts.min.js"></script>
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/maintenanceStatistical/printData.js"></script>
 <script type="text/javascript">

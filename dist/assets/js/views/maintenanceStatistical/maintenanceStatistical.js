@@ -152,7 +152,7 @@ JGBVue.module.maintenanceStatistical = () => {
             '打印维修统计报表', 
             './views/maintenanceStatistical/printData.html', 
             `print=${type}&&filter=${JSON.stringify(this.selectForm)}&&chart=${this.chartsType}&&select=${JSON.stringify(this.detailsSelectCurrent)}`)
-
+console.log(`print=${type}&&filter=${JSON.stringify(this.selectForm)}&&chart=${this.chartsType}&&select=${JSON.stringify(this.detailsSelectCurrent)}`)
         },
         /**
          * 获取详细汇总信息 表格数据

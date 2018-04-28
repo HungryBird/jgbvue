@@ -115,8 +115,10 @@ JGBVue.module.printData = () => {
          */
         btnPrint: function() {
           this.$refs.btnPrint.style.display = 'none'
+          document.getElementById('app').style.paddingTop = 0
           window.print()
           this.$refs.btnPrint.style.display = 'flex'
+          document.getElementById('app').style.paddingTop = '50px'
         },
         /**
          * 获取详细汇总信息 表格数据
@@ -158,7 +160,7 @@ JGBVue.module.printData = () => {
             if(res.data.status) {
               let _data = JSON.parse(res.data.data)
               this.chartDetails = _data
-              this.chartDetails_chart.setOption(this.getOption(this.chartsType, _data), true)
+              this.chartDetails_chart.setOption(this.getOption(this.c_chart, _data), true)
             }
             else {
               this.$message({
@@ -212,7 +214,7 @@ JGBVue.module.printData = () => {
             if(res.data.status) {
               let _data = JSON.parse(res.data.data)
               this.chartInfo = _data
-              this.chartInfo_chart.setOption(this.getOption(this.chartsType, _data), true)
+              this.chartInfo_chart.setOption(this.getOption(this.c_chart, _data), true)
             }
             else {
               this.$message({

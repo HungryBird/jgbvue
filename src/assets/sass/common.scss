@@ -1663,8 +1663,9 @@ table{
 	.btn-print {
 		@include w-flex(row, nowrap, flex-end, center);
 		height:$print-height;
+		padding: 0 10px;
 		background:rgba(0,0,0,.5);
-		position:absolute;
+		position:fixed;
 		top:0;
 		left:0;
 		right:0;
