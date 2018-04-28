@@ -50,10 +50,28 @@ router.post('/btn', (req, res)=> {
 		status: true,
 		message: 'success'
 	})
-})
+});
+
+router.use('/getTags', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/common/tags/tags.json', 'utf-8', (err, data)=> {
+		if(err) {
+			res.send({
+				status: false,
+				message: err
+			});
+			console.log('err', err);
+			return;
+		}
+		jdata += data;
+		res.send({
+			status: true,
+			data: jdata
+		});
+	})
+});
 
 router.post('/getEmployee', (req, res)=> {
-	console.log(req.body.value)
 	if(req.body.value === 'finance1') {
 		let jdata = '';
 		fs.readFile('api/common/audit/auditors1.json', 'utf-8', (err, data)=> {

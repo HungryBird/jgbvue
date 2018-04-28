@@ -498,18 +498,14 @@
 						<el-table-column label="仓库" prop="repo" :render-header="requiredHeader">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.repo }}</div>
-								<!-- <el-input v-else v-model="scope.row.repo"></el-input> -->
 								<el-select v-model="scope.row.repo">
-									<el-option></el-option>
 								</el-select>
 							</template>
 						</el-table-column>
 						<el-table-column label="属性" prop="attribute">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.attribute }}</div>
-								<!-- <el-input v-else v-model="scope.row.attribute"></el-input> -->
 								<el-select v-model="scope.row.attribute">
-									<el-option></el-option>
 								</el-select>
 							</template>
 						</el-table-column>

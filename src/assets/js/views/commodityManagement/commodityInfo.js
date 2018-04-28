@@ -1071,28 +1071,6 @@ JGBVue.module.commodityInfo = ()=> {
 					let _self = this;
 					this.$deleteRow(this.editForm.initSetTable, row, _self);
 		    	},
-		    	addChangeShelfLife() {
-		    		let _self = this;
-    				this.addForm.initSetTable.forEach((item)=> {
-		    			item.shelfLife = _self.addForm.shelfLife;
-		    		});
-		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
-		    			
-		    			let formatDate = new Date((this.addForm.initSetTable[i].productionDate || 0) + (Number.parseInt(this.addForm.initSetTable[i].shelfLife + 1)*24*60*60*1000 || 0));
-    					this.addForm.initSetTable[i].validUntil = this.formatDate(formatDate);
-    					//this.addForm.initSetTable[i].validUntil = 111;
-	    			}
-		    	},
-		    	editChangeShelfLife() {
-		    		let _self = this;
-    				this.editForm.initSetTable.forEach((item)=> {
-		    			item.shelfLife = _self.editForm.shelfLife;
-		    		});
-		    		for(let i = 0; i < this.editForm.initSetTable.length; i++) {
-		    			let formatDate = new Date((this.editForm.initSetTable[i].productionDate || 0) + Number.parseInt(this.editForm.initSetTable[i].shelfLife + 1)*24*60*60*1000 || 0);
-    					this.editForm.initSetTable[i].validUntil = this.formatDate(formatDate);
-	    			}
-		    	},
 		    	addToggleBatchExpirationDateManagement(val) {
 		    		let _self = this;
 		    		this.add_initSetTable_header = [];
@@ -1155,6 +1133,12 @@ JGBVue.module.commodityInfo = ()=> {
 		    			})
 		    		}
 		    	},
+		    	/**
+		    	 * 选择生产日期
+		    	 * @param {[type]} val  [description]
+		    	 * @param {[type]} row  [description]
+		    	 * @param {[type]} prop [description]
+		    	 */
 		    	addFormInitSetTablePickDate(val, row, prop) {
 		    		let _self = this
 	    			,ms = new Date(val).getTime() + (Number.parseInt(_self.addForm.shelfLife)*24*60*60*1000 || 0)
@@ -1177,7 +1161,37 @@ JGBVue.module.commodityInfo = ()=> {
 	    				}
 	    			}
 		    	},
+		    	/**
+		    	 * 输入保质期天数
+		    	 */
+		    	addChangeShelfLife() {
+		    		let _self = this;
+
+    				this.addForm.initSetTable.forEach((item)=> {
+		    			item.shelfLife = _self.addForm.shelfLife;
+		    		});
+
+		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
+		    			let productionDate = new Date(this.addForm.initSetTable[i].productionDate).getTime() || 0
+		    			,shelfLife = Number.parseInt(this.addForm.initSetTable[i].shelfLife)*24*60*60*1000 || 0
+		    			,formatDate = productionDate + shelfLife;
+    					this.addForm.initSetTable[i].validUntil = this.formatDate(new Date(formatDate));
+	    			}
+		    	},
+		    	editChangeShelfLife() {
+		    		let _self = this;
+    				this.editForm.initSetTable.forEach((item)=> {
+		    			item.shelfLife = _self.editForm.shelfLife;
+		    		});
+		    		for(let i = 0; i < this.editForm.initSetTable.length; i++) {
+		    			let productionDate = new Date(this.editForm.initSetTable[i].productionDate).getTime() || 0
+		    			,shelfLife = Number.parseInt(this.editForm.initSetTable[i].shelfLife)*24*60*60*1000 || 0
+		    			,formatDate = productionDate + shelfLife;
+    					this.editForm.initSetTable[i].validUntil = this.formatDate(new Date(formatDate));
+	    			}
+		    	},
 		    	formatDate(val) {
+		    		console.log('val: ', val);
 		    		return val.getFullYear() + '-' + `${val.getMonth() + 1 < 10 ? '0' + (val.getMonth() + 1) : (val.getMonth() + 1)}` + '-' +  `${val.getDate() < 10 ? '0' + val.getDate() : val.getDate()}`;
 		    	},
 		    	addFormInitialNumberChange(val, row) {

@@ -11,9 +11,13 @@ JGBVue.module.maintenanceContract = ()=> {
 	_this.createEditor = ()=> {
 		E = window.wangEditor;
 		addEditor = new E('#addEditor');
+		addEditor.customConfig.onblur = (html)=> {
+			console.log('html: ', html)
+		}
 		addEditor.create();
+		console.log('getRange: ', addEditor)
 	}
-	_this.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl)=> {
+	_this.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -29,7 +33,9 @@ JGBVue.module.maintenanceContract = ()=> {
 					exportForm: [],
 					examinCurRow: null,
 					templateVisible: false,
-					addForm: {},
+					addForm: {
+						tags: []
+					},
 					formRules: {
 						name: [
 							{required: true, message: '请输入名称'}
@@ -47,18 +53,35 @@ JGBVue.module.maintenanceContract = ()=> {
 							{required: true, message: '请输入报价人'}
 						]
 					},
+					otherTags: [],
+					testArr: []
 				}
 			},
 			mounted() {
 				let info = JSON.parse(this.$getQuery(window.location.search).info);
 				this.order_id = info.order_id;
 				this.search();
+				this.getTags();
 			},
 			methods: {
+				addCreateTags() {
+					let _self = this;
+					this.addForm.tags.forEach((item)=> {
+						//addEditor.txt.append('<p>' + item + '</p>')
+						addEditor.cmd.do('insertHTML', '<p>' + item + '</p>')
+					})
+				},
 				search() {
 					axios.post(searchUrl, this.order_id).then((res)=> {
 						if(res.data.status) {
 							this.table = JSON.parse(res.data.data);
+						}
+					})
+				},
+				getTags() {
+					axios.get(getTagsUrl).then((res)=> {
+						if(res.data.status) {
+							this.otherTags = JSON.parse(res.data.data);
 						}
 					})
 				},
@@ -231,8 +254,8 @@ JGBVue.module.maintenanceContract = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl)=> {
-		_this.init(searchUrl, giveOutUrl, getExportFormUrl, btnUrl);
+	that.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl)=> {
+		_this.init(searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl);
 		setTimeout(function() {
 			_this.createEditor();
 		}, 0);

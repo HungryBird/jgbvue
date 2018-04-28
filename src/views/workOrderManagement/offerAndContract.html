@@ -50,7 +50,6 @@
 								</el-checkbox-group>
 							</div>
 							<el-button-group class="pull-right">
-								<el-button size="mini">报价模板</el-button>
 								<el-button v-on:click="exportCilck" size="mini">导出</el-button>
 								<el-button size="mini" :disabled="selectedRows.length !== 1" v-on:click="btnPrintList">打印</el-button>
 								<el-button :disabled="selectedRows.length === 0" v-on:click="giveOut" size="mini">作废</el-button>
