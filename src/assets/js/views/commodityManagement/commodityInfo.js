@@ -6,7 +6,7 @@ JGBVue.module.commodityInfo = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl)=> {
+	_this.init = (getIdUrl, searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -58,7 +58,7 @@ JGBVue.module.commodityInfo = ()=> {
 					auxiliaryAttributesClassifyChildren: [], //添加-点击属性分类-子属性
 					initQuickGenerateTable: [],
 					addForm: {
-						number: 'f011',
+						number: null,
 						name: '',
 						commodityCategory: '',
 						barCode: '',
@@ -113,7 +113,7 @@ JGBVue.module.commodityInfo = ()=> {
 						enterSerialNumberTable: []
 					},
 					editForm: {
-						number: 'f011',
+						number: null,
 						name: '',
 						commodityCategory: '',
 						barCode: '',
@@ -249,11 +249,18 @@ JGBVue.module.commodityInfo = ()=> {
 				this.searchData();
 				this.getQuickQuery();
 				this.getRepo();
-				this.quickGenerate();
 				this.getAuxiliaryAttributesClassify();
 				this.getMultiple();
+				this.getId();
 			},
 			methods: {
+				getId() {
+					axios.get(getIdUrl).then((res)=> {
+						if(res.data.status) {
+							this.addForm.number = res.data.data;
+						}
+					})
+				},
 				searchData(val) {
 					let _self = this;
 					axios.get(searchUrl, val).then((res)=> {
@@ -916,13 +923,14 @@ JGBVue.module.commodityInfo = ()=> {
 			        });
 			    },
 			    quickGenerate(formName) {
-			    	if(this.auxiliaryAttributesClassifyChildren.length !== 0) {
-			    		axios.post(quickGenerateUrl, this.auxiliaryAttributesClassifyChildren).then((res)=> {
-			    			if(res.data.status) {
-			    				this[formName].quickGenerateTable.data = JSON.parse(res.data.data);
-			    			}
-			    		})
+			    	for(let i = 0; i < this.addSelectedAxiliaryAttributesClassify.length; i++ ) {
+			    		console.log('addSelectedAxiliaryAttributesClassify: ', this.addSelectedAxiliaryAttributesClassify[i].children);
+
 			    	}
+			    	/*this.$message({
+		    			type: 'warning',
+		    			message: '请选择至少选择一个属性'
+		    		})*/
 			    },
 			    quickGenerateTable_add_btn(formName) {
 			    	let index = this[formName].quickGenerateTable.data[this[formName].quickGenerateTable.data.length - 1].index + 1;
@@ -1022,11 +1030,8 @@ JGBVue.module.commodityInfo = ()=> {
 		    		/**
 		    		 * prop传入的是父属性的value
 		    		 * auxiliaryAttributesClassify包含父属性和子属性
-		    		 * auxiliaryAttributesClassifyChildren被选中的子属性
-		    		 * 
 		    		 * @type {[type]}
 		    		 */
-		    		console.log(111)
 		    		let _self = this;
 		    		this.quickGenerateOption = [];
 		    		/**
@@ -1038,16 +1043,14 @@ JGBVue.module.commodityInfo = ()=> {
 		    		 */
 	    			for(let i = 0; i < _self.auxiliaryAttributesClassify.length; i++ ) {
 	    				if(prop === _self.auxiliaryAttributesClassify[i].value) {
-	    					this.auxiliaryAttributesClassifyChildren.forEach((child)=> {
-	    						for(let j = 0; j < _self.auxiliaryAttributesClassify[i].chilren.length; j++ ) {
-	    							if(child === _self.auxiliaryAttributesClassify[i].chilren[j].value) {
-	    								let obj = {};
-	    								obj.label = _self.auxiliaryAttributesClassify[i].chilren[j].label;
-	    								obj.value = _self.auxiliaryAttributesClassify[i].chilren[j].value;
-	    								_self.quickGenerateOption.push(obj);
-	    							}
-	    						}
-	    					})
+	    					for(let j = 0; j < _self.auxiliaryAttributesClassify[i].chilren.length; j++ ) {
+    							if(_self.auxiliaryAttributesClassify[i].chilren[j].checked) {
+    								let obj = {};
+    								obj.label = _self.auxiliaryAttributesClassify[i].chilren[j].label;
+    								obj.value = _self.auxiliaryAttributesClassify[i].chilren[j].value;
+    								_self.quickGenerateOption.push(obj);
+    							}
+    						}
 	    				}
 	    			}
 		    	},
@@ -1802,8 +1805,8 @@ JGBVue.module.commodityInfo = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl)=> {
-		_this.init(searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl);
+	that.init = (getIdUrl, searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl)=> {
+		_this.init(getIdUrl, searchUrl, quickQueryUrl, duodanweiUrl, auxiliaryAttributesClassifyUrl, repoUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, toggleCommonUseUrl, getImageUrl, quickGenerateUrl, addAuxiliaryAttributesClassifyUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, addCheckNumberIsRepeatUrl);
 	}
 
 	return that;

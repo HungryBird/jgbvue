@@ -356,9 +356,10 @@
 					<div style="clear: both;"></div>
 					<div style="padding: 5px;border-top: 1px solid #ddd;margin-top: 5px;" v-for="item in addSelectedAxiliaryAttributesClassify" :key="item.label">
 						<h5 class="pull-left" style="padding-right: 10px;">{{ item.parentName }}</h5>
-						<el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren">
+						<!-- <el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren">
 							<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value">{{ c.label }}</el-checkbox>
-						</el-checkbox-group>
+						</el-checkbox-group> -->
+						<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value" v-model="c.checked">{{ c.label }}</el-checkbox>
 						<div style="clear: both;"></div>
 					</div>
 					<div style="padding: 5px 0;">
@@ -498,14 +499,14 @@
 						<el-table-column label="仓库" prop="repo" :render-header="requiredHeader">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.repo }}</div>
-								<el-select v-model="scope.row.repo">
+								<el-select v-model="scope.row.repo" v-else>
 								</el-select>
 							</template>
 						</el-table-column>
 						<el-table-column label="属性" prop="attribute">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.attribute }}</div>
-								<el-select v-model="scope.row.attribute">
+								<el-select v-model="scope.row.attribute" v-else>
 								</el-select>
 							</template>
 						</el-table-column>
@@ -1284,6 +1285,7 @@
 <script type="text/javascript" src="../../assets/js/views/commodityManagement/commodityInfo.js"></script>
 <script type="text/javascript">
 	/**
+	 * 获取编号
 	 * 查询接口
 	 * 获取快速查询选项接口
 	 * 获取多单位选项
@@ -1304,6 +1306,6 @@
 	 * 列设置完成
 	 * 检查编号是否重复
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete', '/commodityInfo/checkNumber');
+	JGBVue.module.commodityInfo().init('/common/getId', '/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete', '/commodityInfo/checkNumber');
 </script>
 </html>
