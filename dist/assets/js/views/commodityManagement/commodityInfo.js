@@ -856,6 +856,14 @@ JGBVue.module.commodityInfo = ()=> {
 			     */
 			    addChangeAuxiliaryAttributesClassify(arr) {
 			    	let _self = this;
+			    	if(arr.length > 3) {
+			    		this.$message({
+			    			type: 'warning',
+			    			message: '只能选择三个属性'
+			    		})
+			    		this.addForm.auxiliaryAttributesClassify.splice(this.addForm.auxiliaryAttributesClassify.length - 1, 1);
+			    		return;
+			    	}
 			    	this.addSelectedAxiliaryAttributesClassify = [];
 			    	this.addForm.quickGenerateTable.header = [];
 			    	arr.forEach((item)=> {
@@ -864,7 +872,7 @@ JGBVue.module.commodityInfo = ()=> {
 			    				let obj = {};
 			    				let hObj = {};
 			    				obj.parentName = _self.auxiliaryAttributesClassify[i].label;
-			    				obj.children = _self.auxiliaryAttributesClassify[i].chilren;
+			    				obj.children = _self.auxiliaryAttributesClassify[i].children;
 			    				_self.addSelectedAxiliaryAttributesClassify.push(obj);
 			    				hObj.label = _self.auxiliaryAttributesClassify[i].label;
 			    				hObj.prop = _self.auxiliaryAttributesClassify[i].value;
@@ -883,7 +891,7 @@ JGBVue.module.commodityInfo = ()=> {
 			    				let obj = {};
 			    				let hObj = {};
 			    				obj.parentName = _self.auxiliaryAttributesClassify[i].label;
-			    				obj.children = _self.auxiliaryAttributesClassify[i].chilren;
+			    				obj.children = _self.auxiliaryAttributesClassify[i].children;
 			    				_self.editSelectedAxiliaryAttributesClassify.push(obj);
 			    				hObj.label = _self.auxiliaryAttributesClassify[i].label;
 			    				hObj.prop = _self.auxiliaryAttributesClassify[i].value;
@@ -907,7 +915,7 @@ JGBVue.module.commodityInfo = ()=> {
 			     */
 			    addAuxiliaryAttributesClassify() {
 			    	let _self = this;
-					this.$prompt('名称', '新增分类', {
+					this.$prompt('名称', '新增属性分类', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 			        }).then(({ value }) => {
@@ -915,6 +923,7 @@ JGBVue.module.commodityInfo = ()=> {
 							if(res.data.status) {
 								let obj = {};
 								obj.label = value;
+								obj.children = [];
 								this.auxiliaryAttributesClassify.push(obj);
 							}
 						})
@@ -928,7 +937,6 @@ JGBVue.module.commodityInfo = ()=> {
 			    quickGenerate(formName) {
 			    	for(let i = 0; i < this.addSelectedAxiliaryAttributesClassify.length; i++ ) {
 			    		console.log('addSelectedAxiliaryAttributesClassify: ', this.addSelectedAxiliaryAttributesClassify[i].children);
-
 			    	}
 			    	/*this.$message({
 		    			type: 'warning',
@@ -989,6 +997,7 @@ JGBVue.module.commodityInfo = ()=> {
 							if(res.data.status) {
 								let obj = {};
 								obj.label = value;
+								obj.children = [];
 								this.auxiliaryAttributesClassify.push(obj);
 							}
 						})
@@ -999,21 +1008,22 @@ JGBVue.module.commodityInfo = ()=> {
 						});       
 			        });
 			    },
-			    addNewAttribute(row, prop) {
+			    addNewAttribute(row, tb) {
 		    		let _self = this;
-					this.$prompt('名称', '新增分类', {
+					this.$prompt('名称', '新增属性', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 			        }).then(({ value }) => {
 						for(let i = 0; i < this.auxiliaryAttributesClassify.length; i++ ) {
-							if(this.auxiliaryAttributesClassify[i].value === prop) {
+							if(this.auxiliaryAttributesClassify[i].value === tb.prop) {
 								let obj = {};
-								obj.parent = prop;
+								obj.parent = tb.prop;
 								obj.label = value;
 								obj.value = value;
 								axios.post(addAuxiliaryAttributesClassifyUrl, obj).then((res)=> {
 									if(res.data.status) {
-										this.auxiliaryAttributesClassify[i].chilren.push(obj);
+										this.auxiliaryAttributesClassify[i].children.push(obj);
+										console.log('this.auxiliaryAttributesClassify[i]: ', this.auxiliaryAttributesClassify[i])
 									}else{
 										this.$message.error(res.data.err);
 										return;
@@ -1045,12 +1055,12 @@ JGBVue.module.commodityInfo = ()=> {
 		    		 * @return {[type]}     [description]
 		    		 */
 	    			for(let i = 0; i < _self.auxiliaryAttributesClassify.length; i++ ) {
-	    				if(prop === _self.auxiliaryAttributesClassify[i].value) {
-	    					for(let j = 0; j < _self.auxiliaryAttributesClassify[i].chilren.length; j++ ) {
-    							if(_self.auxiliaryAttributesClassify[i].chilren[j].checked) {
+	    				if(prop === _self.auxiliaryAttributesClassify[i].value&&_self.auxiliaryAttributesClassify[i].children) {
+	    					for(let j = 0; j < _self.auxiliaryAttributesClassify[i].children.length; j++ ) {
+    							if(_self.auxiliaryAttributesClassify[i].children[j].checked) {
     								let obj = {};
-    								obj.label = _self.auxiliaryAttributesClassify[i].chilren[j].label;
-    								obj.value = _self.auxiliaryAttributesClassify[i].chilren[j].value;
+    								obj.label = _self.auxiliaryAttributesClassify[i].children[j].label;
+    								obj.value = _self.auxiliaryAttributesClassify[i].children[j].value;
     								_self.quickGenerateOption.push(obj);
     							}
     						}
@@ -1313,6 +1323,7 @@ JGBVue.module.commodityInfo = ()=> {
     							for (let k = 0; k < arr.length; k++) {
     								for (let j = 0; j < this.addForm.initSetTable[i].enterSerialNumberTable.length; j++) {
 	    								if(arr[k].serialNumber === this.addForm.initSetTable[i].enterSerialNumberTable[j].serialNumber) {
+	    									console.log( this.addForm.initSetTable)
 											this.$message({
 												type: 'warning',
 												message: '不能添加相同序列号!'
@@ -1321,6 +1332,7 @@ JGBVue.module.commodityInfo = ()=> {
 	    								}
 	    							}
     							}
+    							arr = JSON.parse(JSON.stringify(arr));
 	    						arr.forEach((item)=> {
 	    							_self.addForm.initSetTable[i].enterSerialNumberTable.push(item);
 	    						})	
@@ -1371,6 +1383,7 @@ JGBVue.module.commodityInfo = ()=> {
 	    								}
 	    							}
     							}
+    							arr = JSON.parse(JSON.stringify(arr));
 	    						arr.forEach((item)=> {
 	    							_self.editForm.initSetTable[i].enterSerialNumberTable.push(item);
 	    						})	
@@ -1427,6 +1440,10 @@ JGBVue.module.commodityInfo = ()=> {
 			    openAddEnterSerialNumberDialog(row) {
 			    	this.addCurrentEnterRow = row;
 			    	this.addEnterSerialNumberVisible = true;
+			    },
+			    openEditEnterSerialNumberDialog(row) {
+			    	this.editCurrentEnterRow = row;
+			    	this.editEnterSerialNumberVisible = true;
 			    },
 			    addBatchGenerateSerialNumber() {
 			    	let _self = this;

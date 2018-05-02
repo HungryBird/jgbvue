@@ -26,7 +26,7 @@
 	{
 		"label": "属性2",
 		"value": "sx2",
-		"chilren": [
+		"children": [
 			{
 				"parent": "sx2",
 				"label": "属性2-子属性1",
@@ -50,7 +50,7 @@
 	{
 		"label": "属性3",
 		"value": "sx3",
-		"chilren": [
+		"children": [
 			{
 				"parent": "sx3",
 				"label": "属性3-子属性1",

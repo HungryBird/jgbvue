@@ -356,9 +356,6 @@
 					<div style="clear: both;"></div>
 					<div style="padding: 5px;border-top: 1px solid #ddd;margin-top: 5px;" v-for="item in addSelectedAxiliaryAttributesClassify" :key="item.label">
 						<h5 class="pull-left" style="padding-right: 10px;">{{ item.parentName }}</h5>
-						<!-- <el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren">
-							<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value">{{ c.label }}</el-checkbox>
-						</el-checkbox-group> -->
 						<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value" v-model="c.checked">{{ c.label }}</el-checkbox>
 						<div style="clear: both;"></div>
 					</div>
@@ -391,7 +388,7 @@
 										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label">
 											{{ o.label }}
 										</el-option>
-										<div v-on:click="addNewAttribute(scope.row, tb.prop)" class="el-select-dropdown__item">
+										<div v-on:click="addNewAttribute(scope.row, tb)" class="el-select-dropdown__item">
 											<span style="float: left" class="el-icon-plus"></span>
       										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>
 										</div>
@@ -1027,7 +1024,7 @@
 						</el-table-column>
 						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
 							<template slot-scope="scope">
-								<div v-if="editForm.serialNumberManagement" v-on:click="editEnterSerialNumberVisible = true">
+								<div v-if="editForm.serialNumberManagement" v-on:click="openEditEnterSerialNumberDialog(scope.row)">
 									<el-button v-show="editForm.enterSerialNumberTable.length === 0" size="small">录入</el-button>
 									<div class="pull-right" v-show="editForm.enterSerialNumberTable.length !== 0">{{ editForm.enterSerialNumberTable.length }}</div>
 									<div class="pull-right jgb-brand" v-show="editForm.enterSerialNumberTable.length !== 0">SN</div>
