@@ -1320,22 +1320,11 @@ JGBVue.module.commodityInfo = ()=> {
 			    		});
 			    		for (var i = 0; i < this.addForm.initSetTable.length; i++) {
 	    					if(this.addForm.initSetTable[i] === this.addCurrentEnterRow) {
-    							for (let k = 0; k < arr.length; k++) {
-    								for (let j = 0; j < this.addForm.initSetTable[i].enterSerialNumberTable.length; j++) {
-	    								if(arr[k].serialNumber === this.addForm.initSetTable[i].enterSerialNumberTable[j].serialNumber) {
-	    									console.log( this.addForm.initSetTable)
-											this.$message({
-												type: 'warning',
-												message: '不能添加相同序列号!'
-											})
-											return;
-	    								}
-	    							}
-    							}
     							arr = JSON.parse(JSON.stringify(arr));
+    							this.addForm.initSetTable[i].enterSerialNumberTable = [];
 	    						arr.forEach((item)=> {
 	    							_self.addForm.initSetTable[i].enterSerialNumberTable.push(item);
-	    						})	
+	    						});
 	    					}
 	    				}
 			    		this.addEnterSerialNumberVisible = false;
@@ -1371,22 +1360,12 @@ JGBVue.module.commodityInfo = ()=> {
 			    			}
 			    		});
 			    		for (var i = 0; i < this.editForm.initSetTable.length; i++) {
-	    					if(this.editForm.initSetTable[i] === this.addCurrentEnterRow) {
-    							for (let k = 0; k < arr.length; k++) {
-    								for (let j = 0; j < this.editForm.initSetTable[i].enterSerialNumberTable.length; j++) {
-	    								if(arr[k].serialNumber === this.editForm.initSetTable[i].enterSerialNumberTable[j].serialNumber) {
-											this.$message({
-												type: 'warning',
-												message: '不能添加相同序列号!'
-											})
-											return;
-	    								}
-	    							}
-    							}
+	    					if(this.editForm.initSetTable[i] === this.editCurrentEnterRow) {
     							arr = JSON.parse(JSON.stringify(arr));
+    							this.editForm.initSetTable[i].enterSerialNumberTable = [];
 	    						arr.forEach((item)=> {
 	    							_self.editForm.initSetTable[i].enterSerialNumberTable.push(item);
-	    						})	
+	    						});
 	    					}
 	    				}
 			    		this.editEnterSerialNumberVisible = false;
@@ -1439,10 +1418,34 @@ JGBVue.module.commodityInfo = ()=> {
 			    },
 			    openAddEnterSerialNumberDialog(row) {
 			    	this.addCurrentEnterRow = row;
+			    	for (var i = 0; i < this.addForm.initSetTable.length; i++) {
+			    		if(this.addForm.initSetTable[i] === row) {
+			    			if(this.addForm.initSetTable[i].enterSerialNumberTable.length !== 0) {
+			    				this.addEnterSerialNumberForm.table = JSON.parse(JSON.stringify(this.addForm.initSetTable[i].enterSerialNumberTable));
+			    			}else{
+			    				this.addEnterSerialNumberForm.table = [{
+			    					index: 0,
+			    					editFlag: false
+			    				}]
+			    			}
+			    		}
+			    	}
 			    	this.addEnterSerialNumberVisible = true;
 			    },
 			    openEditEnterSerialNumberDialog(row) {
 			    	this.editCurrentEnterRow = row;
+			    	for (var i = 0; i < this.editForm.initSetTable.length; i++) {
+			    		if(this.editForm.initSetTable[i] === row) {
+			    			if(this.editForm.initSetTable[i].enterSerialNumberTable.length !== 0) {
+			    				this.editEnterSerialNumberForm.table = JSON.parse(JSON.stringify(this.editForm.initSetTable[i].enterSerialNumberTable));
+			    			}else{
+			    				this.editEnterSerialNumberForm.table = [{
+			    					index: 0,
+			    					editFlag: false
+			    				}]
+			    			}
+			    		}
+			    	}
 			    	this.editEnterSerialNumberVisible = true;
 			    },
 			    addBatchGenerateSerialNumber() {
