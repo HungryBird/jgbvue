@@ -1947,6 +1947,28 @@ JGBVue.module.workOrderManagement = () => {
             + subTotal;
           this.finalCostForm.cn_price = 'abc'
         },
+        handleOffer(index, row) {
+          this.$refs.orderManagementTable.clearSelection();
+          this.selectedRows = [];
+          let info = this.$deepCopy(row);
+          this.$selectTab(
+            'maintenanceOffer', 
+            '维修报价', 
+            './views/workOrderManagement/maintenanceOffer.html',
+            `info=${encodeURI(JSON.stringify(info))}`
+          )
+        },
+        handleContract(index, row) {
+          this.$refs.orderManagementTable.clearSelection();
+          this.selectedRows = [];
+          let info = this.$deepCopy(row);
+          this.$selectTab(
+            'maintenanceContract', 
+            '维修合同', 
+            './views/workOrderManagement/maintenanceContract.html',
+            `info=${encodeURI(JSON.stringify(info))}`
+          )
+        }
       },
       watch: {
         //人工费变更 重新计算合计

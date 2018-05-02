@@ -133,13 +133,13 @@
                     <!-- 待报价 -->
                     <div v-else-if="scope.row.status_value == 4" class="order-button">
                       <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                      <el-button type="" size="mini" v-on:click="">维修报价</el-button>
+                      <el-button type="" size="mini" v-on:click="handleOffer(scope.$index, scope.row)">维修报价</el-button>
                     </div>
                     <!-- 报价中 -->
                     <div v-else-if="scope.row.status_value == 5" class="order-button">
                       <el-button type="" size="mini" v-on:click="btnView(scope.row, scope.$index)">查看</el-button>
-                      <el-button type="" size="mini" v-on:click="">维修报价</el-button>
-                      <el-button type="" size="mini" v-on:click="">维修合同</el-button>
+                      <el-button type="" size="mini" v-on:click="handleOffer(scope.$index, scope.row)">维修报价</el-button>
+                      <el-button type="" size="mini" v-on:click="handleContract(scope.$index, scope.row)">维修合同</el-button>
                     </div>
                     <!-- 待维修 -->
                     <div v-else-if="scope.row.status_value == 6" class="order-button">

@@ -62,7 +62,7 @@
 									<div v-if="item.prop == 'action'" >
 										<el-button-group v-if="scope.row.status === 0">
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>
-											<el-button size="mini" v-on:click="addContractDialogVisible = true">新增报价</el-button>
+											<el-button size="mini" v-on:click="handleAddOffer">新增报价</el-button>
 										</el-button-group>
 										<el-button-group v-else-if="scope.row.status === 1">
 											<el-button size="mini" v-on:click="handleExamine(scope.$index, scope.row)">查看</el-button>

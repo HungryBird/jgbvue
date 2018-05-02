@@ -20,7 +20,6 @@ JGBVue.module.offerAndContract = ()=> {
 				};
 				var equipmentSerialNumber = (rule, value, callback)=> {
 					if(!this.equipmentSerialNumberValid) {
-						console.log(1111)
 						callback(new Error(this.equipmentSerialNumberError));
 					}
 				}*/
@@ -727,7 +726,14 @@ JGBVue.module.offerAndContract = ()=> {
 			            `filter=${encodeURI(JSON.stringify(filter))}&&url=${printListUrl}&&mid=${this.c_menuId}&&hurl=${defaultColumnSettingUrl}`
 		            )
 				},
+				handleAddOffer() {
+					this.$refs.table.clearSelection();
+					this.selectedRows = [];
+					this.addContractDialogVisible = true;
+				},
 				handleOffer(index, row) {
+					this.$refs.table.clearSelection();
+					this.selectedRows = [];
 					let info = this.$deepCopy(row);
 					this.$selectTab(
 						'maintenanceOffer', 
@@ -737,6 +743,8 @@ JGBVue.module.offerAndContract = ()=> {
 					)
 				},
 				handleContract(index, row) {
+					this.$refs.table.clearSelection();
+					this.selectedRows = [];
 					let info = this.$deepCopy(row);
 					this.$selectTab(
 						'maintenanceContract', 
@@ -761,7 +769,7 @@ JGBVue.module.offerAndContract = ()=> {
 					}
 				},
 				selectedRows(val) {
-					console.log('watch selectedRows: ', val)
+					//console.log('watch selectedRows: ', val)
 				}
 			},
 			filters: {
