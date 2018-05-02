@@ -19,6 +19,8 @@ JGBVue.module.commodityInfo = ()=> {
 					search: {
 						input: ''
 					},
+					addCurrentEnterRow: null,
+					editCurrentEnterRow: null,
 					multipleOption: [],
 					multipleTotalOption: [],
 					addMultiplePreferredOutOption: [],
@@ -102,15 +104,16 @@ JGBVue.module.commodityInfo = ()=> {
 							{
 								index: 1,
 								editFlag: false,
-								shelfLife: null
+								shelfLife: null,
+								enterSerialNumberTable: []
 							},
 							{
 								index: 2,
 								editFlag: false,
-								shelfLife: null
+								shelfLife: null,
+								enterSerialNumberTable: []
 							}
 						],
-						enterSerialNumberTable: []
 					},
 					editForm: {
 						number: null,
@@ -1238,13 +1241,15 @@ JGBVue.module.commodityInfo = ()=> {
 	    			}
 		    	},
 			    addUsingSerialNumberManagement(val) {
-			    	if(this.addForm.enterSerialNumberTable.length !== 0) {
-			    		this.$message({
-		    				type: 'error',
-		    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
-		    			})
-		    			this.addForm.serialNumberManagement = true;
-		    			return;
+			    	for (var i = 0; i < this.addForm.initSetTable.length; i++) {
+			    		if(this.addForm.initSetTable[i].enterSerialNumberTable.length !== 0) {
+			    			this.$message({
+			    				type: 'error',
+			    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
+			    			})
+			    			this.addForm.serialNumberManagement = true;
+			    			return;
+			    		}
 			    	}
 			    	for(let i = 0; i < this.addForm.initSetTable.length; i++ ) {
 			    		if(this.addForm.initSetTable[i].initialNumber) {
@@ -1258,13 +1263,15 @@ JGBVue.module.commodityInfo = ()=> {
 			    	}
 			    },
 			    editUsingSerialNumberManagement(val) {
-			    	if(this.editForm.enterSerialNumberTable.length !== 0) {
-			    		this.$message({
-		    				type: 'error',
-		    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
-		    			})
-		    			this.editForm.serialNumberManagement = true;
-		    			return;
+			    	for (var i = 0; i < this.editForm.initSetTable.length; i++) {
+			    		if(this.editForm.initSetTable[i].enterSerialNumberTable.length !== 0) {
+			    			this.$message({
+			    				type: 'error',
+			    				message: '期初数量已设置，不可更改！可删除该数据之后切换'
+			    			})
+			    			this.editForm.serialNumberManagement = true;
+			    			return;
+			    		}
 			    	}
 			    	for(let i = 0; i < this.editForm.initSetTable.length; i++ ) {
 			    		if(this.editForm.initSetTable[i].initialNumber) {
@@ -1278,9 +1285,14 @@ JGBVue.module.commodityInfo = ()=> {
 			    	}
 			    },
 			    saveAddSerialNumber() {
-			    	let serialNumberLen = 0;
+			    	let serialNumberLen = 0
+			    	,_self = this;
 			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++) {
 			    		if(this.addEnterSerialNumberForm.table[i].isRepeat) {
+			    			this.$message({
+			    				type: 'warning',
+			    				message: '序列号不能重复！'
+			    			})
 			    			return;
 			    		}
 			    	}
@@ -1290,11 +1302,30 @@ JGBVue.module.commodityInfo = ()=> {
 			    		}
 			    	}
 			    	if(serialNumberLen > 0) {
+			    		let arr = [];
 			    		this.addEnterSerialNumberForm.table.forEach((item)=> {
 			    			if(item.serialNumber&&!item.isRepeat) {
-			    				this.addForm.enterSerialNumberTable.push(item);
+			    				arr.push(item);
 			    			}
 			    		});
+			    		for (var i = 0; i < this.addForm.initSetTable.length; i++) {
+	    					if(this.addForm.initSetTable[i] === this.addCurrentEnterRow) {
+    							for (let k = 0; k < arr.length; k++) {
+    								for (let j = 0; j < this.addForm.initSetTable[i].enterSerialNumberTable.length; j++) {
+	    								if(arr[k].serialNumber === this.addForm.initSetTable[i].enterSerialNumberTable[j].serialNumber) {
+											this.$message({
+												type: 'warning',
+												message: '不能添加相同序列号!'
+											})
+											return;
+	    								}
+	    							}
+    							}
+	    						arr.forEach((item)=> {
+	    							_self.addForm.initSetTable[i].enterSerialNumberTable.push(item);
+	    						})	
+	    					}
+	    				}
 			    		this.addEnterSerialNumberVisible = false;
 			    	}else{
 			    		this.$message({
@@ -1304,9 +1335,14 @@ JGBVue.module.commodityInfo = ()=> {
 			    	}
 			    },
 			    saveEditSerialNumber() {
-			    	let serialNumberLen = 0;
+			    	let serialNumberLen = 0
+			    	,_self = this;
 			    	for(let i = 0; i < this.editEnterSerialNumberForm.table.length; i++) {
 			    		if(this.editEnterSerialNumberForm.table[i].isRepeat) {
+			    			this.$message({
+			    				type: 'warning',
+			    				message: '序列号不能重复！'
+			    			})
 			    			return;
 			    		}
 			    	}
@@ -1316,11 +1352,30 @@ JGBVue.module.commodityInfo = ()=> {
 			    		}
 			    	}
 			    	if(serialNumberLen > 0) {
+			    		let arr = [];
 			    		this.editEnterSerialNumberForm.table.forEach((item)=> {
 			    			if(item.serialNumber&&!item.isRepeat) {
-			    				this.editForm.enterSerialNumberTable.push(item);
+			    				arr.push(item);
 			    			}
 			    		});
+			    		for (var i = 0; i < this.editForm.initSetTable.length; i++) {
+	    					if(this.editForm.initSetTable[i] === this.addCurrentEnterRow) {
+    							for (let k = 0; k < arr.length; k++) {
+    								for (let j = 0; j < this.editForm.initSetTable[i].enterSerialNumberTable.length; j++) {
+	    								if(arr[k].serialNumber === this.editForm.initSetTable[i].enterSerialNumberTable[j].serialNumber) {
+											this.$message({
+												type: 'warning',
+												message: '不能添加相同序列号!'
+											})
+											return;
+	    								}
+	    							}
+    							}
+	    						arr.forEach((item)=> {
+	    							_self.editForm.initSetTable[i].enterSerialNumberTable.push(item);
+	    						})	
+	    					}
+	    				}
 			    		this.editEnterSerialNumberVisible = false;
 			    	}else{
 			    		this.$message({
@@ -1328,33 +1383,32 @@ JGBVue.module.commodityInfo = ()=> {
 				    		message: '请输入序列号'
 				    	})	
 			    	}
-
 			    },
 			    addEnterSerialNumberInputBlur(row, serialNumber, index) {
 			    	for(let i = 0; i < this.addEnterSerialNumberForm.table.length; i++ ) {
-			    		if(this.addEnterSerialNumberForm.table[i].index === index){
+			    		if(i === index){
 			    			continue;
 			    		}else if(this.addEnterSerialNumberForm.table[i].serialNumber === serialNumber) {
-			    			this.addEnterSerialNumberForm.table[index-1].isRepeat = true;
-			    			this.addEnterSerialNumberForm.table[index-1].remark = '与第' + Number.parseInt(i + 1) + '行序列号重复';
+			    			this.addEnterSerialNumberForm.table[index].isRepeat = true;
+			    			this.addEnterSerialNumberForm.table[index].remark = '与第' + Number.parseInt(i + 1) + '行序列号重复';
 			    			return;
 			    		}
 			    	}
-			    	this.addEnterSerialNumberForm.table[index-1].isRepeat = false;
-			    	this.addEnterSerialNumberForm.table[index-1].remark = null;
+			    	this.addEnterSerialNumberForm.table[index].isRepeat = false;
+			    	this.addEnterSerialNumberForm.table[index].remark = null;
 			    },
 			    editEnterSerialNumberInputBlur(row, serialNumber, index) {
 			    	for(let i = 0; i < this.editEnterSerialNumberForm.table.length; i++ ) {
-			    		if(this.editEnterSerialNumberForm.table[i].index === index){
+			    		if(i === index){
 			    			continue;
 			    		}else if(this.editEnterSerialNumberForm.table[i].serialNumber === serialNumber) {
-			    			this.editEnterSerialNumberForm.table[index-1].isRepeat = true;
-			    			this.editEnterSerialNumberForm.table[index-1].remark = '与第' + Number.parseInt(i + 1) + '行序列号重复';
+			    			this.editEnterSerialNumberForm.table[index].isRepeat = true;
+			    			this.editEnterSerialNumberForm.table[index].remark = '与第' + Number.parseInt(i + 1) + '行序列号重复';
 			    			return;
 			    		}
 			    	}
-			    	this.editEnterSerialNumberForm.table[index-1].isRepeat = false;
-			    	this.editEnterSerialNumberForm.table[index-1].remark = null;
+			    	this.editEnterSerialNumberForm.table[index].isRepeat = false;
+			    	this.editEnterSerialNumberForm.table[index].remark = null;
 			    },
 			    handleAddEnterSerialNumberAddRow() {
 					this.$addRow(this.addEnterSerialNumberForm.table);
@@ -1369,6 +1423,10 @@ JGBVue.module.commodityInfo = ()=> {
 			    handleEditEnterSerialNumberDeleteRow(row) {
 					let _self = this;
 					this.$deleteRow(this.editEnterSerialNumberForm.table, row, _self);
+			    },
+			    openAddEnterSerialNumberDialog(row) {
+			    	this.addCurrentEnterRow = row;
+			    	this.addEnterSerialNumberVisible = true;
 			    },
 			    addBatchGenerateSerialNumber() {
 			    	let _self = this;

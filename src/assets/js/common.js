@@ -138,9 +138,9 @@ Vue.prototype.$doubleDecimals = doubleDecimals;
  */
 
 let checkSerialNumberIsRepeat = (data, obj)=> {
-  for(let o = 1; o < data.length + 1; o++ ) {
+  for(let o = 0; o < data.length; o++ ) {
     if(obj.serialNumber === data[o].serialNumber) {
-      obj.remark = '与第' + o + '行序列号重复';
+      obj.remark = '与第' + Number.parseInt(o + 1) + '行序列号重复';
       obj.isRepeat = true;
       break;
     }

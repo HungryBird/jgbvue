@@ -539,10 +539,10 @@
 						</el-table-column>
 						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
 							<template slot-scope="scope">
-								<div v-if="addForm.serialNumberManagement" v-on:click="addEnterSerialNumberVisible = true">
-									<el-button v-show="addForm.enterSerialNumberTable.length === 0" size="small">录入</el-button>
-									<div class="pull-right" v-show="addForm.enterSerialNumberTable.length !== 0">{{ addForm.enterSerialNumberTable.length }}</div>
-									<div class="pull-right jgb-brand" v-show="addForm.enterSerialNumberTable.length !== 0">SN</div>
+								<div v-if="addForm.serialNumberManagement" v-on:click="openAddEnterSerialNumberDialog(scope.row)">
+									<el-button v-show="scope.row.enterSerialNumberTable.length === 0" size="small">录入</el-button>
+									<div class="pull-right" v-show="scope.row.enterSerialNumberTable.length !== 0">{{ scope.row.enterSerialNumberTable.length }}</div>
+									<div class="pull-right jgb-brand" v-show="scope.row.enterSerialNumberTable.length !== 0">SN</div>
 									<div class="jgb-clearFloat">.</div>
 								</div>
 								<div v-else-if="!scope.row.editFlag&&!addForm.serialNumberManagement&&addForm.initSet">{{ scope.row.initialNumber }}</div>
@@ -1092,7 +1092,7 @@
 				<el-table-column label="序列号" prop="serialNumber">
 					<template slot-scope="scope">
 						<div v-if="!scope.row.editFlag">{{ scope.row.serialNumber }}</div>
-						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="addEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.row.index)"></el-input>
+						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="addEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.$index)"></el-input>
 					</template>
 				</el-table-column>
 				<el-table-column label="备注" prop="remark">
@@ -1144,7 +1144,7 @@
 				<el-table-column label="序列号" prop="serialNumber">
 					<template slot-scope="scope">
 						<div v-if="!scope.row.editFlag">{{ scope.row.serialNumber }}</div>
-						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="editEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.row.index)"></el-input>
+						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="editEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.$index)"></el-input>
 					</template>
 				</el-table-column>
 				<el-table-column label="备注" prop="remark">
