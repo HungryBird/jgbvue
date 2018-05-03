@@ -1642,15 +1642,15 @@ table{
 				}
 			}
 		}
-		//表格式表单中点击出现输入框
-		.show-on-focus {
-			.el-input__inner,
-			.el-textarea__inner {
-				border:none;
-				box-sizing:border-box;
-				&:focus {
-					border: 1px solid #409EFF;
-				}
+	}
+	//表格式表单中点击出现输入框
+	.show-on-focus {
+		.el-input__inner,
+		.el-textarea__inner {
+			border:none;
+			box-sizing:border-box;
+			&:focus {
+				border: 1px solid #409EFF;
 			}
 		}
 	}

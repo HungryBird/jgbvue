@@ -1466,16 +1466,14 @@ table {
       margin: 0 auto; }
       .w-common-form-table th .el-form-item.cost .el-input, .w-common-form-table td .el-form-item.cost .el-input {
         width: 100%; }
-    .w-common-form-table th .show-on-focus .el-input__inner,
-    .w-common-form-table th .show-on-focus .el-textarea__inner, .w-common-form-table td .show-on-focus .el-input__inner,
-    .w-common-form-table td .show-on-focus .el-textarea__inner {
-      border: none;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box; }
-      .w-common-form-table th .show-on-focus .el-input__inner:focus,
-      .w-common-form-table th .show-on-focus .el-textarea__inner:focus, .w-common-form-table td .show-on-focus .el-input__inner:focus,
-      .w-common-form-table td .show-on-focus .el-textarea__inner:focus {
-        border: 1px solid #409EFF; }
+  .w-common-form-table .show-on-focus .el-input__inner,
+  .w-common-form-table .show-on-focus .el-textarea__inner {
+    border: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box; }
+    .w-common-form-table .show-on-focus .el-input__inner:focus,
+    .w-common-form-table .show-on-focus .el-textarea__inner:focus {
+      border: 1px solid #409EFF; }
 
 .w-common-line-2 {
   display: -webkit-box;
