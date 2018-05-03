@@ -156,6 +156,7 @@
                       <el-button type="" size="mini" v-on:click="btnOutside(scope.row, scope.$index)">送外修</el-button>
                       <el-button type="" size="mini" v-on:click="btnDiagnosis(scope.row, scope.$index)">再次诊断</el-button>
                       <el-button type="" size="mini" v-on:click="">开票申请</el-button>
+                      <el-button type="" size="mini" v-on:click="btnAccessoriesOut(scope.row, scope.$index)">维修配件出库</el-button>
                     </div>
                     <!-- 完成维修 -->
                     <div v-else-if="scope.row.status_value == 8" class="order-button">
@@ -1119,6 +1120,11 @@
           v-on:save="saveAddVisitRecord" v-on:close="closeAddVisitRecord">
         </jgb-form-footer>
       </el-dialog>
+      <!-- 提交维修配件出库 -->
+      <el-dialog :visible.sync="showAccessoriesOut">
+        <div class="title" slot="title">提交维修配件出库</div>
+        <object :data="accessoriesOutUrl" width="100%" height="500px"></object>
+      </el-dialog>
 		</el-container>
 	</div>
 </body>
@@ -1128,7 +1134,8 @@
 <script type="text/javascript" src="../../assets/js/common.js"></script>
 <script type="text/javascript" src="../../assets/js/views/workOrderManagement/orderManagement.js"></script>
 <script type="text/javascript">
-	JGBVue.module.workOrderManagement().init(
+var workOrderManagement = JGBVue.module.workOrderManagement()
+workOrderManagement.init(
     '/orderManagement/get_business_data', //获取业务人员数据
     '/orderManagement/get_maintenance_data', //获取维修人员数据
     '/orderManagement/get_work_order_data', //获取工单数据

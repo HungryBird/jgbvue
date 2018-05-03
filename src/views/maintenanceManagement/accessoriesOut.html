@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>提交维修配件出库</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+</head>
+
+<body style="background:#fff;">
+	<div id="app" v-cloak class="accessoriesOut">
+    <el-form class="w-common-form" ref="accessoriesOutForm" v-loading="loadingForm"
+      :model="accessoriesOutForm">
+      <el-table width="100%" border
+        :data="accessoriesOutForm.peijian" >
+        <el-table-column  align="center" width="300" prop="" label="配件"
+          :render-header="(h, params)=> {
+            return h('div', {
+                class: 'render-table-header'
+              },[
+              h('span', {
+                style: {
+                  color: '#F56C6C'
+                }
+              }, '*'),
+              h('span', {
+                style: {
+                  color: '#909399'
+                }
+              }, '配件'),
+            ])
+          }">
+          <template slot-scope="scope">
+            <div class="accessories">
+              <div class="row-action">
+                <i class="circle el-icon-circle-close" v-on:click="removeOneAccessories(scope.$index)"></i>
+                <i class="circle el-icon-circle-plus" v-on:click="addOneAccessories"></i>
+              </div>
+              <el-form-item :prop="`peijian[${scope.$index}].data.commodityNumber`"
+                :rules="{required: true, message: '请选择配件', trigger: 'blur, change'}">
+                <el-select v-model="accessoriesOutForm.peijian[scope.$index].data.commodityNumber" filterable remote 
+                  placeholder="请选择" value-key="value"
+                  :remote-method="remoteAccessories"
+                  v-on:change="handleAccessoriesChange(scope.$index)">
+                  <el-option v-for="item in formAccessoriesList"
+                    :key="item.commodityNumber"
+                    :label="'商品'+item.commodityName+',型号'+item.specifications+',编号'+item.commodityNumber"
+                    :value="item.commodityNumber">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column  align="center" prop="" label="数量"
+          :render-header="(h, params)=> {
+            return h('div', {
+                class: 'render-table-header'
+              }, [
+              h('span', {
+                style: {
+                  color: '#F56C6C'
+                }
+              }, '*'),
+              h('span', {
+                style: {
+                  color: '#909399'
+                }
+              }, '数量'),
+            ])
+          }">
+          <template slot-scope="scope">
+            <el-form-item v-if="scope.row.exist_SN === true"
+              :prop="`peijian[${scope.$index}].SN`"
+              :rules="{ validator: validateSN, trigger: 'blur,change' }">
+              <div style="cursor:pointer;" v-on:click="btnChooseSN(scope.$index)">
+                <span style="background:#67C23A;padding:0 5px;border-radius:3px;color:#fff;">SN</span>&nbsp;&nbsp;{{scope.row.SN.length}}
+              </div>
+            </el-form-item>
+            <el-form-item v-if="scope.row.exist_SN === false"  
+              :prop="`peijian[${scope.$index}].count`" 
+              :rules="{ validator: validateInt, trigger: 'blur,change' }">
+              <el-input-number v-model="accessoriesOutForm.peijian[scope.$index].count" 
+                controls-position="right" :min="1">
+              </el-input-number>
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column  align="center" prop="" label="属性">
+          <template slot-scope="scope">
+            <el-select v-if="scope.row.attribute_list && scope.row.attribute_list.length" v-model="accessoriesOutForm.peijian[scope.$index].attribute">
+              <el-option v-for="item in accessoriesOutForm.peijian[scope.$index].attribute_list"
+                placeholder="请选择" value-key="value" size="small"
+                :key="item.id" :value="item.id" :label="item.name">
+              </el-option>
+            </el-select>
+            <div v-if="scope.row.attribute_list && scope.row.attribute_list.length === 0">无</div>
+          </template>
+        </el-table-column>
+        <el-table-column  align="center" prop="" label="批次">
+          <template slot-scope="scope">
+            <el-select v-if="scope.row.bacth_list && scope.row.bacth_list.length" v-model="accessoriesOutForm.peijian[scope.$index].bacth">
+              <el-option v-for="item in accessoriesOutForm.peijian[scope.$index].bacth_list"
+                placeholder="请选择" value-key="value" size="small"
+                :key="item.id" :value="item.id" :label="item.name">
+              </el-option>
+            </el-select>
+            <div v-if="scope.row.bacth_list && scope.row.bacth_list.length === 0">无</div>
+          </template>
+        </el-table-column>
+        <el-table-column  align="center" prop="" label="仓库"
+          :render-header="(h, params)=> {
+            return h('div', {
+                class: 'render-table-header'
+              }, [
+              h('span', {
+                style: {
+                  color: '#F56C6C'
+                }
+              }, '*'),
+              h('span', {
+                style: {
+                  color: '#909399'
+                }
+              }, '仓库'),
+            ])
+          }">
+          <template slot-scope="scope">
+            <el-form-item v-if="scope.row.warehouse_list && scope.row.warehouse_list.length" :prop="`peijian[${scope.$index}].warehouse`" 
+              :rules="{ required: true, message: '请选择仓库', trigger: 'blur,change' }">
+              <el-select v-if="scope.row.warehouse_list && scope.row.warehouse_list.length" v-model="accessoriesOutForm.peijian[scope.$index].warehouse">
+                <el-option v-for="item in accessoriesOutForm.peijian[scope.$index].warehouse_list"
+                  placeholder="请选择" value-key="value" size="small"
+                  :key="item.id" :value="item.id" :label="item.name">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-form>
+    <jgb-form-footer class="footer"
+      :loading="loadingSaveAccessoriesOut"
+      save-text="提交" close-text="取消"
+      v-on:save="saveAccessoriesOut" v-on:close="closeAccessoriesOut">
+    </jgb-form-footer>
+    <!-- 商品序列号 -->
+    <el-dialog v-cloak class="sn" :visible.sync="showSN" width="600px" :modal="false">
+      <div class="title title-sn" slot="title">
+        <span>商品序列号：</span>
+        <el-switch v-model="selectOn"></el-switch>
+        <span>&nbsp;&nbsp;扫码录入&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <el-input v-if="selectOn" v-model="selectSN" class="input-sn" 
+          placeholder="查询序列号" clearable>
+          <i slot="prefix" class="el-input__icon el-icon-search"></i>
+        </el-input>
+      </div>
+      <div class="choose-sn">
+        <table class="w-common-form-table">
+          <thead>
+            <th style="width:50px;">序号</th>
+            <th>
+              请选择序列号&nbsp;
+              <span style="font-weight:500;color:#409EFF;cursor:pointer;" v-on:click="addAllSN">
+                复制全部序列号
+                <i class="el-icon-d-arrow-right"></i>
+              </span>
+            </th>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in currentSNList">
+              <td>{{index+1}}</td>
+              <td>{{item}}&nbsp;&nbsp;&nbsp;&nbsp;<i class="el-icon-d-arrow-right" v-on:click="addSN(item)"></i></td>
+            </tr>
+            <tr v-if="!currentSNList.length">
+              <td></td>
+              <td style="height:245px;">查询不到结果。</td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="w-common-form-table" style="width:45%;">
+          <thead>
+            <th>选择的序列号</th>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in currentSN">
+              <td>{{item}}&nbsp;&nbsp;&nbsp;&nbsp;<i class="el-icon-delete" v-on:click="removeSN(index)"></i></td>
+            </tr>
+            <tr v-if="!currentSN.length">
+              <td style="height:245px;">请点击左侧<i class="el-icon-d-arrow-right"></i>按钮选择。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <jgb-form-footer class="footer"
+        save-text="确认" close-text="取消"
+        v-on:save="saveChooseSN" v-on:close="closeChooseSN">
+      </jgb-form-footer>
+    </el-dialog>
+  </div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/maintenanceManagement/accessoriesOut.js"></script>
+<script type="text/javascript">
+	JGBVue.module.accessoriesOut().init(
+    '/orderManagement/get_accessories_list', //查询配件信息
+    '/maintenanceManagement/get_accessories_data', //获取配件出库信息 属性 批次 仓库 数量
+    '/common/data_add_save' //提交配件出库信息
+  );
+</script>
+
+</html>

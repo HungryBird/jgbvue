@@ -392,6 +392,9 @@ JGBVue.module.workOrderManagement = () => {
               return false
             },
           }, 
+
+          showAccessoriesOut: false, //提交维修配件出库
+          accessoriesOutUrl: '', //提交维修配件库 页面地址
         }
       },
       computed: {
@@ -428,6 +431,15 @@ JGBVue.module.workOrderManagement = () => {
         btnAdd: function() {
           //调用父级框架打开工单录入标签页
           this.$selectTab('addOrder', '工单录入', './views/workOrderManagement/addOrder.html')
+        },
+        /**
+         * 维修配件出库
+         * @param {Object} row 行数据
+         * @param {Number} index 行
+         */
+        btnAccessoriesOut: function(row, index) {
+          this.accessoriesOutUrl = `../maintenanceManagement/accessoriesOut.html?menu_id=accessoriesOut&&order_id=${row.order_id}`
+          this.showAccessoriesOut = true
         },
         //故障诊断 @param {row 行数, index 行数}
         btnDiagnosis: function(row, index) {
