@@ -2,63 +2,72 @@
 	{
 		"label": "属性1",
 		"value": "sx1",
-		"chilren": [
+		"children": [
 			{
 				"parent": "sx1",
 				"label": "属性1-子属性1",
-				"value": "zsx1_1"
+				"value": "zsx1_1",
+				"checked": false
 			},
 			{
 				"parent": "sx1",
 				"label": "属性1-子属性2",
-				"value": "zsx2_1"
+				"value": "zsx2_1",
+				"checked": false
 			},
 			{
 				"parent": "sx1",
 				"label": "属性1-子属性3",
-				"value": "zsx3_1"
+				"value": "zsx3_1",
+				"checked": false
 			}
 		]
 	},
 	{
 		"label": "属性2",
 		"value": "sx2",
-		"chilren": [
+		"children": [
 			{
 				"parent": "sx2",
 				"label": "属性2-子属性1",
-				"value": "zsx1_2"
+				"value": "zsx1_2",
+				"checked": false
 			},
 			{
 				"parent": "sx2",
 				"label": "属性2-子属性2",
-				"value": "zsx2_2"
+				"value": "zsx2_2",
+				"checked": false
 			},
 			{
 				"parent": "sx2",
 				"label": "属性2-子属性3",
-				"value": "zsx3_2"
+				"value": "zsx3_2",
+				"checked": false
 			}
 		]
 	},
 	{
 		"label": "属性3",
 		"value": "sx3",
-		"chilren": [
+		"children": [
 			{
 				"parent": "sx3",
 				"label": "属性3-子属性1",
-				"value": "zsx1_3"
+				"value": "zsx1_3",
+				"checked": false
 			},
 			{
 				"parent": "sx3",
 				"label": "属性3-子属性2",
-				"value": "zsx2_3"
+				"value": "zsx2_3",
+				"checked": false
 			},
 			{
 				"parent": "sx3",
 				"label": "属性3-子属性3",
-				"value": "zsx3_3"
+				"value": "zsx3_3",
+				"checked": false
 			}
 		]
 	}

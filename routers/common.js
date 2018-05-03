@@ -1,7 +1,16 @@
 const express = require('express');
 const fs = require('fs');
+const uuid = require('./public/generateId');
 
 const router = express.Router();
+
+router.use('/getId', (req, res)=> {
+	console.log(uuid(4, 2))
+	res.send({
+		status: true,
+		data: uuid(4, 16)
+	})
+})
 
 router.post('/data_add_save', (req, res)=> {
 	res.send({

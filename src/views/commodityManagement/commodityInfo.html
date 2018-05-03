@@ -356,9 +356,7 @@
 					<div style="clear: both;"></div>
 					<div style="padding: 5px;border-top: 1px solid #ddd;margin-top: 5px;" v-for="item in addSelectedAxiliaryAttributesClassify" :key="item.label">
 						<h5 class="pull-left" style="padding-right: 10px;">{{ item.parentName }}</h5>
-						<el-checkbox-group class="pull-left" v-model="auxiliaryAttributesClassifyChildren">
-							<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value">{{ c.label }}</el-checkbox>
-						</el-checkbox-group>
+						<el-checkbox v-for="c in item.children" :key="c.value" :label="c.value" v-model="c.checked">{{ c.label }}</el-checkbox>
 						<div style="clear: both;"></div>
 					</div>
 					<div style="padding: 5px 0;">
@@ -385,12 +383,10 @@
 							</el-table-column>
 							<el-table-column v-for="(tb, index) in addForm.quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="quickGenerateHeader">
 								<template slot-scope="scope">
-									<div v-if="!scope.row.editFlag">{{ scope.row[tb.label] }}</div>
+									<div v-if="!scope.row.editFlag">{{ scope.row[tb.prop] }}</div>
 									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else v-on:focus="selectQuickGenerateOption(tb.prop)">
-										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label">
-											{{ o.label }}
-										</el-option>
-										<div v-on:click="addNewAttribute(scope.row, tb.prop)" class="el-select-dropdown__item">
+										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label" :label="o.label"></el-option>
+										<div v-on:click="addNewAttribute(scope.row, tb)" class="el-select-dropdown__item">
 											<span style="float: left" class="el-icon-plus"></span>
       										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>
 										</div>
@@ -498,14 +494,14 @@
 						<el-table-column label="仓库" prop="repo" :render-header="requiredHeader">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.repo }}</div>
-								<el-select v-model="scope.row.repo">
+								<el-select v-model="scope.row.repo" v-else>
 								</el-select>
 							</template>
 						</el-table-column>
 						<el-table-column label="属性" prop="attribute">
 							<template slot-scope="scope">
 								<div v-if="!scope.row.editFlag">{{ scope.row.attribute }}</div>
-								<el-select v-model="scope.row.attribute">
+								<el-select v-model="scope.row.attribute" v-else>
 								</el-select>
 							</template>
 						</el-table-column>
@@ -538,10 +534,10 @@
 						</el-table-column>
 						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
 							<template slot-scope="scope">
-								<div v-if="addForm.serialNumberManagement" v-on:click="addEnterSerialNumberVisible = true">
-									<el-button v-show="addForm.enterSerialNumberTable.length === 0" size="small">录入</el-button>
-									<div class="pull-right" v-show="addForm.enterSerialNumberTable.length !== 0">{{ addForm.enterSerialNumberTable.length }}</div>
-									<div class="pull-right jgb-brand" v-show="addForm.enterSerialNumberTable.length !== 0">SN</div>
+								<div v-if="addForm.serialNumberManagement" v-on:click="openAddEnterSerialNumberDialog(scope.row)">
+									<el-button v-show="scope.row.enterSerialNumberTable.length === 0" size="small">录入</el-button>
+									<div class="pull-right" v-show="scope.row.enterSerialNumberTable.length !== 0">{{ scope.row.enterSerialNumberTable.length }}</div>
+									<div class="pull-right jgb-brand" v-show="scope.row.enterSerialNumberTable.length !== 0">SN</div>
 									<div class="jgb-clearFloat">.</div>
 								</div>
 								<div v-else-if="!scope.row.editFlag&&!addForm.serialNumberManagement&&addForm.initSet">{{ scope.row.initialNumber }}</div>
@@ -877,9 +873,7 @@
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row[tb.label] }}</div>
 									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else v-on:focus="selectQuickGenerateOption(tb.prop)">
-										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label">
-											{{ o.label }}
-										</el-option>
+										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label" :label="o.label"></el-option>
 										<div v-on:click="addNewAttribute(scope.row, tb.prop)" class="el-select-dropdown__item">
 											<span style="float: left" class="el-icon-plus"></span>
       										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>
@@ -1026,7 +1020,7 @@
 						</el-table-column>
 						<el-table-column label="期初数量" prop="initialNumber" :render-header="requiredHeader">
 							<template slot-scope="scope">
-								<div v-if="editForm.serialNumberManagement" v-on:click="editEnterSerialNumberVisible = true">
+								<div v-if="editForm.serialNumberManagement" v-on:click="openEditEnterSerialNumberDialog(scope.row)">
 									<el-button v-show="editForm.enterSerialNumberTable.length === 0" size="small">录入</el-button>
 									<div class="pull-right" v-show="editForm.enterSerialNumberTable.length !== 0">{{ editForm.enterSerialNumberTable.length }}</div>
 									<div class="pull-right jgb-brand" v-show="editForm.enterSerialNumberTable.length !== 0">SN</div>
@@ -1091,7 +1085,7 @@
 				<el-table-column label="序列号" prop="serialNumber">
 					<template slot-scope="scope">
 						<div v-if="!scope.row.editFlag">{{ scope.row.serialNumber }}</div>
-						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="addEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.row.index)"></el-input>
+						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="addEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.$index)"></el-input>
 					</template>
 				</el-table-column>
 				<el-table-column label="备注" prop="remark">
@@ -1143,7 +1137,7 @@
 				<el-table-column label="序列号" prop="serialNumber">
 					<template slot-scope="scope">
 						<div v-if="!scope.row.editFlag">{{ scope.row.serialNumber }}</div>
-						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="editEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.row.index)"></el-input>
+						<el-input v-else v-model="scope.row.serialNumber" v-on:blur="editEnterSerialNumberInputBlur(scope.row, scope.row.serialNumber, scope.$index)"></el-input>
 					</template>
 				</el-table-column>
 				<el-table-column label="备注" prop="remark">
@@ -1284,6 +1278,7 @@
 <script type="text/javascript" src="../../assets/js/views/commodityManagement/commodityInfo.js"></script>
 <script type="text/javascript">
 	/**
+	 * 获取编号
 	 * 查询接口
 	 * 获取快速查询选项接口
 	 * 获取多单位选项
@@ -1304,6 +1299,6 @@
 	 * 列设置完成
 	 * 检查编号是否重复
 	 */
-	JGBVue.module.commodityInfo().init('/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete', '/commodityInfo/checkNumber');
+	JGBVue.module.commodityInfo().init('/common/getId', '/commodityInfo/search', '/commodityInfo/getQuickQuery', '/commodityInfo/duodanwei','/commodityInfo/getAuxiliaryAttributesClassify', '/common/getRepo', '/common/switch', '/common/data_delete', '/commodityInfo/examine', '/common/data_add_save', '/commodityInfo/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/commodityInfo/toggleCommonUse', '/common/slideshow', '/commodityInfo/quickGenerate', '/common/data_add_save', '/commodityInfo/defaultColumnSettingUrl', '/equipmentManagement/columnSettingComplete', '/commodityInfo/checkNumber');
 </script>
 </html>

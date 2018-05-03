@@ -52,6 +52,45 @@ let timeStampFormat = function(stamp, format) {
 }
 Vue.prototype.$timeStampFormat = timeStampFormat
 
+
+/**
+ * 多数组排列组合
+ * create by 何俊洁 2018-5-2
+ * @param  {[type]} doubleArrays [array]
+ * @return {[type]}              [description]
+ */
+let doExchange = (doubleArrays)=> {  
+    var len = doubleArrays.length;  
+    if (len >= 2) {  
+        var len1 = doubleArrays[0].length;  
+        var len2 = doubleArrays[1].length;  
+        var newlen = len1 * len2;  
+        var temp = new Array(newlen);  
+        var index = 0;  
+        for (var i = 0; i < len1; i++) {  
+            for (var j = 0; j < len2; j++) {  
+                temp[index] = doubleArrays[0][i] + "," + doubleArrays[1][j];  
+                index++;  
+            }  
+        }  
+        var newArray = new Array(len- 1);  
+        newArray[0] = temp;  
+        if (len > 2) {  
+           var _count = 1;  
+           for(var i=2;i<len;i++)  
+           {  
+               newArray[_count] = doubleArrays[i];  
+               _count ++;  
+           }  
+        }                          
+        return doExchange(newArray);  
+    }  
+    else {  
+        return doubleArrays[0];  
+    }  
+}
+Vue.prototype.$doExchange = doExchange;
+
 /**
  * 点击表格的行
  * created by 何俊洁 2018-4-25
@@ -138,9 +177,9 @@ Vue.prototype.$doubleDecimals = doubleDecimals;
  */
 
 let checkSerialNumberIsRepeat = (data, obj)=> {
-  for(let o = 1; o < data.length + 1; o++ ) {
+  for(let o = 0; o < data.length; o++ ) {
     if(obj.serialNumber === data[o].serialNumber) {
-      obj.remark = '与第' + o + '行序列号重复';
+      obj.remark = '与第' + Number.parseInt(o + 1) + '行序列号重复';
       obj.isRepeat = true;
       break;
     }
