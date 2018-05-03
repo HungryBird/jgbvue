@@ -267,6 +267,9 @@ JGBVue.module.maintenanceOrder = () => {
           },
           validateCost: validateCost, //公用金额验证规则
           loadingFinalCostSure: false, //正在提交最终报告
+
+          showAccessoriesOut: false, //提交维修配件出库
+          accessoriesOutUrl: '', //提交维修配件库 页面地址
         }
       },
       computed: {
@@ -287,6 +290,15 @@ JGBVue.module.maintenanceOrder = () => {
             },
             subTotal: 0
           })
+        },
+        /**
+         * 维修配件出库
+         * @param {Object} row 行数据
+         * @param {Number} index 行
+         */
+        btnAccessoriesOut: function(row, index) {
+          this.accessoriesOutUrl = `./accessoriesOut.html?menu_id=accessoriesOut&&order_id=${row.order_id}`
+          this.showAccessoriesOut = true
         },
         //新增
         btnAdd: function() {

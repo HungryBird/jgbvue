@@ -20,6 +20,8 @@ JGBVue.module.printDeliveryInfo = ()=> {
         deliveryInfo: {}, //工单信息
         oldHTML: "",
         newHTML: "",
+        settingForm: {}, //打印设置
+        showPrintSetting: false, //打印设置 窗
       },
       computed: {
         c_orderId: function() {
@@ -33,14 +35,26 @@ JGBVue.module.printDeliveryInfo = ()=> {
         },
       },
 			methods: {
+        //edit by lanw 2018-5-3 通过媒体查询隐藏打印按钮 js不做操作
         btnPrint: function() { 
-          this.oldHTML = this.$refs.mainContent.innerHTML
-          // console.log(this.oldHTML)
-          this.newHTML = this.$refs.printContent.innerHTML
-          // console.log(this.newHTML)
-          this.$refs.mainContent.innerHTML = this.newHTML
+
+
           window.print()
-          this.$refs.mainContent.innerHTML = this.oldHTML
+
+          // this.oldHTML = this.$refs.mainContent.innerHTML
+          // this.newHTML = this.$refs.printContent.innerHTML
+          // this.$refs.mainContent.innerHTML = this.newHTML
+          // window.print()
+          // this.$refs.mainContent.innerHTML = this.oldHTML
+        },
+        /**
+         * 修改打印公司信息 
+         * edit by lanw 2018-5-3
+         * 可修改打印预览的公司
+         */
+        btnPrintSetting: function() {
+          this.settingForm.company = this.deliveryInfo.delivery
+          this.showPrintSetting = true
         },
         //获取工单信息
         getDeliveryInfo: function() {
@@ -69,6 +83,14 @@ JGBVue.module.printDeliveryInfo = ()=> {
             })
             this.loadingDeliveryInfo = false
           })
+        },
+        /**
+         * 修改打印公司信息 - 确定
+         * edit by lanw 2018-5-3
+         */
+        savePrintSetting: function() {
+          this.deliveryInfo.delivery = this.settingForm.company
+          this.showPrintSetting = false
         },
       },
       watch: {

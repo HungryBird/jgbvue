@@ -1642,15 +1642,15 @@ table{
 				}
 			}
 		}
-		//表格式表单中点击出现输入框
-		.show-on-focus {
-			.el-input__inner,
-			.el-textarea__inner {
-				border:none;
-				box-sizing:border-box;
-				&:focus {
-					border: 1px solid #409EFF;
-				}
+	}
+	//表格式表单中点击出现输入框
+	.show-on-focus {
+		.el-input__inner,
+		.el-textarea__inner {
+			border:none;
+			box-sizing:border-box;
+			&:focus {
+				border: 1px solid #409EFF;
 			}
 		}
 	}
@@ -1706,5 +1706,106 @@ table{
 				padding: $padding $padding $padding*2;
 			}
 		}
+	}
+}
+
+//提交配件出库
+.accessoriesOut {
+	@include w-flex(column, nowrap, space-between, stretch);
+	.el-select {
+		width:100%;
+	}
+	.el-table__header {
+		th {
+			padding:0;
+		}
+	}
+	.el-table__row {
+		td{
+			padding: 0;
+		}
+	}
+	.el-form-item {
+		&.is-error {
+			padding:5px 0 15px;
+			transition: all .25s;
+		}
+	}
+	.el-input-number {
+		width:90px;
+	}
+	.render-table-header {
+		@include w-flex(row, nowrap, center, center);
+		width:100%;
+		padding:0;
+	}
+	.accessories {
+		@include w-flex(row, nowrap, center, center);
+		.row-action {
+			@include w-flex-grow(0, 0);
+			@include w-flex(column, nowrap, space-around, center);
+			margin-right:5px;
+			.circle {
+				color: #f00;
+				font-size: 18px;
+				cursor: pointer;
+			}
+		}
+		.el-form-item {
+			@include w-flex-grow(1, 1);
+		}
+	}
+	.sn {
+		.el-dialog {
+			box-shadow: 0 7px 16px rgba(0, 0, 0, .3);
+			margin-top:0 !important;
+		}
+	}
+	.title-sn {
+		@include w-flex(row, nowrap, flex-start, center);
+		height:30px;
+	}
+	.input-sn {
+		$sn-height:30px;
+		width:180px;
+		.el-input__inner {
+			height:$sn-height;
+			border-radius:$sn-height/2;
+		}
+		.el-input__icon {
+			line-height:$sn-height;
+		}
+	}
+	.choose-sn {
+		@include w-flex(row, nowrap, space-between, stretch);
+		width:100%;
+		height:300px;
+		overflow-y:auto;
+		.w-common-form-table {
+			@include w-flex-grow(0, 0);
+			@include common-border;
+			width:55%;
+			box-sizing:border-box;
+			th {
+				padding:0;
+				box-sizing: border-box;
+				line-height:40px;
+			}
+			.el-icon-d-arrow-right,
+			.el-icon-delete {
+				cursor:pointer;
+				color:#f00;
+			}
+			.el-icon-d-arrow-right {
+				color:#409EFF;
+			}
+		}
+	}
+	.footer {
+		@include w-flex-grow(0, 0);
+		@include w-flex(row, nowrap, flex-end, center);
+		border-top:1px solid #ddd;
+		padding-top:10px;
+		background:#fff;
 	}
 }

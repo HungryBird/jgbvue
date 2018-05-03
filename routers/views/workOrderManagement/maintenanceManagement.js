@@ -197,4 +197,21 @@ router.post('/is_cost_exist', (req, res)=> {
 	});
 })
 
+router.post('/get_accessories_data', (req, res)=> {
+	let jdata = '';
+	fs.readFile('api/views/afterSale/maintenanceManagement/get_accessories_data.json', 'utf-8', (err, data)=> {
+		if(err) {
+			console.log('err: ', err);
+			return;
+		}
+		jdata += data;
+		let _data = JSON.parse(jdata)
+		_data.exist_SN = Math.round(Math.random()) ? true : false //随机商品是否有序列号
+		res.send({
+			status: true,
+			data: JSON.stringify(_data)
+		}).end();
+	});
+})
+
 module.exports = router;

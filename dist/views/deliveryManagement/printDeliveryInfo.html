@@ -7,13 +7,27 @@
 	<title>打印交付单</title>
 	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
 	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+  <style>
+    @media print {
+      body {
+        padding:0;
+        background:#fff;
+      }
+      .jgb-wrap {
+        border:none;
+      }
+      .w-print-footer-btn {
+        display:none;
+      }
+    }
+  </style>
 </head>
 
-<body style="background:#fff;">
+<body>
 	<div id="app" v-cloak ref="mainContent" class="workOrderManagement">
 		<el-container>
 			<el-main>
-        <div class="jgb-wrap" ref="printContent" style="border:none;">
+        <div class="jgb-wrap" ref="printContent">
           <div class="w-print-page" >
             <div v-if="c_showPrintButton == 1" class="print-title">交付单</div>
             <div class="order-details">
@@ -71,10 +85,30 @@
           </div>
         </div>
         <div class="w-print-footer-btn" v-if="c_showPrintButton == 1">
+          <el-button type="primary" v-on:click="btnPrintSetting">修改打印公司信息</el-button>
           <el-button type="primary" v-on:click="btnPrint">打印</el-button>
         </div>
 			</el-main>
 		</el-container>
+    <!-- 修改打印公司信息 -->
+    <el-dialog :visible.sync="showPrintSetting" width="450px">
+      <div class="title" slot="title">修改打印公司信息</div>
+      <el-form :model="settingForm">
+        <el-form-item prop="company" label="公司名称：">
+          <el-input v-model="settingForm.company"></el-input>
+        </el-form-item>
+        <el-form-item prop="address" label="公司地址：">
+          <el-input v-model="settingForm.address"></el-input>
+        </el-form-item>
+        <el-form-item prop="telephone" label="联系电话：">
+          <el-input v-model="settingForm.telephone"></el-input>
+        </el-form-item>
+      </el-form>
+      <jgb-form-footer slot="footer"
+        save-text="确认" close-text="取消"
+        v-on:save="savePrintSetting" v-on:close="showPrintSetting = false;">
+      </jgb-form-footer>
+    </el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
