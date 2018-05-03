@@ -383,11 +383,9 @@
 							</el-table-column>
 							<el-table-column v-for="(tb, index) in addForm.quickGenerateTable.header" :key="tb.label" :prop="tb.prop" :label="tb.label" :render-header="quickGenerateHeader">
 								<template slot-scope="scope">
-									<div v-if="!scope.row.editFlag">{{ scope.row[tb.label] }}</div>
+									<div v-if="!scope.row.editFlag">{{ scope.row[tb.prop] }}</div>
 									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else v-on:focus="selectQuickGenerateOption(tb.prop)">
-										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label">
-											{{ o.label }}
-										</el-option>
+										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label" :label="o.label"></el-option>
 										<div v-on:click="addNewAttribute(scope.row, tb)" class="el-select-dropdown__item">
 											<span style="float: left" class="el-icon-plus"></span>
       										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>
@@ -875,9 +873,7 @@
 								<template slot-scope="scope">
 									<div v-if="!scope.row.editFlag">{{ scope.row[tb.label] }}</div>
 									<el-select v-model="scope.row[tb.prop]" filterable allow-create v-else v-on:focus="selectQuickGenerateOption(tb.prop)">
-										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label">
-											{{ o.label }}
-										</el-option>
+										<el-option v-for="o in quickGenerateOption" :value="o.value" :key="o.label" :label="o.label"></el-option>
 										<div v-on:click="addNewAttribute(scope.row, tb.prop)" class="el-select-dropdown__item">
 											<span style="float: left" class="el-icon-plus"></span>
       										<span style="float: left; color: #8492a6; font-size: 13px">新增属性</span>

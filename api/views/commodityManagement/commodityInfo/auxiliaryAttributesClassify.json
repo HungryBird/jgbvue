@@ -2,7 +2,7 @@
 	{
 		"label": "属性1",
 		"value": "sx1",
-		"chilren": [
+		"children": [
 			{
 				"parent": "sx1",
 				"label": "属性1-子属性1",

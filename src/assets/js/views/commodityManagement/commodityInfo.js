@@ -92,7 +92,7 @@ JGBVue.module.commodityInfo = ()=> {
 							header: [],
 							data: [
 								{
-									indexNum: 1,
+									index: 1,
 									editFlag: false,
 								}
 							]
@@ -148,7 +148,7 @@ JGBVue.module.commodityInfo = ()=> {
 							header: [],
 							data: [
 								{
-									indexNum: 1,
+									index: 1,
 									editFlag: false,
 								}
 							]
@@ -935,13 +935,28 @@ JGBVue.module.commodityInfo = ()=> {
 			        });
 			    },
 			    quickGenerate(formName) {
+			    	let arr1 = [];
 			    	for(let i = 0; i < this.addSelectedAxiliaryAttributesClassify.length; i++ ) {
-			    		console.log('addSelectedAxiliaryAttributesClassify: ', this.addSelectedAxiliaryAttributesClassify[i].children);
+			    		let arr2 = [];
+			    		for (let j = 0; j < this.addSelectedAxiliaryAttributesClassify[i].children.length; j++) {
+			    			if(this.addSelectedAxiliaryAttributesClassify[i].children[j].checked) {
+			    				arr2.push(this.addSelectedAxiliaryAttributesClassify[i].children[j].value)
+			    			}
+			    		}
+			    		arr1.push(arr2);
 			    	}
-			    	/*this.$message({
-		    			type: 'warning',
-		    			message: '请选择至少选择一个属性'
-		    		})*/
+			    	let result = this.$doExchange(arr1);
+			    	let index = this.addForm.quickGenerateTable.data[this.addForm.quickGenerateTable.data.length - 1].index + 1;
+			    	for (let i = 0; i < result.length; i++) {
+			    		let obj = {
+			    			index: index,
+			    			editFlag: false,
+			    			sx1: "zsx1_1"
+			    		};
+			    		this.addForm.quickGenerateTable.data.push(obj);
+			    		index++;
+			    	}
+			    	console.log('addForm.quickGenerateTable: ', this.addForm.quickGenerateTable);
 			    },
 			    quickGenerateTable_add_btn(formName) {
 			    	let index = this[formName].quickGenerateTable.data[this[formName].quickGenerateTable.data.length - 1].index + 1;
@@ -1069,7 +1084,8 @@ JGBVue.module.commodityInfo = ()=> {
 		    	},
 		    	handleAddInitSetAdd() {
 					let obj = {
-						shelfLife: null
+						shelfLife: null,
+						enterSerialNumberTable: []
 					}
 					this.$addRow(this.addForm.initSetTable, obj);
 		    	},
@@ -1079,7 +1095,8 @@ JGBVue.module.commodityInfo = ()=> {
 		    	},
 		    	handleEditInitSetAdd() {
 					let obj = {
-						shelfLife: null
+						shelfLife: null,
+						enterSerialNumberTable: []
 					}
 					this.$addRow(this.editForm.initSetTable, obj);
 		    	},
@@ -1234,8 +1251,12 @@ JGBVue.module.commodityInfo = ()=> {
 		    		if(isNaN(Number(val))) return;
 		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
 	    				if(this.addForm.initSetTable[i] === row) {
-	    					if(!isNaN(this.addForm.initSetTable[i].initialNumber)) {
-	    						this.addForm.initSetTable[i].atFirstTotalPrice = this.addForm.initSetTable[i].initialNumber*val;
+	    					if(addForm.serialNumberManagement) {
+	    						this.addForm.initSetTable[i].atFirstTotalPrice = this.addForm.initSetTable[i].enterSerialNumberTable.length * val;
+	    					}else{
+	    						if(!isNaN(this.addForm.initSetTable[i].initialNumber)) {
+		    						this.addForm.initSetTable[i].atFirstTotalPrice = this.addForm.initSetTable[i].initialNumber*val;
+		    					}
 	    					}
 	    				}
 	    			}
@@ -1244,8 +1265,12 @@ JGBVue.module.commodityInfo = ()=> {
 		    		if(isNaN(Number(val))) return;
 		    		for(let i = 0; i < this.editForm.initSetTable.length; i++) {
 	    				if(this.editForm.initSetTable[i] === row) {
-	    					if(!isNaN(this.editForm.initSetTable[i].initialNumber)) {
-	    						this.editForm.initSetTable[i].atFirstTotalPrice = this.editForm.initSetTable[i].initialNumber*val;
+	    					if(editForm.serialNumberManagement) {
+	    						this.editForm.initSetTable[i].atFirstTotalPrice = this.editForm.initSetTable[i].enterSerialNumberTable.length * val;
+	    					}else{
+	    						if(!isNaN(this.editForm.initSetTable[i].initialNumber)) {
+		    						this.editForm.initSetTable[i].atFirstTotalPrice = this.editForm.initSetTable[i].initialNumber*val;
+		    					}
 	    					}
 	    				}
 	    			}
@@ -1318,15 +1343,19 @@ JGBVue.module.commodityInfo = ()=> {
 			    				arr.push(item);
 			    			}
 			    		});
-			    		for (var i = 0; i < this.addForm.initSetTable.length; i++) {
+			    		for (let i = 0; i < this.addForm.initSetTable.length; i++) {
 	    					if(this.addForm.initSetTable[i] === this.addCurrentEnterRow) {
     							arr = JSON.parse(JSON.stringify(arr));
     							this.addForm.initSetTable[i].enterSerialNumberTable = [];
 	    						arr.forEach((item)=> {
 	    							_self.addForm.initSetTable[i].enterSerialNumberTable.push(item);
+	    							_self.addForm.initSetTable[i].atFirstTotalPrice = _self.addForm.initSetTable[i].enterSerialNumberTable.length * (_self.addForm.initSetTable[i].unitCost | 0)
 	    						});
 	    					}
 	    				}
+	    				/*for (let i = 0; i < this.addForm.initSetTable.length; i++) {
+	    					
+	    				}*/
 			    		this.addEnterSerialNumberVisible = false;
 			    	}else{
 			    		this.$message({
