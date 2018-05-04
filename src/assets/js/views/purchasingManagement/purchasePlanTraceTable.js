@@ -21,7 +21,10 @@ JGBVue.module.purchasePlanTraceTable = ()=> {
 						orderNumber: '',
 						supplierCategory: ''
 					},
-					time: '',	//显示时间
+					time: {
+						start: '',
+						end: ''
+					},	//显示时间
 					headerOption: {  //头部下拉选择
 						supplier: [],
 						commodity: [],
@@ -56,6 +59,7 @@ JGBVue.module.purchasePlanTraceTable = ()=> {
 			},
 			mounted() {
 				//this.search();
+				this.getTime();
 			},
 			methods: {
 				search() {
@@ -65,11 +69,20 @@ JGBVue.module.purchasePlanTraceTable = ()=> {
 						}
 					})
 				},
+				getTime() {
+					let date = new Date();
+					nowDate = date.getFullYear() + '-' + ((date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1))+ '-' + (date.getDate() > 9 ? date.getDate() : '0' + date.getDate());
+					console.log(nowDate)
+					this.headerForm.date = ['2008-12-27', '2099-11-21']
+				},
 				btnColumnSettingReset() {
 					//
 				},
 				btnColumnSettingComplete() {
 					//
+				},
+				test(val) {
+					console.log('val: ', val)
 				}
 			},
 			filters: {

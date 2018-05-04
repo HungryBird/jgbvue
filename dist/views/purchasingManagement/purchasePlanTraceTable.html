@@ -18,7 +18,10 @@
 							type="datetimerange"
 							range-separator="至"
 							start-placeholder="开始日期"
-							end-placeholder="结束日期">
+							end-placeholder="结束日期"
+							format="yyyy-MM-dd"
+							value-format="yyyy-MM-dd"
+							@change="test">
     					</el-date-picker>
 					</el-form-item>
 					<el-form-item label="预计交货日期" prop="expecDate">
@@ -27,7 +30,9 @@
 							type="datetimerange"
 							range-separator="至"
 							start-placeholder="开始日期"
-							end-placeholder="结束日期">
+							end-placeholder="结束日期"
+							format="yyyy-MM-dd"
+							value-format="yyyy-MM-dd">
     					</el-date-picker>
 					</el-form-item>
 					<el-form-item>
@@ -81,7 +86,7 @@
 				</nav>
 			</el-header>
 			<el-main>
-				<time>{{ time }}</time>
+				<time>{{ time.start - time.end }}</time>
 				<el-table :data="table.data" border ref="table">
 					<el-table-column v-for="tb in table.header" align="center" :type="item.type" :sortable="item.sortable" :width="item.width" :key="item.prop" :prop="item.prop" :label="item.label"></el-table-column>
 				</el-table>

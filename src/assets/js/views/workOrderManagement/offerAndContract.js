@@ -752,6 +752,9 @@ JGBVue.module.offerAndContract = ()=> {
 			            './views/workOrderManagement/maintenanceContract.html',
 			            `info=${encodeURI(JSON.stringify(info))}`
 					)
+				},
+				addCreateTags(tag) {
+					addEditor.cmd.do('insertHTML', '<span>' + item.label + '</span>')
 				}
 			},
 			watch: {
