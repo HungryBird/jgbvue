@@ -936,27 +936,97 @@ JGBVue.module.commodityInfo = ()=> {
 			    },
 			    quickGenerate(formName) {
 			    	let arr1 = [];
-			    	for(let i = 0; i < this.addSelectedAxiliaryAttributesClassify.length; i++ ) {
-			    		let arr2 = [];
-			    		for (let j = 0; j < this.addSelectedAxiliaryAttributesClassify[i].children.length; j++) {
-			    			if(this.addSelectedAxiliaryAttributesClassify[i].children[j].checked) {
-			    				arr2.push(this.addSelectedAxiliaryAttributesClassify[i].children[j].value)
-			    			}
-			    		}
-			    		arr1.push(arr2);
+			    	if(formName === 'addForm') {
+			    		for(let i = 0; i < this.addSelectedAxiliaryAttributesClassify.length; i++ ) {
+				    		let arr2 = [];
+				    		for (let j = 0; j < this.addSelectedAxiliaryAttributesClassify[i].children.length; j++) {
+				    			if(this.addSelectedAxiliaryAttributesClassify[i].children[j].checked) {
+				    				arr2.push(this.addSelectedAxiliaryAttributesClassify[i].children[j].value)
+				    			}
+				    		}
+				    		arr1.push(arr2);
+				    	}
+			    	} else {
+			    		for(let i = 0; i < this.editSelectedAxiliaryAttributesClassify.length; i++ ) {
+				    		let arr2 = [];
+				    		for (let j = 0; j < this.editSelectedAxiliaryAttributesClassify[i].children.length; j++) {
+				    			if(this.editSelectedAxiliaryAttributesClassify[i].children[j].checked) {
+				    				arr2.push(this.editSelectedAxiliaryAttributesClassify[i].children[j].value)
+				    			}
+				    		}
+				    		arr1.push(arr2);
+				    	}
 			    	}
-			    	let result = this.$doExchange(arr1);
-			    	let index = this.addForm.quickGenerateTable.data[this.addForm.quickGenerateTable.data.length - 1].index + 1;
-			    	for (let i = 0; i < result.length; i++) {
+			    	let result = this.$doExchange(arr1)
+			    	, index = this[formName].quickGenerateTable.data[this[formName].quickGenerateTable.data.length - 1].index + 1;
+			    	/**
+			    	 * 循环赋值
+			    	 * @param  {Number} let    i             [插入行的索引]
+			    	 * @param  {[type]} resLen [行的长度]
+			    	 * @return {[type]}        [description]
+			    	 */
+			    	let optArr = [];
+			    	for (let i = 0, resLen = result.length; i < resLen; i++) {
+			    		/**
+			    		 * 每行插入的值
+			    		 * @type {Object}
+			    		 */
 			    		let obj = {
 			    			index: index,
 			    			editFlag: false,
-			    			sx1: "zsx1_1"
+			    			//attributesNumber: 34656
 			    		};
-			    		this.addForm.quickGenerateTable.data.push(obj);
+			    		/**
+			    		 * 每行组合的元素
+			    		 * @param  {Number} let       j             [description]
+			    		 * @param  {[type]} resultRow [description]
+			    		 * @param  {[type]} resRLen   [description]
+			    		 * @return {[type]}           [description]
+			    		 */
+			    		for (let j = 0, resultRow = result[i].split(','), resRLen = resultRow.length; j < resRLen; j++) {
+			    			if(formName === 'addForm') {
+			    				for (let k = 0, acLen = this.addSelectedAxiliaryAttributesClassify.length; k < acLen; k++) {
+				    				for (let o = 0, chLen = this.addSelectedAxiliaryAttributesClassify[k].children.length;o < chLen; o++) {
+				    					if(resultRow[j] === this.addSelectedAxiliaryAttributesClassify[k].children[o].value) {
+				    						let optObj = {};
+				    						optObj.value = resultRow[j];
+				    						optObj.label = this.addSelectedAxiliaryAttributesClassify[k].children[o].label;
+				    						optArr.push(optObj);
+				    						obj[this.addSelectedAxiliaryAttributesClassify[k].children[o].parent] = resultRow[j];
+				    					}
+				    				}
+				    			}
+				    		} else {
+				    			for (let k = 0, acLen = this.editSelectedAxiliaryAttributesClassify.length; k < acLen; k++) {
+				    				for (let o = 0, chLen = this.editSelectedAxiliaryAttributesClassify[k].children.length;o < chLen; o++) {
+				    					if(resultRow[j] === this.editSelectedAxiliaryAttributesClassify[k].children[o].value) {
+				    						let optObj = {};
+				    						optObj.value = resultRow[j];
+				    						optObj.label = this.editSelectedAxiliaryAttributesClassify[k].children[o].label;
+				    						optArr.push(optObj);
+				    						obj[this.editSelectedAxiliaryAttributesClassify[k].children[o].parent] = resultRow[j];
+				    					}
+				    				}
+				    			}
+				    		}
+			    		}
+			    		obj.attributesNumber = this[formName].number + '_' + index;
+			    		this[formName].quickGenerateTable.data.push(obj);
 			    		index++;
 			    	}
-			    	console.log('addForm.quickGenerateTable: ', this.addForm.quickGenerateTable);
+			    	let hash = {};
+			    	/**
+			    	 * 数组去重
+			    	 * @param  {[type]} item  [description]
+			    	 * @param  {[type]} next) {					          hash[next.value] ? '' : hash[next.value] [description]
+			    	 * @param  {[type]} []    [description]
+			    	 * @return {[type]}       [description]
+			    	 */
+					optArr = optArr.reduce(function(item, next) {
+					    hash[next.value] ? '' : hash[next.value] = true && item.push(next);
+					    return item
+					}, []);
+					this.quickGenerateOption = optArr;
 			    },
 			    quickGenerateTable_add_btn(formName) {
 			    	let index = this[formName].quickGenerateTable.data[this[formName].quickGenerateTable.data.length - 1].index + 1;
@@ -1081,6 +1151,10 @@ JGBVue.module.commodityInfo = ()=> {
     						}
 	    				}
 	    			}
+		    	},
+		    	addChangeAuxiliaryAttributesClassifyChild(val, item) {
+		    		console.log('val: ', val);
+		    		console.log('item: ', item);
 		    	},
 		    	handleAddInitSetAdd() {
 					let obj = {
@@ -1250,8 +1324,8 @@ JGBVue.module.commodityInfo = ()=> {
 		    	addFormUnitCostChange(val, row) {
 		    		if(isNaN(Number(val))) return;
 		    		for(let i = 0; i < this.addForm.initSetTable.length; i++) {
-	    				if(this.addForm.initSetTable[i] === row) {
-	    					if(addForm.serialNumberManagement) {
+	    				 if(this.addForm.initSetTable[i] === row) {
+	    					if(this.addForm.serialNumberManagement) {
 	    						this.addForm.initSetTable[i].atFirstTotalPrice = this.addForm.initSetTable[i].enterSerialNumberTable.length * val;
 	    					}else{
 	    						if(!isNaN(this.addForm.initSetTable[i].initialNumber)) {
@@ -1265,7 +1339,7 @@ JGBVue.module.commodityInfo = ()=> {
 		    		if(isNaN(Number(val))) return;
 		    		for(let i = 0; i < this.editForm.initSetTable.length; i++) {
 	    				if(this.editForm.initSetTable[i] === row) {
-	    					if(editForm.serialNumberManagement) {
+	    					if(this.editForm.serialNumberManagement) {
 	    						this.editForm.initSetTable[i].atFirstTotalPrice = this.editForm.initSetTable[i].enterSerialNumberTable.length * val;
 	    					}else{
 	    						if(!isNaN(this.editForm.initSetTable[i].initialNumber)) {
