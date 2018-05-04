@@ -126,7 +126,7 @@
   "purchasePlanList": [
     { "label": "序号", "prop": "", "width": 50, "sortable": false, "type": "index", "enable": true},
     { "label":"操作", "prop": "action", "width": 120, "sortable": false, "enable": true },
-    { "label":"审核", "prop": "audit", "width": 120, "sortable": false, "enable": true },
+    { "label":"审核", "prop": "audit", "width": 150, "sortable": false, "enable": true },
     { "label":"状态", "prop": "status", "width": 120, "sortable": "custom", "enable": true },
     { "label":"申请日期", "prop": "apply_date", "width": 120, "sortable": "custom", "enable": true },
     { "label":"单据编号", "prop": "order_id", "width": 120, "sortable": "custom", "enable": true },

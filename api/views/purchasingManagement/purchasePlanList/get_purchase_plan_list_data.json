@@ -1,0 +1,93 @@
+{
+  "data": [
+    {
+      "status": "待审核",
+      "status_id": 1,
+      "apply_date": "2018-4-4",
+      "order_id": "0000",
+      "sale_id": "0001",
+      "price" : "",
+      "count": "",
+      "putin_status": "",
+      "delivery_date": "2018-5-5",
+      "producer": "",
+      "auditor": "",
+      "remark": ""
+    },
+    {
+      "status": "审核通过",
+      "status_id": 2,
+      "apply_date": "2018-4-4",
+      "order_id": "0000",
+      "sale_id": "0001",
+      "price" : "",
+      "count": "",
+      "putin_status": "",
+      "delivery_date": "2018-5-5",
+      "producer": "",
+      "auditor": "",
+      "remark": ""
+    },
+    {
+      "status": "审核不通过",
+      "status_id": 3,
+      "apply_date": "2018-4-4",
+      "order_id": "0000",
+      "sale_id": "0001",
+      "price" : "",
+      "count": "",
+      "putin_status": "",
+      "delivery_date": "2018-5-5",
+      "producer": "",
+      "auditor": "",
+      "remark": ""
+    },
+    {
+      "status": "暂存",
+      "status_id": 4,
+      "apply_date": "2018-4-4",
+      "order_id": "0000",
+      "sale_id": "0001",
+      "price" : "",
+      "count": "",
+      "putin_status": "",
+      "delivery_date": "2018-5-5",
+      "producer": "",
+      "auditor": "",
+      "remark": ""
+    },
+    {
+      "status": "关闭",
+      "status_id": 5,
+      "apply_date": "2018-4-4",
+      "order_id": "0000",
+      "sale_id": "0001",
+      "price" : "",
+      "count": "",
+      "putin_status": "",
+      "delivery_date": "2018-5-5",
+      "producer": "",
+      "auditor": "",
+      "remark": ""
+    },
+    {
+      "status": "作废",
+      "status_id": 6,
+      "apply_date": "2018-4-4",
+      "order_id": "0000",
+      "sale_id": "0001",
+      "price" : "",
+      "count": "",
+      "putin_status": "",
+      "delivery_date": "2018-5-5",
+      "producer": "",
+      "auditor": "",
+      "remark": ""
+    }
+  ],
+  "page": {
+    "page_current": 1,
+    "page_total": 10,
+    "page_size": 10
+  }
+}

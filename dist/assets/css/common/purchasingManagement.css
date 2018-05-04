@@ -33,3 +33,10 @@
     flex-flow: row nowrap;
     justify-content: flex-end;
     align-items: center; }
+
+.purchasingManagement .w-main-table {
+  padding: 10px 0; }
+  .purchasingManagement .w-main-table .order-button .el-button--mini {
+    padding: 5px 7px; }
+    .purchasingManagement .w-main-table .order-button .el-button--mini + .el-button--mini {
+      margin-left: 3px; }

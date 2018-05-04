@@ -36,4 +36,15 @@
       @include w-flex(row, nowrap, flex-end, center);
     }
   }
+  .w-main-table {
+    padding: $padding 0;
+    .order-button {
+      .el-button--mini {
+        padding:5px 7px;
+        &+.el-button--mini {
+          margin-left:3px;
+        }
+      }
+    }
+  }
 } 

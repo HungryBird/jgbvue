@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/get_purchase_plan_list_data', (req, res)=> {
 	let jdata = '';
-	fs.readFile('api/views/afterSale/purchasingManagement/get_purchase_plan_list_data.json', 'utf-8', (err, data)=> {
+	fs.readFile('api/views/purchasingManagement/purchasePlanList/get_purchase_plan_list_data.json', 'utf-8', (err, data)=> {
 		if(err) {
 			console.log('err: ', err);
 			return;

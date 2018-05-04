@@ -16,7 +16,7 @@
 			<el-main>
         <div class="jgb-wrap">
           <div class="w-main-header">
-              <el-form label-width="80px" :model="selectForm" size="small">
+              <el-form label-width="80px" :model="selectForm" size="mini">
                 <el-row :gutter="0">
                   <el-col :span="6">
                     <el-form-item label="日期:" label-width="50px">
@@ -61,7 +61,7 @@
                     <div class="search-and-buttons">
                         <el-form-item label-width="0">
                           <el-input v-model="selectForm.keyword" clearable
-                            placeholder="单号、供货商、商品" 
+                            placeholder="单号、供货商、商品" size="mini"
                             style="width:300px;">
                             <template slot="append">
                               <el-button v-on:click="search">查询</el-button>
@@ -109,10 +109,10 @@
                   </div>
                   <!-- 审核 -->
                   <div v-else-if="item.prop == 'audit'">
-                    <el-button-group v-if="scope.row.status == '待审核'" size="mini">
-                      <el-button type="success" v-on:click="">通过</el-button>
-                      <el-button type="danger" v-on:click="">不通过</el-button>
-                    </el-button-group>
+                    <div v-if="scope.row.status == '待审核'" class="order-button">
+                      <el-button type="primary" plain size="mini" v-on:click="">通过</el-button>
+                      <el-button type="danger" plain size="mini" v-on:click="">不通过</el-button>
+                    </div>
                   </div>
                   <!-- 序号 -->
                   <div v-else-if="item.type == 'index'">{{scope.$index+1}}</div>
