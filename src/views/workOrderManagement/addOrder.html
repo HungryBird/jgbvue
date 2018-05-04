@@ -148,6 +148,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
+                    <!-- edit by lanw 2018-5-4 BUG#115 -->
                     <el-form-item v-if="orderAddForm.assigned.label == '是'" label="委派人员：" prop="person" 
                       :rules="{ required: true, message: '请选择委派人员', trigger: 'blur,change' }">
                       <el-select v-model="orderAddForm.person" remote filterable placeholder="请选择"

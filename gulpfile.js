@@ -36,7 +36,8 @@ gulp.task('clean',(cb)=> {
  */
 
 gulp.task('sass',()=> {
-	return gulp.src('./src/assets/sass/common.scss')
+	//edit by lanw 2018-5-4 新增功能模块scss文件编译路径'./src/assets/sass/views/*.scss'
+	return gulp.src(['./src/assets/sass/common.scss', './src/assets/sass/views/*.scss'])
 	.pipe(plumber())
 	.pipe(autoprefixer('last 3 version'))
 	.pipe(sass({
@@ -125,7 +126,8 @@ gulp.task('watch', ()=> {
 	gulp.watch('src/assets/css/*.css', ['css']);
 	gulp.watch('src/assets/css/**/**/*.css', ['css']);
 	gulp.watch('src/assets/img/**/*', ['img']);
-	gulp.watch('src/assets/sass/*.scss', ['sass'])
+	gulp.watch('src/assets/sass/*.scss', ['sass']);
+	gulp.watch('src/assets/sass/views/*.scss', ['sass'])
 })
 
 /**

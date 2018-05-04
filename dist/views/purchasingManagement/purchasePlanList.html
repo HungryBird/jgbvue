@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>采购计划单</title>
+	<link rel="stylesheet" href="../../element-ui-2.0.11/lib/theme-chalk/index.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/common.css">
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/purchasingManagement.css">
+</head>
+
+<body>
+	<div id="app" v-cloak class="purchasingManagement">
+		<el-container>
+			<el-main>
+        <div class="jgb-wrap">
+          <div class="w-main-header">
+              <el-form label-width="80px" :model="selectForm" size="small">
+                <el-row :gutter="0">
+                  <el-col :span="6">
+                    <el-form-item label="日期:" label-width="50px">
+                      <el-date-picker
+                        v-model="selectForm.dateRange"
+                        value-format="yyyy-MM-dd"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="11">
+                    <el-form-item label="采购计划单状态:" class="status-group" label-width="120px">
+                      <el-checkbox v-model="formOrderStatusCheckAll" style="margin-right:0;"
+                        v-on:change="handleFormCheckAllChange">
+                        全选
+                      </el-checkbox>
+                      <el-checkbox-group v-model="selectForm.checkedOrderStatus" v-on:change="handleFormCheckStatusChange">
+                        <el-checkbox v-for="item in formOrderStatus" :label="item" :key="item.value">{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="7">
+                    <el-form-item label="入库状态:" class="status-group">
+                      <el-checkbox v-model="formPutInStatusCheckAll" style="margin-right:0;"
+                        v-on:change="handleFormCheckAllChange">
+                        全选
+                      </el-checkbox>
+                      <el-checkbox-group v-model="selectForm.checkedPutInStatus" v-on:change="handleFormCheckStatusChange">
+                        <el-checkbox v-for="item in formPutInStatus" :label="item" :key="item.value">{{item.label}}</el-checkbox>
+                      </el-checkbox-group>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row type="flex" justify="space-between" align="middle">
+                  <el-col :span="4">
+                    <el-button type="" size="mini" v-on:click="">列设置</el-button>
+                  </el-col>
+                  <el-col :span="20">
+                    <div class="search-and-buttons">
+                        <el-form-item label-width="0">
+                          <el-input v-model="selectForm.keyword" clearable
+                            placeholder="单号、供货商、商品" 
+                            style="width:300px;">
+                            <template slot="append">
+                              <el-button v-on:click="search">查询</el-button>
+                            </template>
+                          </el-input>
+                        </el-form-item>
+                        <el-button-group style="margin-left:10px;">
+                          <el-button type="primary" size="mini" v-on:click="">新增</el-button>
+                          <el-button type="primary" size="mini" v-on:click="">导入</el-button>
+                          <el-button type="primary" size="mini" v-on:click="">导出</el-button>
+                          <el-button type="primary" size="mini" v-on:click="">打印</el-button>
+                          <el-button type="primary" size="mini" v-on:click="">审核通过</el-button>
+                          <el-button type="primary" size="mini" v-on:click="">审核不通过</el-button>
+                          <el-button type="primary" size="mini" v-on:click="">作废</el-button>
+                        </el-button-group>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-form>
+          </div>
+          <div class="w-main-table">
+            <el-table ref="orderManagementTable"
+              border highlight-current-row style="width: 100%"
+              :default-sort = "selectForm.sort"
+              :data="orderList"
+              v-on:sort-change="handleOrderSort"
+              v-on:selection-change="handleOrderSelectionChange">
+              <el-table-column type="selection" align="center" width="40" key="selection"></el-table-column>
+              <el-table-column v-for="item in tableHeader" v-if="item.enable"
+                align="center"
+                :type="item.type"
+                :sortable="item.sortable"
+                :width="item.width"
+                :key="item.prop"
+                :prop="item.prop"
+                :label="item.label">
+                <template slot-scope="scope">
+                  <!-- 操作 -->
+                  <div v-if="item.prop == 'action'" >
+                    <div class="order-button">
+                      <el-button type="" size="mini" v-on:click="">查看</el-button>
+                      <el-button v-if="scope.row.status == '审核通过'" type="" size="mini" v-on:click="">关闭</el-button>
+                      <el-button v-if="scope.row.status == '暂存'" type="" size="mini" v-on:click="">修改</el-button>
+                    </div>
+                  </div>
+                  <!-- 审核 -->
+                  <div v-else-if="item.prop == 'audit'">
+                    <el-button-group v-if="scope.row.status == '待审核'" size="mini">
+                      <el-button type="success" v-on:click="">通过</el-button>
+                      <el-button type="danger" v-on:click="">不通过</el-button>
+                    </el-button-group>
+                  </div>
+                  <!-- 序号 -->
+                  <div v-else-if="item.type == 'index'">{{scope.$index+1}}</div>
+                  <div v-else>{{scope.row[item.prop]}}</div>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-pagination v-if="orderPage.page_total > 1" class="w-table-pagination"
+              layout="prev, pager, total, next, jumper"
+              prev-text="上一页" next-text="下一页"
+              :current-page="orderPage.page_current"
+              :page-size="orderPage.page_size"
+              :total="orderPage.page_total"
+              v-on:current-change="handleOrderCurrentChange">
+            </el-pagination>
+          </div>
+        </div>
+			</el-main>
+		</el-container>
+	</div>
+</body>
+<script type="text/javascript" src="../../vue/vue.js"></script>
+<script type="text/javascript" src="../../axios/axios.min.js"></script>
+<script type="text/javascript" src="../../element-ui-2.0.11/lib/index.js"></script>
+<script type="text/javascript" src="../../assets/js/common.js"></script>
+<script type="text/javascript" src="../../assets/js/views/purchasingManagement/purchasePlanList.js"></script>
+<script type="text/javascript">
+	JGBVue.module.purchasePlanList().init(
+    '/orderManagement/get_header', //获取表头 列设置
+    '/orderManagement/get_header', //获取表头 列设置默认数据
+    '/purchasingManagement/get_purchase_plan_list_data', //获取采购计划单数据
+  );
+</script>
+
+</html>

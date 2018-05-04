@@ -1,0 +1,39 @@
+
+@import '../mixin.scss';
+
+.purchasingManagement {
+  $padding: 10px;
+  .jgb-wrap {
+    padding:$padding;
+  }
+  .w-main-header {
+    @include common-border-bottom;
+    .el-date-editor--daterange.el-input__inner {
+      width:240px;
+      .el-range__close-icon {
+        width:7px;
+      }
+    }
+    .status-group {
+      .el-form-item__content {
+        @include w-flex(row, nowrap, flex-start, flex-start);
+      }
+      .el-checkbox-group {
+        @include w-flex-grow(0, 1);
+        @include w-flex(row, wrap, flex-start, center);
+      }
+      .el-checkbox {
+        @include w-flex-grow(0, 0);
+        min-width:70px;
+        padding-right:15px;
+        box-sizing: border-box;
+        &+.el-checkbox {
+          margin-left:0;
+        }
+      }
+    }
+    .search-and-buttons {
+      @include w-flex(row, nowrap, flex-end, center);
+    }
+  }
+} 

@@ -122,5 +122,21 @@
     { "label":"紧急程度", "prop": "level", "width": 120, "sortable": "custom", "enable": true },
     { "label":"报修方式", "prop": "repair_methods", "width": 120, "sortable": "custom", "enable": true },
     { "label":"备注", "prop": "remark", "width": 120, "sortable": false, "enable": true }
+  ],
+  "purchasePlanList": [
+    { "label": "序号", "prop": "", "width": 50, "sortable": false, "type": "index", "enable": true},
+    { "label":"操作", "prop": "action", "width": 120, "sortable": false, "enable": true },
+    { "label":"审核", "prop": "audit", "width": 120, "sortable": false, "enable": true },
+    { "label":"状态", "prop": "status", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"申请日期", "prop": "apply_date", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"单据编号", "prop": "order_id", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"关联销售订单号", "prop": "sale_id", "width": 150, "sortable": "custom", "enable": true },
+    { "label":"金额", "prop": "price", "width": 120, "sortable": "custom", "enable": true },
+    { "label": "数量", "prop": "count", "width": 80, "sortable": "custom", "enable": true },
+    { "label":"入库状态", "prop": "putin_status", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"交货日期", "prop": "delivery_date", "width": 120, "sortable": "custom", "enable": true },
+    { "label":"制单人", "prop": "producer", "width": 100, "sortable": "custom", "enable": true },
+    { "label":"审核人", "prop": "auditor", "width": 100, "sortable": "custom", "enable": true },
+    { "label":"备注", "prop": "remark", "width": 120, "sortable": false, "enable": true }
   ]
 }
