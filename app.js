@@ -104,6 +104,14 @@ app.use('/maintenanceStatistical', maintenanceStatisticalRouter);
 app.use('/maintenanceContract', maintenanceContractRouter);
 
 /**
+ * 采购管理
+ */
+
+const purchasePlanTraceTableRouter = require('./routers/views/purchasingManagement/purchasePlanTraceTable');
+
+app.use('/purchasePlanTraceTable', purchasePlanTraceTableRouter);
+
+/**
  * server running at port 3333
  */
 
