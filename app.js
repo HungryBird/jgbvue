@@ -108,8 +108,10 @@ app.use('/maintenanceContract', maintenanceContractRouter);
  */
 
 const purchasePlanTraceTableRouter = require('./routers/views/purchasingManagement/purchasePlanTraceTable');
+const purchasingManagementRouter = require('./routers/views/purchasingManagement/purchasingManagement');
 
 app.use('/purchasePlanTraceTable', purchasePlanTraceTableRouter);
+app.use('/purchasingManagement', purchasingManagementRouter);
 
 /**
  * server running at port 3333
