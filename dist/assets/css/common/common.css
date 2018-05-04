@@ -1619,3 +1619,14 @@ table {
     border-top: 1px solid #ddd;
     padding-top: 10px;
     background: #fff; }
+
+@media print {
+  body {
+    padding: 0;
+    background: #fff; }
+  .jgb-wrap {
+    border: none; }
+  .w-print-footer-btn {
+    display: none; }
+  @page :first {
+    margin: 0; } }

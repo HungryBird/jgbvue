@@ -145,7 +145,8 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
-                    <el-form-item label="委派人员：" prop="person">
+                    <el-form-item v-if="orderEditForm.assigned == '1'" label="委派人员：" prop="person" 
+                      :rules="{ required: true, message: '请选择委派人员', trigger: 'blur,change' }">
                       <el-select v-model="orderEditForm.person" remote filterable placeholder="请选择"
                         :remote-method="remoteRepairPerson">
                         <el-option v-for="item in formRepairPersonList"
