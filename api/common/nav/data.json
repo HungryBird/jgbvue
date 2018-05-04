@@ -141,5 +141,39 @@
 				"items": [] 
 			}
 		]
+	},
+	{
+		"code": "purchasingManagement",
+		"name": "采购管理",
+		"url": "",
+		"isMenu": false,
+		"items": [
+			{ "code": "purchaseOrder", "name": "采购单", "isMenu": false, 
+				"url": "",
+				"items": [
+					{ "code": "purchasePlanList", "name": "采购计划单", "isMenu": true, 
+						"url": "./views/purchasingManagement/purchasePlanList.html" },
+					{ "code": "purchaseList", "name": "采购单", "isMenu": true, 
+						"url": "./views/purchasingManagement/purchaseList.html" },
+					{ "code": "purchaseReturnManifest", "name": "采购退还货单", "isMenu": true, 
+						"url": "./views/purchasingManagement/purchaseReturnManifest.html" },
+					{ "code": "yixiaodinggou", "name": "以销订购看板", "isMenu": true, 
+					"url": "./views/purchasingManagement/yixiaodinggou.html" }
+				]
+			},
+			{ "code": "purchaseReport", "name": "采购报表", "isMenu": false, 
+				"url": "",
+				"items": [
+					{ "code": "purchasePlanTraceTable", "name": "采购计划跟踪表", "isMenu": true, 
+						"url": "./views/purchasingManagement/purchasePlanTraceTable.html" },
+					{ "code": "purchaseDetailList", "name": "采购明细表", "isMenu": true, 
+						"url": "./views/purchasingManagement/purchaseDetailList.html" },
+					{ "code": "purchaseSummarySheet", "name": "采购汇总表", "isMenu": true, 
+						"url": "./views/purchasingManagement/purchaseSummarySheet.html" },
+					{ "code": "purchasePaymentsList", "name": "采购付款退款一览表", "isMenu": true, 
+						"url": "./views/purchasingManagement/purchasePaymentsList.html" }
+				] 
+			}
+		]
 	}
 ]
