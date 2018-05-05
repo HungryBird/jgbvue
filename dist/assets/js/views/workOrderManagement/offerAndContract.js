@@ -201,6 +201,7 @@ JGBVue.module.offerAndContract = ()=> {
 				handleAddContract() {
 					this.addDialogVisible = true;
 					setTimeout(function() {
+						if(E != undefined) return;
 						E = window.wangEditor;
 						addEditor = new E('#addEditor');
 						addEditor.create();	
@@ -755,6 +756,9 @@ JGBVue.module.offerAndContract = ()=> {
 				},
 				addCreateTags(tag) {
 					addEditor.cmd.do('insertHTML', '<span>' + tag.label + '</span>')
+				},
+				saveAdd() {
+					this.addContractForm.editor = addEditor.txt.html();
 				}
 			},
 			watch: {

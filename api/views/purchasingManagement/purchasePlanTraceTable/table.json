@@ -21,18 +21,18 @@
 	"data": [
 		{
 			"bianhao": "sdfa98s64as6d5",
-			"name": "金克拉",
-			"status": true
+			"name": "金坷垃1",
+			"status": -1
 		},
 		{
 			"bianhao": "sdfa98s64as6d5",
-			"name": "张三",
-			"status": true
+			"name": "金坷垃2",
+			"status": 0
 		},
 		{
 			"bianhao": "sdfa98s64as6d5",
-			"name": "张三",
-			"status": true
+			"name": "金坷垃3",
+			"status": 1
 		}
 	]
 }

@@ -58,15 +58,16 @@ JGBVue.module.purchasePlanTraceTable = ()=> {
 				}
 			},
 			mounted() {
-				//this.search();
+				this.search();
 				this.getTime();
 			},
 			methods: {
 				search() {
+					console.log(this.headerForm)
 					axios.get(searchUrl, this.headerForm).then((res)=> {
-						if(res.data.status) {
+						/*if(res.data.status) {
 
-						}
+						}*/
 					})
 				},
 				getTime() {

@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/search', (req, res)=> {
 	let cities = '';
-	console.log(req)
+	console.log(req.query)
 	/*fs.readFile('api/views/systemSettings/administrativeRegion/beijing0.json', 'utf-8', (err, data)=> {
 		if(err) {
 			res.send({
