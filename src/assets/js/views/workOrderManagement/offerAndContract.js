@@ -754,7 +754,7 @@ JGBVue.module.offerAndContract = ()=> {
 					)
 				},
 				addCreateTags(tag) {
-					addEditor.cmd.do('insertHTML', '<span>' + item.label + '</span>')
+					addEditor.cmd.do('insertHTML', '<span>' + tag.label + '</span>')
 				}
 			},
 			watch: {
