@@ -1,0 +1,20 @@
+{
+	"title": "XXXX标题",
+	"number": "asd456asd46a5s",
+	"partAName": "甲方A",
+	"partBName": "乙方B",
+	"partAAddress": "",
+	"partBAddress": "",
+	"partALinkman": "",
+	"partBLinkman": "",
+	"partATel": "",
+	"partAFax": "",
+	"partBTel": "",
+	"partBFax": "",
+	"editorContent": "<p><span>标题1</span></p><p><span>标题2</span></p><p><span>标题3</span></p>",
+	"filePic": {
+		"width": 500,
+		"height": 400,
+		"src": "../../img/slideshow/1.jpg"
+	}
+}

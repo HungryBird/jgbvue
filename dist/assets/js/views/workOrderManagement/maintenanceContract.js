@@ -5,8 +5,26 @@ JGBVue = {
 JGBVue.module.maintenanceContract = ()=> {
 	let _this = {}
 	,that = {}
-	,E
-	,addEditor;
+	,E1
+	,E2
+	,addEditor
+	,examineEditor
+	,initCurRow = {
+		title: '',
+		number: '',
+		partAName: '',
+		partBName: '',
+		partAAddress: '',
+		partBAddress: '',
+		partALinkman: '',
+		partBLinkman: '',
+		partATel: '',
+		partAFax: '',
+		partBTel: '',
+		partBFax: '',
+		editorContent: '',
+		filePic: ''
+	}
 
 	_this.init = (searchUrl, giveOutUrl, getExportFormUrl, btnUrl, getTagsUrl, saveAddUrl, getContractInfoUrl, examineUrl, getImageUrl)=> {
 		that.vm = new Vue({
@@ -57,6 +75,22 @@ JGBVue.module.maintenanceContract = ()=> {
 					currentImgHeight: 0,
 					currentImgIndex: 0,
 					currentImgSrc: '',
+					curRow: {
+						title: '',
+						number: '',
+						partAName: '',
+						partBName: '',
+						partAAddress: '',
+						partBAddress: '',
+						partALinkman: '',
+						partBLinkman: '',
+						partATel: '',
+						partAFax: '',
+						partBTel: '',
+						partBFax: '',
+						editorContent: '',
+						filePic: ''
+					}
 				}
 			},
 			mounted() {
@@ -84,9 +118,16 @@ JGBVue.module.maintenanceContract = ()=> {
 					axios.post(examineUrl, row).then((res)=> {
 						if(res.data.status) {
 							let jdata = JSON.parse(res.data.data);
-							this.contractInfo = jdata;
 							this.isUnfold = true;
 							this.loadingDetailInfo = false;
+							Object.assign(this.curRow, initCurRow);
+							this.curRow = jdata;
+							if(E2 != null) return;
+							E2 = window.wangEditor;
+							examineEditor = new E2('#examineEditor');
+							examineEditor.create();
+							examineEditor.$textElem.attr('contenteditable', false);
+							examineEditor.txt.html(jdata.editorContent);
 						}
 					}).catch((err)=> {
 						console.log(err)
@@ -100,8 +141,9 @@ JGBVue.module.maintenanceContract = ()=> {
 				addContract() {
 					this.addDialogVisible = true;
 					setTimeout(function() {
-						E = window.wangEditor;
-						addEditor = new E('#addEditor');
+						if(E1 != null) return;
+						E1 = window.wangEditor;
+						addEditor = new E1('#addEditor');
 						addEditor.create();	
 					}, 0)						
 				},
@@ -109,7 +151,7 @@ JGBVue.module.maintenanceContract = ()=> {
 					console.log(response)
 				},
 				handleUploadReportError: function(response, file, fileList) {
-				console.log(response)
+					console.log(response)
 				},
 				getContractInfo() {
 					axios.get(getContractInfoUrl).then((res)=> {
@@ -120,8 +162,8 @@ JGBVue.module.maintenanceContract = ()=> {
 					})
 				},
 				createEditor() {
-					E = window.wangEditor;
-					addEditor = new E('#addEditor');
+					E1 = window.wangEditor;
+					addEditor = new E1('#addEditor');
 					addEditor.create();
 				},
 				addCreateTags(item) {
@@ -305,6 +347,15 @@ JGBVue.module.maintenanceContract = ()=> {
 					this.selectedRows = [];
 					this.$refs['table'].clearSelection();
 					this.openSlideshow(item);
+				},
+				viewFile() {
+					this.slideshowArr = [];
+					this.currentImgIndex = 0;
+					this.slideshowArr.push(this.curRow.filePic);
+					this.currentImgSrc = this.slideshowArr[0].src;
+					this.currentImgWidth = this.slideshowArr[0].width;
+					this.currentImgHeight = this.slideshowArr[0].height;
+					this.showSlideshow = true;
 				},
 				openSlideshow(item) {
 					let _self = this;

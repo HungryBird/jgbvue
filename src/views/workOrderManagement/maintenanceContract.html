@@ -180,10 +180,58 @@
 						<div class="title text-center">
 							<h3>合同信息详情页</h3>
 						</div>
-						<el-col v-for="item in contractInfo" :span="item.oneRow ? 24 : 12" class="text-center" :key="item.name">
-							<div>{{ item.name }}</div>
-							<div v-if="item.isImages" v-on:click="viewImage(item)"><i class="el-icon-picture"></i></div>
-							<div v-else>{{ item.value }}</div>
+						<el-col :span="24" class="text-center">
+							<div>合同标题</div>
+							<div>{{ curRow.title }}</div>
+						</el-col>
+						<el-col :span="24" class="text-center">
+							<div>合同编号</div>
+							<div>{{ curRow.number }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>甲方名称</div>
+							<div>{{ curRow.partAName }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>乙方名称</div>
+							<div>{{ curRow.partBName }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>联系地址</div>
+							<div>{{ curRow.partAAddress }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>联系地址</div>
+							<div>{{ curRow.partBAddress }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>联系人</div>
+							<div>{{ curRow.partALinkman }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>联系人</div>
+							<div>{{ curRow.partBLinkman }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>联系电话</div>
+							<div>{{ curRow.partATel }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>联系电话</div>
+							<div>{{ curRow.partBTel }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>传真</div>
+							<div>{{ curRow.partAFax }}</div>
+						</el-col>
+						<el-col :span="12" class="text-center">
+							<div>传真</div>
+							<div>{{ curRow.partBFax }}</div>
+						</el-col>
+						<div id="examineEditor"></div>
+						<el-col :span="24" class="text-center">
+							<div>盖章合同文件</div>
+							<div v-on:click="viewFile"><i class="el-icon-picture"></i></div>
 						</el-col>
 					</el-row>
 					<div class="toggle-button-wrap" v-on:click="toggleInfo">
@@ -237,6 +285,6 @@
 	 * 保存
 	 * 获取合同信息
 	 */
-	JGBVue.module.maintenanceContract().init('/maintenanceContract/search', '/common/data_give_out', '/clientInfo/exportForm', '/common/btn', '/common/getTags', '/common/data_add_save', '/maintenanceContract/getContractInfo', '/commodityInfo/examine', '/common/slideshow');
+	JGBVue.module.maintenanceContract().init('/maintenanceContract/search', '/common/data_give_out', '/clientInfo/exportForm', '/common/btn', '/common/getTags', '/common/data_add_save', '/maintenanceContract/getContractInfo', '/maintenanceContract/examine', '/common/slideshow');
 </script>
 </html>
