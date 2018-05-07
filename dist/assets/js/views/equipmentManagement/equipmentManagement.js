@@ -6,7 +6,7 @@ JGBVue.module.equipmentManagement = ()=> {
 	const _this = {}
 	,that = {};
 
-	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
+	_this.init = (searchUrl, getQuickQueryUrl,startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, cancelWarningUrl)=> {
 		that.vm = new Vue({
 			el: '#app',
 			data() {
@@ -803,12 +803,22 @@ JGBVue.module.equipmentManagement = ()=> {
 						`url=${printListUrl}`
 					)
 				},
-				test() {
-					console.log('addForm: ', this.addForm)
-					for(key in this.addForm.auxiliaryAttributesClassify) {
-						console.log('key: ', key)
-						console.log('keyIsNull: ', this.addForm.auxiliaryAttributesClassify[key]=='')
-					}
+				cancelWarning() {
+					let _self = this;
+					axios.post(cancelWarningUrl, this.selectedRows).then((res)=> {
+						if(res.data.status) {
+							this.selectedRows.forEach((item)=> {
+								_self.table.data.usingWarning = false;
+							})
+							this.$message({
+								type: 'success',
+								message: 'success'
+							})
+						}
+					})
+				},
+				printBarCode() {
+					//
 				}
 			},
 			watch: {
@@ -822,8 +832,8 @@ JGBVue.module.equipmentManagement = ()=> {
 		})
 	}
 
-	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl)=> {
-		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl);
+	that.init = (searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, cancelWarningUrl)=> {
+		_this.init(searchUrl, getQuickQueryUrl, startUsingUrl, deleteUrl, examineUrl, saveAddUrl, getEditUrl, saveEditUrl, uploadUrl, getExportFormUrl, getImageUrl, defaultColumnSettingUrl, columnSettingCompleteUrl, getClientUrl, getEquipmentNameOptionUrl, getEquipmentBrandOptionUrl, getEquipmentCategoryOptionUrl, getUnitMeasurementOptionUrl, getUniqueCodeUrl, getAuxiliaryAttributesClassifyUrl, printListUrl, cancelWarningUrl);
 	}
 
 	return that;

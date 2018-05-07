@@ -51,13 +51,15 @@
 								列设置
 							</el-button>
 							<el-button-group class="pull-right">
-								<el-button icon="el-icon-plus" v-on:click="addVisible = true">新增</el-button>
-								<el-button icon="el-icon-minus" :disabled="selectedRows.length === 0" v-on:click="remove">删除</el-button>
-								<el-button :disabled="selectedRows.length === 0" v-on:click="forbidden">禁用</el-button>
-								<el-button :disabled="selectedRows.length === 0" v-on:click="startUsing">启用</el-button>
-								<el-button v-on:click="importVisible = true">导入</el-button>
-								<el-button v-on:click="exportCilck">导出</el-button>
-								<el-button v-on:click="preview">打印设备预览</el-button>
+								<el-button icon="el-icon-plus" v-on:click="addVisible = true" size="mini">新增</el-button>
+								<el-button icon="el-icon-minus" :disabled="selectedRows.length === 0" v-on:click="remove" size="mini">删除</el-button>
+								<el-button :disabled="selectedRows.length === 0" v-on:click="forbidden" size="mini">禁用</el-button>
+								<el-button :disabled="selectedRows.length === 0" v-on:click="startUsing" size="mini">启用</el-button>
+								<el-button v-on:click="importVisible = true" size="mini">导入</el-button>
+								<el-button v-on:click="exportCilck" size="mini">导出</el-button>
+								<el-button :disabled="selectedRows.length === 0" v-on:click="cancelWarning" size="mini">取消预警</el-button>
+								<el-button v-on:click="printBarCode" size="mini">打印条形码</el-button>
+								<el-button v-on:click="preview" size="mini">打印设备预览</el-button>
 							</el-button-group>
 						</nav>
 						<el-table :data="table.data" ref="table" border v-on:row-click="rowClick" :data="cyTable" v-on:select-all="selectAll" v-on:select="selectItem" :row-class-name="rowStatusClassName" v-loading="loadingDetailInfo">
@@ -292,7 +294,7 @@
 									<label>
 										<!-- <el-checkbox :label="aa.value" v-model="addForm.auxiliaryAttributesClassify[aa.value]" >{{  }}</el-checkbox> -->
 										<span>{{ aa.label }}</span>
-										<el-select v-model="addForm.auxiliaryAttributesClassify[aa.value]" style="padding-top: 5px;" v-on:change="test" clearable>
+										<el-select v-model="addForm.auxiliaryAttributesClassify[aa.value]" style="padding-top: 5px;" clearable>
 											<el-option v-for="op in aa.option" :key="op.value" :label="op.label" :value="op"></el-option>
 										</el-select>
 									</label>
@@ -600,7 +602,8 @@
 	 * 获取计量单位option
 	 * 验证并声称唯一码
 	 * 获取打印数据
+	 * 取消设备预警
 	 */
-	JGBVue.module.equipmentManagement().init('/equipmentManagement/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/data_add_save', '/equipmentManagement/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory', '/equipmentManagement/getUnitMeasurement', '/equipmentManagement/getuniqueCode', '/equipmentManagement/getAuxiliaryAttributesClassify', '/equipmentManagement/search');
+	JGBVue.module.equipmentManagement().init('/equipmentManagement/search', '/common/getQuickQueryOption','/common/switch', '/common/data_delete', '/common/examine', '/common/data_add_save', '/equipmentManagement/edit_data_get', '/common/data_edit_save', '/common/upload_info', '/clientInfo/exportForm', '/common/slideshow', '/equipmentManagement/defaultColumnSetting', '/equipmentManagement/columnSettingComplete', '/equipmentManagement/getClientOption', '/equipmentManagement/getEquipmentName', '/equipmentManagement/getEquipmentBrand', '/equipmentManagement/getEquipmentCategory', '/equipmentManagement/getUnitMeasurement', '/equipmentManagement/getuniqueCode', '/equipmentManagement/getAuxiliaryAttributesClassify', '/equipmentManagement/search', '/common/success');
 </script>
 </html>
