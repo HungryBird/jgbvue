@@ -20,8 +20,7 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							format="yyyy-MM-dd"
-							value-format="yyyy-MM-dd"
-							@change="test">
+							value-format="yyyy-MM-dd">
     					</el-date-picker>
 					</el-form-item>
 					<el-form-item label="预计交货日期" prop="expecDate">
@@ -36,7 +35,7 @@
     					</el-date-picker>
 					</el-form-item>
 					<el-form-item>
-						<el-button>查询</el-button>
+						<el-button v-on:click="search">查询</el-button>
 					</el-form-item>
 				</el-form>
 				<el-form :model="headerForm" :rules="formRules" :inline="true">
@@ -80,18 +79,33 @@
 						<el-button v-on:click="showColumnSetting = true" size="mini">列设置</el-button>
 					</div>
 					<div class="pull-right">
-						<el-button size="mini">导出</el-button>
-						<el-button size="mini">打印</el-button>
+						<el-button-group>
+							<el-button size="mini" v-on:click="showExport = true" type="primary">导出</el-button>
+							<el-button size="mini" type="primary" v-on:click="btnPrintList">打印</el-button>
+						</el-button-group>
 					</div>
 				</nav>
 			</el-header>
 			<el-main>
-				<time>{{ time.start - time.end }}</time>
-				<el-table :data="table.data" border ref="table">
-					<el-table-column v-for="tb in table.header" align="center" :type="item.type" :sortable="item.sortable" :width="item.width" :key="item.prop" :prop="item.prop" :label="item.label"></el-table-column>
+				<time>{{ time.start }}</time> - <time>{{ time.end }}</time>
+				<el-table :data="table.data" border ref="table" height="480" highlight-current-row>
+					<el-table-column v-for="tb in table.header" v-if="tb.enable" align="center" :type="tb.type" :sortable="tb.sortable" :width="tb.width" :key="tb.prop" :prop="tb.prop" :label="tb.label">
+						<template slot-scope="scope">
+							<div v-if="tb.prop === 'status'">
+								{{ scope.row[tb.prop] | fiterStatus }}
+							</div>
+							<div v-else>
+								{{ scope.row[tb.prop] }}
+							</div>
+						</template>
+					</el-table-column>
 				</el-table>
 			</el-main>
 		</el-container>
+		<div class="wrap_footer">
+			<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="400"></el-pagination>
+		</div>
+		<!-- 列设置 -->
 		<el-dialog :visible.sync="showColumnSetting">
 	        <div class="title" slot="title">列设置</div>
 	        <jgb-column-setting v-if="table.header.length" v-model="table.header"></jgb-column-setting>
@@ -100,6 +114,16 @@
 	          	<el-button type="primary" v-on:click="btnColumnSettingComplete">完成</el-button>
 	        </div>
 	    </el-dialog>
+	    <!-- 导出 -->
+	    <el-dialog :visible.sync="showExport" width="600px">
+			<div class="title" slot="title">导出</div>
+			<el-checkbox-group v-model="exportChecked" class="w-export">
+				<el-checkbox v-if="item.prop != 'action'" v-for="item in table.header" border checked :key="item.label" :label="item.prop" >
+					{{item.label}}
+				</el-checkbox>
+			</el-checkbox-group>
+			<jgb-form-footer slot="footer" save-text="导出" close-text="关闭" :loading="isLoadingExportRequest" v-on:save="btnExportSave" v-on:close="btnExportClose"></jgb-form-footer>
+		</el-dialog>
 	</div>
 </body>
 <script type="text/javascript" src="../../vue/vue.js"></script>
@@ -109,8 +133,10 @@
 <script type="text/javascript" src="../../assets/js/views/purchasingManagement/purchasePlanTraceTable.js"></script>
 <script type="text/javascript">
 	JGBVue.module.purchasePlanTraceTable().init(
-		'/purchasePlanTraceTable/search',
-		'',
+		'/purchasePlanTraceTable/search' //搜索
+		, '/equipmentManagement/defaultColumnSetting' //默认列设置
+		, '/equipmentManagement/columnSettingComplete' //列设置完成
+		, '/orderManagement/get_waiting_order_data' //打印列表接口
 		);
 </script>
 </html>
